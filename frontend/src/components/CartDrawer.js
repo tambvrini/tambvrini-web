@@ -39,16 +39,18 @@ export const CartDrawer = () => {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="right" className="w-full sm:w-[420px] bg-obsidian border-l border-white/5 p-0 flex flex-col">
+      <SheetContent side="right" hideClose className="w-full sm:w-[420px] bg-obsidian border-l border-white/5 p-0 flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-white/5 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <ShoppingBag size={18} className="text-marble/60" />
             <h2 className="font-cinzel text-sm tracking-[0.2em] uppercase text-marble">Carrito</h2>
           </div>
-          <button data-testid="cart-close-btn" onClick={() => setIsOpen(false)}>
-            <X size={20} className="text-marble/50 hover:text-marble" />
-          </button>
+          <SheetClose asChild>
+            <button data-testid="cart-close-btn">
+              <X size={20} className="text-marble/50 hover:text-marble" />
+            </button>
+          </SheetClose>
         </div>
 
         {/* Items */}
