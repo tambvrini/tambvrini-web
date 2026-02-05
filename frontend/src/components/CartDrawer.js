@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Sheet, SheetContent } from '../components/ui/sheet';
+import { Sheet, SheetContent, SheetClose } from '../components/ui/sheet';
 import axios from 'axios';
 import { useState } from 'react';
 
