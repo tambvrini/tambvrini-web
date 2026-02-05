@@ -28,35 +28,69 @@ const useInView = (opts = {}) => {
   return [ref, visible];
 };
 
-/* ============ HERO ============ */
+/* ============ HERO with GUCCI-style animated logo ============ */
+const SCROLL_THRESHOLD = 500;
+
 const HeroSection = () => {
   const { scrollY } = useScroll();
-  const logoScale = useTransform(scrollY, [0, 400], [1, 0.5]);
-  const logoOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const textY = useTransform(scrollY, [0, 400], [0, -60]);
-  const overlayOpacity = useTransform(scrollY, [0, 400], [0.4, 0.7]);
+  const [viewportH, setViewportH] = useState(800);
+
+  useEffect(() => {
+    setViewportH(window.innerHeight);
+    const onResize = () => setViewportH(window.innerHeight);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Hero logo: starts GIANT centered, shrinks + moves up, fades out before reaching header
+  const logoScale = useTransform(scrollY, [0, SCROLL_THRESHOLD], [1, 0.14]);
+  const logoY = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, -(viewportH * 0.44)]);
+  const heroLogoOpacity = useTransform(scrollY, [SCROLL_THRESHOLD * 0.65, SCROLL_THRESHOLD * 0.85], [1, 0]);
+
+  // Hero overlay darkens as you scroll
+  const overlayOpacity = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0.35, 0.65]);
+
+  // CTA buttons fade out quickly
+  const buttonsOpacity = useTransform(scrollY, [0, 250], [1, 0]);
+  const buttonsY = useTransform(scrollY, [0, 250], [0, 40]);
 
   return (
     <section data-testid="hero-section" className="relative h-screen overflow-hidden">
+      {/* Background image */}
       <div className="absolute inset-0">
         <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-full object-cover" />
         <motion.div className="absolute inset-0 bg-obsidian" style={{ opacity: overlayOpacity }} />
       </div>
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-        <motion.div style={{ scale: logoScale, opacity: logoOpacity, y: textY }} className="text-center">
-          <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-20 md:h-28 lg:h-36 mx-auto" />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="absolute bottom-20 md:bottom-24 flex flex-col sm:flex-row gap-4"
-        >
-          <Link to="/tienda?gender=hombre" data-testid="hero-shop-men" className="btn-luxury text-center">Comprar Hombre</Link>
-          <Link to="/tienda?gender=mujer" data-testid="hero-shop-women" className="btn-luxury text-center">Comprar Mujer</Link>
-          <Link to="/tienda" data-testid="hero-explore" className="btn-luxury btn-gold text-center">Explorar Colección</Link>
-        </motion.div>
-      </div>
+
+      {/* Animated GIANT logo — fixed position, transforms from center to header */}
+      <motion.div
+        className="fixed inset-0 z-[52] flex items-center justify-center pointer-events-none"
+        style={{ opacity: heroLogoOpacity }}
+      >
+        <motion.img
+          src={LOGO_WHITE}
+          alt="TAMBVRINI"
+          className="w-[55vw] md:w-[50vw] lg:w-[45vw] max-w-[700px]"
+          style={{
+            scale: logoScale,
+            y: logoY,
+            willChange: 'transform',
+          }}
+        />
+      </motion.div>
+
+      {/* CTA Buttons at bottom of hero */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        className="absolute bottom-20 md:bottom-24 left-0 right-0 z-10 flex flex-col sm:flex-row justify-center gap-4 px-6"
+        style={{ opacity: buttonsOpacity, y: buttonsY }}
+      >
+        <Link to="/tienda?gender=hombre" data-testid="hero-shop-men" className="btn-luxury text-center">Comprar Hombre</Link>
+        <Link to="/tienda?gender=mujer" data-testid="hero-shop-women" className="btn-luxury text-center">Comprar Mujer</Link>
+        <Link to="/tienda" data-testid="hero-explore" className="btn-luxury btn-gold text-center">Explorar Colección</Link>
+      </motion.div>
     </section>
   );
 };
