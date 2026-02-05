@@ -1,0 +1,146 @@
+{
+  "brand_identity": {
+    "name": "TAMBVRINI",
+    "dna": "Roman Classical, Elite Tennis Club, 1970s Riviera, Old Money Mediterranean",
+    "tone": "Cinematic, Timeless, Exclusive, Haughty but Inviting",
+    "target_audience": "High-net-worth individuals, European luxury aesthetic lovers"
+  },
+  "typography": {
+    "headings": {
+      "family": "Cinzel, serif",
+      "weights": ["400", "700"],
+      "usage": "Main Section Titles, Hero Text, Logo (if text)",
+      "style": "uppercase tracking-[0.2em]"
+    },
+    "subheadings": {
+      "family": "Playfair Display, serif",
+      "weights": ["400", "600", "italic"],
+      "usage": "Editorial bylines, Product names, Story pull-quotes"
+    },
+    "body": {
+      "family": "Montserrat, sans-serif",
+      "weights": ["300", "400", "500"],
+      "usage": "Paragraphs, UI elements, Buttons, Nav links",
+      "style": "tracking-wide"
+    }
+  },
+  "colors": {
+    "mode": "hybrid",
+    "primary_dark": "#0A0A0A",
+    "primary_light": "#F5F5F0",
+    "accent_gold": "#C5A059",
+    "accent_green": "#1B4D3E",
+    "text_on_dark": "#E5E5E5",
+    "text_on_light": "#1A1A1A",
+    "border_color": "#2A2A2A",
+    "palette": {
+      "obsidian": "#0A0A0A",
+      "marble": "#F5F5F0",
+      "gold": "#C5A059",
+      "emerald": "#1B4D3E",
+      "terracotta": "#A0522D"
+    }
+  },
+  "layout_strategy": {
+    "container_padding": "px-6 md:px-12 lg:px-24",
+    "section_spacing": "py-24 md:py-32",
+    "grid_system": "Bento / Tetris Grid (Mode A)",
+    "mobile_first": true,
+    "max_width": "max-w-[1920px] mx-auto"
+  },
+  "components": {
+    "buttons": {
+      "style": "sharp-edged",
+      "radius": "rounded-none",
+      "hover": "hover:bg-accent_gold hover:text-black transition-colors duration-500",
+      "default": "border border-white/20 uppercase tracking-widest text-xs py-4 px-8"
+    },
+    "cards": {
+      "style": "minimalist",
+      "radius": "rounded-none",
+      "shadow": "none",
+      "hover": "group-hover:opacity-80 transition-opacity duration-500"
+    },
+    "inputs": {
+      "style": "underlined",
+      "radius": "rounded-none",
+      "border": "border-b border-white/20 bg-transparent focus:border-white transition-colors"
+    },
+    "navigation": {
+      "style": "split-layout",
+      "behavior": "sticky top-0 z-50 transition-all duration-500",
+      "initial_state": "bg-transparent py-8",
+      "scrolled_state": "bg-obsidian/90 backdrop-blur-md py-4 border-b border-white/10"
+    }
+  },
+  "visual_enhancers": {
+    "textures": "Use subtle noise overlays (opacity 0.05) on dark backgrounds to prevent banding and add 'film grain' feel.",
+    "borders": "Use 1px borders with 10% opacity for grid separations.",
+    "shadows": "Avoid drop shadows. Use 'Inner Glow' or strict lines.",
+    "parallax": "Use 'react-scroll-parallax' or 'framer-motion' for slow vertical drift on images."
+  },
+  "image_urls": {
+    "hero_campaign": {
+        "url": "https://images.unsplash.com/photo-1760446005643-292066b54734?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODl8MHwxfHNlYXJjaHw0fHxtZWRpdGVycmFuZWFuJTIwcml2aWVyYSUyMGx1eHVyeSUyMGxpZmVzdHlsZSUyMDE5NzBzfGVufDB8fHx8MTc3MDMyMTY4OXww&ixlib=rb-4.1.0&q=85",
+        "alt": "Mediterranean Riviera Coast"
+    },
+    "categories": [
+      {
+        "name": "Men's Tailoring",
+        "url": "https://images.unsplash.com/photo-1765815442140-f88e94db8817?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHw0fHxmYXNoaW9uJTIwbW9kZWwlMjBlZGl0b3JpYWwlMjBzdWl0fGVufDB8fHx8MTc3MDMyMTcwMHww&ixlib=rb-4.1.0&q=85"
+      },
+      {
+        "name": "Women's Resort",
+        "url": "https://images.unsplash.com/photo-1765269303556-b53ff8bd8a8a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDR8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGx1eHVyeSUyMGZhc2hpb24lMjBkcmVzcyUyMHN1bW1lcnxlbnwwfHx8fDE3NzAzMjE3MDF8MA&ixlib=rb-4.1.0&q=85"
+      },
+      {
+        "name": "Tennis Club",
+        "url": "https://images.unsplash.com/photo-1731777347197-3418de40a8f4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzN8MHwxfHNlYXJjaHwzfHx0ZW5uaXMlMjBjb3VydCUyMGNsYXklMjBsdXh1cnl8ZW58MHx8fHwxNzcwMzIxNzA0fDA&ixlib=rb-4.1.0&q=85"
+      }
+    ],
+    "textures": [
+      {
+        "name": "Marble",
+        "url": "https://images.unsplash.com/photo-1756287530100-c0b4412dee8b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzN8MHwxfHNlYXJjaHwxfHxtYXJibGUlMjB0ZXh0dXJlJTIwd2hpdGUlMjBjbGFzc2ljYWx8ZW58MHx8fHwxNzcwMzIxNzAzfDA&ixlib=rb-4.1.0&q=85"
+      }
+    ],
+    "branding": {
+        "logo_full": "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/zxlxju1y_LOGO%20svg%20web.svg",
+        "logo_white_letters": "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg",
+        "logo_dark_letters": "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/ly9xd3r6_LOGO%20LETRAS%20svg%20web.svg",
+        "logo_white_icon": "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/krjmn5r6_LOGO%20ICONO%20blanco%20svg%20web.svg",
+        "logo_dark_icon": "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/a90ej7xc_LOGO%20ICONO%20svg%20web.svg"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Install 'lenis' for smooth scrolling immediately.",
+    "Install 'lucide-react' for icons.",
+    "Add these Google Fonts to index.html: Cinzel (400,700), Playfair Display (400,600,Italic), Montserrat (300,400,500).",
+    "The Header must start transparent and turn solid #0A0A0A on scroll.",
+    "The Hero Logo must shrink from center screen to header on scroll (use framer-motion).",
+    "Use the 'Bento' grid layout for the product list, not a standard uniform grid.",
+    "All product images must have a hover effect (zoom or swap).",
+    "Use the provided SVGs for branding. Do not use text for the logo.",
+    "Primary button style: White text, transparent background, white border, sharp corners. Hover: White background, black text.",
+    "Ensure the 'Tennis Club' section uses the Light Mode palette (#F5F5F0 bg, #1B4D3E text) for contrast."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. In frontend design, this creates what users call the 'AI slop' aesthetic. Avoid this: make creative, distinctive frontends that surprise and delight.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use 'sonner' for toasts. Sonner component are located in /app/src/components/ui/sonner.tsx"
+  ]
+}
