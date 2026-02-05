@@ -4,24 +4,24 @@
 
 @layer base {
     :root {
-        --background: 0 0% 4%;
-        --foreground: 43 23% 95%;
-        --card: 0 0% 6%;
-        --card-foreground: 43 23% 95%;
-        --popover: 0 0% 6%;
-        --popover-foreground: 43 23% 95%;
+        --background: 37 33% 97%;
+        --foreground: 0 0% 7%;
+        --card: 37 25% 95%;
+        --card-foreground: 0 0% 7%;
+        --popover: 37 25% 95%;
+        --popover-foreground: 0 0% 7%;
         --primary: 39 40% 55%;
-        --primary-foreground: 0 0% 4%;
-        --secondary: 0 0% 12%;
-        --secondary-foreground: 43 23% 95%;
-        --muted: 0 0% 15%;
-        --muted-foreground: 0 0% 64%;
+        --primary-foreground: 37 33% 97%;
+        --secondary: 37 15% 91%;
+        --secondary-foreground: 0 0% 7%;
+        --muted: 37 15% 91%;
+        --muted-foreground: 0 0% 45%;
         --accent: 160 47% 21%;
-        --accent-foreground: 43 23% 95%;
+        --accent-foreground: 37 33% 97%;
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 16%;
-        --input: 0 0% 16%;
+        --border: 37 12% 87%;
+        --input: 37 12% 87%;
         --ring: 39 40% 55%;
         --radius: 0px;
         --chart-1: 12 76% 61%;
@@ -40,8 +40,8 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
-    background-color: #0A0A0A;
-    color: #F5F5F0;
+    background-color: #F9F7F4;
+    color: #1A1A1A;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: 0.02em;
@@ -49,17 +49,17 @@ body {
 
 ::selection {
     background-color: #C5A059;
-    color: #0A0A0A;
+    color: #F9F7F4;
 }
 
 ::-webkit-scrollbar {
     width: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #0A0A0A;
+    background: #F9F7F4;
 }
 ::-webkit-scrollbar-thumb {
-    background: #2A2A2A;
+    background: #D5D0C8;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #C5A059;
