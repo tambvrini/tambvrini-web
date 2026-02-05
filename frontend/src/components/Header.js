@@ -126,14 +126,13 @@ export const Header = () => {
                       <ul className="space-y-4">
                         {section.links.map((link, j) => (
                           <li key={j}>
-                            <SheetClose asChild>
-                              <Link
-                                to={link.href}
-                                className="font-montserrat text-sm text-marble/70 hover:text-marble tracking-wide transition-colors duration-300 block"
-                              >
-                                {link.label}
-                              </Link>
-                            </SheetClose>
+                            <Link
+                              to={link.href}
+                              onClick={() => setMenuOpen(false)}
+                              className="font-montserrat text-sm text-marble/70 hover:text-marble tracking-wide transition-colors duration-300 block"
+                            >
+                              {link.label}
+                            </Link>
                           </li>
                         ))}
                       </ul>
