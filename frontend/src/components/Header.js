@@ -148,7 +148,7 @@ export const Header = () => {
             <img
               src={LOGO_WHITE}
               alt="TAMBVRINI"
-              className={`transition-all duration-500 ${scrolled ? 'h-5 md:h-6' : 'h-6 md:h-7'}`}
+              className={`transition-all duration-500 ${scrolled ? 'h-7 md:h-9' : 'h-9 md:h-12'}`}
             />
           </Link>
 
