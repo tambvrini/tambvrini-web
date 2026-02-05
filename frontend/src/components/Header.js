@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, Menu, X, User, Heart, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
@@ -7,6 +7,8 @@ import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
 
 const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
+
+const SCROLL_THRESHOLD = 500;
 
 const NAV_LINKS = [
   { label: 'Novedades', href: '/tienda?filter=novedades' },
@@ -52,18 +54,21 @@ const MENU_SECTIONS = [
 ];
 
 export const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const searchRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { totalItems, setIsOpen } = useCart();
   const { items: wishlistItems } = useWishlist();
 
+  const isHomePage = location.pathname === '/';
+
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
+    const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -80,6 +85,14 @@ export const Header = () => {
       setSearchQuery('');
     }
   };
+
+  // On homepage, header logo hidden until scroll passes threshold
+  // On other pages, header logo always visible
+  const scrolled = isHomePage ? scrollY > SCROLL_THRESHOLD : scrollY > 80;
+  const headerLogoVisible = isHomePage ? scrollY > SCROLL_THRESHOLD * 0.75 : true;
+  const headerLogoOpacity = isHomePage
+    ? Math.min(1, Math.max(0, (scrollY - SCROLL_THRESHOLD * 0.7) / (SCROLL_THRESHOLD * 0.3)))
+    : 1;
 
   return (
     <>
@@ -143,8 +156,13 @@ export const Header = () => {
             </Sheet>
           </div>
 
-          {/* Center: Logo */}
-          <Link to="/" data-testid="header-logo-link" className="flex-shrink-0">
+          {/* Center: Header Logo — fades in after hero logo shrinks (homepage) or always visible (other pages) */}
+          <Link
+            to="/"
+            data-testid="header-logo-link"
+            className="flex-shrink-0 transition-opacity duration-500"
+            style={{ opacity: headerLogoOpacity, pointerEvents: headerLogoVisible ? 'auto' : 'none' }}
+          >
             <img
               src={LOGO_WHITE}
               alt="TAMBVRINI"
@@ -188,10 +206,10 @@ export const Header = () => {
           </div>
         </div>
 
-        {/* Subnav links - desktop only */}
+        {/* Subnav links - desktop only, visible only when header is solid */}
         <nav
           className={`hidden lg:flex justify-center gap-10 mt-3 transition-all duration-500 ${
-            scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'
+            scrolled ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'
           }`}
         >
           {NAV_LINKS.map((link, i) => (
