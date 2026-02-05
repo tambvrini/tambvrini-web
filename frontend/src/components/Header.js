@@ -110,13 +110,15 @@ export const Header = () => {
                   <Menu size={20} strokeWidth={1.5} />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-full sm:w-[480px] bg-obsidian border-r border-white/5 p-0 overflow-y-auto">
+              <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-obsidian border-r border-white/5 p-0 overflow-y-auto">
                 <div className="p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
                     <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-5" />
-                    <button data-testid="menu-close-btn" onClick={() => setMenuOpen(false)}>
-                      <X size={24} className="text-marble/60 hover:text-marble" />
-                    </button>
+                    <SheetClose asChild>
+                      <button data-testid="menu-close-btn">
+                        <X size={24} className="text-marble/60 hover:text-marble" />
+                      </button>
+                    </SheetClose>
                   </div>
                   {MENU_SECTIONS.map((section, i) => (
                     <div key={i} className="mb-12">
@@ -124,13 +126,14 @@ export const Header = () => {
                       <ul className="space-y-4">
                         {section.links.map((link, j) => (
                           <li key={j}>
-                            <Link
-                              to={link.href}
-                              onClick={() => setMenuOpen(false)}
-                              className="font-montserrat text-sm text-marble/70 hover:text-marble tracking-wide transition-colors duration-300 block"
-                            >
-                              {link.label}
-                            </Link>
+                            <SheetClose asChild>
+                              <Link
+                                to={link.href}
+                                className="font-montserrat text-sm text-marble/70 hover:text-marble tracking-wide transition-colors duration-300 block"
+                              >
+                                {link.label}
+                              </Link>
+                            </SheetClose>
                           </li>
                         ))}
                       </ul>
