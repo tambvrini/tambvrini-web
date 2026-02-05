@@ -44,8 +44,7 @@ const HeroSection = () => {
       </div>
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
         <motion.div style={{ scale: logoScale, opacity: logoOpacity, y: textY }} className="text-center">
-          <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-12 md:h-16 lg:h-20 mx-auto mb-4" />
-          <p className="font-cinzel text-xs md:text-sm tracking-[0.5em] text-marble/50 uppercase">Hispania</p>
+          <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-20 md:h-28 lg:h-36 mx-auto" />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
