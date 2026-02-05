@@ -12,8 +12,7 @@ export default function BrandPage() {
         <img src={MARBLE_IMAGE} alt="Marble" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-obsidian/50" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
-          <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-10 md:h-14 mb-4" />
-          <p className="font-cinzel text-xs tracking-[0.5em] text-marble/50 uppercase">La Casa</p>
+          <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-16 md:h-24 mb-4" />
         </div>
       </section>
 
