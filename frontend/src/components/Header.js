@@ -26,16 +26,7 @@ const MENU_SECTIONS = [
       { label: 'Tennis Club', href: '/tienda?filter=tennis-club' },
     ]
   },
-  {
-    title: 'Colecciones',
-    links: [
-      { label: 'Resort 2026', href: '/tienda?collection=resort-2026' },
-      { label: 'Tennis Club', href: '/tienda?collection=tennis-club' },
-      { label: 'Roma', href: '/tienda?collection=roma' },
-      { label: 'Atelier', href: '/tienda?collection=atelier' },
-      { label: 'Piezas Limitadas', href: '/tienda?collection=limited' },
-    ]
-  },
+
   {
     title: 'Marca',
     links: [
