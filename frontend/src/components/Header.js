@@ -10,13 +10,7 @@ const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 
 const SCROLL_THRESHOLD = 500;
 
-const NAV_LINKS = [
-  { label: 'Novedades', href: '/tienda?filter=novedades' },
-  { label: 'Hombre', href: '/tienda?gender=hombre' },
-  { label: 'Mujer', href: '/tienda?gender=mujer' },
-  { label: 'Tennis Club', href: '/tienda?filter=tennis-club' },
-  { label: 'Colecciones', href: '/tienda?collection=resort-2026' },
-];
+// Minimal header: no visible navigation links (drop-first homepage)
 
 const MENU_SECTIONS = [
   {
