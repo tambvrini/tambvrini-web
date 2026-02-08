@@ -206,7 +206,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Homepage Layout Update - 8 Products + Promo Tiles"
+    - "Hero Background Brightness Enhancement"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
