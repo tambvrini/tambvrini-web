@@ -271,6 +271,31 @@ async def get_product(product_id: str):
     ).limit(4).to_list(4)
     return {**product, "related_products": related}
 
+@api_router.post("/products/replace")
+async def replace_product(payload: Dict):
+    """Admin helper (no auth) to replace one product_id with another.
+
+    Expected payload:
+    {
+      "old_product_id": "sandalia-venus",
+      "new_product": { ... full product doc ... }
+    }
+    """
+    old_product_id = payload.get("old_product_id")
+    new_product = payload.get("new_product")
+    if not old_product_id or not new_product:
+        raise HTTPException(400, "old_product_id y new_product son requeridos")
+
+    new_id = new_product.get("product_id")
+    if not new_id:
+        raise HTTPException(400, "new_product.product_id es requerido")
+
+    # Replace atomically: delete old, upsert new
+    await db.products.delete_one({"product_id": old_product_id})
+    await db.products.replace_one({"product_id": new_id}, new_product, upsert=True)
+    return {"message": "ok", "deleted": old_product_id, "upserted": new_id}
+
+
 # ==================== CHECKOUT ====================
 
 @api_router.post("/checkout/create-session")
