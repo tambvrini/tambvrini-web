@@ -139,7 +139,7 @@ export const Header = () => {
           </Link>
 
           {/* Right: Account + Wishlist + Cart */}
-          <div className="flex items-center gap-5 w-[200px] justify-end">
+          <div className="flex items-center gap-5 w-[120px] justify-end">
             <Link
               to="/cuenta"
               data-testid="account-link"
