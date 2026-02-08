@@ -44,6 +44,7 @@ export default function ProductPage() {
   }, [productId]);
 
   const handleAddToCart = () => {
+    if (product.is_sold_out) return;
     if (!selectedSize) {
       toast.error('Selecciona una talla');
       return;
@@ -117,9 +118,16 @@ export default function ProductPage() {
             <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-gold/60 mb-4">
               {product.category?.join(' / ')}
             </p>
-            <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-marble mb-4">
-              {product.name}
-            </h1>
+            <div className="flex items-start justify-between gap-6 mb-4">
+              <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-marble">
+                {product.name}
+              </h1>
+              {product.is_sold_out && (
+                <span className="mt-2 border border-marble/25 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-marble/70">
+                  SOLD OUT
+                </span>
+              )}
+            </div>
             <p data-testid="product-price" className="font-montserrat text-lg text-marble/70 tracking-wide mb-10">
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
@@ -134,9 +142,10 @@ export default function ProductPage() {
                       key={i}
                       data-testid={`color-btn-${i}`}
                       onClick={() => setSelectedColor(c.name)}
+                      disabled={product.is_sold_out}
                       className={`flex items-center gap-2 px-4 py-2 border transition-colors duration-300 ${
-                        selectedColor === c.name ? 'border-gold text-gold' : 'border-white/10 text-marble/50 hover:border-white/30'
-                      }`}
+                        selectedColor === c.name ? 'border-gold text-gold' : 'border-white/10 text-marble/50'
+                      } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-white/30'}`}
                     >
                       <span className="w-3 h-3 rounded-full" style={{ backgroundColor: c.hex }} />
                       <span className="font-montserrat text-[10px] tracking-wide">{c.name}</span>
@@ -155,11 +164,12 @@ export default function ProductPage() {
                     key={i}
                     data-testid={`size-btn-${s}`}
                     onClick={() => setSelectedSize(s)}
+                    disabled={product.is_sold_out}
                     className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
                       selectedSize === s
                         ? 'border-marble text-marble bg-marble/5'
-                        : 'border-white/10 text-marble/50 hover:border-white/30 hover:text-marble'
-                    }`}
+                        : 'border-white/10 text-marble/40'
+                    } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-white/30 hover:text-marble'}`}
                   >
                     {s}
                   </button>
@@ -192,9 +202,14 @@ export default function ProductPage() {
               <button
                 data-testid="add-to-cart-btn"
                 onClick={handleAddToCart}
-                className="flex-1 py-4 bg-marble text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500"
+                disabled={product.is_sold_out}
+                className={`flex-1 py-4 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 ${
+                  product.is_sold_out
+                    ? 'bg-white/10 text-marble/70 cursor-not-allowed'
+                    : 'bg-marble text-obsidian hover:bg-gold'
+                }`}
               >
-                Añadir al Carrito
+                {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
               </button>
               <button
                 data-testid="product-wishlist-btn"
