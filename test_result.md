@@ -194,7 +194,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Option A Filtering Verification - Tennis-club only removal"
+    - "Homepage Layout Update - 8 Products + Promo Tiles"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
