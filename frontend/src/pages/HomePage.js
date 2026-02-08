@@ -43,7 +43,8 @@ const HeroSection = () => {
   }, []);
 
   // Hero logo: starts GIANT centered, shrinks + moves up, fades out before reaching header
-  const logoScale = useTransform(scrollY, [0, SCROLL_THRESHOLD], [1, 0.09]);
+  // Scale end tuned to match the (now larger) header logo size more proportionally.
+  const logoScale = useTransform(scrollY, [0, SCROLL_THRESHOLD], [1, 0.12]);
   const logoY = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, -(viewportH * 0.44)]);
   const heroLogoOpacity = useTransform(scrollY, [SCROLL_THRESHOLD * 0.65, SCROLL_THRESHOLD * 0.85], [1, 0]);
 
@@ -65,12 +66,13 @@ const HeroSection = () => {
       {/* Animated GIANT logo — fixed position, transforms from center to header */}
       <motion.div
         className="fixed inset-0 z-[52] flex items-center justify-center pointer-events-none"
+        // Re-centered exactly on screen (avoid any layout drift when transforms apply)
         style={{ opacity: heroLogoOpacity }}
       >
         <motion.img
           src={LOGO_WHITE}
           alt="TAMBVRINI"
-          className="w-[80vw] md:w-[70vw] lg:w-[65vw] max-w-[1100px]"
+          className="w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px]"
           style={{
             scale: logoScale,
             y: logoY,
