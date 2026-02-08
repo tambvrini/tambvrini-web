@@ -55,7 +55,9 @@ const HeroSection = () => {
   // Scale end tuned to match the (now smaller) header logo size more proportionally.
   const logoScale = useTransform(progress, [0, 1], [1, 0.06]);
   const logoY = useTransform(progress, [0, 1], [0, -(viewportH * 0.44)]);
-  const heroLogoOpacity = useTransform(progress, [0.65, 0.85], [1, 0]);
+  // Keep the hero logo fully visible until it's nearly at the final (small) size,
+  // so we avoid the unwanted "medium logo" handoff step.
+  const heroLogoOpacity = useTransform(progress, [0.9, 1], [1, 0]);
 
   // Hero overlay darkens as you scroll
   const overlayOpacity = useTransform(progress, [0, 1], [0.35, 0.65]);
