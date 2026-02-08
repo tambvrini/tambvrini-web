@@ -200,7 +200,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Redesigned Homepage Structure - Clean DROP-style Layout"
+    - "Option A Filtering Verification - Tennis-club only removal"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
