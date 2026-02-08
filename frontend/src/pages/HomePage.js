@@ -43,8 +43,8 @@ const HeroSection = () => {
   }, []);
 
   // Hero logo: starts GIANT centered, shrinks + moves up, fades out before reaching header
-  // Scale end tuned to match the (now larger) header logo size more proportionally.
-  const logoScale = useTransform(scrollY, [0, SCROLL_THRESHOLD], [1, 0.12]);
+  // Scale end tuned to match the (now smaller) header logo size more proportionally.
+  const logoScale = useTransform(scrollY, [0, SCROLL_THRESHOLD], [1, 0.06]);
   const logoY = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, -(viewportH * 0.44)]);
   const heroLogoOpacity = useTransform(scrollY, [SCROLL_THRESHOLD * 0.65, SCROLL_THRESHOLD * 0.85], [1, 0]);
 
