@@ -233,7 +233,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Product Replacement and SOLD OUT UX Implementation"
+    - "Product Gallery Update - 6 Images with Specific Order"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
