@@ -41,7 +41,6 @@ export const Header = () => {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
   const { totalItems, setIsOpen } = useCart();
