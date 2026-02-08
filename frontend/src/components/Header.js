@@ -23,7 +23,6 @@ const MENU_SECTIONS = [
       { label: 'Marroquinería', href: '/tienda?category=marroquineria' },
       { label: 'Calzado', href: '/tienda?category=calzado' },
       { label: 'Resort de Verano', href: '/tienda?category=resort' },
-      { label: 'Tennis Club', href: '/tienda?filter=tennis-club' },
     ]
   },
 
