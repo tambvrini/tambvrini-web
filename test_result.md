@@ -132,6 +132,8 @@
 ## agent_communication:
 ##   - agent: "main"
 ##     message: "He aplicado tus cambios visuales (nuevo SVG, centrado exacto, más grande, header más proporcional). Falta tu OK visual."
+##   - agent: "main"
+##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
 user_problem_statement: "Quick UI verification on Gucci-style hero logo animation and sizing changes. Replaced logos to use /logo-letras-final-blanco.svg, made hero logo larger (w-[88vw], max-w 1250) with scale end 0.12, header logo larger and proportional (scrolled: h-14 md:h-24; not scrolled: h-16 md:h-28), increased scrolled padding."
 
