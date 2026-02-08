@@ -135,7 +135,7 @@
 ##   - agent: "main"
 ##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
-user_problem_statement: "Test new product replacement and SOLD OUT UX. Requirements: - Old product /producto/sandalia-venus should show 'Producto no encontrado' (404 backend). - New product /producto/traje-monograma-tambvrini should load. - Images order: exactly 5 thumbnails, and main image is first (full body front). Thumbnails match order. - Product shows SOLD OUT label. - Sizes S/M/L/XL visible, crossed out / disabled (not clickable). - Color shows only Blanco; disabled. - Add to cart button disabled and reads 'SOLD OUT'. - Maintain premium styling (no aggressive red). Also check homepage drops grid: the new product should appear if in the 8 items fetched (depending on sort), and its first image is used as thumbnail. Site: http://localhost:3000/"
+user_problem_statement: "Verify updated product page gallery order and count for /producto/traje-monograma-tambvrini. Expected: - Product page shows 6 images now. - Order must be: 1) full body front 2) full body profile 3) full body back 4) portrait close-up (face+torso) 5) blazer/buttons/monogram detail 6) sleeve monogram embroidery detail. Also verify: - Thumbnail in homepage grid still uses image #1. - SOLD OUT UX still present (disabled button, sizes crossed out, label). Site: http://localhost:3000/"
 
 frontend:
   - task: "Product Replacement and SOLD OUT UX Implementation"
