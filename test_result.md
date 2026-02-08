@@ -152,3 +152,5 @@ test_plan:
 agent_communication:
     - agent: "testing"
       message: "Completed UI verification test at 1920x800 viewport. Found 2 critical issues: header logo opacity not animating correctly (always visible instead of fading in after scroll), and significant horizontal drift (330px) during hero logo scroll animation. Hero logo sizing and scaling work correctly, header logo is legible size. No console errors detected. Screenshots captured showing the issues."
+    - agent: "testing"
+      message: "RE-TEST COMPLETED: Logo positioning fixes verified. Hero logo horizontal drift issue RESOLVED - now uses proper CSS centering (left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2). Header logo visibility threshold improved to 0.7 * SCROLL_THRESHOLD for smoother fade-in. Both tasks now working correctly. Visual inspection confirms proper centering and no console errors."
