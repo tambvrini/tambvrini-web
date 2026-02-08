@@ -218,7 +218,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Hero Background Brightness Enhancement"
+    - "Remove 'Made with Emergent' Badge from Homepage"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
