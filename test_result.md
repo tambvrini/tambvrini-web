@@ -135,7 +135,7 @@
 ##   - agent: "main"
 ##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
-user_problem_statement: "Test homepage changes: Expected: 1) Drops grid now renders exactly 8 product cards (slice 0..8). On desktop 1920 width, should be 4 columns, 2 rows. 2) Below grid, there are 2 parallel promo tiles: 'Novedades para Hombre' and 'Novedades para Mujer' (2 columns on desktop, 1 on mobile). 3) Clicking either tile scrolls to #drops (aesthetic-only). 4) Hero remains unchanged. Check http://localhost:3000/ desktop + mobile. Verify layout alignment and no extra sections."
+user_problem_statement: "Test new product replacement and SOLD OUT UX. Requirements: - Old product /producto/sandalia-venus should show 'Producto no encontrado' (404 backend). - New product /producto/traje-monograma-tambvrini should load. - Images order: exactly 5 thumbnails, and main image is first (full body front). Thumbnails match order. - Product shows SOLD OUT label. - Sizes S/M/L/XL visible, crossed out / disabled (not clickable). - Color shows only Blanco; disabled. - Add to cart button disabled and reads 'SOLD OUT'. - Maintain premium styling (no aggressive red). Also check homepage drops grid: the new product should appear if in the 8 items fetched (depending on sort), and its first image is used as thumbnail. Site: http://localhost:3000/"
 
 frontend:
   - task: "Homepage Layout Update - 8 Products + Promo Tiles"
