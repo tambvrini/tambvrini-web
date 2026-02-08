@@ -138,6 +138,18 @@
 user_problem_statement: "Test new product replacement and SOLD OUT UX. Requirements: - Old product /producto/sandalia-venus should show 'Producto no encontrado' (404 backend). - New product /producto/traje-monograma-tambvrini should load. - Images order: exactly 5 thumbnails, and main image is first (full body front). Thumbnails match order. - Product shows SOLD OUT label. - Sizes S/M/L/XL visible, crossed out / disabled (not clickable). - Color shows only Blanco; disabled. - Add to cart button disabled and reads 'SOLD OUT'. - Maintain premium styling (no aggressive red). Also check homepage drops grid: the new product should appear if in the 8 items fetched (depending on sort), and its first image is used as thumbnail. Site: http://localhost:3000/"
 
 frontend:
+  - task: "Product Replacement and SOLD OUT UX Implementation"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/ProductPage.js, /app/frontend/src/pages/HomePage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "PRODUCT REPLACEMENT AND SOLD OUT UX VERIFICATION COMPLETED: ✅ Old product /producto/sandalia-venus correctly shows 'Producto no encontrado' (404 backend response). ✅ New product /producto/traje-monograma-tambvrini loads successfully with product name 'Traje Monograma Tambvrini'. ✅ Images: exactly 5 thumbnails found with main image displayed first (full body front view). ✅ SOLD OUT label visible in top-right corner with premium styling (border: marble/25, no aggressive red). ✅ Sizes S/M/L/XL all visible, properly disabled (disabled=true), and crossed out with line-through styling. ✅ Color shows only 'Blanco' option, correctly disabled. ✅ Add to cart button disabled and reads 'SOLD OUT' with premium styling (bg: white/10, no aggressive red). ✅ Homepage drops grid: new product appears at position 1 in the 8 items, using first image as thumbnail. ✅ Premium styling maintained throughout - subtle borders, elegant typography, no harsh colors. All requirements successfully implemented and verified."
+
   - task: "Homepage Layout Update - 8 Products + Promo Tiles"
     implemented: true
     working: true
