@@ -136,11 +136,7 @@ const DropGridSection = () => {
   }, []);
 
   return (
-    <section
-      id="drops"
-      data-testid="drop-grid"
-      className="py-20 md:py-28"
-    >
+    <section id="drops" data-testid="drop-grid" className="py-20 md:py-28">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16">
           {loading
@@ -152,53 +148,11 @@ const DropGridSection = () => {
               </div>
             ))
             : products.slice(0, 12).map((p, i) => (
-              <DropProductCard key={p.product_id} product={p} index={i} />
+              <ProductCard key={p.product_id} product={p} index={i} />
             ))}
         </div>
       </div>
     </section>
-  );
-};
-
-const DropProductCard = ({ product, index = 0 }) => {
-  return (
-    <Link
-      to={`/producto/${product.product_id}`}
-      data-testid={`drop-card-${product.product_id}`}
-      className="group block"
-      style={{ animationDelay: `${index * 0.03}s` }}
-    >
-      <div className="relative aspect-[3/4] overflow-hidden">
-        <img
-          src={product.images?.[0]}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
-          loading="lazy"
-        />
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-obsidian/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-marble/90">
-            View product
-          </span>
-        </div>
-        {/* Sold out (optional) */}
-        {product.is_sold_out && (
-          <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-marble/80">
-            Sold out
-          </span>
-        )}
-      </div>
-
-      <div className="mt-4">
-        <h3 className="font-playfair text-[13px] text-marble/90 leading-snug">
-          {product.name}
-        </h3>
-        <p className="mt-1 font-montserrat text-[11px] tracking-wide text-marble/55">
-          {product.price?.toLocaleString('en-US', { minimumFractionDigits: 0 })} €
-        </p>
-      </div>
-    </Link>
   );
 };
 
