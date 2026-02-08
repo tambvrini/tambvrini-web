@@ -693,24 +693,28 @@ SEED_PRODUCTS = [
         "created_at": datetime.now(timezone.utc).isoformat()
     },
     {
-        "product_id": "sandalia-venus",
-        "name": "Sandalia Venus",
-        "description": "Sandalia de piel con tiras entrelazadas y suela de esparto. Inspirada en el calzado de las patricias romanas, reinterpretada para el resort contemporáneo.",
-        "price": 695.00,
+        "product_id": "traje-monograma-tambvrini",
+        "name": "Traje Monograma Tambvrini",
+        "description": "Set de traje Tambvrini con bordado monograma romano integral. Sastrería contemporánea de inspiración italiana con silueta elegante y estructura ligera.",
+        "price": 399.00,
         "currency": "EUR",
         "images": [
-            "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800&q=80",
-            "https://images.unsplash.com/photo-1603487742131-4160ec999306?w=800&q=80"
+            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/j8yehypp_hf_20260208_220603_61c0624c-085d-470b-9e36-3b1d627c6093.jpeg",
+            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg",
+            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/f0lyuia5_hf_20260208_222545_269ad1ab-bb74-4e4a-b589-045346511340.jpeg",
+            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/5jns2eeo_hf_20260208_221348_52bbd817-b422-409d-a7ef-5348747545fa.png",
+            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1dd3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png"
         ],
-        "category": ["calzado"],
-        "gender": "mujer",
-        "sizes": ["35", "36", "37", "38", "39", "40", "41"],
-        "colors": [{"name": "Dorado", "hex": "#C5A059"}, {"name": "Natural", "hex": "#D2B48C"}],
-        "composition": "Piel de Cabra. Suela: Esparto y Cuero",
-        "care": "Evitar contacto con agua. Almacenar en bolsa de tela.",
+        "category": ["sastrería", "set"],
+        "gender": "unisex",
+        "sizes": ["S", "M", "L", "XL"],
+        "colors": [{"name": "Blanco", "hex": "#FFFFFF"}],
+        "composition": "Algodón premium jacquard con monograma bordado. Forro interior de viscosa suave. Botones nacarados tono marfil.",
+        "care": "Limpieza en seco. Planchar a baja temperatura con paño.",
         "is_new": True,
-        "is_featured": False,
-        "collections": ["resort-2026"],
+        "is_featured": True,
+        "is_sold_out": True,
+        "collections": ["drop"],
         "created_at": datetime.now(timezone.utc).isoformat()
     },
     {
