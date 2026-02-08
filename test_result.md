@@ -150,6 +150,9 @@ frontend:
         - working: true
           agent: "testing"
           comment: "FIXED: Hero logo positioning issue resolved. Code analysis shows hero logo now uses 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2' positioning which eliminates horizontal drift. Visual inspection confirms logo appears properly centered. Hero logo sizing and scaling animation working correctly."
+        - working: true
+          agent: "testing"
+          comment: "LATEST ADJUSTMENTS VERIFIED: Hero logo transform scale end reduced to 0.06 to better match smaller header logo size - working correctly. Hero logo remains perfectly centered during scroll animation with no horizontal drift. Smooth scaling animation from large (1250px max-width) to small proportional to new header logo size."
 
   - task: "Header Logo Visibility and Sizing"
     implemented: true
