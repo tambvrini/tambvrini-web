@@ -703,7 +703,7 @@ SEED_PRODUCTS = [
             "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg",
             "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/f0lyuia5_hf_20260208_222545_269ad1ab-bb74-4e4a-b589-045346511340.jpeg",
             "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/5jns2eeo_hf_20260208_221348_52bbd817-b422-409d-a7ef-5348747545fa.png",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1dd3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png"
+            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png"
         ],
         "category": ["sastrería", "set"],
         "gender": "unisex",
