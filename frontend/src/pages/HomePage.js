@@ -124,8 +124,20 @@ const DropGridSection = () => {
     const fetchDrop = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${API}/products?limit=12`);
-        setProducts(res.data.products || []);
+        // Fetch more than 12 so we can filter out unwanted categories/collections
+        // while still rendering exactly 12 items.
+        const res = await axios.get(`${API}/products?limit=50`);
+        const all = res.data.products || [];
+        const filtered = all.filter((p) => {
+          const cats = Array.isArray(p.category) ? p.category : [];
+          const cols = Array.isArray(p.collections) ? p.collections : [];
+          if (cats.includes('tennis-club')) return false;
+          if (cols.includes('tennis-club')) return false;
+          if (cols.includes('resort-2026')) return false;
+          if (cols.includes('atelier')) return false;
+          return true;
+        });
+        setProducts(filtered);
       } catch {
         setProducts([]);
       } finally {

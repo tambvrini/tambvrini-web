@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Menu, X, User, Heart, ShoppingBag } from 'lucide-react';
+import { Menu, X, User, Heart, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -94,15 +94,8 @@ export const Header = () => {
         }`}
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
-          {/* Left: Search + Menu */}
+          {/* Left: Menu */}
           <div className="flex items-center gap-5 w-[200px]">
-            <button
-              data-testid="search-toggle-btn"
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="text-marble/80 hover:text-gold transition-colors duration-300"
-            >
-              <Search size={20} strokeWidth={1.5} />
-            </button>
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
