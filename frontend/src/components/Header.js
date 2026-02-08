@@ -211,22 +211,7 @@ export const Header = () => {
           </div>
         </div>
 
-        {/* Subnav links - desktop only, visible only when header is solid */}
-        <nav
-          className={`hidden lg:flex justify-center gap-10 mt-3 transition-all duration-500 ${
-            scrolled ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'
-          }`}
-        >
-          {NAV_LINKS.map((link, i) => (
-            <Link
-              key={i}
-              to={link.href}
-              className="font-montserrat text-[11px] tracking-[0.2em] uppercase text-marble/50 hover:text-marble transition-colors duration-300"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+
       </header>
 
       {/* Search overlay */}
