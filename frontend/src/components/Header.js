@@ -81,7 +81,7 @@ export const Header = () => {
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
-          <div className="flex items-center gap-5 w-[200px]">
+          <div className="flex items-center gap-5 w-[120px]">
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
