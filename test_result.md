@@ -135,7 +135,7 @@
 ##   - agent: "main"
 ##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
-user_problem_statement: "Quick UI verification on Gucci-style hero logo animation and sizing changes. Replaced logos to use /logo-letras-final-blanco.svg, made hero logo larger (w-[88vw], max-w 1250) with scale end 0.12, header logo larger and proportional (scrolled: h-14 md:h-24; not scrolled: h-16 md:h-28), increased scrolled padding."
+user_problem_statement: "Test the redesigned homepage structure on http://localhost:3000/. Expected: Header present, minimal (no subnav links visible). Hero section unchanged: logo animation + CTA buttons still shown. 'Explorar Colección' button should smooth-scroll to the drops grid (id='drops') instead of navigating. Immediately after hero, a clean DROP product grid renders with exactly 12 items (from /api/products?limit=12). Nothing else between grid and footer (no campaign/categories/featured/story/tennis/newsletter sections). Product cards: minimal text, hover overlay shows 'View product', subtle zoom. Please verify on desktop and mobile breakpoints: Grid columns: desktop 4; tablet 2; mobile 1-2. Alignment and spacing; no borders/boxes. Ensure the page doesn't crash and CTA scroll works."
 
 frontend:
   - task: "Gucci-style Hero Logo Animation"
