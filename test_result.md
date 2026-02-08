@@ -194,8 +194,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Gucci-style Hero Logo Animation"
-    - "Header Logo Visibility and Sizing"
+    - "Redesigned Homepage Structure - Clean DROP-style Layout"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
