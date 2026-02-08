@@ -99,7 +99,17 @@ const HeroSection = () => {
       >
         <Link to="/tienda?gender=hombre" data-testid="hero-shop-men" className="btn-luxury text-center">Comprar Hombre</Link>
         <Link to="/tienda?gender=mujer" data-testid="hero-shop-women" className="btn-luxury text-center">Comprar Mujer</Link>
-        <Link to="/tienda" data-testid="hero-explore" className="btn-luxury btn-gold text-center">Explorar Colección</Link>
+        <button
+          type="button"
+          data-testid="hero-explore"
+          onClick={() => {
+            const el = document.getElementById('drops');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+          className="btn-luxury btn-gold text-center"
+        >
+          Explorar Colección
+        </button>
       </motion.div>
     </section>
   );
