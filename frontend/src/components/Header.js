@@ -100,7 +100,7 @@ export const Header = () => {
         data-testid="main-header"
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-obsidian/95 backdrop-blur-md py-3 border-b border-white/5'
+            ? 'bg-obsidian/95 backdrop-blur-md py-5 border-b border-white/5'
             : 'bg-transparent py-6'
         }`}
       >
