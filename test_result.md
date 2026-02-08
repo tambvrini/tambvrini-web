@@ -230,7 +230,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Remove 'Made with Emergent' Badge from Homepage"
+    - "Product Replacement and SOLD OUT UX Implementation"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
