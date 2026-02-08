@@ -178,31 +178,7 @@ export const Header = () => {
 
       </header>
 
-      {/* Search overlay */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-[60] bg-obsidian/95 backdrop-blur-lg flex items-start justify-center pt-32">
-          <div className="w-full max-w-2xl px-6">
-            <form onSubmit={handleSearch}>
-              <input
-                ref={searchRef}
-                data-testid="search-input"
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar..."
-                className="w-full bg-transparent border-b border-white/20 pb-4 text-2xl md:text-4xl font-playfair text-marble focus:outline-none focus:border-gold placeholder:text-white/20"
-              />
-            </form>
-            <button
-              data-testid="search-close-btn"
-              onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
-              className="absolute top-8 right-8 text-marble/60 hover:text-marble"
-            >
-              <X size={28} strokeWidth={1.5} />
-            </button>
-          </div>
-        </div>
-      )}
+
     </>
   );
 };
