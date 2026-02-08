@@ -195,9 +195,7 @@ const DropProductCard = ({ product, index = 0 }) => {
           {product.name}
         </h3>
         <p className="mt-1 font-montserrat text-[11px] tracking-wide text-marble/55">
-          {product.price?.toLocaleString('en-US', { minimumFractionDigits: 0 })} 
-          
-
+          {product.price?.toLocaleString('en-US', { minimumFractionDigits: 0 })} €
         </p>
       </div>
     </Link>
@@ -209,12 +207,7 @@ export default function HomePage() {
   return (
     <div data-testid="home-page">
       <HeroSection />
-      <CampaignSection />
-      <CategoriesSection />
-      <FeaturedSection />
-      <StorySection />
-      <TennisSection />
-      <NewsletterSection />
+      <DropGridSection />
     </div>
   );
 }
