@@ -135,7 +135,7 @@
 ##   - agent: "main"
 ##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
-user_problem_statement: "Re-test homepage after latest simplification changes. Expected now: Header: minimal with ONLY menu hamburger (left), center logo, right icons; no search icon and no subnav. Hero: CTA buttons still present; 'Explorar Colección' scrolls to #drops. Drop grid section renders 12 products and filters OUT tennis-club and resort-2026 and atelier collections. No other homepage sections below grid. Please verify on http://localhost:3000/ desktop + mobile: 1) Header minimal as described. 2) Clicking 'Explorar Colección' scrolls down. 3) Grid shows exactly 12 cards and hover shows 'View product'. 4) Confirm none of the visible products are tennis-club or resort-2026/atelier. 5) No console errors beyond expected API/CORS noise."
+user_problem_statement: "Test homepage changes: Expected: 1) Drops grid now renders exactly 8 product cards (slice 0..8). On desktop 1920 width, should be 4 columns, 2 rows. 2) Below grid, there are 2 parallel promo tiles: 'Novedades para Hombre' and 'Novedades para Mujer' (2 columns on desktop, 1 on mobile). 3) Clicking either tile scrolls to #drops (aesthetic-only). 4) Hero remains unchanged. Check http://localhost:3000/ desktop + mobile. Verify layout alignment and no extra sections."
 
 frontend:
   - task: "Redesigned Homepage Structure - Clean DROP-style Layout"
