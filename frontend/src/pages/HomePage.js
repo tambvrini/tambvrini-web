@@ -46,8 +46,9 @@ const HeroSection = () => {
   // We smooth the scroll progress with a spring to get a more premium, Gucci-like feel.
   const rawProgress = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, 1]);
   const progress = useSpring(rawProgress, {
-    stiffness: 120,
-    damping: 26,
+    // More critically damped to avoid any "bounce back" feeling.
+    stiffness: 110,
+    damping: 32,
     mass: 0.9,
     restDelta: 0.001,
   });
