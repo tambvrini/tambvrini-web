@@ -65,8 +65,7 @@ const HeroSection = () => {
 
       {/* Animated GIANT logo — fixed position, transforms from center to header */}
       <motion.div
-        className="fixed inset-0 z-[52] flex items-center justify-center pointer-events-none"
-        // Re-centered exactly on screen (avoid any layout drift when transforms apply)
+        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[52] pointer-events-none"
         style={{ opacity: heroLogoOpacity }}
       >
         <motion.img
