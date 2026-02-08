@@ -165,6 +165,9 @@ frontend:
         - working: true
           agent: "testing"
           comment: "FIXED: Header logo visibility threshold updated to 0.7 * SCROLL_THRESHOLD (350px) for earlier fade-in. Code analysis shows proper opacity calculation using Math.min/max for smooth transition. Header logo sizing remains correct and legible."
+        - working: true
+          agent: "testing"
+          comment: "LATEST ADJUSTMENTS VERIFIED: Header logo scrolled size successfully reduced to h-10 md:h-12 (~48px desktop, ~40px mobile) as requested. Non-scrolled size unchanged at h-16 md:h-28 (~112px). Fade-in animation working correctly starting at 350px scroll threshold. All sizing requirements from review request properly implemented."
 
 metadata:
   created_by: "testing_agent"
