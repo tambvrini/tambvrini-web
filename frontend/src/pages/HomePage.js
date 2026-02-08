@@ -7,7 +7,7 @@ import ProductCard from '../components/ProductCard';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
+const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "https://images.unsplash.com/photo-1760446005643-292066b54734?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODl8MHwxfHNlYXJjaHw0fHxtZWRpdGVycmFuZWFuJTIwcml2aWVyYSUyMGx1eHVyeSUyMGxpZmVzdHlsZSUyMDE5NzBzfGVufDB8fHx8MTc3MDMyMTY4OXww&ixlib=rb-4.1.0&q=85";
 const MEN_IMAGE = "https://images.unsplash.com/photo-1765815442140-f88e94db8817?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHw0fHxmYXNoaW9uJTIwbW9kZWwlMjBlZGl0b3JpYWwlMjBzdWl0fGVufDB8fHx8MTc3MDMyMTcwMHww&ixlib=rb-4.1.0&q=85";
 const WOMEN_IMAGE = "https://images.unsplash.com/photo-1765269303556-b53ff8bd8a8a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDR8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGx1eHVyeSUyMGZhc2hpb24lMjBkcmVzcyUyMHN1bW1lcnxlbnwwfHx8fDE3NzAzMjE3MDF8MA&ixlib=rb-4.1.0&q=85";

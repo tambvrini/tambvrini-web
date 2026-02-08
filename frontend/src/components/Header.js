@@ -6,7 +6,7 @@ import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
 
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
+const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 
 const SCROLL_THRESHOLD = 500;
 
