@@ -149,18 +149,45 @@ const DropGridSection = () => {
   return (
     <section id="drops" data-testid="drop-grid" className="py-20 md:py-28">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+        {/* 8 items: 2 rows of 4 on desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16">
           {loading
-            ? Array.from({ length: 12 }).map((_, i) => (
+            ? Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="aspect-[3/4] bg-white/5" />
                 <div className="mt-4 h-3 bg-white/5 w-2/3" />
                 <div className="mt-2 h-3 bg-white/5 w-1/3" />
               </div>
             ))
-            : products.slice(0, 12).map((p, i) => (
+            : products.slice(0, 8).map((p, i) => (
               <ProductCard key={p.product_id} product={p} index={i} />
             ))}
+        </div>
+
+        {/* Aesthetic-only promo tiles (scroll to drops) */}
+        <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-10">
+          {["Novedades para Hombre", "Novedades para Mujer"].map((title) => (
+            <button
+              key={title}
+              type="button"
+              onClick={() => {
+                const el = document.getElementById('drops');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              className="group text-left"
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-white/5">
+                <div className="absolute inset-0 bg-obsidian/20" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-10">
+                  <p className="font-cinzel text-[11px] tracking-[0.35em] uppercase text-marble/60">Novedades</p>
+                  <h3 className="mt-4 font-playfair text-2xl md:text-3xl text-marble tracking-wide text-center">{title}</h3>
+                  <span className="mt-8 inline-flex items-center justify-center border border-marble/30 px-10 py-4 font-montserrat text-[10px] tracking-[0.25em] uppercase text-marble/80 group-hover:border-marble/60 group-hover:text-marble transition-colors duration-500">
+                    Comprar
+                  </span>
+                </div>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     </section>
