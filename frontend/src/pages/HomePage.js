@@ -72,7 +72,7 @@ const HeroSection = () => {
         <motion.img
           src={LOGO_WHITE}
           alt="TAMBVRINI"
-          className="w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px]"
+          className="w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px] origin-center"
           style={{
             scale: logoScale,
             y: logoY,
