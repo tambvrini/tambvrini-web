@@ -43,13 +43,22 @@ const HeroSection = () => {
   }, []);
 
   // Hero logo: starts GIANT centered, shrinks + moves up, fades out before reaching header
+  // We smooth the scroll progress with a spring to get a more premium, Gucci-like feel.
+  const rawProgress = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, 1]);
+  const progress = useSpring(rawProgress, {
+    stiffness: 120,
+    damping: 26,
+    mass: 0.9,
+    restDelta: 0.001,
+  });
+
   // Scale end tuned to match the (now smaller) header logo size more proportionally.
-  const logoScale = useTransform(scrollY, [0, SCROLL_THRESHOLD], [1, 0.06]);
-  const logoY = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0, -(viewportH * 0.44)]);
-  const heroLogoOpacity = useTransform(scrollY, [SCROLL_THRESHOLD * 0.65, SCROLL_THRESHOLD * 0.85], [1, 0]);
+  const logoScale = useTransform(progress, [0, 1], [1, 0.06]);
+  const logoY = useTransform(progress, [0, 1], [0, -(viewportH * 0.44)]);
+  const heroLogoOpacity = useTransform(progress, [0.65, 0.85], [1, 0]);
 
   // Hero overlay darkens as you scroll
-  const overlayOpacity = useTransform(scrollY, [0, SCROLL_THRESHOLD], [0.35, 0.65]);
+  const overlayOpacity = useTransform(progress, [0, 1], [0.35, 0.65]);
 
   // CTA buttons fade out quickly
   const buttonsOpacity = useTransform(scrollY, [0, 250], [1, 0]);
