@@ -102,6 +102,37 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
+## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
+## frontend:
+##   - task: "Gucci-style hero logo: nuevo SVG + centrado perfecto + tamaño/escala + header logo más grande"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/pages/HomePage.js, frontend/src/components/Header.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Reemplacé el logo a /public/logo-letras-final-blanco.svg para hero animado y header; aumenté tamaño del hero (w/max-w) y ajusté scale final; header logo más grande (h-24 desktop) y padding; corregí drift horizontal centrando con left-1/2 top-1/2 translate(-50%, -50%)."
+##       - working: true
+##         agent: "testing"
+##         comment: "Verificado en http://localhost:3000/: logo hero permanece centrado durante scroll (sin drift), header logo oculto al inicio y aparece con fade-in alrededor del threshold; sin clipping/overlap."
+## metadata:
+##   created_by: "main_agent"
+##   version: "1.0"
+##   test_sequence: 1
+##   run_ui: true
+## test_plan:
+##   current_focus:
+##     - "Validación visual por usuario: centrado y tamaño del logo en hero y header"
+##   stuck_tasks: []
+##   test_all: false
+##   test_priority: "high_first"
+## agent_communication:
+##   - agent: "main"
+##     message: "He aplicado tus cambios visuales (nuevo SVG, centrado exacto, más grande, header más proporcional). Falta tu OK visual."
+
 user_problem_statement: "Quick UI verification on Gucci-style hero logo animation and sizing changes. Replaced logos to use /logo-letras-final-blanco.svg, made hero logo larger (w-[88vw], max-w 1250) with scale end 0.12, header logo larger and proportional (scrolled: h-14 md:h-24; not scrolled: h-16 md:h-28), increased scrolled padding."
 
 frontend:
