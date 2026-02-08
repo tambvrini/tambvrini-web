@@ -101,3 +101,48 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Quick UI verification on Gucci-style hero logo animation and sizing changes. Replaced logos to use /logo-letras-final-blanco.svg, made hero logo larger (w-[88vw], max-w 1250) with scale end 0.12, header logo larger and proportional (scrolled: h-14 md:h-24; not scrolled: h-16 md:h-28), increased scrolled padding."
+
+frontend:
+  - task: "Gucci-style Hero Logo Animation"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/HomePage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL ISSUES FOUND: 1) Header logo opacity=1 from start (should be hidden initially on homepage), 2) Significant horizontal drift of 330px during scroll animation causing logo to move off-center. POSITIVE: Hero logo sizing correct (1250px), scaling animation works (1250px->150px), header logo legible size (96px), no console errors, background image displays correctly."
+
+  - task: "Header Logo Visibility and Sizing"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/Header.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "Header logo opacity animation not working correctly - shows opacity=1 from start instead of fading in after scroll threshold. Logo sizing is correct (h-14 md:h-24 when scrolled, h-16 md:h-28 when not scrolled) and legible at 96px height."
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Gucci-style Hero Logo Animation"
+    - "Header Logo Visibility and Sizing"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "testing"
+      message: "Completed UI verification test at 1920x800 viewport. Found 2 critical issues: header logo opacity not animating correctly (always visible instead of fading in after scroll), and significant horizontal drift (330px) during hero logo scroll animation. Hero logo sizing and scaling work correctly, header logo is legible size. No console errors detected. Screenshots captured showing the issues."
