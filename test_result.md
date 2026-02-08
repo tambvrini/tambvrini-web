@@ -104,7 +104,7 @@
 
 ## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
 ## frontend:
-##   - task: "Gucci-style hero logo: nuevo SVG + centrado perfecto + tamaño/escala + header logo más grande"
+##   - task: "Homepage DROP: grid 8 productos + 2 tiles 'Novedades' (estético) + header minimal"
 ##     implemented: true
 ##     working: true
 ##     file: "frontend/src/pages/HomePage.js, frontend/src/components/Header.js"
