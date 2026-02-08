@@ -40,9 +40,7 @@ const MENU_SECTIONS = [
 export const Header = () => {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const searchRef = useRef(null);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
