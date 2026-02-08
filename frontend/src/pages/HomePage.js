@@ -68,7 +68,7 @@ const HeroSection = () => {
     <section data-testid="hero-section" className="relative h-screen overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
-        <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-full object-cover" />
+        <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-full object-cover brightness-105" />
         <motion.div className="absolute inset-0 bg-obsidian" style={{ opacity: overlayOpacity }} />
       </div>
 
