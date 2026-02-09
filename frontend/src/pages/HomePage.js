@@ -9,7 +9,7 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/hero-main.jpg";
-const CINEMATIC_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/ff1jbom4_WEB%20LOOP.mp4";
+const CINEMATIC_VIDEO_URL = "/cinematic-loop.mp4";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 /* ============ useInView hook ============ */
@@ -216,7 +216,7 @@ const CinematicVideoSection = () => {
   }, [shouldLoad]);
 
   return (
-    <section className="mt-4 mb-[120px]">
+    <section className="mt-24 mb-[120px]">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         <motion.div
           ref={ref}
@@ -238,7 +238,6 @@ const CinematicVideoSection = () => {
               controls={false}
               disablePictureInPicture
               controlsList="nodownload noplaybackrate noremoteplayback"
-              crossOrigin="anonymous"
               src={shouldLoad ? CINEMATIC_VIDEO_URL : undefined}
             />
           </div>
