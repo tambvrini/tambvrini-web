@@ -421,6 +421,107 @@ async def stripe_webhook(request: Request):
             if not existing:
                 await db.payment_transactions.update_one(
                     {"session_id": webhook_response.session_id},
+
+# ==================== CART + WISHLIST ROUTES ====================
+
+def _merge_cart_items(existing: List[dict], guest: List[dict]) -> List[dict]:
+    merged: Dict[str, dict] = {}
+    for item in existing:
+        key = f"{item.get('product_id','')}|{item.get('size','')}|{item.get('color','')}"
+        merged[key] = {
+            "product_id": item.get("product_id", ""),
+            "size": item.get("size", ""),
+            "color": item.get("color", ""),
+            "quantity": int(item.get("quantity", 1))
+        }
+    for item in guest:
+        key = f"{item.get('product_id','')}|{item.get('size','')}|{item.get('color','')}"
+        if key in merged:
+            merged[key]["quantity"] += int(item.get("quantity", 1))
+        else:
+            merged[key] = {
+                "product_id": item.get("product_id", ""),
+                "size": item.get("size", ""),
+                "color": item.get("color", ""),
+                "quantity": int(item.get("quantity", 1))
+            }
+    return list(merged.values())
+
+@api_router.get("/cart")
+async def get_cart(request: Request):
+    user = await get_current_user(request)
+    if not user:
+        raise HTTPException(401, "No autenticado")
+    doc = await db.carts.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    return {"items": doc.get("items", []) if doc else []}
+
+@api_router.put("/cart")
+async def replace_cart(request: Request, data: CartReplaceRequest):
+    user = await get_current_user(request)
+    if not user:
+        raise HTTPException(401, "No autenticado")
+    items = [i.model_dump() for i in data.items]
+    await db.carts.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {"user_id": user["user_id"], "items": items, "updated_at": datetime.now(timezone.utc).isoformat()},
+         "$setOnInsert": {"created_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    return {"items": items}
+
+@api_router.post("/cart/merge")
+async def merge_cart(request: Request, data: CartMergeRequest):
+    user = await get_current_user(request)
+    if not user:
+        raise HTTPException(401, "No autenticado")
+    existing = await db.carts.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    merged_items = _merge_cart_items(existing.get("items", []) if existing else [], [i.model_dump() for i in data.guest_items])
+    await db.carts.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {"user_id": user["user_id"], "items": merged_items, "updated_at": datetime.now(timezone.utc).isoformat()},
+         "$setOnInsert": {"created_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    return {"items": merged_items}
+
+@api_router.get("/wishlist")
+async def get_wishlist(request: Request):
+    user = await get_current_user(request)
+    if not user:
+        raise HTTPException(401, "No autenticado")
+    doc = await db.wishlists.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    return {"product_ids": doc.get("product_ids", []) if doc else []}
+
+@api_router.put("/wishlist")
+async def replace_wishlist(request: Request, data: WishlistReplaceRequest):
+    user = await get_current_user(request)
+    if not user:
+        raise HTTPException(401, "No autenticado")
+    product_ids = list(dict.fromkeys(data.product_ids))
+    await db.wishlists.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {"user_id": user["user_id"], "product_ids": product_ids, "updated_at": datetime.now(timezone.utc).isoformat()},
+         "$setOnInsert": {"created_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    return {"product_ids": product_ids}
+
+@api_router.post("/wishlist/merge")
+async def merge_wishlist(request: Request, data: WishlistMergeRequest):
+    user = await get_current_user(request)
+    if not user:
+        raise HTTPException(401, "No autenticado")
+    existing = await db.wishlists.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    existing_ids = existing.get("product_ids", []) if existing else []
+    merged_ids = list(dict.fromkeys(existing_ids + data.guest_product_ids))
+    await db.wishlists.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {"user_id": user["user_id"], "product_ids": merged_ids, "updated_at": datetime.now(timezone.utc).isoformat()},
+         "$setOnInsert": {"created_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    return {"product_ids": merged_ids}
+
                     {"$set": {"payment_status": "paid", "status": "complete",
                               "updated_at": datetime.now(timezone.utc).isoformat()}}
                 )
