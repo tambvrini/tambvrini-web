@@ -227,6 +227,7 @@ const CinematicVideoSection = () => {
         >
           <div className="relative w-full aspect-video bg-white/5">
             <video
+              ref={videoRef}
               data-testid="cinematic-loop-video"
               className="absolute inset-0 w-full h-full object-cover"
               autoPlay
