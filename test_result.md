@@ -102,6 +102,44 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
+
+## user_problem_statement: "TAMBVRINI - Implementar Auth completo (registro/login + Google via Emergent) sin cambios visuales salvo lo mínimo para conectar backend. Login obligatorio para checkout."
+## backend:
+##   - task: "Auth API (register/login/me/logout + Google session exchange)"
+##     implemented: true
+##     working: true
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Verificado con curl: /api/auth/register devuelve token+user; /api/auth/login funciona; /api/auth/me devuelve user con Bearer token. Ajustado CORS para allow_credentials sin '*' (allow_origin_regex='.*' cuando CORS_ORIGINS='*')."
+## frontend:
+##   - task: "Auth UI existente (AccountPage/AuthCallback) conectada a backend"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/pages/AccountPage.js, frontend/src/pages/AuthCallback.js, frontend/src/contexts/AuthContext.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Screenshot /cuenta OK. Flujo Google Auth implementado: redirect -> #session_id -> exchangeSession -> /cuenta. Sin cambios estéticos."
+##
+## test_plan:
+##   current_focus:
+##     - "Auth end-to-end: registro, login, /auth/me, logout, callback Google (session_id)"
+##   stuck_tasks: []
+##   test_all: false
+##   test_priority: "high_first"
+##
+## agent_communication:
+##   - agent: "main"
+##     message: "Auth implementado y smoke-tested por curl + screenshot. Llamar testing_agent para e2e (incluyendo cookie/session flow)."
+
 ## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
 ## frontend:
 ##   - task: "Homepage DROP: grid 8 productos + 2 tiles 'Novedades' (estético) + header minimal"
