@@ -161,15 +161,18 @@
 ## frontend:
 ##   - task: "CartContext + WishlistContext connected to backend (no UI changes)"
 ##     implemented: true
-##     working: true
+##     working: false
 ##     file: "frontend/src/contexts/CartContext.js, frontend/src/contexts/WishlistContext.js"
-##     stuck_count: 0
+##     stuck_count: 1
 ##     priority: "high"
-##     needs_retesting: true
+##     needs_retesting: false
 ##     status_history:
 ##       - working: true
 ##         agent: "main"
 ##         comment: "Guest sigue en localStorage. Al loguear: carga server y hace merge una vez. En logout: vuelve a guest vacío. Sin cambios visuales; header counters siguen consumiendo contexts."
+##       - working: false
+##         agent: "testing"
+##         comment: "CRITICAL BUG FOUND: Guest localStorage persistence is broken. When page loads, WishlistContext and CartContext incorrectly clear localStorage even for guest users. Issue in line 35-39 of WishlistContext.js and similar logic in CartContext.js: the condition `if (!user)` triggers on page load for guest users, not just on logout. This causes guest cart/wishlist items to be lost on page reload. ✅ WORKING: User registration/login, guest-to-user merge, logout functionality, backend API calls (200 status), sold out product UX, wishlist deduplication. ❌ FAILING: Guest persistence (localStorage cleared on page reload), cart functionality (all products sold out). ❌ 401 errors from /api/auth/me causing auth state confusion."
 
 ## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
 ## frontend:
