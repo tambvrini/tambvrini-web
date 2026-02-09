@@ -245,6 +245,7 @@ export default function HomePage() {
     <div data-testid="home-page">
       <HeroSection />
       <DropGridSection />
+      <CinematicVideoSection />
     </div>
   );
 }
