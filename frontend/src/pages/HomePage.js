@@ -223,7 +223,7 @@ const CinematicVideoSection = () => {
           initial={{ opacity: 0, scale: 1 }}
           animate={visible ? { opacity: 1, scale: 1.02 } : { opacity: 0, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto w-[70%] overflow-hidden rounded-[8px]"
+          className="mx-auto w-full max-w-[1008px] overflow-hidden rounded-[8px]"
         >
           <div className="relative w-full aspect-video bg-white/5">
             <video
