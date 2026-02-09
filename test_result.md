@@ -145,6 +145,32 @@
 ##   - agent: "testing"
 ##     message: "AUTH FLOW E2E TESTING COMPLETED: All core authentication flows working perfectly. ✅ WORKING: Login form display, registration (email/password/name), login with existing credentials, logout, session persistence via localStorage and /api/auth/me calls. ✅ UI BEHAVIOR: Proper form toggling, user info display, success toasts, logout button functionality. ✅ BACKEND INTEGRATION: API calls to /api/auth/register, /api/auth/login, /api/auth/me working correctly. ❌ OAUTH CALLBACK LIMITATION: Cannot fully test Google OAuth callback flow as it requires external OAuth service validation - this is expected behavior, not a bug. The AuthCallback component routing logic is correctly implemented. All requested test scenarios completed successfully except OAuth simulation which requires real Google OAuth flow."
 
+
+## backend:
+##   - task: "Cart + Wishlist persistence per logged user (guest merge)"
+##     implemented: true
+##     working: true
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Añadidos endpoints: GET/PUT /api/cart, POST /api/cart/merge; GET/PUT /api/wishlist, POST /api/wishlist/merge. Probado con curl: replace/get/merge sumando cantidades en carrito y dedupe en wishlist."
+## frontend:
+##   - task: "CartContext + WishlistContext connected to backend (no UI changes)"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/contexts/CartContext.js, frontend/src/contexts/WishlistContext.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Guest sigue en localStorage. Al loguear: carga server y hace merge una vez. En logout: vuelve a guest vacío. Sin cambios visuales; header counters siguen consumiendo contexts."
+
 ## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
 ## frontend:
 ##   - task: "Homepage DROP: grid 8 productos + 2 tiles 'Novedades' (estético) + header minimal"
