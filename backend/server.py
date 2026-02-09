@@ -208,6 +208,27 @@ async def logout(request: Request, response: Response):
     response.delete_cookie("session_token", path="/", samesite="none", secure=True)
     return {"message": "Sesión cerrada"}
 
+
+# ==================== CART + WISHLIST MODELS ====================
+
+class CartItem(BaseModel):
+    product_id: str
+    size: str = ""
+    color: str = ""
+    quantity: int = 1
+
+class CartReplaceRequest(BaseModel):
+    items: List[CartItem]
+
+class CartMergeRequest(BaseModel):
+    guest_items: List[CartItem]
+
+class WishlistReplaceRequest(BaseModel):
+    product_ids: List[str]
+
+class WishlistMergeRequest(BaseModel):
+    guest_product_ids: List[str]
+
 # ==================== PRODUCTS ====================
 
 @api_router.get("/products")
