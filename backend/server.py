@@ -790,10 +790,21 @@ async def startup():
 
 app.include_router(api_router)
 
+# ==================== CORS ====================
+# NOTE: When allow_credentials=True, the CORS response cannot use '*' as Access-Control-Allow-Origin.
+# If CORS_ORIGINS is set to '*', we switch to allow_origin_regex so Starlette echoes back the request Origin.
+cors_origins = [o.strip() for o in os.environ.get('CORS_ORIGINS', '*').split(',') if o.strip()]
+allow_origin_regex = None
+allow_origins = cors_origins
+if '*' in cors_origins:
+    allow_origins = []
+    allow_origin_regex = r".*"
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=allow_origins,
+    allow_origin_regex=allow_origin_regex,
     allow_methods=["*"],
     allow_headers=["*"],
 )
