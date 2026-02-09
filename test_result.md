@@ -134,10 +134,11 @@
 ##
 ## test_plan:
 ##   current_focus:
-##     - "Auth end-to-end: registro, login, /auth/me, logout, callback Google (session_id)"
-##   stuck_tasks: []
+##     - "CartContext + WishlistContext guest persistence bug fix"
+##   stuck_tasks:
+##     - "CartContext + WishlistContext connected to backend (no UI changes)"
 ##   test_all: false
-##   test_priority: "high_first"
+##   test_priority: "stuck_first"
 ##
 ## agent_communication:
 ##   - agent: "main"
