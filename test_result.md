@@ -217,7 +217,7 @@
 ##   - agent: "main"
 ##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
-user_problem_statement: "Verify thumbnail_image behavior for Traje Monograma Tambvrini. Requirements: 1) On homepage drops grid and shop grid cards, the product traje-monograma-tambvrini should display the NEW flat-lay image (thumbnail_image) instead of model photo. 2) On product page /producto/traje-monograma-tambvrini: - main hero image remains the model look (images[0]) - the flat-lay image is present as the LAST thumbnail/image in the gallery 3) Confirm SOLD OUT UX unchanged. Site: http://localhost:3000/"
+user_problem_statement: "Test homepage cinematic video section behavior (no UI changes besides new block). Verify on http://localhost:3000: 1) Home loads normally. 2) Scroll down to the new cinematic video block (below the two promo tiles 'Novedades para Hombre/Mujer'). 3) Confirm it is centered, about 70% width, rounded corners subtle. 4) Confirm it fades in + subtle zoom when entering view. 5) Confirm video element has autoplay muted loop playsinline and no controls visible."
 
 frontend:
   - task: "Thumbnail Image Behavior for Traje Monograma Tambvrini"
