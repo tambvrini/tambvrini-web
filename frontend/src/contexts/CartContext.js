@@ -20,6 +20,7 @@ export const CartProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const didInitialLoadRef = useRef(false);
+  const prevUserIdRef = useRef(null);
 
   // Guest persistence: keep using localStorage until user is logged.
   useEffect(() => {

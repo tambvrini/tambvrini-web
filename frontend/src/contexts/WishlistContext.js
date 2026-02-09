@@ -19,6 +19,7 @@ export const WishlistProvider = ({ children }) => {
   });
 
   const didInitialLoadRef = useRef(false);
+  const prevUserIdRef = useRef(null);
 
   // Guest persistence
   useEffect(() => {
