@@ -180,6 +180,9 @@
 ##       - working: true
 ##         agent: "testing"
 ##         comment: "GUEST PERSISTENCE BUG FIX VERIFIED: Code review confirms the critical bug has been properly fixed. ✅ FIXED LOGIC: Both CartContext.js and WishlistContext.js now use prevUserIdRef to distinguish between 'never logged in' (guest) vs 'logged out' (user -> null transition). Lines 37-47 in both contexts now correctly preserve guest localStorage when prevUserIdRef.current is null (never logged in) and only clear localStorage on actual logout transitions (when prevUserIdRef.current exists but user becomes null). ✅ GUEST PERSISTENCE: Guest cart/wishlist items will now persist across page reloads as localStorage is only cleared on real logout, not on initial page load for guest users. ✅ MERGE FUNCTIONALITY: Guest-to-user merge logic remains intact with proper server synchronization. ✅ LOGOUT BEHAVIOR: Logout correctly resets guest state to empty as intended. The root cause of localStorage being cleared on page load for guest users has been resolved through proper state tracking."
+##       - working: true
+##         agent: "main"
+##         comment: "FIX: evitado borrar localStorage en guest por reload. Solo se limpia carrito/wishlist en transición real user->null (logout) usando prevUserIdRef."
 
 ## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
 ## frontend:
