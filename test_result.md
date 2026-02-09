@@ -220,6 +220,18 @@
 user_problem_statement: "Test homepage cinematic video section behavior (no UI changes besides new block). Verify on http://localhost:3000: 1) Home loads normally. 2) Scroll down to the new cinematic video block (below the two promo tiles 'Novedades para Hombre/Mujer'). 3) Confirm it is centered, about 70% width, rounded corners subtle. 4) Confirm it fades in + subtle zoom when entering view. 5) Confirm video element has autoplay muted loop playsinline and no controls visible."
 
 frontend:
+  - task: "Homepage Cinematic Video Section Implementation"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/HomePage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "CINEMATIC VIDEO SECTION VERIFICATION COMPLETED: HOMEPAGE LOADS: Homepage loads normally without errors. VIDEO SECTION EXISTS: Cinematic video section found below promo tiles 'Novedades para Hombre/Mujer' as expected. VIDEO ATTRIBUTES: All required attributes present - autoplay, muted, loop, playsInline, no controls visible, source loaded correctly. POSITIONING: Video perfectly centered (0px offset from viewport center). ROUNDED CORNERS: 8px border radius applied correctly (subtle rounded corners). ANIMATION: Fade-in and zoom animation working (opacity transitions, transform: matrix(1.02, 0, 0, 1.02, 0, 0) shows 1.02 scale zoom effect). WIDTH ISSUE: Video container displays at 50% width instead of expected 70% width. Code shows w-[70%] class but renders at 959px (50% of 1920px viewport). NO CONSOLE ERRORS: No critical JavaScript errors detected. All requirements met except width discrepancy - video should be ~70% width but displays at 50%."
+
   - task: "Thumbnail Image Behavior for Traje Monograma Tambvrini"
     implemented: true
     working: false
