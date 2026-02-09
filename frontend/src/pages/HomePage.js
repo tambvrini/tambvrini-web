@@ -216,7 +216,7 @@ const CinematicVideoSection = () => {
   }, [shouldLoad]);
 
   return (
-    <section className="mt-24 mb-[120px]">
+    <section className="mt-10 mb-[120px]">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         <motion.div
           ref={ref}
