@@ -216,7 +216,7 @@ const CinematicVideoSection = () => {
   }, [shouldLoad]);
 
   return (
-    <section className="mt-24 mb-[120px]">
+    <section className="mt-4 mb-[120px]">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         <motion.div
           ref={ref}
@@ -238,11 +238,9 @@ const CinematicVideoSection = () => {
               controls={false}
               disablePictureInPicture
               controlsList="nodownload noplaybackrate noremoteplayback"
-            >
-              {shouldLoad && (
-                <source src={CINEMATIC_VIDEO_URL} type="video/mp4" />
-              )}
-            </video>
+              crossOrigin="anonymous"
+              src={shouldLoad ? CINEMATIC_VIDEO_URL : undefined}
+            />
           </div>
         </motion.div>
       </div>
