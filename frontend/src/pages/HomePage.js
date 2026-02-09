@@ -195,6 +195,50 @@ const DropGridSection = () => {
   );
 };
 
+/* ============ CINEMATIC VIDEO LOOP (below promo tiles) ============ */
+const CinematicVideoSection = () => {
+  const [ref, visible] = useInView({ threshold: 0.2, rootMargin: '120px' });
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (visible) setShouldLoad(true);
+  }, [visible]);
+
+  return (
+    <section className="mt-[100px] mb-[120px]">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, scale: 1 }}
+          animate={visible ? { opacity: 1, scale: 1.02 } : { opacity: 0, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto w-[70%] overflow-hidden rounded-[8px]"
+        >
+          <div className="relative w-full aspect-video bg-white/5">
+            <video
+              data-testid="cinematic-loop-video"
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload={shouldLoad ? 'auto' : 'none'}
+              controls={false}
+              disablePictureInPicture
+              controlsList="nodownload noplaybackrate noremoteplayback"
+            >
+              {shouldLoad && (
+                <source src={CINEMATIC_VIDEO_URL} type="video/mp4" />
+              )}
+            </video>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+
 /* ============ HOMEPAGE ============ */
 export default function HomePage() {
   return (
