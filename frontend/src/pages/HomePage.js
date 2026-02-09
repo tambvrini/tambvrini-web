@@ -199,10 +199,21 @@ const DropGridSection = () => {
 const CinematicVideoSection = () => {
   const [ref, visible] = useInView({ threshold: 0.2, rootMargin: '120px' });
   const [shouldLoad, setShouldLoad] = useState(false);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     if (visible) setShouldLoad(true);
   }, [visible]);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
+    const v = videoRef.current;
+    if (!v) return;
+    // When adding <source> dynamically, call load() so the browser starts fetching immediately.
+    v.load();
+    const p = v.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  }, [shouldLoad]);
 
   return (
     <section className="mt-24 mb-[120px]">
