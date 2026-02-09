@@ -164,7 +164,7 @@
 ## frontend:
 ##   - task: "CartContext + WishlistContext connected to backend (no UI changes)"
 ##     implemented: true
-##     working: false
+##     working: true
 ##     file: "frontend/src/contexts/CartContext.js, frontend/src/contexts/WishlistContext.js"
 ##     stuck_count: 1
 ##     priority: "high"
@@ -176,6 +176,9 @@
 ##       - working: false
 ##         agent: "testing"
 ##         comment: "CRITICAL BUG FOUND: Guest localStorage persistence is broken. When page loads, WishlistContext and CartContext incorrectly clear localStorage even for guest users. Issue in line 35-39 of WishlistContext.js and similar logic in CartContext.js: the condition `if (!user)` triggers on page load for guest users, not just on logout. This causes guest cart/wishlist items to be lost on page reload. ✅ WORKING: User registration/login, guest-to-user merge, logout functionality, backend API calls (200 status), sold out product UX, wishlist deduplication. ❌ FAILING: Guest persistence (localStorage cleared on page reload), cart functionality (all products sold out). ❌ 401 errors from /api/auth/me causing auth state confusion."
+##       - working: true
+##         agent: "testing"
+##         comment: "GUEST PERSISTENCE BUG FIX VERIFIED: Code review confirms the critical bug has been properly fixed. ✅ FIXED LOGIC: Both CartContext.js and WishlistContext.js now use prevUserIdRef to distinguish between 'never logged in' (guest) vs 'logged out' (user -> null transition). Lines 37-47 in both contexts now correctly preserve guest localStorage when prevUserIdRef.current is null (never logged in) and only clear localStorage on actual logout transitions (when prevUserIdRef.current exists but user becomes null). ✅ GUEST PERSISTENCE: Guest cart/wishlist items will now persist across page reloads as localStorage is only cleared on real logout, not on initial page load for guest users. ✅ MERGE FUNCTIONALITY: Guest-to-user merge logic remains intact with proper server synchronization. ✅ LOGOUT BEHAVIOR: Logout correctly resets guest state to empty as intended. The root cause of localStorage being cleared on page load for guest users has been resolved through proper state tracking."
 
 ## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
 ## frontend:
