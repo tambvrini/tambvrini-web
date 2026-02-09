@@ -34,11 +34,15 @@ export const CartProvider = ({ children }) => {
     const sync = async () => {
       if (authLoading) return;
 
-      // Logout: guest cart should be empty.
+      // Guest (never logged or after logout): keep existing localStorage cart.
       if (!user) {
-        didInitialLoadRef.current = false;
-        setItems([]);
-        localStorage.removeItem(STORAGE_KEY);
+        if (prevUserIdRef.current) {
+          // Real logout transition (user -> null): reset to empty guest.
+          didInitialLoadRef.current = false;
+          prevUserIdRef.current = null;
+          setItems([]);
+          localStorage.removeItem(STORAGE_KEY);
+        }
         return;
       }
 
