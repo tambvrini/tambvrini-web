@@ -142,6 +142,8 @@
 ## agent_communication:
 ##   - agent: "main"
 ##     message: "Auth implementado y smoke-tested por curl + screenshot. Llamar testing_agent para e2e (incluyendo cookie/session flow)."
+##   - agent: "testing"
+##     message: "AUTH FLOW E2E TESTING COMPLETED: All core authentication flows working perfectly. ✅ WORKING: Login form display, registration (email/password/name), login with existing credentials, logout, session persistence via localStorage and /api/auth/me calls. ✅ UI BEHAVIOR: Proper form toggling, user info display, success toasts, logout button functionality. ✅ BACKEND INTEGRATION: API calls to /api/auth/register, /api/auth/login, /api/auth/me working correctly. ❌ OAUTH CALLBACK LIMITATION: Cannot fully test Google OAuth callback flow as it requires external OAuth service validation - this is expected behavior, not a bug. The AuthCallback component routing logic is correctly implemented. All requested test scenarios completed successfully except OAuth simulation which requires real Google OAuth flow."
 
 ## user_problem_statement: "TAMBVRINI - ajustes visuales: sustituir logo central por nuevo SVG, re-centrar exacto y hacerlo un poco más grande; usar el mismo logo también en el header y que el header logo quede más grande/proporcional. No cambiar el fondo del hero por ahora."
 ## frontend:
