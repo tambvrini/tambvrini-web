@@ -230,7 +230,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Product Gallery Update - 6 Images with Specific Order"
+    - "Thumbnail Image Behavior for Traje Monograma Tambvrini"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
