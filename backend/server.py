@@ -211,8 +211,13 @@ async def logout(request: Request, response: Response):
 
 # ==================== CART + WISHLIST MODELS ====================
 
+# NOTE: We store display fields (name/price/image) in cart/wishlist docs to keep the current UI unchanged.
+
 class CartItem(BaseModel):
     product_id: str
+    name: str
+    price: float
+    image: str
     size: str = ""
     color: str = ""
     quantity: int = 1
@@ -223,11 +228,18 @@ class CartReplaceRequest(BaseModel):
 class CartMergeRequest(BaseModel):
     guest_items: List[CartItem]
 
+class WishlistItem(BaseModel):
+    product_id: str
+    name: str
+    price: float
+    image: str
+    gender: Optional[str] = None
+
 class WishlistReplaceRequest(BaseModel):
-    product_ids: List[str]
+    items: List[WishlistItem]
 
 class WishlistMergeRequest(BaseModel):
-    guest_product_ids: List[str]
+    guest_items: List[WishlistItem]
 
 # ==================== PRODUCTS ====================
 
