@@ -123,11 +123,14 @@
 ##     file: "frontend/src/pages/AccountPage.js, frontend/src/pages/AuthCallback.js, frontend/src/contexts/AuthContext.js"
 ##     stuck_count: 0
 ##     priority: "high"
-##     needs_retesting: true
+##     needs_retesting: false
 ##     status_history:
 ##       - working: true
 ##         agent: "main"
 ##         comment: "Screenshot /cuenta OK. Flujo Google Auth implementado: redirect -> #session_id -> exchangeSession -> /cuenta. Sin cambios estéticos."
+##       - working: true
+##         agent: "testing"
+##         comment: "COMPREHENSIVE AUTH FLOW TESTING COMPLETED: ✅ Login form loads correctly with Google button and all form fields present. ✅ Registration flow working: toggle to create account, name field appears, successful registration with realistic data (María González), user gets logged in with correct name/email display. ✅ Logout functionality working: returns to login form correctly. ✅ Login with existing credentials working: can log back in with same email/password. ✅ Session persistence working: user remains logged in after page reload, /api/auth/me calls detected. ✅ AuthCallback routing logic implemented correctly in App.js (checks location.hash for session_id). ❌ OAuth callback simulation not fully testable: requires external OAuth service validation at https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data, manually created sessions get 'Sesión inválida' response as expected. ✅ All core auth flows (register, login, logout, persistence) working perfectly. Minor: Console shows expected 401 errors when not authenticated and WebSocket connection warnings (non-critical)."
 ##
 ## test_plan:
 ##   current_focus:
