@@ -1,35 +1,114 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { useAuth } from './AuthContext';
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const STORAGE_KEY = 'tambvrini_wishlist';
 
 const WishlistContext = createContext(null);
 export const useWishlist = () => useContext(WishlistContext);
 
 export const WishlistProvider = ({ children }) => {
+  const { user, loading: authLoading, getHeaders } = useAuth();
+
   const [items, setItems] = useState(() => {
     try {
-      const saved = localStorage.getItem('tambvrini_wishlist');
+      const saved = localStorage.getItem(STORAGE_KEY);
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
 
+  const didInitialLoadRef = useRef(false);
+
+  // Guest persistence
   useEffect(() => {
-    localStorage.setItem('tambvrini_wishlist', JSON.stringify(items));
-  }, [items]);
+    if (!user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+  }, [items, user]);
+
+  useEffect(() => {
+    const sync = async () => {
+      if (authLoading) return;
+
+      // Logout => guest empty
+      if (!user) {
+        didInitialLoadRef.current = false;
+        setItems([]);
+        localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+
+      try {
+        const guestRaw = localStorage.getItem(STORAGE_KEY);
+        const guestItems = guestRaw ? JSON.parse(guestRaw) : [];
+
+        const serverRes = await axios.get(`${API}/wishlist`, {
+          headers: getHeaders(),
+          withCredentials: true
+        });
+        const serverItems = serverRes.data.items || [];
+
+        if (!didInitialLoadRef.current) {
+          didInitialLoadRef.current = true;
+
+          if (Array.isArray(guestItems) && guestItems.length > 0) {
+            const mergedRes = await axios.post(
+              `${API}/wishlist/merge`,
+              { guest_items: guestItems },
+              { headers: getHeaders(), withCredentials: true }
+            );
+            setItems(mergedRes.data.items || []);
+            localStorage.removeItem(STORAGE_KEY);
+            return;
+          }
+        }
+
+        setItems(serverItems);
+      } catch {
+        // ignore
+      }
+    };
+
+    sync();
+  }, [user, authLoading, getHeaders]);
+
+  const persistServerWishlist = async (nextItems) => {
+    if (!user) return;
+    try {
+      await axios.put(
+        `${API}/wishlist`,
+        { items: nextItems },
+        { headers: getHeaders(), withCredentials: true }
+      );
+    } catch {
+      // ignore
+    }
+  };
+
+  const setAndPersist = (updater) => {
+    setItems(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      persistServerWishlist(next);
+      return next;
+    });
+  };
 
   const addItem = (product) => {
-    setItems(prev => {
+    setAndPersist(prev => {
       if (prev.find(i => i.product_id === product.product_id)) return prev;
       return [...prev, {
         product_id: product.product_id,
         name: product.name,
         price: product.price,
-        image: product.images[0],
+        image: product.thumbnail_image || product.images?.[0],
         gender: product.gender
       }];
     });
   };
 
   const removeItem = (product_id) => {
-    setItems(prev => prev.filter(i => i.product_id !== product_id));
+    setAndPersist(prev => prev.filter(i => i.product_id !== product_id));
   };
 
   const toggleItem = (product) => {
