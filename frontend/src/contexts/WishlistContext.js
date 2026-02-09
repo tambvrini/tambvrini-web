@@ -47,6 +47,7 @@ export const WishlistProvider = ({ children }) => {
       try {
         const guestRaw = localStorage.getItem(STORAGE_KEY);
         const guestItems = guestRaw ? JSON.parse(guestRaw) : [];
+        prevUserIdRef.current = user.user_id;
 
         const serverRes = await axios.get(`${API}/wishlist`, {
           headers: getHeaders(),
