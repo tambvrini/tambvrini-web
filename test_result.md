@@ -135,8 +135,7 @@
 ## test_plan:
 ##   current_focus:
 ##     - "CartContext + WishlistContext guest persistence bug fix"
-##   stuck_tasks:
-##     - "CartContext + WishlistContext connected to backend (no UI changes)"
+##   stuck_tasks: []
 ##   test_all: false
 ##   test_priority: "stuck_first"
 ##
