@@ -312,7 +312,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Thumbnail Image Behavior for Traje Monograma Tambvrini"
+    - "Homepage Cinematic Video Section Implementation"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
