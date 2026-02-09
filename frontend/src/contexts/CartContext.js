@@ -50,6 +50,7 @@ export const CartProvider = ({ children }) => {
       try {
         const guestRaw = localStorage.getItem(STORAGE_KEY);
         const guestItems = guestRaw ? JSON.parse(guestRaw) : [];
+        prevUserIdRef.current = user.user_id;
 
         // Always fetch server cart first.
         const serverRes = await axios.get(`${API}/cart`, {
