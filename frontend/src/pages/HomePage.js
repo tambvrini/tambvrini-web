@@ -9,6 +9,7 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/hero-main.jpg";
+const CINEMATIC_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/b3pidco0_LOOP%20WEB%20FINAL.mp4";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 /* ============ useInView hook ============ */
