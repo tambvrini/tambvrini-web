@@ -138,20 +138,17 @@
 user_problem_statement: "Verify thumbnail_image behavior for Traje Monograma Tambvrini. Requirements: 1) On homepage drops grid and shop grid cards, the product traje-monograma-tambvrini should display the NEW flat-lay image (thumbnail_image) instead of model photo. 2) On product page /producto/traje-monograma-tambvrini: - main hero image remains the model look (images[0]) - the flat-lay image is present as the LAST thumbnail/image in the gallery 3) Confirm SOLD OUT UX unchanged. Site: http://localhost:3000/"
 
 frontend:
-  - task: "Product Gallery Update - 6 Images with Specific Order"
+  - task: "Thumbnail Image Behavior for Traje Monograma Tambvrini"
     implemented: true
-    working: true
-    file: "/app/frontend/src/pages/ProductPage.js, /app/frontend/src/pages/HomePage.js"
+    working: false
+    file: "/app/frontend/src/components/ProductCard.js, /app/frontend/src/pages/ProductPage.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
-        - working: true
+        - working: false
           agent: "testing"
-          comment: "PRODUCT GALLERY UPDATE VERIFICATION COMPLETED: ✅ Product page now shows exactly 6 images (updated from previous 5). ✅ Image order verified correct: 1) full body front, 2) full body profile, 3) full body back, 4) portrait close-up (face+torso), 5) blazer/buttons/monogram detail, 6) sleeve monogram embroidery detail. ✅ Main image correctly displays first image (full body front). ✅ All 6 thumbnail navigation buttons work correctly - clicking each thumbnail updates main image. ✅ Homepage grid thumbnail still uses image #1 (full body front) as expected. ✅ SOLD OUT UX fully preserved: label visible, all sizes S/M/L/XL disabled and crossed out, color selector disabled, add to cart button disabled showing 'SOLD OUT'. ✅ Premium styling maintained throughout with no aggressive red colors. ✅ Product appears correctly in homepage drops grid at position 1. All requirements successfully implemented and verified through comprehensive UI testing."
-        - working: true
-          agent: "testing"
-          comment: "PRODUCT REPLACEMENT AND SOLD OUT UX VERIFICATION COMPLETED: ✅ Old product /producto/sandalia-venus correctly shows 'Producto no encontrado' (404 backend response). ✅ New product /producto/traje-monograma-tambvrini loads successfully with product name 'Traje Monograma Tambvrini'. ✅ Images: exactly 5 thumbnails found with main image displayed first (full body front view). ✅ SOLD OUT label visible in top-right corner with premium styling (border: marble/25, no aggressive red). ✅ Sizes S/M/L/XL all visible, properly disabled (disabled=true), and crossed out with line-through styling. ✅ Color shows only 'Blanco' option, correctly disabled. ✅ Add to cart button disabled and reads 'SOLD OUT' with premium styling (bg: white/10, no aggressive red). ✅ Homepage drops grid: new product appears at position 1 in the 8 items, using first image as thumbnail. ✅ Premium styling maintained throughout - subtle borders, elegant typography, no harsh colors. All requirements successfully implemented and verified."
+          comment: "THUMBNAIL_IMAGE BEHAVIOR VERIFICATION COMPLETED: ❌ CRITICAL ISSUE: Homepage and shop grid cards are NOT displaying the flat-lay thumbnail_image. Both grids show the same image as images[0] (model photo) instead of the dedicated thumbnail_image. ✅ BACKEND DATA CORRECT: API shows thumbnail_image field properly set to flat-lay image (m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png). ✅ PRODUCT PAGE GALLERY: Shows 7 images total with flat-lay image correctly positioned as LAST thumbnail (image 7). Main hero image correctly shows model look (images[0]). ✅ GALLERY FUNCTIONALITY: Clicking last thumbnail correctly displays flat-lay image in main view. ❌ SOLD OUT UX ISSUES: Size buttons and color buttons are NOT properly disabled (should be disabled=true but are clickable). ✅ SOLD OUT UX WORKING: SOLD OUT label present, add to cart button disabled with 'SOLD OUT' text, sizes have line-through styling. ISSUE: ProductCard component logic (line 12) uses 'product.thumbnail_image || product.images?.[0]' but thumbnail_image is not being prioritized in grid displays."
 
   - task: "Homepage Layout Update - 8 Products + Promo Tiles"
     implemented: true
