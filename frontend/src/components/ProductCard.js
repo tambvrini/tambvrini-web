@@ -9,7 +9,7 @@ export const ProductCard = ({ product, index = 0 }) => {
     >
       <div className="relative aspect-[3/4] overflow-hidden">
         <img
-          src={product.images?.[0]}
+          src={product.thumbnail_image || product.images?.[0]}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
           loading="lazy"
