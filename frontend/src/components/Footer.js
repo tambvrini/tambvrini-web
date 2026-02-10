@@ -8,51 +8,23 @@ export const Footer = () => {
     <footer data-testid="main-footer" className="bg-obsidian border-t border-white/5">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
-          {/* La Marca */}
-          <div>
-            <h4 className="font-cinzel text-xs tracking-[0.3em] uppercase text-marble/60 mb-6">La Marca</h4>
-            <ul className="space-y-3">
-              {['Sobre TAMBVRINI', 'Filosofía', 'Artesanía', 'Editorial', 'Sostenibilidad'].map((item, i) => (
-                <li key={i}>
-                  <Link
-                    to="/marca"
-                    className="font-montserrat text-xs text-marble/40 hover:text-gold tracking-wide transition-colors duration-300"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 w-full">
+            {/* Left spacer (keeps center perfectly centered on large screens) */}
+            <div className="hidden lg:block" />
 
-          {/* Brand (center) */}
-          <div className="flex items-start justify-center">
-            <div className="flex flex-col items-center text-center">
-              <img src={ICON_WHITE} alt="TAMBVRINI" className="h-24 mb-6 opacity-60" />
-              <p className="font-montserrat text-xs text-marble/40 leading-relaxed tracking-wide">
-                TAMBVRINI by Lucas Tamburini
-              </p>
+            {/* Brand (true center) */}
+            <div className="flex items-start justify-center">
+              <div className="flex flex-col items-center text-center">
+                <img src={ICON_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-60" />
+                <p className="font-montserrat text-xs text-marble/40 leading-relaxed tracking-wide">
+                  TAMBVRINI by Lucas Tamburini
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Client Services */}
-          <div>
-            <h4 className="font-cinzel text-xs tracking-[0.3em] uppercase text-marble/60 mb-6">Atención al Cliente</h4>
-            <ul className="space-y-3">
-              {['Contacto', 'Envíos', 'Devoluciones', 'Guía de Tallas', 'FAQ'].map((item, i) => (
-                <li key={i}>
-                  <Link
-                    to="/marca"
-                    className="font-montserrat text-xs text-marble/40 hover:text-gold tracking-wide transition-colors duration-300"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {/* Right spacer */}
+            <div className="hidden lg:block" />
           </div>
-        </div>
 
         {/* Bottom bar */}
         <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
