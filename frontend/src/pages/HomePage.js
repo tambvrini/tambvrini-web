@@ -239,6 +239,15 @@ const CinematicVideoSection = () => {
               disablePictureInPicture
               controlsList="nodownload noplaybackrate noremoteplayback"
               src={shouldLoad ? CINEMATIC_VIDEO_URL : undefined}
+              onError={() => {
+                // Retry once in case of transient network abort (common on large mp4 streams)
+                const v = videoRef.current;
+                if (!v || v.dataset.retry === '1') return;
+                v.dataset.retry = '1';
+                v.load();
+                const p = v.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+              }}
             />
           </div>
         </motion.div>
