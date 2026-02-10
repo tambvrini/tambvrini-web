@@ -225,32 +225,54 @@ const CinematicVideoSection = () => {
           initial={{ opacity: 0, scale: 1 }}
           animate={visible ? { opacity: 1, scale: 1.02 } : { opacity: 0, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto w-full max-w-[1008px] overflow-hidden rounded-[8px]"
+          className="mx-auto w-full max-w-[1008px]"
         >
-          <div className="relative w-full aspect-video bg-white/5">
-            <video
-              ref={videoRef}
-              data-testid="cinematic-loop-video"
-              className="absolute inset-0 w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload={shouldLoad ? 'auto' : 'none'}
-              controls={false}
-              disablePictureInPicture
-              controlsList="nodownload noplaybackrate noremoteplayback"
-              src={shouldLoad ? CINEMATIC_VIDEO_URL : undefined}
-              onError={() => {
-                // Retry once in case of transient network abort (common on large mp4 streams)
-                const v = videoRef.current;
-                if (!v || v.dataset.retry === '1') return;
-                v.dataset.retry = '1';
-                v.load();
-                const p = v.play();
-                if (p && typeof p.catch === 'function') p.catch(() => {});
-              }}
-            />
+          <div className="overflow-hidden rounded-[8px]">
+            <div className="relative w-full aspect-video bg-white/5">
+              <video
+                ref={videoRef}
+                data-testid="cinematic-loop-video"
+                className="absolute inset-0 w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload={shouldLoad ? 'auto' : 'none'}
+                controls={false}
+                disablePictureInPicture
+                controlsList="nodownload noplaybackrate noremoteplayback"
+                src={shouldLoad ? CINEMATIC_VIDEO_URL : undefined}
+                onError={() => {
+                  // Retry once in case of transient network abort (common on large mp4 streams)
+                  const v = videoRef.current;
+                  if (!v || v.dataset.retry === '1') return;
+                  v.dataset.retry = '1';
+                  v.load();
+                  const p = v.play();
+                  if (p && typeof p.catch === 'function') p.catch(() => {});
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Premium branding cards under video */}
+          <div className="mt-10 flex items-center justify-center gap-10">
+            <div className="overflow-hidden">
+              <img
+                src={ROMAN_CARD_WHITE_URL}
+                alt="Tarjeta romana blanca"
+                loading="lazy"
+                className="h-28 w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
+              />
+            </div>
+            <div className="overflow-hidden">
+              <img
+                src={ROMAN_CARD_BLACK_URL}
+                alt="Tarjeta romana negra"
+                loading="lazy"
+                className="h-28 w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
+              />
+            </div>
           </div>
         </motion.div>
       </div>
