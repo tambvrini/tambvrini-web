@@ -10,11 +10,12 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
           {/* Brand */}
           <div>
-            <img src={ICON_WHITE} alt="TAMBVRINI" className="h-10 mb-6 opacity-60" />
-            <p className="font-montserrat text-xs text-marble/40 leading-relaxed tracking-wide">
-              Casa de moda europea con inspiración clásica romana y estética de club de tenis elite.
-              Desde Hispania, para el mundo.
-            </p>
+            <div className="flex flex-col items-center text-center">
+              <img src={ICON_WHITE} alt="TAMBVRINI" className="h-20 mb-6 opacity-60" />
+              <p className="font-montserrat text-xs text-marble/40 leading-relaxed tracking-wide">
+                TAMBVRINI by Lucas Tamburini
+              </p>
+            </div>
           </div>
 
           {/* Shop */}
