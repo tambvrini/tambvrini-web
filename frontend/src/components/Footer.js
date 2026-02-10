@@ -53,6 +53,7 @@ export const Footer = () => {
             </ul>
           </div>
         </div>
+        </div>
 
         {/* Bottom bar */}
         <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
