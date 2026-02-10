@@ -257,7 +257,7 @@ const CinematicVideoSection = () => {
 
           {/* Premium branding cards under video */}
           <div className="mt-10 flex items-center justify-center gap-10">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden rounded-[8px]">
               <img
                 src={ROMAN_CARD_WHITE_URL}
                 alt="Tarjeta romana blanca"
@@ -265,7 +265,7 @@ const CinematicVideoSection = () => {
                 className="h-40 w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
               />
             </div>
-            <div className="overflow-hidden">
+            <div className="overflow-hidden rounded-[8px]">
               <img
                 src={ROMAN_CARD_BLACK_URL}
                 alt="Tarjeta romana negra"
