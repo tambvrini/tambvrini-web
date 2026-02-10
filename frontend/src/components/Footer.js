@@ -9,22 +9,63 @@ export const Footer = () => {
     <footer data-testid="main-footer" className="bg-obsidian border-t border-white/5">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 w-full">
-            {/* Left spacer (keeps center perfectly centered on large screens) */}
-            <div className="hidden lg:block" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 w-full items-start">
+            {/* Left (links) */}
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+              <ul className="space-y-3">
+                {[t('contacto'), t('mi_pedido'), t('faq')].map((item) => (
+                  <li key={item}>
+                    <button
+                      type="button"
+                      className="font-montserrat text-xs text-marble/40 hover:text-gold tracking-wide transition-colors duration-300"
+                    >
+                      {item}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             {/* Brand (true center) */}
             <div className="flex items-start justify-center">
               <div className="flex flex-col items-center text-center">
                 <img src={ICON_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-60" />
                 <p className="font-montserrat text-xs text-marble/40 leading-relaxed tracking-wide">
-                  TAMBVRINI by Lucas Tamburini
+                  {t('tambvrini_by')}
                 </p>
               </div>
             </div>
 
-            {/* Right spacer */}
-            <div className="hidden lg:block" />
+            {/* Right (links + language) */}
+            <div className="flex flex-col items-center lg:items-end text-center lg:text-right">
+              <ul className="space-y-3">
+                {[t('acerca'), t('avisos'), t('privacidad')].map((item) => (
+                  <li key={item}>
+                    <button
+                      type="button"
+                      className="font-montserrat text-xs text-marble/40 hover:text-gold tracking-wide transition-colors duration-300"
+                    >
+                      {item}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8">
+                <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-marble/50 mb-4">{t('idioma')}</p>
+                <select
+                  aria-label="Idioma"
+                  value={lang}
+                  onChange={(e) => setLang(e.target.value)}
+                  className="bg-transparent border border-white/10 px-4 py-2 font-montserrat text-xs text-marble/50 tracking-wide outline-none"
+                >
+                  <option value="es">Español</option>
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                  <option value="it">Italiano</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
