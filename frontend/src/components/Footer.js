@@ -7,6 +7,7 @@ export const Footer = () => {
   return (
     <footer data-testid="main-footer" className="bg-obsidian border-t border-white/5">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
+        <div className="flex justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
           {/* La Marca */}
           <div>
