@@ -262,7 +262,7 @@ const CinematicVideoSection = () => {
                 src={ROMAN_CARD_WHITE_URL}
                 alt="Tarjeta romana blanca"
                 loading="lazy"
-                className="h-40 w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
+                className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
               />
             </div>
             <div className="overflow-hidden rounded-[8px]">
@@ -270,7 +270,7 @@ const CinematicVideoSection = () => {
                 src={ROMAN_CARD_BLACK_URL}
                 alt="Tarjeta romana negra"
                 loading="lazy"
-                className="h-40 w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
+                className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
               />
             </div>
           </div>
