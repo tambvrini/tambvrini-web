@@ -846,24 +846,31 @@ SEED_PRODUCTS = [
         "created_at": datetime.now(timezone.utc).isoformat()
     },
     {
-        "product_id": "gafas-riviera",
-        "name": "Gafas Riviera",
-        "description": "Gafas de sol con montura de acetato italiano y lentes polarizadas. Diseño inspirado en los iconos del estilo europeo de los años 70.",
-        "price": 395.00,
+        "product_id": "bolso-monograma-tambvrini",
+        "name": "Bolso Monograma Tambvrini",
+        "description": "El Bolso Monograma Tambvrini representa la visión contemporánea del lujo clásico de la casa.\nUna pieza diseñada para viajes elegantes y uso diario refinado, donde el equilibrio entre estructura, textura y detalles define su carácter.\n\nSu silueta arquitectónica se combina con un lienzo monograma exclusivo y bandas centrales en tonos pastel que aportan identidad visual distintiva. Cada elemento ha sido pensado para transmitir presencia, sofisticación y durabilidad.\n\nDiseñado para acompañar movimiento, viajes y estilo con una estética limpia y atemporal.",
+        "price": 299.00,
         "currency": "EUR",
         "images": [
-            "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=80",
-            "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80"
+            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png",
+            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/y7v5nwm1_2.png",
+            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/q6ej9bx3_hf_20260209_005423_81aed519-78ff-4ad0-a98c-31ded5afb2f1.png",
+            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
+            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qt1e9qlx_hf_20260210_013900_45cb2e8a-fe02-498b-826c-fa5c03b904e1.png",
+            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gfxx8pdm_4.png",
+            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/ahyaof7a_5.png"
         ],
-        "category": ["accesorios"],
+        "thumbnail_image": "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
+        "category": ["accesorios", "marroquineria"],
         "gender": "unisex",
-        "sizes": ["Único"],
-        "colors": [{"name": "Carey", "hex": "#8B4513"}, {"name": "Negro", "hex": "#0A0A0A"}],
-        "composition": "Acetato Italiano. Lentes: CR39 Polarizadas",
-        "care": "Limpiar con gamuza incluida. Almacenar en estuche.",
+        "sizes": ["Única"],
+        "colors": [{"name": "Beige / Blanco", "hex": "#E7DDCF"}],
+        "composition": "Canvas premium monogramado de alta resistencia\nDetalles en piel tratada\nHerrajes metálicos dorados\nCremalleras reforzadas\nInterior textil de alta durabilidad\n\nHecho para mantener estructura y elegancia con el uso.",
+        "care": "Limpiar con paño suave. Almacenar en bolsa de algodón.",
         "is_new": True,
         "is_featured": False,
-        "collections": ["resort-2026"],
+        "collections": ["roma", "limited"],
+        "is_sold_out": True,
         "created_at": datetime.now(timezone.utc).isoformat()
     },
     {
