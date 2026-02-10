@@ -224,13 +224,16 @@ frontend:
     implemented: true
     working: false
     file: "/app/frontend/src/pages/HomePage.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
         - working: false
           agent: "testing"
           comment: "CINEMATIC VIDEO SECTION VERIFICATION COMPLETED: HOMEPAGE LOADS: Homepage loads normally without errors. VIDEO SECTION EXISTS: Cinematic video section found below promo tiles 'Novedades para Hombre/Mujer' as expected. VIDEO ATTRIBUTES: All required attributes present - autoplay, muted, loop, playsInline, no controls visible, source loaded correctly. POSITIONING: Video perfectly centered (0px offset from viewport center). ROUNDED CORNERS: 8px border radius applied correctly (subtle rounded corners). ANIMATION: Fade-in and zoom animation working (opacity transitions, transform: matrix(1.02, 0, 0, 1.02, 0, 0) shows 1.02 scale zoom effect). WIDTH ISSUE: Video container displays at 50% width instead of expected 70% width. Code shows w-[70%] class but renders at 959px (50% of 1920px viewport). NO CONSOLE ERRORS: No critical JavaScript errors detected. All requirements met except width discrepancy - video should be ~70% width but displays at 50%."
+        - working: false
+          agent: "testing"
+          comment: "RE-TEST AFTER LATEST CHANGE COMPLETED: ❌ WIDTH ISSUE PERSISTS: Video container still displays at 52.5% width (1008px) instead of expected ~70% width (1344px). ROOT CAUSE IDENTIFIED: Code uses max-w-[1008px] class which renders exactly 1008px width = 52.5% of 1920px viewport, not 70%. The 1008px appears to be 70% of the 1440px parent container (1008/1440 = 70%), but relative to full viewport it's only 52.5%. ✅ WORKING CORRECTLY: Perfect centering (0px offset), 8px rounded corners, fade-in/zoom animation (opacity: 1, transform: matrix(1.02, 0, 0, 1.02, 0, 0)), video attributes (autoplay, loop, playsInline), no controls visible. ❌ MINOR ISSUE: HTML muted attribute missing (shows None) but JavaScript muted property is True, so video is functionally muted. SOLUTION NEEDED: Change max-w-[1008px] to max-w-[1344px] to achieve true 70% viewport width, or adjust to desired percentage."
 
   - task: "Thumbnail Image Behavior for Traje Monograma Tambvrini"
     implemented: true
