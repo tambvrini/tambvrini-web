@@ -8,7 +8,7 @@ export const Footer = () => {
     <footer data-testid="main-footer" className="bg-obsidian border-t border-white/5">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
         <div className="flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
           {/* La Marca */}
           <div>
             <h4 className="font-cinzel text-xs tracking-[0.3em] uppercase text-marble/60 mb-6">La Marca</h4>
