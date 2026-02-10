@@ -178,7 +178,7 @@ export default function ProductPage() {
             </div>
 
             {/* Quantity */}
-            <div className="mb-10">
+            <div className={`mb-10 ${product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}`}>
               <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 mb-4">Cantidad</p>
               <div className="flex items-center gap-0 border border-white/10 inline-flex">
                 <button
