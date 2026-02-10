@@ -7,35 +7,8 @@ export const Footer = () => {
   return (
     <footer data-testid="main-footer" className="bg-obsidian border-t border-white/5">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
-          {/* Brand */}
-          <div>
-            <div className="flex flex-col items-center text-center">
-              <img src={ICON_WHITE} alt="TAMBVRINI" className="h-20 mb-6 opacity-60" />
-              <p className="font-montserrat text-xs text-marble/40 leading-relaxed tracking-wide">
-                TAMBVRINI by Lucas Tamburini
-              </p>
-            </div>
-          </div>
-
-          {/* Shop */}
-          <div>
-            <h4 className="font-cinzel text-xs tracking-[0.3em] uppercase text-marble/60 mb-6">Tienda</h4>
-            <ul className="space-y-3">
-              {['Novedades', 'Hombre', 'Mujer', 'Accesorios', 'Calzado', 'Tennis Club'].map((item, i) => (
-                <li key={i}>
-                  <Link
-                    to={`/tienda?category=${item.toLowerCase().replace(' ', '-')}`}
-                    className="font-montserrat text-xs text-marble/40 hover:text-gold tracking-wide transition-colors duration-300"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Brand */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+          {/* La Marca */}
           <div>
             <h4 className="font-cinzel text-xs tracking-[0.3em] uppercase text-marble/60 mb-6">La Marca</h4>
             <ul className="space-y-3">
@@ -50,6 +23,16 @@ export const Footer = () => {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* Brand (center) */}
+          <div className="flex items-start justify-center">
+            <div className="flex flex-col items-center text-center">
+              <img src={ICON_WHITE} alt="TAMBVRINI" className="h-24 mb-6 opacity-60" />
+              <p className="font-montserrat text-xs text-marble/40 leading-relaxed tracking-wide">
+                TAMBVRINI by Lucas Tamburini
+              </p>
+            </div>
           </div>
 
           {/* Client Services */}
