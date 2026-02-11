@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
+const scrollToDrops = () => {
+  // Works both for same-page navigation and after route changes.
+  requestAnimationFrame(() => {
+    const el = document.getElementById('drops');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+};
+
 import { Menu, X, User, Heart, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
