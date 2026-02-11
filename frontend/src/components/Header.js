@@ -114,7 +114,10 @@ export const Header = () => {
                           <li key={j}>
                             <Link
                               to={link.href}
-                              onClick={() => setMenuOpen(false)}
+                              onClick={() => {
+                                setMenuOpen(false);
+                                if (link.href === '/#drops') scrollToDrops();
+                              }}
                               className="font-montserrat text-sm text-marble/70 hover:text-marble tracking-wide transition-colors duration-300 block"
                             >
                               {link.label}
