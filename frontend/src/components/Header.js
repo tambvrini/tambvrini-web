@@ -16,13 +16,9 @@ const MENU_SECTIONS = [
   {
     title: 'Tienda',
     links: [
-      { label: 'Novedades', href: '/tienda?filter=novedades' },
+      { label: 'Novedades', href: '/#drops' },
       { label: 'Hombre', href: '/tienda?gender=hombre' },
       { label: 'Mujer', href: '/tienda?gender=mujer' },
-      { label: 'Accesorios', href: '/tienda?category=accesorios' },
-      { label: 'Marroquinería', href: '/tienda?category=marroquineria' },
-      { label: 'Calzado', href: '/tienda?category=calzado' },
-      { label: 'Resort de Verano', href: '/tienda?category=resort' },
     ]
   },
 
