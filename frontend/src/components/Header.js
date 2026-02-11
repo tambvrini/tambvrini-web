@@ -59,6 +59,13 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // If we land on home with #drops, smooth scroll to the drop grid.
+  useEffect(() => {
+    if (location.pathname === '/' && location.hash === '#drops') {
+      scrollToDrops();
+    }
+  }, [location.pathname, location.hash]);
+
 
 
   // On homepage, header logo hidden until scroll passes threshold
