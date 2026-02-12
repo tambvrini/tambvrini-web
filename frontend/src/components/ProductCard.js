@@ -8,24 +8,20 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   useEffect(() => {
     if (!isTraje) return;
-    if (!hovered) {
-      const v = videoRef.current;
-      if (v) {
-        v.pause();
-        v.currentTime = 0;
-      }
-      return;
-    }
-
-    setShouldLoadVideo(true);
 
     const v = videoRef.current;
     if (!v) return;
-    // Ensure instant start on hover
+
+    if (!hovered) {
+      v.pause();
+      v.currentTime = 0;
+      return;
+    }
+
+    // Instant start on hover
     v.load();
     const p = v.play();
     if (p && typeof p.catch === 'function') p.catch(() => {});
