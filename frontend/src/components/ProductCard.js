@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom';
-export const ProductCard = ({ product, index = 0 }) => {
+import { useEffect, useRef, useState } from 'react';
+
+const TRAJE_ID = 'traje-monograma-tambvrini';
+const TRAJE_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/c37z6yj8_loop%20fade.mp4';
+
+export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) => {
   return (
     <Link
       to={`/producto/${product.product_id}`}

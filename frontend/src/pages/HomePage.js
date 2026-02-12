@@ -163,7 +163,7 @@ const DropGridSection = () => {
               </div>
             ))
             : products.slice(0, 8).map((p, i) => (
-              <ProductCard key={p.product_id} product={p} index={i} />
+              <ProductCard key={p.product_id} product={p} index={i} enableHoverVideo />
             ))}
         </div>
 
