@@ -217,7 +217,7 @@
 ##   - agent: "main"
 ##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
-user_problem_statement: "Test homepage cinematic video section behavior (no UI changes besides new block). Verify on http://localhost:3000: 1) Home loads normally. 2) Scroll down to the new cinematic video block (below the two promo tiles 'Novedades para Hombre/Mujer'). 3) Confirm it is centered, about 70% width, rounded corners subtle. 4) Confirm it fades in + subtle zoom when entering view. 5) Confirm video element has autoplay muted loop playsinline and no controls visible."
+user_problem_statement: "Verify product update for 'Camiseta Sport Club' replaced from 'Mocasín Augustus' end-to-end. 1) On homepage, find 'Camiseta Sport Club' card: check thumbnail is the double-shirt image, name correct. 2) Click product, confirm product_id is camiseta-sport-club. 3) Verify gallery has 8 images and order matches: 1 double shirts, 2 walking towards camera with racket, 3 hitting ball frontal, 4 backhand turned, 5 back full logo, 6 dynamic frontal, 7 packshot front, 8 packshot back. 4) Verify colors selector shows only Azul marino, and sizes S M L XL. 5) Add to cart button works (not sold out). 6) No regressions to layout. Capture screenshots of home card + product page."
 
 frontend:
   - task: "Homepage Cinematic Video Section Implementation"
