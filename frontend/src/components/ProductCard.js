@@ -40,7 +40,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
         <img
           src={product.thumbnail_image || product.images?.[0]}
           alt={product.name}
-          className={`w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] ${isTraje ? 'transition-opacity duration-200' : ''} ${isTraje && hovered ? 'opacity-0' : 'opacity-100'}`}
+          className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
           loading="lazy"
         />
 
@@ -51,7 +51,8 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
             loop
             playsInline
             preload="metadata"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+            poster={product.thumbnail_image || product.images?.[0]}
+            className={`absolute inset-0 w-full h-full object-cover ${hovered ? 'opacity-100' : 'opacity-0'}`}
             src={TRAJE_HOVER_VIDEO_URL}
           />
         )}
