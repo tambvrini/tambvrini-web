@@ -324,7 +324,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Homepage Cinematic Video Section Implementation"
+    - "Camiseta Sport Club Product Implementation and Verification"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
