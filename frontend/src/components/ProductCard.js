@@ -50,9 +50,9 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
             muted
             loop
             playsInline
-            preload={shouldLoadVideo ? 'auto' : 'metadata'}
+            preload="metadata"
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
-            src={shouldLoadVideo ? TRAJE_HOVER_VIDEO_URL : undefined}
+            src={TRAJE_HOVER_VIDEO_URL}
           />
         )}
 
