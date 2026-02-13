@@ -162,7 +162,8 @@ export default function ProductPage() {
                 {product.sizes.map((s, i) => {
                   const isSizeSoldOut =
                     (product.product_id === 'polo-golf' && s === 'L') ||
-                    (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(s));
+                    (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(s)) ||
+                    (product.product_id === 'polo-aureus' && ['XS', 'S', 'L', 'XL'].includes(s));
                   const disabled = product.is_sold_out || isSizeSoldOut;
                   return (
                     <button
