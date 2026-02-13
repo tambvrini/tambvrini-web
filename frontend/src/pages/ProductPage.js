@@ -128,9 +128,17 @@ export default function ProductPage() {
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-marble/70 tracking-wide mb-10">
+            <p data-testid="product-price" className="font-montserrat text-lg text-marble/70 tracking-wide mb-4">
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
+            {product.product_id === 'polo-aureus' && (
+              <p className="font-montserrat text-xs text-marble/40 tracking-wide mb-8">
+                Solo queda talla M disponible
+              </p>
+            )}
+            {product.product_id !== 'polo-aureus' && (
+              <div className="mb-10" />
+            )}
 
             {/* Color selector */}
             {product.colors?.length > 0 && (
