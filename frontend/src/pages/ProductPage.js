@@ -159,21 +159,25 @@ export default function ProductPage() {
             <div className="mb-8">
               <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 mb-4">Talla</p>
               <div className="flex flex-wrap gap-2">
-                {product.sizes.map((s, i) => (
-                  <button
-                    key={i}
-                    data-testid={`size-btn-${s}`}
-                    onClick={() => setSelectedSize(s)}
-                    disabled={product.is_sold_out}
-                    className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
-                      selectedSize === s
-                        ? 'border-marble text-marble bg-marble/5'
-                        : 'border-white/10 text-marble/40'
-                    } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-white/30 hover:text-marble'}`}
-                  >
-                    {s}
-                  </button>
-                ))}
+                {product.sizes.map((s, i) => {
+                  const isSizeSoldOut = product.product_id === 'polo-golf' && s === 'L';
+                  const disabled = product.is_sold_out || isSizeSoldOut;
+                  return (
+                    <button
+                      key={i}
+                      data-testid={`size-btn-${s}`}
+                      onClick={() => setSelectedSize(s)}
+                      disabled={disabled}
+                      className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
+                        selectedSize === s
+                          ? 'border-marble text-marble bg-marble/5'
+                          : 'border-white/10 text-marble/40'
+                      } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-white/30 hover:text-marble'}`}
+                    >
+                      {s}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
