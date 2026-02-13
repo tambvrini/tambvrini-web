@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
 const TRAJE_ID = 'traje-monograma-tambvrini';
-const TRAJE_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/9m68u4ke_loop%20reverse.mp4';
+const TRAJE_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/tf3t88bp_loop%20final%20model.mp4';
 
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
