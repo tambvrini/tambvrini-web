@@ -39,8 +39,8 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
       data-testid={`product-card-${product.product_id}`}
       className="group block"
       style={{ animationDelay: `${index * 0.03}s` }}
-      onMouseEnter={() => { if (isTraje) setHovered(true); }}
-      onMouseLeave={() => { if (isTraje) setHovered(false); }}
+      onMouseEnter={() => { if (hasHoverVideo) setHovered(true); }}
+      onMouseLeave={() => { if (hasHoverVideo) setHovered(false); }}
     >
       <div className="relative aspect-[3/4] overflow-hidden">
         <img
