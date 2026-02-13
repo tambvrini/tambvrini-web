@@ -50,7 +50,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
           loading="lazy"
         />
 
-        {isTraje && (
+        {hasHoverVideo && (
           <video
             ref={videoRef}
             muted
@@ -59,7 +59,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
             preload="metadata"
             poster={product.thumbnail_image || product.images?.[0]}
             className={`absolute inset-0 w-full h-full object-cover ${hovered ? 'opacity-100' : 'opacity-0'}`}
-            src={TRAJE_HOVER_VIDEO_URL}
+            src={isTraje ? TRAJE_HOVER_VIDEO_URL : AUREUS_HOVER_VIDEO_URL}
           />
         )}
 
