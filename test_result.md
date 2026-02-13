@@ -324,7 +324,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Camiseta Sport Club Product Implementation and Verification"
+    - "Polo Aureus Product Replacement and Size Availability Logic"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
