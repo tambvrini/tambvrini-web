@@ -160,7 +160,9 @@ export default function ProductPage() {
               <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 mb-4">Talla</p>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((s, i) => {
-                  const isSizeSoldOut = product.product_id === 'polo-golf' && s === 'L';
+                  const isSizeSoldOut =
+                    (product.product_id === 'polo-golf' && s === 'L') ||
+                    (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(s));
                   const disabled = product.is_sold_out || isSizeSoldOut;
                   return (
                     <button
