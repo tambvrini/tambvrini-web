@@ -9,11 +9,14 @@ const AUREUS_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a2
 
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
+  const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
+  const hasHoverVideo = isTraje || isAureus;
+
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    if (!isTraje) return;
+    if (!hasHoverVideo) return;
 
     const v = videoRef.current;
     if (!v) return;
@@ -28,7 +31,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
     v.load();
     const p = v.play();
     if (p && typeof p.catch === 'function') p.catch(() => {});
-  }, [hovered, isTraje]);
+  }, [hovered, hasHoverVideo]);
 
   return (
     <Link
