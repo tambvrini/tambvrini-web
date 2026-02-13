@@ -217,7 +217,7 @@
 ##   - agent: "main"
 ##     message: "Mejoré la animación del shrink/move del logo usando progress con spring (inercia premium + bounce muy sutil) manteniendo tamaños inicial/final. Header scrolled ajustado a tamaño tipo Gucci. Falta tu OK visual final."
 
-user_problem_statement: "Verify product update for 'Camiseta Sport Club' replaced from 'Mocasín Augustus' end-to-end. 1) On homepage, find 'Camiseta Sport Club' card: check thumbnail is the double-shirt image, name correct. 2) Click product, confirm product_id is camiseta-sport-club. 3) Verify gallery has 8 images and order matches: 1 double shirts, 2 walking towards camera with racket, 3 hitting ball frontal, 4 backhand turned, 5 back full logo, 6 dynamic frontal, 7 packshot front, 8 packshot back. 4) Verify colors selector shows only Azul marino, and sizes S M L XL. 5) Add to cart button works (not sold out). 6) No regressions to layout. Capture screenshots of home card + product page."
+user_problem_statement: "Verify 'Polo Aureus' replacement for 'Bolso Colosseum' and size availability logic. Steps: 1) Go to homepage, locate 'Polo Aureus' card (should be in the same position where Bolso Colosseum was). Verify thumbnail is packshot front (IMG_1519) and price 49,99 €. 2) Click it and verify product page: First images are lifestyle (couple car coast), then product packshots later. Color only Blanco. Sizes XS/S/L/XL disabled, M enabled (selectable). Visual sold-out on disabled sizes. Message visible: 'Solo queda talla M disponible'. Add to cart works only when M selected. 3) Ensure no other products impacted. Take screenshots home card and product page size section."
 
 frontend:
   - task: "Camiseta Sport Club Product Implementation and Verification"
