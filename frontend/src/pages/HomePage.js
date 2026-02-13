@@ -185,12 +185,14 @@ const DropGridSection = () => {
               }}
               className="group text-left"
             >
-              <div className="relative aspect-[16/9] overflow-hidden bg-white/5">
-                <div
-                  className="absolute inset-0 bg-center bg-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-                  style={{ backgroundImage: `url(${bg})` }}
+              <div className="relative aspect-[4/5] overflow-hidden bg-white/5">
+                <img
+                  src={bg}
+                  alt={title}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-contain object-center"
                 />
-                <div className="absolute inset-0 bg-obsidian/40 group-hover:bg-obsidian/35 transition-colors duration-700" />
+                <div className="absolute inset-0 bg-obsidian/15 group-hover:bg-obsidian/10 transition-colors duration-700" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center px-10">
                   <p className="font-cinzel text-[11px] tracking-[0.35em] uppercase text-marble/60">Novedades</p>
                   <h3 className="mt-4 font-playfair text-2xl md:text-3xl text-marble tracking-wide text-center">{title}</h3>
