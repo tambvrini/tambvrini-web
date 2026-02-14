@@ -187,12 +187,6 @@ const NovedadesTile = ({ title, bg, videoSrc }) => {
   );
 };
 
-          Explorar Colección
-        </button>
-      </motion.div>
-    </section>
-  );
-};
 
 /* ============ DROP GRID (Homepage main focus) ============ */
 const DropGridSection = () => {
