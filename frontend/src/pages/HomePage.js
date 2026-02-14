@@ -239,37 +239,16 @@ const DropGridSection = () => {
 
         {/* Aesthetic-only promo tiles (scroll to drops) */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-10">
-          {[
-            { title: 'Novedades para Hombre', bg: NOVEDADES_HOMBRE_BG },
-            { title: 'Novedades para Mujer', bg: NOVEDADES_MUJER_BG },
-          ].map(({ title, bg }) => (
-            <button
-              key={title}
-              type="button"
-              onClick={() => {
-                const el = document.getElementById('drops');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-              className="group text-left"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-white/5">
-                <img
-                  src={bg}
-                  alt={title}
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-contain object-center"
-                />
-                <div className="absolute inset-0 bg-obsidian/15 group-hover:bg-obsidian/10 transition-colors duration-700" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center px-10">
-                  <p className="font-cinzel text-[11px] tracking-[0.35em] uppercase text-marble/60">Novedades</p>
-                  <h3 className="mt-4 font-playfair text-2xl md:text-3xl text-marble tracking-wide text-center">{title}</h3>
-                  <span className="mt-8 inline-flex items-center justify-center border border-marble/30 px-10 py-4 font-montserrat text-[10px] tracking-[0.25em] uppercase text-marble/80 group-hover:border-marble/60 group-hover:text-marble transition-colors duration-500">
-                    Comprar
-                  </span>
-                </div>
-              </div>
-            </button>
-          ))}
+          <NovedadesTile
+            title="Novedades para Hombre"
+            bg={NOVEDADES_HOMBRE_BG}
+            videoSrc={NOVEDADES_HOMBRE_VIDEO}
+          />
+          <NovedadesTile
+            title="Novedades para Mujer"
+            bg={NOVEDADES_MUJER_BG}
+            videoSrc={NOVEDADES_MUJER_VIDEO}
+          />
         </div>
       </div>
     </section>
