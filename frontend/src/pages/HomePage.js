@@ -15,6 +15,8 @@ const ROMAN_CARD_BLACK_URL = "https://customer-assets.emergentagent.com/job_a24b
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
 const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
+const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sbeaj2rx_video%20hombre.mp4";
+const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 /* ============ useInView hook ============ */
@@ -114,6 +116,71 @@ const HeroSection = () => {
           }}
           className="btn-luxury btn-gold text-center"
         >
+
+const NovedadesTile = ({ title, bg, videoSrc }) => {
+  const videoRef = useRef(null);
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    if (!hovered) {
+      v.pause();
+      v.currentTime = 0;
+      return;
+    }
+
+    v.load();
+    const p = v.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  }, [hovered]);
+
+  return (
+    <button
+      type="button"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => {
+        const el = document.getElementById('drops');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }}
+      className="group text-left"
+      aria-label={title}
+    >
+      <div className="relative aspect-[4/5] overflow-hidden bg-white/5">
+        <img
+          src={bg}
+          alt={title}
+          loading="lazy"
+          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'opacity-0' : 'opacity-100'}`}
+        />
+        <video
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={bg}
+          src={videoSrc}
+          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'opacity-100' : 'opacity-0'}`}
+        />
+
+        {/* Keep luminosity consistent between image/video */}
+        <div className="absolute inset-0 bg-obsidian/15" />
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-10">
+          <p className="font-cinzel text-[11px] tracking-[0.35em] uppercase text-marble/60">Novedades</p>
+          <h3 className="mt-4 font-playfair text-2xl md:text-3xl text-marble tracking-wide text-center">{title}</h3>
+          <span className="mt-8 inline-flex items-center justify-center border border-marble/30 px-10 py-4 font-montserrat text-[10px] tracking-[0.25em] uppercase text-marble/80 group-hover:border-marble/60 group-hover:text-marble transition-colors duration-500">
+            Comprar
+          </span>
+        </div>
+      </div>
+    </button>
+  );
+};
+
           Explorar Colección
         </button>
       </motion.div>
