@@ -116,6 +116,12 @@ const HeroSection = () => {
           }}
           className="btn-luxury btn-gold text-center"
         >
+          Explorar
+        </button>
+      </motion.div>
+    </section>
+  );
+};
 
 const NovedadesTile = ({ title, bg, videoSrc }) => {
   const videoRef = useRef(null);
