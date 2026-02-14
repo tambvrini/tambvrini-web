@@ -159,7 +159,7 @@ const NovedadesTile = ({ title, bg, videoSrc }) => {
           src={bg}
           alt={title}
           loading="lazy"
-          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'opacity-0' : 'opacity-100'}`}
+          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'hidden' : 'block'}`}
         />
         <video
           ref={videoRef}
@@ -169,7 +169,7 @@ const NovedadesTile = ({ title, bg, videoSrc }) => {
           preload="metadata"
           poster={bg}
           src={videoSrc}
-          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'block' : 'hidden'}`}
         />
 
         {/* Keep luminosity consistent between image/video */}
