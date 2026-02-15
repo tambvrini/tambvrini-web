@@ -2,68 +2,108 @@
 The user wants to build a luxury e-commerce fashion website called TAMBVRINI.
 
 **PRODUCT REQUIREMENTS:**
-1.  **Authentication:** Both email/password and Google login for a premium feel.
-2.  **Payment Gateway:** Stripe integration (in test mode for now).
-3.  **Products:** Use mock luxury fashion products with a specific aesthetic: European luxury, elitist tennis club, Mediterranean, classic Roman, 1970s, GUCCI/CASABLANCA style.
-4.  **Newsletter:** A simple email collection form that saves emails to a database.
-5.  **Language:** Spanish as the primary language, with the structure ready for future multi-language support (English, French, Italian).
-6.  **Logo/Hero Animation (Crucial):** A very specific dynamic logo behavior inspired by Gucci's website. On page load, a large logo is centered, which animates to become the smaller header logo on scroll.
-7.  **Homepage Layout:** A DROP style homepage that immediately showcases products in a clean, minimalist grid (Header -> Hero -> Product Grid -> Footer).
-8.  **Visuals:** Dark, luxurious aesthetic with prominent branding and high-quality editorial imagery.
+The project's scope has evolved significantly through iterative user requests. The current high-level requirements are:
+1.  **Authentication:** Completed and verified, supporting email/password and Emergent-managed Google login.
+2.  **Payment Gateway:** Stripe integration is a high-priority upcoming task.
+3.  **Products & Content:** The user frequently provides detailed prompts to add, replace, or update products, including specific images, descriptions, pricing, and sold out logic. This includes adding interactive elements like hover-to-play videos on product cards.
+4.  **Newsletter:** A simple email collection form in the footer that saves emails to the database. The frontend is not yet connected.
+5.  **Language:** The site's primary language is Spanish. A basic internationalization (i18n) structure has been added for future multi-language support (EN/FR/IT), which currently only translates the footer.
+6.  **Homepage Layout:** A highly customized DROP style homepage featuring a product grid, a cinematic video loop, and category tiles with hover-video effects.
+7.  **Visuals:** A dark, minimalist, and cinematic luxury editorial aesthetic is paramount. The user is very specific about visual details, animations, and transitions.
 
 **User's preferred language**: Spanish
 
 **what currently exists?**
-A full-stack application with a Flask backend and a React frontend (using Vite and TailwindCSS) is in place. The application has been heavily styled to match the user's luxury aesthetic, featuring a dark theme and custom fonts.
+A full-stack application with a **FastAPI** backend (using MongoDB) and a **React** frontend. The application has been heavily customized to match the user's luxury aesthetic.
 
-The core functionalities completed are primarily on the frontend:
--   A sophisticated, Gucci-style hero logo animation using Framer Motion has been implemented and refined multiple times to the user's satisfaction.
--   The homepage has been redesigned into a minimalist DROP style, featuring the hero section, a grid of 8 products, and two promotional tiles, followed by the footer.
--   The header is simplified to show only a hamburger menu, the centered logo, and user/wishlist/cart icons.
--   One of the initial mock products has been completely replaced with a new one (Traje Monograma Tambvrini) featuring a full SOLD OUT user experience, custom image gallery, and a separate thumbnail image for the grid view.
--   The Made with Emergent badge has been successfully removed from the UI.
--   The backend seeds the database with mock products and has been updated to support the new product structure.
+Key completed features include:
+-   **Full Authentication:** A robust and user-verified authentication system for email/password (JWT) and Google login is complete.
+-   **Guest Persistence:** Cart and Wishlist items are saved to  for guest users.
+-   **Homepage:** The homepage is highly dynamic, featuring a Gucci-style hero logo animation, a product grid with hover-to-play video effects on specific items, a cinematic video loop section, and vertical category tiles also with hover-video effects.
+-   **Footer:** A custom 3-column footer with social links and a basic language switcher (ES/EN/FR/IT) that translates only the footer text.
+-   **Product Management:** Numerous products have been added, replaced, and updated with specific images, sold out logic for entire products or specific sizes, and custom interactions per user requests.
 
 **Last working item**:
-The agent finished updating a product's display logic, where the Traje Monograma Tambvrini product now shows a specific flat-lay image on the homepage grid while retaining a different set of images on its own detail page. The user confirmed this change was correct.
+The agent was tasked with adding five new images to the Camiseta Imperium product.
 
-- **Last item agent was working:** Setting a separate  for grid view vs. the main product page gallery.
-- **Status:** COMPLETED
-- **Agent Testing Done:** Y
-- **Which testing method agent to use?** NA
-- **User Testing Done:** Y
+- **Last item agent was working:** Adding 5 new images to the Camiseta Imperium product gallery, to be placed at the end of the existing image set.
+- **Status:** NOT STARTED
+- **Agent Testing Done:** N
+- **Which testing method agent to use?** screenshot tool
+- **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-There are no pending issues or bugs. All user requests from the session were addressed. The remaining work consists of implementing major features.
+- **Issue 1 (P0): Incorrect Size Selection Logic for Americana UMBRA**
+- **Issue 2 (P1): Unverified Product Replacement: Camiseta Imperium**
+
+**Issues Detail:**
+- **Issue 1:**
+    - **Description:** For the product Americana UMBRA, all sizes (XS-XL) are shown as available on the frontend. However, the requirement was for sizes M, L, and XL to be disabled and styled as sold out. This was reported by the testing subagent.
+    - **Attempted fixes:** None. The agent received the test report but moved on to the user's next content request before addressing the bug.
+    - **Next debug checklist:**
+        1.  Inspect  to ensure the americana-umbra product data includes a  field or similar.
+        2.  Inspect  to implement the rendering logic that checks for this field and disables the corresponding size buttons, applying a  style.
+    - **Why fix this issue and what will be achieved with the fix?** To ensure product availability is accurately reflected to the user, preventing them from trying to add unavailable items to their cart.
+    - **Status:** NOT STARTED
+    - **Is recurring issue?** N
+    - **Should Test frontend/backend/both after fix?** Frontend
+    - **Blocked on other issue:** None
+
+- **Issue 2:**
+    - **Description:** The automated test to verify the replacement of Vestido Amalfi with Camiseta Imperium failed due to a script error in the testing agent. The backend replacement appears to be complete, but there is no confirmation that the product displays correctly on the frontend grid and product page.
+    - **Attempted fixes:** None.
+    - **Next debug checklist:**
+        1.  Manually navigate to the homepage and check if Camiseta Imperium appears in the product grid.
+        2.  Click the product to navigate to its page.
+        3.  Verify all details are correct: price (19,99 €), colors (Beige, Negro), sizes (S, M, L, XL), and the image gallery order.
+    - **Why fix this issue and what will be achieved with the fix?** To confirm that a major content update was successful and is visible to users.
+    - **Status:** TESTING PENDING
+    - **Is recurring issue?** N
+    - **Should Test frontend/backend/both after fix?** Frontend
+    - **Blocked on other issue:** None
 
 **In progress Task List**:
-There are no tasks currently in progress.
+- **Task 1 (P0): Add Images to Camiseta Imperium**
+
+**Task Detail:**
+- **Task 1:**
+    - **Where to resume:** Edit the camiseta-imperium product definition in . Append the URLs of the 5 new images provided by the user to the end of the  array.
+    - **What will be achieved with this?** Fulfills the user's latest content update request.
+    - **Status:** IN PROGRESS
+    - **Should Test frontend/backend/both after fix?** Frontend
+    - **Blocked on something:** None
 
 **Upcoming and Future Tasks**
 - **Upcoming Tasks:**
-    - **P0: Implement Full Authentication:** Build the backend and frontend logic for user registration and login using both email/password and Google OAuth. The  file is a placeholder.
-    - **P1: Implement Cart & Wishlist:** Develop the functionality for adding, viewing, and removing items from the cart and wishlist. The  and  files are placeholders.
-    - **P2: Implement Stripe Checkout:** Integrate Stripe to handle the payment process.
-    - **P2: Implement Newsletter Backend:** Create the API endpoint and database logic to save emails submitted through the newsletter form.
+    - **P0: Implement Cart & Wishlist Backend Sync:** The frontend contexts (, ) currently only handle guest persistence via . The next step is to integrate with the existing backend APIs (, ) to fetch, save, and merge cart/wishlist data for authenticated users.
+    - **P1: Implement Stripe Checkout:** Integrate Stripe to handle the payment process. The user has confirmed this requires a mandatory login.
+    - **P2: Connect Newsletter Frontend:** Connect the newsletter signup form in the footer () to the  backend endpoint.
+    - **P3: Full Internationalization (i18n):** Expand the existing i18n context () to translate the entire website, including product details, headers, and CTAs, not just the footer.
 
 - **Future Tasks:**
-    - Replace all mock products with real product data from the user.
-    - Add internationalization support (i18n) for English, French, and Italian.
+    - Replace all remaining mock products with real product data from the user.
     - Integrate a professional email marketing service for the newsletter.
 
 **Completed work in this session**
-- **Homepage Redesign:** Transformed the homepage into a minimalist DROP style, implementing a product grid (8 items) and promotional tiles, removing all other sections.
-- **Hero Animation & Logo Refinement:** Iteratively adjusted the Gucci-style scroll animation using Framer Motion with  for a smoother, more luxurious feel. Replaced and resized logo assets multiple times based on user feedback.
-- **Product Management Overhaul:**
-    - Replaced the Sandalia Venus product with Traje Monograma Tambvrini.
-    - Implemented a full SOLD OUT UX for the new product, including crossed-out sizes and a disabled Add to Cart button.
-    - Added a  field to the product model and frontend logic to display different images on the grid vs. the product page.
-    - Managed a multi-image gallery for the new product, including adding new images and reordering them as requested.
-- **Header Simplification:** Stripped down the main header navigation to its most minimal state (logo, hamburger menu, action icons).
-- **UI & Asset Updates:** Replaced the main hero background image, adjusted its brightness via CSS filters, and removed the Made with Emergent badge.
+- **Authentication Module (COMPLETED):** Fully implemented and user-verified JWT (email/password) and Emergent-managed Google Authentication.
+- **Homepage Overhaul (COMPLETED):**
+    - Implemented a cinematic video loop section.
+    - Redesigned Novedades section into two vertical 4:5 cards with a hover-to-play-video effect.
+    - Added two static image cards below the cinematic video.
+- **Product Interactivity (COMPLETED):**
+    - Implemented a hover-to-play-video effect for the Traje Monograma Tambvrini and Polo Aureus product cards on the homepage grid.
+- **Footer Redesign (COMPLETED):**
+    - Re-structured into a 3-column layout (left links, center brand, right links).
+    - Implemented a basic i18n language switcher (ES/EN/FR/IT) for footer text.
+- **Extensive Content & Product Management (COMPLETED):**
+    - Replaced multiple products (Cinturón Centurión, Mocasín Augustus, Bolso Colosseum, Pañuelo Mediterráneo) with new ones, including custom images, details, and specific sold out size logic.
+    - Performed numerous iterative updates to product image galleries, thumbnail images, and hover videos based on user feedback.
+- **Minor UI/UX Fixes (COMPLETED):**
+    - Changed product hover text from VIEW PRODUCT to VER PRODUCTO.
+    - Cleaned up navigation links in the header's slide-out menu.
 
 **Earlier issues found/mentioned but not fixed**
-None.
+This is covered in the **All Pending/In progress Issue list** section.
 
 **Known issue recurrence from previous fork**
 N/A
@@ -72,73 +112,88 @@ N/A
 
 
 **Key Technical Concepts**
--   **Backend:** Python, Flask, SQLAlchemy
--   **Frontend:** React, Vite, TailwindCSS
--   **Animation:** Framer Motion (, , ) for the scroll-based logo and element animations.
--   **State Management:** React Hooks (, , ) and Context API (placeholders).
--   **Architecture:** Monorepo with  and  folders.
+-   **Backend:** Python, **FastAPI**, **Motor** (for asynchronous MongoDB access), JWT.
+-   **Frontend:** React, Vite, TailwindCSS, Framer Motion (for animations).
+-   **Database:** **MongoDB**.
+-   **State Management:** React Context API for Auth, Cart, Wishlist, and I18n.  is used for guest cart/wishlist persistence.
+-   **Authentication:** JWT for email/password, and an OAuth2-like flow with an external service for Google Auth.
 
 **key DB schema**
--   **User:** uid=0(root) gid=0(root) groups=0(root), , , , 
--   **Product:** uid=0(root) gid=0(root) groups=0(root), , , , ,  (Array),  (String), , ,  (Array),  (Array),  (Boolean)
--   **NewsletterSubscription:** uid=0(root) gid=0(root) groups=0(root), , 
+-   **users:** , , , , , 
+-   **products:**  (slug), , , ,  (Array),  (String),  (Array),  (Array),  (Array)
+-   **carts:** ,  (Array of {, , , })
+-   **wishlists:** ,  (Array of strings)
+-   **newsletter:** , 
 
 **changes in tech stack**
-None.
+The backend stack is **FastAPI + MongoDB**. The initial handoff summary from the *previous* job incorrectly stated it was Flask + SQLAlchemy. This session continued on the correct, existing stack. No migrations occurred.
 
 **All files of reference**
--   : Contains API endpoints and the updated SQLAlchemy Product model (, ).
--   : Implements the homepage layout, hero animation, product grid, and scroll behaviors.
--   : Contains the logic for the sticky header and its different states (scrolled/unscrolled).
--   : Renders individual products in the grid, now using .
--   : Displays product details, including the image gallery and the SOLD OUT UI.
--   : Modified to remove the Made with Emergent script.
+-   : Monolithic file containing all backend logic, including API routes for auth, products, cart, and wishlist.
+-   : Handles the complex homepage layout with the product grid, Novedades tiles (with hover videos), and cinematic video section.
+-   : Implements the product card UI, including the conditional hover-to-play-video logic.
+-   : Displays product details and handles product-specific sold out logic for sizes.
+-   : Manages user authentication state and tokens.
+-   : Manages cart state, currently using  for guest persistence.
+-   : Manages wishlist state, also using .
+-   : Contains the redesigned 3-column footer and the i18n language switcher.
 
 **Areas that need refactoring**:
--   The React Contexts (, , ) are boilerplate and need to be fully implemented with state logic and API integration to enable user accounts, shopping cart, and wishlist features.
+-   The  file has grown large and could be split into multiple files using FastAPI's  for better organization (e.g., separate routers for auth, products, cart).
+-   The  and  in the frontend need to be updated to integrate with the backend for authenticated users, moving beyond guest-only  persistence.
 
 **key api endpoints**
--   : Fetches all products.
--   : Fetches a single product by its ID.
--   : An internal endpoint to seed/reset product data in the database.
+-   , , , 
+-   , 
+-    (GET, POST for logged-in users)
+-    (GET, POST for logged-in users)
+-    (POST)
 
 **Critical Info for New Agent**
--   The user communicates in **Spanish** and is highly focused on visual perfection. Be prepared for iterative feedback on design details.
--   The core visual identity and homepage layout are now established and approved. The next major phase should be implementing the application's backend functionalities (Auth, Cart, Stripe).
--   **File Extensions**: Note that the React component files use the  extension, not .
--   The product data structure has been updated. Products now have an  boolean and an optional  string. The frontend logic correctly handles these new fields.
+-   **User communicates exclusively in Spanish.** All responses should be in Spanish.
+-   **The backend is FastAPI + MongoDB.** Ignore any previous summaries that mention Flask/SQLAlchemy.
+-   The user is highly focused on visual perfection and makes frequent, small, iterative requests. Prioritize these quick changes to maintain momentum.
+-   The next major feature in the roadmap is **Stripe Checkout**.
+-   Sold out logic for product sizes is currently implemented on a case-by-case basis in the  component and is not yet a generic system.
 
 **documents and test reports created in this job**
-None.
+-   : A playbook for testing authentication.
+-   : Has been updated multiple times by the testing subagent with results from various UI and product verification tests.
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:**  (It's good now) - Confirmed the final product thumbnail change was correct.
-2.  **User:**  (yes) - Agreed to the agent's plan to update the product thumbnail logic.
-3.  **User:** Uploaded a new flat-lay image to be used as the product thumbnail on the grid.
-4.  **User:**  (all good but add this one too, don't remove any) - Requested to add another image to the product gallery.
-5.  **User:** Provided a detailed prompt to completely replace an existing product with a new one (Traje Monograma Tambvrini), specifying all details, images, and the SOLD OUT status.
-6.  **User:**  (I want to remove the whole made with emergent box...) - Clarified the request to remove the branding badge entirely.
-7.  **User:**  (it's fine like that, don't touch anything, just give the background image a bit of brightness) - Confirmed the new hero image and requested a minor visual tweak.
-8.  **User:** Uploaded a new image to replace the main hero background.
-9.  **User:** Confirmed the agent's detailed plan to redesign the homepage into a minimal DROP style.
-10. **User:** Provided a detailed prompt to overhaul the homepage layout, simplifying the header and focusing on a product grid.
+1.  **User:** en camiseta imperium dentro del articulo añadir estas nuevas imagenes... - **(PENDING)** Requested to add 5 new images to the Camiseta Imperium product.
+2.  **User:** *Uploaded 5 image artifacts for Camiseta Imperium.*
+3.  **User:** ya - Confirmed to proceed with replacing vestido-amalfi with camiseta-imperium.
+4.  **User:** *Provided full specs to replace vestido-amalfi with camiseta-imperium.*
+5.  **User:** Sí. - Confirmed the plan for adding hover videos to the Novedades section.
+6.  **User:** *Provided prompt to add hover videos to the Novedades section.*
+7.  **User:** *Provided prompt to fix the aspect ratio of the Novedades section to 4:5 vertical.*
+8.  **User:** *Provided prompt to replace the images in the Novedades section.*
+9.  **User:** perfecto - Confirmed the homepage redesign with new images looked good.
+10. **User:** *Provided prompt to replace images and add a hover effect to the Novedades cards.*
 
 **Project Health Check:**
--   **Broken:** None.
--   **Mocked:** User Authentication (email/Google), Cart functionality, Wishlist functionality, Newsletter signup logic, Stripe payment processing.
+-   **Broken:**
+    -   The size selection for Americana UMBRA is bugged; it doesn't show sold-out sizes as disabled.
+-   **Mocked:**
+    -   Stripe payment processing.
+    -   Full site internationalization (i18n).
+    -   Newsletter form submission.
+    -   Cart & Wishlist functionality for authenticated users (backend APIs exist but are not integrated into the frontend contexts).
 
 **3rd Party Integrations**
--   **Stripe (Payments):** Planned. Requires User API Key.
--   **Google OAuth (Authentication):** Planned via Emergent-managed Google Auth.
+-   **Stripe (Payments):** Planned. Requires User API Key (a test key is available in ).
+-   **Emergent-managed Google Auth:** Implemented and functional.
 
 **Testing status**
--   **Testing agent used after significant changes:** YES. The agent used automated frontend testing and screenshot verification after almost every visual change.
+-   **Testing agent used after significant changes:** YES, frequently used for verifying product replacements and UI changes, though it sometimes encountered its own script errors.
 -   **Troubleshoot agent used after agent stuck in loop:** NO
--   **Test files created:** []
--   **Known regressions:** None.
+-   **Test files created:** None persistent.
+-   **Known regressions:** The size selection logic for Americana UMBRA broke during its implementation.
 
 **Credentials to test flow:**
-N/A.
+N/A. User authentication can be tested with registration. Google OAuth requires manual user interaction.
 
 **What agent forgot to execute**
-The agent did not forget any tasks. It correctly prioritized the user's continuous and detailed requests for visual enhancements and homepage redesign over the initial, larger feature set. The backend features (Auth, Stripe, etc.) are pending as per this user-driven prioritization.</analysis>
+-   The agent did not fix the bug with the size selection for the Americana UMBRA product, which was explicitly reported by the testing agent.
+-   The agent did not complete the verification for the Camiseta Imperium product replacement after its testing script failed. It moved on to the user's next request.</analysis>
