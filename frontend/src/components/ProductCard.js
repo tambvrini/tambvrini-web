@@ -68,7 +68,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
             playsInline
             preload="metadata"
             poster={product.thumbnail_image || product.images?.[0]}
-            className={`absolute inset-0 w-full h-full object-cover ${hovered ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute inset-0 w-full h-full object-cover pointer-events-none ${hovered ? 'opacity-100' : 'opacity-0'}`}
             src={
               isTraje
                 ? TRAJE_HOVER_VIDEO_URL
