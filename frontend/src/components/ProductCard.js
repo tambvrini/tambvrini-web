@@ -7,10 +7,14 @@ const TRAJE_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24
 const AUREUS_ID = 'polo-aureus';
 const AUREUS_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sf8pflhe_loop%20modelos.mp4';
 
+const BOLSO_ID = 'bolso-monograma-tambvrini';
+const BOLSO_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/9eqm94jq_0216.mp4';
+
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
-  const hasHoverVideo = isTraje || isAureus;
+  const isBolso = enableHoverVideo && product.product_id === BOLSO_ID;
+  const hasHoverVideo = isTraje || isAureus || isBolso;
 
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
