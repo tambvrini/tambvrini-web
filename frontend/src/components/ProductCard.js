@@ -53,7 +53,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
         <img
           src={product.thumbnail_image || product.images?.[0]}
           alt={product.name}
-          className={`w-full h-full object-cover ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
+          className={`w-full h-full object-cover ${legacyHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
           loading="lazy"
         />
 
