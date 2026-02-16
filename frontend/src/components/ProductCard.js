@@ -14,10 +14,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
   const isBolso = enableHoverVideo && product.product_id === BOLSO_ID;
-
-  const legacyHoverVideo = isTraje || isAureus;
-  const instantHoverVideo = isBolso;
-  const hasHoverVideo = legacyHoverVideo || instantHoverVideo;
+  const hasHoverVideo = isTraje || isAureus || isBolso;
 
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
