@@ -232,9 +232,16 @@ const DropGridSection = () => {
                 <div className="mt-2 h-3 bg-white/5 w-1/3" />
               </div>
             ))
-            : products.slice(0, 8).map((p, i) => (
-              <ProductCard key={p.product_id} product={p} index={i} enableHoverVideo />
-            ))}
+            : (() => {
+              // Force “Suéter Captain” to render as the 8th (last) item in the 2nd row on desktop.
+              const captain = products.find((p) => p.product_id === 'sueter-captain');
+              const rest = products.filter((p) => p.product_id !== 'sueter-captain');
+              const base = rest.slice(0, captain ? 7 : 8);
+              const displayed = captain ? [...base, captain] : base;
+              return displayed.map((p, i) => (
+                <ProductCard key={p.product_id} product={p} index={i} enableHoverVideo />
+              ));
+            })()}
         </div>
 
         {/* Aesthetic-only promo tiles (scroll to drops) */}
