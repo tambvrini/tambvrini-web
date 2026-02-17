@@ -169,6 +169,7 @@ export default function ProductPage() {
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((s, i) => {
                   const isSizeSoldOut =
+                    (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(s)) ||
                     (product.product_id === 'polo-golf' && s === 'L') ||
                     (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(s)) ||
                     (product.product_id === 'polo-aureus' && ['XS', 'S', 'L', 'XL'].includes(s));
