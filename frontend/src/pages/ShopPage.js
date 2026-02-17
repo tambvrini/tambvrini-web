@@ -14,13 +14,9 @@ const CATEGORY_LABELS = {
   accesorios: 'Accesorios',
   marroquineria: 'Marroquinería',
   calzado: 'Calzado',
-  resort: 'Resort',
-  'tennis-club': 'Tennis Club',
 };
 
 const COLLECTION_LABELS = {
-  'resort-2026': 'Resort 2026',
-  'tennis-club': 'Tennis Club',
   roma: 'Roma',
   atelier: 'Atelier',
   limited: 'Piezas Limitadas',
@@ -51,7 +47,6 @@ export default function ShopPage() {
         if (search) params.set('search', search);
         if (sort) params.set('sort', sort);
         if (category === 'novedades' || searchParams.get('filter') === 'novedades') params.set('is_new', 'true');
-        if (searchParams.get('filter') === 'tennis-club') params.set('category', 'tennis-club');
         params.set('page', page.toString());
         params.set('limit', '20');
         const res = await axios.get(`${API}/products?${params.toString()}`);
