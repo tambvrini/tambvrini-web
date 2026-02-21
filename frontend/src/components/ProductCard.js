@@ -83,7 +83,9 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
                   ? AUREUS_HOVER_VIDEO_URL
                   : isBolso
                     ? BOLSO_HOVER_VIDEO_URL
-                    : SPORT_CLUB_HOVER_VIDEO_URL
+                    : isSportClub
+                      ? SPORT_CLUB_HOVER_VIDEO_URL
+                      : POLO_GOLF_HOVER_VIDEO_URL
             }
           />
         )}
