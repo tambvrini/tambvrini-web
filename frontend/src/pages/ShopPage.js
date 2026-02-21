@@ -77,7 +77,9 @@ export default function ShopPage() {
 
   const filteredProducts = gender === 'hombre'
     ? products.filter((p) => p.product_id !== 'bolso-monograma-tambvrini' && p.product_id !== 'americana-umbra')
-    : products;
+    : gender === 'mujer'
+      ? products.filter((p) => p.product_id !== 'traje-monograma-tambvrini')
+      : products;
 
   const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
 
