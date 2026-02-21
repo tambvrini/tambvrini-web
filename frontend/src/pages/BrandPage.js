@@ -62,7 +62,7 @@ export default function BrandPage() {
           {[
             { title: 'Herencia', text: 'Cada colección rinde homenaje a la rica tradición de la moda europea, desde la sastrería napolitana hasta la seda de Como.' },
             { title: 'Excelencia', text: 'Materiales de la más alta calidad, confeccionados por maestros artesanos con décadas de experiencia.' },
-            { title: 'Atemporalidad', text: 'Diseñamos piezas que trascienden temporadas. Prendas que se heredan y mejoran con el tiempo.' },
+            { title: 'Compromiso', text: 'Tu satisfacción es nuestra prioridad. Si el producto no cumple tus expectativas, puedes solicitar la devolución en un plazo de 14 días.' },
           ].map((v, i) => (
             <div key={i} className="text-center">
               <h3 className="font-cinzel text-sm tracking-[0.2em] uppercase text-gold mb-6">{v.title}</h3>
