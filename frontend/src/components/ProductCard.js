@@ -19,6 +19,9 @@ const POLO_GOLF_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job
 const IMPERIUM_ID = 'camiseta-imperium';
 const IMPERIUM_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/d2xis2ec_0212%20%284%29.mp4';
 
+const UMBRA_ID = 'americana-umbra';
+const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/xgsml0mm_umbra.mp4';
+
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
@@ -26,7 +29,8 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
   const isSportClub = enableHoverVideo && product.product_id === SPORT_CLUB_ID;
   const isPoloGolf = enableHoverVideo && product.product_id === POLO_GOLF_ID;
   const isImperium = enableHoverVideo && product.product_id === IMPERIUM_ID;
-  const hasHoverVideo = isTraje || isAureus || isBolso || isSportClub || isPoloGolf || isImperium;
+  const isUmbra = enableHoverVideo && product.product_id === UMBRA_ID;
+  const hasHoverVideo = isTraje || isAureus || isBolso || isSportClub || isPoloGolf || isImperium || isUmbra;
 
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
@@ -77,7 +81,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
             muted
             loop
             playsInline
-            preload={isSportClub || isPoloGolf || isImperium ? 'auto' : 'metadata'}
+            preload={isSportClub || isPoloGolf || isImperium || isUmbra ? 'auto' : 'metadata'}
             poster={product.thumbnail_image || product.images?.[0]}
             className={`absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
             src={
