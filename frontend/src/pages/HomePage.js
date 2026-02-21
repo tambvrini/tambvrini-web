@@ -239,7 +239,12 @@ const DropGridSection = () => {
               const base = rest.slice(0, captain ? 7 : 8);
               const displayed = captain ? [...base, captain] : base;
               return displayed.map((p, i) => (
-                <ProductCard key={p.product_id} product={p} index={i} enableHoverVideo />
+                <ProductCard
+                  key={p.product_id}
+                  product={p}
+                  index={i}
+                  enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
+                />
               ));
             })()}
         </div>
