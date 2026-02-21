@@ -40,12 +40,10 @@ export default function BrandPage() {
             <div className="w-12 h-px bg-emerald mb-10" />
             <h2 className="font-cinzel text-2xl md:text-3xl text-obsidian tracking-[0.1em] mb-8">Artesanía</h2>
             <p className="font-montserrat text-sm text-obsidian/50 leading-relaxed mb-6 max-w-md">
-              Trabajamos exclusivamente con los mejores artesanos de Europa. Cada pieza pasa por un riguroso proceso
-              de confección que garantiza la excelencia en cada detalle.
+              Trabajamos artesanalmente. Cada pieza pasa por un riguroso proceso de confección que garantiza la excelencia en cada detalle.
             </p>
             <p className="font-montserrat text-sm text-obsidian/50 leading-relaxed max-w-md">
-              Desde los telares de Como hasta los talleres de piel de Florencia, seleccionamos materiales de la más
-              alta calidad para crear prendas que duran generaciones.
+              Desde Barcelona, seleccionamos materiales de la más alta calidad para crear prendas que duran generaciones.
             </p>
           </div>
           <div className="img-zoom aspect-square lg:aspect-auto overflow-hidden">
