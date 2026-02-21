@@ -89,7 +89,7 @@ export default function ShopPage() {
           <div>
             <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-marble">{getTitle()}</h1>
             <p className="font-montserrat text-xs text-marble/40 mt-3 tracking-wide">
-              {total} {total === 1 ? 'producto' : 'productos'}
+              {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
           </div>
           <div className="flex items-center gap-4">
