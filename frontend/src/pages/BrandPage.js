@@ -11,9 +11,7 @@ export default function BrandPage() {
       <section className="relative h-[70vh] overflow-hidden">
         <img src={MARBLE_IMAGE} alt="Marble" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-obsidian/50" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
-          <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-16 md:h-24 mb-4" />
-        </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6" />
       </section>
 
       {/* Philosophy */}
