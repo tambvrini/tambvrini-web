@@ -13,12 +13,16 @@ const BOLSO_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tam
 const SPORT_CLUB_ID = 'camiseta-sport-club';
 const SPORT_CLUB_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/r6zojqz1_video%20articulo.mp4';
 
+const POLO_GOLF_ID = 'polo-golf';
+const POLO_GOLF_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/dcwhx6l3_articulo%202%20video.mp4';
+
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
   const isBolso = enableHoverVideo && product.product_id === BOLSO_ID;
   const isSportClub = enableHoverVideo && product.product_id === SPORT_CLUB_ID;
-  const hasHoverVideo = isTraje || isAureus || isBolso || isSportClub;
+  const isPoloGolf = enableHoverVideo && product.product_id === POLO_GOLF_ID;
+  const hasHoverVideo = isTraje || isAureus || isBolso || isSportClub || isPoloGolf;
 
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
@@ -69,7 +73,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
             muted
             loop
             playsInline
-            preload={isSportClub ? 'auto' : 'metadata'}
+            preload={isSportClub || isPoloGolf ? 'auto' : 'metadata'}
             poster={product.thumbnail_image || product.images?.[0]}
             className={`absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
             src={
