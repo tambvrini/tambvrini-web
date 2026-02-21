@@ -75,6 +75,12 @@ export default function ShopPage() {
 
   const hasActiveFilters = category || gender || collection || search;
 
+  const filteredProducts = gender === 'hombre'
+    ? products.filter((p) => p.product_id !== 'bolso-monograma-tambvrini' && p.product_id !== 'americana-umbra')
+    : products;
+
+  const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
+
   return (
     <div data-testid="shop-page" className="min-h-screen pt-32 md:pt-40 pb-24">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
