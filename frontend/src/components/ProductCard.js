@@ -89,7 +89,9 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
                     ? BOLSO_HOVER_VIDEO_URL
                     : isSportClub
                       ? SPORT_CLUB_HOVER_VIDEO_URL
-                      : POLO_GOLF_HOVER_VIDEO_URL
+                      : isPoloGolf
+                        ? POLO_GOLF_HOVER_VIDEO_URL
+                        : IMPERIUM_HOVER_VIDEO_URL
             }
           />
         )}
