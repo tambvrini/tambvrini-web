@@ -150,7 +150,7 @@ export default function ShopPage() {
               </div>
             ))}
           </div>
-        ) : products.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20">
             <p className="font-playfair text-xl text-marble/40">No se encontraron productos</p>
             <button onClick={clearFilters} className="mt-6 btn-luxury text-xs">Ver todos los productos</button>
