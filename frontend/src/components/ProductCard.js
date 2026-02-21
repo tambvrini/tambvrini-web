@@ -85,7 +85,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
           />
         )}
 
-        <div className="absolute inset-0 bg-obsidian/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isSportClub ? 'bg-obsidian/10' : 'bg-obsidian/30'}`} />
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
           <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-marble/90">Ver producto</span>
         </div>
