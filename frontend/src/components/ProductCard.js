@@ -95,7 +95,9 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
                       ? SPORT_CLUB_HOVER_VIDEO_URL
                       : isPoloGolf
                         ? POLO_GOLF_HOVER_VIDEO_URL
-                        : IMPERIUM_HOVER_VIDEO_URL
+                        : isImperium
+                          ? IMPERIUM_HOVER_VIDEO_URL
+                          : UMBRA_HOVER_VIDEO_URL
             }
           />
         )}
