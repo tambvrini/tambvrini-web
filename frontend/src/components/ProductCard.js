@@ -35,8 +35,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
       return;
     }
 
-    // Instant start on hover
-    v.load();
+    // Instant start on hover (video is preloaded; play only while hovering)
     const p = v.play();
     if (p && typeof p.catch === 'function') p.catch(() => {});
   }, [hovered, hasHoverVideo]);
@@ -85,8 +84,8 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
           />
         )}
 
-        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isSportClub ? 'bg-obsidian/10' : 'bg-obsidian/30'}`} />
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isSportClub ? 'bg-obsidian/10' : 'bg-obsidian/30'}`} />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-marble/90">Ver producto</span>
         </div>
 
