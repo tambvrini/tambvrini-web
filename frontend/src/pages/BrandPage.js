@@ -61,7 +61,7 @@ export default function BrandPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
           {[
             { title: 'Herencia', text: 'Cada colección rinde homenaje a la rica tradición de la moda europea, desde la sastrería napolitana hasta la seda de Como.' },
-            { title: 'Excelencia', text: 'Materiales de la más alta calidad, confeccionados por maestros artesanos con décadas de experiencia.' },
+            { title: 'Excelencia', text: 'Diseñado y elaborado a mano en Barcelona, cada producto TAMBVRINI nace de un proceso artesanal donde el detalle es la prioridad.' },
             { title: 'Compromiso', text: 'Tu satisfacción es nuestra prioridad. Si el producto no cumple tus expectativas, puedes solicitar la devolución en un plazo de 14 días.' },
           ].map((v, i) => (
             <div key={i} className="text-center">
