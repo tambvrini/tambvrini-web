@@ -20,12 +20,15 @@ export default function BrandPage() {
         <h2 className="font-cinzel text-2xl md:text-3xl tracking-[0.1em] text-marble mb-10">Filosofía</h2>
         <div className="space-y-6">
           <p className="font-montserrat text-sm text-marble/50 leading-relaxed">
-            TAMBVRINI nace de la convicción de que la verdadera elegancia es atemporal. Inspirados en la grandeza del mundo clásico
-            y la sofisticación de la Riviera europea, creamos piezas que trascienden temporadas y tendencias.
+            TAMBVRINI nace de Lucas Tamburini, artista y diseñador establecido en Barcelona.
+            La marca surge como una visión personal de la elegancia atemporal, prendas creadas para trascender.
           </p>
           <p className="font-montserrat text-sm text-marble/50 leading-relaxed">
-            Cada colección es un diálogo entre el pasado y el presente: la majestuosidad de Roma, la despreocupada elegancia
-            de los clubes de tenis de la Costa Azul, y la artesanía de los mejores talleres de Italia.
+            Inspirado en la grandeza del mundo clásico, la estética europea y la artesanía tradicional, TAMBVRINI construye cada colección como un diálogo entre el pasado y el presente.
+            Una búsqueda constante de equilibrio entre la majestuosidad, la sobriedad y la elegancia despreocupada.
+          </p>
+          <p className="font-montserrat text-sm text-marble/50 leading-relaxed">
+            Cada pieza refleja una filosofía clara: identidad y carácter.
           </p>
           <p className="font-playfair italic text-lg text-marble/30 mt-10">
             "Vestir bien no es un acto de vanidad, sino un homenaje a la tradición."
