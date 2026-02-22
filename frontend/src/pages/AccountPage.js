@@ -48,8 +48,8 @@ export default function AccountPage() {
     return (
       <div data-testid="account-page" className="min-h-screen pt-32 md:pt-40 pb-24">
         <div className="max-w-2xl mx-auto px-6">
-          <h1 className="font-cinzel text-3xl md:text-4xl tracking-[0.1em] text-marble mb-16">Mi Cuenta</h1>
-          <div className="border border-white/5 p-8 md:p-12 mb-8">
+          <h1 className="font-cinzel text-3xl md:text-4xl tracking-[0.1em] text-obsidian mb-16">Mi Cuenta</h1>
+          <div className="border border-black/5 p-8 md:p-12 mb-8">
             <div className="flex items-center gap-5 mb-8">
               {user.picture ? (
                 <img src={user.picture} alt="" className="w-14 h-14 rounded-full object-cover" />
@@ -59,21 +59,21 @@ export default function AccountPage() {
                 </div>
               )}
               <div>
-                <p className="font-playfair text-lg text-marble">{user.name}</p>
-                <p className="font-montserrat text-xs text-marble/40 mt-1">{user.email}</p>
+                <p className="font-playfair text-lg text-obsidian">{user.name}</p>
+                <p className="font-montserrat text-xs text-obsidian/50 mt-1">{user.email}</p>
               </div>
             </div>
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/favoritos')}
-                className="w-full flex items-center gap-3 py-4 px-5 border border-white/5 text-left hover:border-white/15 transition-colors duration-300"
+                className="w-full flex items-center gap-3 py-4 px-5 border border-black/5 text-left hover:border-black/15 transition-colors duration-300"
               >
-                <Heart size={16} className="text-marble/30" />
-                <span className="font-montserrat text-xs tracking-wide text-marble/60">Mis Favoritos</span>
+                <Heart size={16} className="text-obsidian/30" />
+                <span className="font-montserrat text-xs tracking-wide text-obsidian/60">Mis Favoritos</span>
               </button>
               <button
                 onClick={() => navigate('/tienda')}
-                className="w-full flex items-center gap-3 py-4 px-5 border border-white/5 text-left hover:border-white/15 transition-colors duration-300"
+                className="w-full flex items-center gap-3 py-4 px-5 border border-black/5 text-left hover:border-black/15 transition-colors duration-300"
               >
                 <Package size={16} className="text-marble/30" />
                 <span className="font-montserrat text-xs tracking-wide text-marble/60">Mis Pedidos</span>
