@@ -17,6 +17,8 @@ const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/th2xfrpo_10.jpg";
 const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
+const EDITORIAL_POLOS_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/v4zs6ugs_hf_20260222_181550_e58e110a-c888-46f9-818a-7daac73fbd28.jpeg";
+const EDITORIAL_SUETERES_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/lks43ws5_hf_20260222_183135_094a5ad6-f6e8-407f-8fd4-6dceef064698.jpeg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 
@@ -284,6 +286,39 @@ const DropGridSection = () => {
                     enableWishlistIcon
                   />
                 ))}
+              </div>
+
+              <div data-testid="editorial-collections-section" className="my-6 md:my-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                  <Link
+                    to="/tienda?category=polos"
+                    data-testid="editorial-polos-link"
+                    className="group block"
+                  >
+                    <div className="overflow-hidden rounded-[22px]">
+                      <img
+                        src={EDITORIAL_POLOS_IMAGE}
+                        alt="Colección Polos"
+                        loading="lazy"
+                        className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  </Link>
+                  <Link
+                    to="/tienda?category=sueteres"
+                    data-testid="editorial-sueteres-link"
+                    className="group block"
+                  >
+                    <div className="overflow-hidden rounded-[22px]">
+                      <img
+                        src={EDITORIAL_SUETERES_IMAGE}
+                        alt="Colección Suéteres"
+                        loading="lazy"
+                        className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  </Link>
+                </div>
               </div>
 
               <div className="my-6 md:my-8">
