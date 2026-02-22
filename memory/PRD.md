@@ -24,6 +24,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **22 Feb 2026**: nueva sección editorial doble (Polos/Suéteres) bajo los 4 primeros productos en Home.
 - **22 Feb 2026**: subcategoría “Suéteres” añadida en filtros de Tienda.
 - **22 Feb 2026**: subcategoría “Polos” añadida en filtros de Tienda.
 - **22 Feb 2026**: overlay editorial “Sport Club 2026” + CTA con transición suave en la imagen de campaña Home.
