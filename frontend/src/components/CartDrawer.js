@@ -95,14 +95,14 @@ export const CartDrawer = () => {
                     <div className="flex items-center gap-3 mt-3">
                       <button
                         onClick={() => updateQuantity(item.product_id, item.size, item.color, item.quantity - 1)}
-                        className="w-6 h-6 border border-white/10 flex items-center justify-center text-marble/50 hover:text-marble hover:border-white/30"
+                        className="w-6 h-6 border border-black/10 flex items-center justify-center text-obsidian/50 hover:text-obsidian hover:border-black/30"
                       >
                         <Minus size={12} />
                       </button>
-                      <span className="font-montserrat text-xs text-marble/80 w-6 text-center">{item.quantity}</span>
+                      <span className="font-montserrat text-xs text-obsidian/80 w-6 text-center">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.product_id, item.size, item.color, item.quantity + 1)}
-                        className="w-6 h-6 border border-white/10 flex items-center justify-center text-marble/50 hover:text-marble hover:border-white/30"
+                        className="w-6 h-6 border border-black/10 flex items-center justify-center text-obsidian/50 hover:text-obsidian hover:border-black/30"
                       >
                         <Plus size={12} />
                       </button>
@@ -111,7 +111,7 @@ export const CartDrawer = () => {
                   <button
                     data-testid={`remove-item-${item.product_id}`}
                     onClick={() => removeItem(item.product_id, item.size, item.color)}
-                    className="text-marble/30 hover:text-marble/60 self-start"
+                    className="text-obsidian/30 hover:text-obsidian/60 self-start"
                   >
                     <X size={14} />
                   </button>
@@ -123,10 +123,10 @@ export const CartDrawer = () => {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="p-6 border-t border-white/5">
+          <div className="p-6 border-t border-black/5">
             <div className="flex justify-between items-center mb-6">
-              <span className="font-montserrat text-xs tracking-widest uppercase text-marble/50">Subtotal</span>
-              <span className="font-playfair text-lg text-marble">
+              <span className="font-montserrat text-xs tracking-widest uppercase text-obsidian/50">Subtotal</span>
+              <span className="font-playfair text-lg text-obsidian">
                 {totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;
               </span>
             </div>
