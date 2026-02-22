@@ -244,6 +244,7 @@ const DropGridSection = () => {
                   product={p}
                   index={i}
                   enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
+                  enableWishlistIcon
                 />
               ));
             })()}
