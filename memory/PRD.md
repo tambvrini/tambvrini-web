@@ -7,7 +7,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **Frontend**: React + TailwindCSS + Framer Motion
 - **Backend**: FastAPI + MongoDB
 - **Auth**: JWT + Emergent Google OAuth
-- **Pagos**: Stripe (pendiente de integrar, test mode)
+- **Pagos**: Stripe Checkout (test mode) con dirección de envío obligatoria
 - **Tipografías**: Cinzel (títulos), Playfair Display (editorial), Montserrat (cuerpo)
 - **Paleta**: Marfil #F5F2EA (global), Marfil claro #F8F6F1 (Home), Obsidian #0A0A0A, Dorado #C5A059
 
@@ -24,6 +24,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **22 Feb 2026**: Stripe Checkout exige dirección de envío y muestra tarifas de envío.
 - **22 Feb 2026**: miniatura de “Americana UMBRA” actualizada.
 - **22 Feb 2026**: miniatura de “Polo Aureus” actualizada.
 - **22 Feb 2026**: miniatura de “Traje Monograma Tambvrini” actualizada.
