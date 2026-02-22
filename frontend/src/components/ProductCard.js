@@ -71,51 +71,53 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
         if (hasHoverVideo && canHover) setHovered(false);
       }}
     >
-      <div className="relative aspect-[3/4] overflow-hidden">
-        <img
-          src={product.thumbnail_image || product.images?.[0]}
-          alt={product.name}
-          className={`w-full h-full object-cover ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
-          loading="lazy"
-        />
-
-        {hasHoverVideo && (
-          <video
-            ref={videoRef}
-            muted
-            loop
-            playsInline
-            preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
-            poster={product.thumbnail_image || product.images?.[0]}
-            className={`absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
-            src={
-              isTraje
-                ? TRAJE_HOVER_VIDEO_URL
-                : isAureus
-                  ? AUREUS_HOVER_VIDEO_URL
-                  : isBolso
-                    ? BOLSO_HOVER_VIDEO_URL
-                    : isSportClub
-                      ? SPORT_CLUB_HOVER_VIDEO_URL
-                      : isPoloGolf
-                        ? POLO_GOLF_HOVER_VIDEO_URL
-                        : isImperium
-                          ? IMPERIUM_HOVER_VIDEO_URL
-                          : isUmbra
-                            ? UMBRA_HOVER_VIDEO_URL
-                            : CAPTAIN_HOVER_VIDEO_URL
-            }
+      <div className="relative aspect-[3/4] rounded-[10px] bg-black/5 p-[2px]">
+        <div className="relative w-full h-full overflow-hidden rounded-[8px]">
+          <img
+            src={product.thumbnail_image || product.images?.[0]}
+            alt={product.name}
+            className={`w-full h-full object-cover ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
+            loading="lazy"
           />
-        )}
 
-        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${(isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain) ? 'bg-obsidian/5' : 'bg-obsidian/30'}`} />
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
+          {hasHoverVideo && (
+            <video
+              ref={videoRef}
+              muted
+              loop
+              playsInline
+              preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
+              poster={product.thumbnail_image || product.images?.[0]}
+              className={`absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+              src={
+                isTraje
+                  ? TRAJE_HOVER_VIDEO_URL
+                  : isAureus
+                    ? AUREUS_HOVER_VIDEO_URL
+                    : isBolso
+                      ? BOLSO_HOVER_VIDEO_URL
+                      : isSportClub
+                        ? SPORT_CLUB_HOVER_VIDEO_URL
+                        : isPoloGolf
+                          ? POLO_GOLF_HOVER_VIDEO_URL
+                          : isImperium
+                            ? IMPERIUM_HOVER_VIDEO_URL
+                            : isUmbra
+                              ? UMBRA_HOVER_VIDEO_URL
+                              : CAPTAIN_HOVER_VIDEO_URL
+              }
+            />
+          )}
+
+          <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${(isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain) ? 'bg-obsidian/5' : 'bg-obsidian/30'}`} />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
+          </div>
+
+          {product.is_sold_out && (
+            <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
+          )}
         </div>
-
-        {product.is_sold_out && (
-          <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
-        )}
       </div>
 
       <div className="mt-4">
