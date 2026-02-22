@@ -134,7 +134,7 @@ export default function AccountPage() {
             </div>
           )}
           <div>
-            <label className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 block mb-2">Email</label>
+            <label className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 block mb-2">Email</label>
             <input
               data-testid="email-input"
               type="email"
@@ -146,7 +146,7 @@ export default function AccountPage() {
             />
           </div>
           <div>
-            <label className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 block mb-2">Contraseña</label>
+            <label className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 block mb-2">Contraseña</label>
             <input
               data-testid="password-input"
               type="password"
@@ -170,7 +170,7 @@ export default function AccountPage() {
         <button
           data-testid="toggle-auth-mode"
           onClick={() => setIsLogin(!isLogin)}
-          className="block mx-auto mt-8 font-montserrat text-[10px] tracking-widest uppercase text-marble/30 hover:text-marble transition-colors"
+          className="block mx-auto mt-8 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 hover:text-obsidian transition-colors"
         >
           {isLogin ? '¿No tiene cuenta? Crear cuenta' : '¿Ya tiene cuenta? Iniciar sesión'}
         </button>
