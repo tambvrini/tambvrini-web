@@ -24,6 +24,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **22 Feb 2026**: imagen full-width añadida en Tienda Hombre entre los primeros 4 y los últimos 2 artículos.
 - **22 Feb 2026**: imagen “campaña 2” actualizada debajo de los últimos 4 artículos en Home.
 - **22 Feb 2026**: tarifas de envío España (estándar 4,99€ / exprés 7,99€) + envío gratis > 75€.
 - **22 Feb 2026**: Stripe Checkout exige dirección de envío y muestra tarifas de envío.
