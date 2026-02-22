@@ -117,6 +117,27 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
           <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${(isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain || isBolso || isTraje) ? 'bg-obsidian/5' : 'bg-obsidian/30'}`} />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
+
+          {enableWishlistIcon && (
+            <button
+              type="button"
+              aria-label={inWishlist ? 'Quitar de favoritos' : 'Añadir a favoritos'}
+              className={`absolute top-[14px] right-[14px] z-20 w-8 h-8 flex items-center justify-center rounded-full bg-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
+                inWishlist ? 'opacity-100' : ''
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleItem(product);
+              }}
+            >
+              <Heart
+                size={16}
+                className={`text-obsidian transition-transform duration-200 ${inWishlist ? 'fill-obsidian scale-[1.03]' : 'scale-100'}`}
+              />
+            </button>
+          )}
+
           </div>
 
           {product.is_sold_out && (
