@@ -182,8 +182,8 @@ export default function ProductPage() {
                       disabled={disabled}
                       className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
                         selectedSize === s
-                          ? 'border-marble text-marble bg-marble/5'
-                          : 'border-white/10 text-marble/40'
+                          ? 'border-obsidian text-obsidian bg-black/5'
+                          : 'border-black/10 text-obsidian/50'
                       } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'}`}
                     >
                       {s}
