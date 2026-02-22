@@ -31,7 +31,7 @@ export default function AuthCallback() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F5F2EA] flex items-center justify-center">
+    <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="text-center">
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin mx-auto mb-4" />
         <p className="font-montserrat text-xs text-obsidian/60 tracking-wide">Autenticando...</p>

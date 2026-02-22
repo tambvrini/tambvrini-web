@@ -222,7 +222,7 @@ export default function ProductPage() {
                 className={`flex-1 py-4 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 ${
                   product.is_sold_out
                     ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
-                    : 'bg-marble text-obsidian hover:bg-gold'
+                    : 'bg-white text-obsidian hover:bg-gold'
                 }`}
               >
                 {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}

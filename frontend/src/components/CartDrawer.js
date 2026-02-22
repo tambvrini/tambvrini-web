@@ -48,7 +48,7 @@ export const CartDrawer = () => {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="right" hideClose className="w-full sm:w-[420px] bg-[#F5F2EA] border-l border-black/5 p-0 flex flex-col">
+      <SheetContent side="right" hideClose className="w-full sm:w-[420px] bg-white border-l border-black/5 p-0 flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-black/5 flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -149,7 +149,7 @@ export const CartDrawer = () => {
               data-testid="checkout-btn"
               onClick={handleCheckout}
               disabled={loading}
-              className="w-full py-4 bg-marble text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50"
+              className="w-full py-4 bg-white text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50"
             >
               {loading ? 'Procesando...' : (user ? 'Finalizar Compra' : 'Inicia sesión para pagar')}
             </button>

@@ -5,17 +5,17 @@
 @layer base {
     :root {
         /* Luxury ivory theme */
-        --background: 43 33% 94%;
+        --background: 0 0% 100%;
         --foreground: 0 0% 7%;
-        --card: 43 33% 94%;
+        --card: 0 0% 100%;
         --card-foreground: 0 0% 7%;
-        --popover: 43 33% 94%;
+        --popover: 0 0% 100%;
         --popover-foreground: 0 0% 7%;
         --primary: 39 40% 55%;
         --primary-foreground: 0 0% 7%;
-        --secondary: 43 25% 92%;
+        --secondary: 0 0% 100%;
         --secondary-foreground: 0 0% 7%;
-        --muted: 43 18% 90%;
+        --muted: 0 0% 100%;
         --muted-foreground: 0 0% 43%;
         --accent: 160 47% 21%;
         --accent-foreground: 43 33% 94%;
@@ -57,7 +57,7 @@ body {
     width: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #F5F2EA;
+    background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
     background: rgba(17, 17, 17, 0.18);

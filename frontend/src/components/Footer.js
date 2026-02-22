@@ -3,7 +3,7 @@ import { useI18n } from "../contexts/I18nContext";
 const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
 const ICON_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/krjmn5r6_LOGO%20ICONO%20blanco%20svg%20web.svg";
 
-export const Footer = ({ bgColor = '#F5F2EA' }) => {
+export const Footer = ({ bgColor = '#FFFFFF' }) => {
   const { lang, setLang, t } = useI18n();
   return (
     <footer

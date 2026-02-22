@@ -90,7 +90,7 @@ export const Header = () => {
         data-testid="main-header"
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? `${isHomePage ? 'bg-[#F8F6F1]/95' : 'bg-[#F5F2EA]/95'} backdrop-blur-md py-5 border-b border-black/5`
+            ? `${isHomePage ? 'bg-white/95' : 'bg-white/95'} backdrop-blur-md py-5 border-b border-black/5`
             : 'bg-transparent py-6'
         }`}
       >
@@ -106,7 +106,7 @@ export const Header = () => {
                   <Menu size={20} strokeWidth={1.5} />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-[#F5F2EA] border-r border-black/5 p-0 overflow-y-auto">
+              <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-white border-r border-black/5 p-0 overflow-y-auto">
                 <div className="p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
                     <img src={logoSrc} alt="TAMBVRINI" className={`h-5 ${(scrolled || !isHomePage) ? 'invert' : ''}`} />

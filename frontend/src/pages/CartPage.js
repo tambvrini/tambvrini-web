@@ -124,7 +124,7 @@ export default function CartPage() {
                 data-testid="cart-checkout-btn"
                 onClick={handleCheckout}
                 disabled={loading}
-                className="w-full py-4 bg-marble text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-4 bg-white text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {loading ? 'Procesando...' : (user ? (<>Finalizar Compra <ArrowRight size={14} /></>) : 'Inicia sesión para pagar')}
               </button>

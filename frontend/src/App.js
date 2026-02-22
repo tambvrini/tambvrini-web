@@ -49,7 +49,7 @@ function AppRouter() {
           <Route path="/marca" element={<BrandPage />} />
         </Routes>
       </main>
-      <Footer bgColor={isHome ? '#F8F6F1' : undefined} />
+      <Footer bgColor={isHome ? '#FFFFFF' : undefined} />
     </div>
   );
 }

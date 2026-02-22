@@ -66,7 +66,7 @@ const HeroSection = () => {
       {/* Background image */}
       <div className="absolute inset-0">
         <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-full object-cover brightness-105" />
-        <motion.div className="absolute inset-0 bg-[#F5F2EA]" style={{ opacity: overlayOpacity }} />
+        <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
       </div>
 
       {/* Animated GIANT logo — fixed position, transforms from center to header */}
@@ -239,7 +239,7 @@ const DropGridSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.35, ease: 'easeOut' }}
-          className="fixed inset-0 z-[80] bg-[#F5F2EA]/90 backdrop-blur-sm flex items-center justify-center"
+          className="fixed inset-0 z-[80] bg-white/90 backdrop-blur-sm flex items-center justify-center"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
@@ -384,7 +384,7 @@ const DropGridSection = () => {
                           data-testid="campaign-collection-button"
                           type="button"
                           onClick={handleCollectionClick}
-                          className="mt-6 inline-flex items-center justify-center rounded-full border border-[#F6F1E7]/70 px-8 py-3 font-montserrat text-[10px] tracking-[0.32em] uppercase text-[#F6F1E7]/85 transition-all duration-500 hover:text-[#F6F1E7] hover:border-[#F6F1E7] hover:shadow-[0_0_18px_rgba(246,241,231,0.35)] hover:bg-white/5"
+                          className="mt-6 inline-flex items-center justify-center rounded-full border border-[#F6F1E7]/70 px-8 py-3 font-montserrat text-[10px] tracking-[0.32em] uppercase text-[#F6F1E7]/85 transition-all duration-500 hover:text-[#F6F1E7] hover:border-[#F6F1E7] hover:shadow-[0_0_18px_rgba(0,0,0,0.04)] hover:bg-white/5"
                         >
                           Comprar la Colección
                         </button>
@@ -408,7 +408,7 @@ const DropGridSection = () => {
                       data-testid="editorial-hero-cta"
                       to="/tienda?category=novedades"
                       onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                      className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 rounded-full border border-[#F5F2EA]/70 bg-transparent px-6 py-2 text-[11px] tracking-[0.25em] uppercase font-montserrat text-[#1a1a1a] transition-colors duration-300 hover:bg-[#F5F2EA] hover:text-[#1a1a1a]"
+                      className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 rounded-full border border-[#F5F2EA]/70 bg-transparent px-6 py-2 text-[11px] tracking-[0.25em] uppercase font-montserrat text-[#1a1a1a] transition-colors duration-300 hover:bg-white hover:text-[#1a1a1a]"
                     >
                       Descubrir
                     </Link>
@@ -447,7 +447,7 @@ const DropGridSection = () => {
 /* ============ HOMEPAGE ============ */
 export default function HomePage() {
   return (
-    <div data-testid="home-page" className="noise-overlay editorial-noise bg-[#F8F6F1]">
+    <div data-testid="home-page" className="noise-overlay editorial-noise bg-white">
       <HeroSection />
 
       {/* (removed editorial divider) */}

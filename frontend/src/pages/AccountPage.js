@@ -161,7 +161,7 @@ export default function AccountPage() {
             data-testid="auth-submit-btn"
             type="submit"
             disabled={submitting}
-            className="w-full py-4 bg-marble text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50"
+            className="w-full py-4 bg-white text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50"
           >
             {submitting ? 'Procesando...' : isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
           </button>

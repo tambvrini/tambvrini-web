@@ -123,7 +123,7 @@ export default function ShopPage() {
               <SelectTrigger data-testid="sort-select" className="w-[200px] bg-transparent border-black/10 text-obsidian/60 font-montserrat text-xs">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
-              <SelectContent className="bg-[#F5F2EA] border-black/10">
+              <SelectContent className="bg-white border-black/10">
                 <SelectItem value="newest" className="text-obsidian/80 font-montserrat text-xs">Más recientes</SelectItem>
                 <SelectItem value="price_asc" className="text-obsidian/80 font-montserrat text-xs">Precio: menor a mayor</SelectItem>
                 <SelectItem value="price_desc" className="text-obsidian/80 font-montserrat text-xs">Precio: mayor a menor</SelectItem>
