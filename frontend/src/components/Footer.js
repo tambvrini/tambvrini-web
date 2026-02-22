@@ -52,7 +52,7 @@ export const Footer = () => {
               </ul>
 
               <div className="mt-8">
-                <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-marble/50 mb-4">{t('idioma')}</p>
+                <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-obsidian/50 mb-4">{t('idioma')}</p>
                 <select
                   aria-label="Idioma"
                   value={lang}
