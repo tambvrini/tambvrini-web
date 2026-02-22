@@ -19,7 +19,7 @@ const POLO_GOLF_ID = 'polo-golf';
 const POLO_GOLF_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/dcwhx6l3_articulo%202%20video.mp4';
 
 const IMPERIUM_ID = 'camiseta-imperium';
-const IMPERIUM_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/clr0su91_0212%20%284%29%281%292.mp4';
+const IMPERIUM_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/5muj0dwx_0212%20%284%29.mp4';
 
 const UMBRA_ID = 'americana-umbra';
 const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/eotmn5eb_0212%20%284%29%282%29.mp4';
