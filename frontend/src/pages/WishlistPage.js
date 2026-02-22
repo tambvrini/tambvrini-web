@@ -22,7 +22,7 @@ export default function WishlistPage() {
             {items.map((item) => (
               <div key={item.product_id} className="group relative">
                 <Link to={`/producto/${item.product_id}`} className="block">
-                  <div className="img-zoom aspect-[3/4] bg-white/5 mb-4 overflow-hidden">
+                  <div className="img-zoom aspect-[3/4] bg-black/5 mb-4 overflow-hidden">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </div>
                   <h3 className="font-playfair text-sm text-obsidian/95 mb-1">{item.name}</h3>
