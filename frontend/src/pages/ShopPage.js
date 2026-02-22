@@ -25,6 +25,8 @@ const COLLECTION_LABELS = {
   limited: 'Piezas Limitadas',
 };
 
+const SUETERES_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/g945z4pt_eden1.jpg";
+
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
 
 export default function ShopPage() {
@@ -129,6 +131,19 @@ export default function ShopPage() {
             </Select>
           </div>
         </div>
+
+        {category === 'sueteres' && (
+          <div data-testid="sueteres-hero-image" className="my-6 md:my-8">
+            <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+              <img
+                src={SUETERES_HERO_IMAGE}
+                alt="Editorial Suéteres TAMBVRINI"
+                loading="lazy"
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Category pills */}
         <div className="flex flex-wrap gap-2 mb-12">
