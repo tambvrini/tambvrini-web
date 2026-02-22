@@ -23,6 +23,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 
 ## Última actualización
 - **22 Feb 2026**: miniatura de “Americana UMBRA” actualizada.
+- **22 Feb 2026**: miniatura de “Polo Aureus” actualizada.
 
 ## Backlog
 ### P0
