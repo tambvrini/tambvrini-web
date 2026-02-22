@@ -288,6 +288,18 @@ const DropGridSection = () => {
                 ))}
               </div>
 
+              <div className="my-6 md:my-8">
+                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                  <img
+                    data-testid="editorial-divider-image"
+                    src={DROP_EDITORIAL_IMAGE}
+                    alt="Editorial TAMBVRINI"
+                    className="w-full h-[240px] sm:h-[300px] md:h-[360px] lg:h-[420px] object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+
               <div data-testid="editorial-collections-section" className="my-6 md:my-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <Link
@@ -318,18 +330,6 @@ const DropGridSection = () => {
                       />
                     </div>
                   </Link>
-                </div>
-              </div>
-
-              <div className="my-6 md:my-8">
-                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-                  <img
-                    data-testid="editorial-divider-image"
-                    src={DROP_EDITORIAL_IMAGE}
-                    alt="Editorial TAMBVRINI"
-                    className="w-full h-[240px] sm:h-[300px] md:h-[360px] lg:h-[420px] object-cover"
-                    loading="lazy"
-                  />
                 </div>
               </div>
 
