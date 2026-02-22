@@ -41,23 +41,23 @@ export default function CartPage() {
 
         {items.length === 0 ? (
           <div className="text-center py-20">
-            <p className="font-playfair text-xl text-marble/30 mb-6">Tu carrito está vacío</p>
+            <p className="font-playfair text-xl text-obsidian/50 mb-6">Tu carrito está vacío</p>
             <Link to="/tienda" className="btn-luxury inline-block">Explorar Tienda</Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             {/* Items */}
             <div className="lg:col-span-2">
-              <div className="border-b border-white/5 pb-4 mb-8 hidden md:grid grid-cols-12 gap-4">
-                <span className="col-span-6 font-montserrat text-[10px] tracking-widest uppercase text-marble/30">Producto</span>
-                <span className="col-span-2 font-montserrat text-[10px] tracking-widest uppercase text-marble/30">Cantidad</span>
-                <span className="col-span-2 font-montserrat text-[10px] tracking-widest uppercase text-marble/30 text-right">Precio</span>
+              <div className="border-b border-black/5 pb-4 mb-8 hidden md:grid grid-cols-12 gap-4">
+                <span className="col-span-6 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">Producto</span>
+                <span className="col-span-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">Cantidad</span>
+                <span className="col-span-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 text-right">Precio</span>
                 <span className="col-span-2" />
               </div>
               {items.map((item) => (
-                <div key={`${item.product_id}-${item.size}-${item.color}`} className="border-b border-white/5 py-6 md:grid md:grid-cols-12 md:gap-4 md:items-center flex flex-col gap-4">
+                <div key={`${item.product_id}-${item.size}-${item.color}`} className="border-b border-black/5 py-6 md:grid md:grid-cols-12 md:gap-4 md:items-center flex flex-col gap-4">
                   <div className="col-span-6 flex gap-5">
-                    <Link to={`/producto/${item.product_id}`} className="w-24 h-32 bg-white/5 flex-shrink-0 overflow-hidden">
+                    <Link to={`/producto/${item.product_id}`} className="w-24 h-32 bg-black/5 flex-shrink-0 overflow-hidden">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     </Link>
                     <div>
