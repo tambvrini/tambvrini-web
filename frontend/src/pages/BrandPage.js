@@ -10,27 +10,27 @@ export default function BrandPage() {
       {/* Hero */}
       <section className="relative h-[70vh] overflow-hidden">
         <img src={MARBLE_IMAGE} alt="Marble" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-obsidian/50" />
+        <div className="absolute inset-0 bg-black/20" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6" />
       </section>
 
       {/* Philosophy */}
       <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto">
         <div className="section-divider mb-10" />
-        <h2 className="font-cinzel text-2xl md:text-3xl tracking-[0.1em] text-marble mb-10">Filosofía</h2>
+        <h2 className="font-cinzel text-2xl md:text-3xl tracking-[0.1em] text-obsidian mb-10">Filosofía</h2>
         <div className="space-y-6">
-          <p className="font-montserrat text-sm text-marble/50 leading-relaxed">
+          <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">
             TAMBVRINI nace de Lucas Tamburini, artista y diseñador establecido en Barcelona.
             La marca surge como una visión personal de la elegancia atemporal, prendas creadas para trascender.
           </p>
-          <p className="font-montserrat text-sm text-marble/50 leading-relaxed">
+          <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">
             Inspirado en la grandeza del mundo clásico, la estética europea y la artesanía tradicional, TAMBVRINI construye cada colección como un diálogo entre el pasado y el presente.
             Una búsqueda constante de equilibrio entre la majestuosidad, la sobriedad y la elegancia despreocupada.
           </p>
-          <p className="font-montserrat text-sm text-marble/50 leading-relaxed">
+          <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">
             Cada pieza refleja una filosofía clara: identidad y carácter.
           </p>
-          <p className="font-playfair italic text-lg text-marble/30 mt-10">
+          <p className="font-playfair italic text-lg text-obsidian/35 mt-10">
             "Vestir bien no es un acto de vanidad, sino un homenaje a la tradición."
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function BrandPage() {
       <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-[1920px] mx-auto">
         <div className="text-center mb-16">
           <div className="section-divider mx-auto mb-8" />
-          <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-marble/50">Nuestros Valores</h2>
+          <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50">Nuestros Valores</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
           {[
