@@ -61,17 +61,17 @@ export default function CartPage() {
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     </Link>
                     <div>
-                      <Link to={`/producto/${item.product_id}`} className="font-playfair text-sm text-marble hover:text-gold transition-colors">{item.name}</Link>
-                      <p className="font-montserrat text-[10px] text-marble/30 mt-1 tracking-wide">Talla: {item.size}</p>
-                      {item.color && <p className="font-montserrat text-[10px] text-marble/30 tracking-wide">Color: {item.color}</p>}
+                      <Link to={`/producto/${item.product_id}`} className="font-playfair text-sm text-obsidian hover:text-obsidian transition-colors">{item.name}</Link>
+                      <p className="font-montserrat text-[10px] text-obsidian/40 mt-1 tracking-wide">Talla: {item.size}</p>
+                      {item.color && <p className="font-montserrat text-[10px] text-obsidian/40 tracking-wide">Color: {item.color}</p>}
                     </div>
                   </div>
-                  <div className="col-span-2 flex items-center gap-0 border border-white/10 inline-flex self-start">
-                    <button onClick={() => updateQuantity(item.product_id, item.size, item.color, item.quantity - 1)} className="w-9 h-9 flex items-center justify-center text-marble/40 hover:text-marble">
+                  <div className="col-span-2 flex items-center gap-0 border border-black/10 inline-flex self-start">
+                    <button onClick={() => updateQuantity(item.product_id, item.size, item.color, item.quantity - 1)} className="w-9 h-9 flex items-center justify-center text-obsidian/40 hover:text-obsidian">
                       <Minus size={12} />
                     </button>
-                    <span className="w-9 h-9 flex items-center justify-center font-montserrat text-xs text-marble">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.product_id, item.size, item.color, item.quantity + 1)} className="w-9 h-9 flex items-center justify-center text-marble/40 hover:text-marble">
+                    <span className="w-9 h-9 flex items-center justify-center font-montserrat text-xs text-obsidian">{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.product_id, item.size, item.color, item.quantity + 1)} className="w-9 h-9 flex items-center justify-center text-obsidian/40 hover:text-obsidian">
                       <Plus size={12} />
                     </button>
                   </div>
