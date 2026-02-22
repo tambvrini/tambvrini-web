@@ -17,6 +17,7 @@ const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6
 const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
 const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sbeaj2rx_video%20hombre.mp4";
 const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
+const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/th2xfrpo_10.jpg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 /* ============ useInView hook ============ */
@@ -223,32 +224,65 @@ const DropGridSection = () => {
     <section id="drops" data-testid="drop-grid" className="py-24 md:py-32">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         {/* 8 items: 2 rows of 4 on desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
-          {loading
-            ? Array.from({ length: 8 }).map((_, i) => (
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
+            {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="aspect-[3/4] bg-white/5" />
                 <div className="mt-4 h-3 bg-white/5 w-2/3" />
                 <div className="mt-2 h-3 bg-white/5 w-1/3" />
               </div>
-            ))
-            : (() => {
-              // Force “Suéter Captain” to render as the 8th (last) item in the 2nd row on desktop.
-              const captain = products.find((p) => p.product_id === 'sueter-captain');
-              const rest = products.filter((p) => p.product_id !== 'sueter-captain');
-              const base = rest.slice(0, captain ? 7 : 8);
-              const displayed = captain ? [...base, captain] : base;
-              return displayed.map((p, i) => (
-                <ProductCard
-                  key={p.product_id}
-                  product={p}
-                  index={i}
-                  enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
-                  enableWishlistIcon
-                />
-              ));
-            })()}
-        </div>
+            ))}
+          </div>
+        ) : (() => {
+          // Force “Suéter Captain” to render as the 8th (last) item in the 2nd row on desktop.
+          const captain = products.find((p) => p.product_id === 'sueter-captain');
+          const rest = products.filter((p) => p.product_id !== 'sueter-captain');
+          const base = rest.slice(0, captain ? 7 : 8);
+          const displayed = captain ? [...base, captain] : base;
+          const firstRow = displayed.slice(0, 4);
+          const secondRow = displayed.slice(4, 8);
+
+          return (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
+                {firstRow.map((p, i) => (
+                  <ProductCard
+                    key={p.product_id}
+                    product={p}
+                    index={i}
+                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
+                    enableWishlistIcon
+                  />
+                ))}
+              </div>
+
+              <div className="my-6 md:my-8">
+                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                  <img
+                    data-testid="editorial-divider-image"
+                    src={DROP_EDITORIAL_IMAGE}
+                    alt="Editorial TAMBVRINI"
+                    className="w-full h-[240px] sm:h-[300px] md:h-[360px] lg:h-[420px] object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
+                {secondRow.map((p, i) => (
+                  <ProductCard
+                    key={p.product_id}
+                    product={p}
+                    index={i + firstRow.length}
+                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
+                    enableWishlistIcon
+                  />
+                ))}
+              </div>
+            </>
+          );
+        })()}
 
         {/* Aesthetic-only promo tiles (scroll to drops) */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-10">
