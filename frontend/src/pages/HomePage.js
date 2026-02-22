@@ -307,13 +307,19 @@ const DropGridSection = () => {
                     data-testid="editorial-polos-link"
                     className="group block"
                   >
-                    <div className="overflow-hidden rounded-[22px]">
+                    <div className="relative overflow-hidden rounded-[22px]">
                       <img
                         src={EDITORIAL_POLOS_IMAGE}
                         alt="Colección Polos"
                         loading="lazy"
                         className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                       />
+                      <span
+                        data-testid="editorial-polos-text"
+                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[20px] md:text-[28px] lg:text-[32px] tracking-[0.35em] text-[#F6F1E7]/90 font-light"
+                      >
+                        Polos
+                      </span>
                     </div>
                   </Link>
                   <Link
@@ -321,13 +327,19 @@ const DropGridSection = () => {
                     data-testid="editorial-sueteres-link"
                     className="group block"
                   >
-                    <div className="overflow-hidden rounded-[22px]">
+                    <div className="relative overflow-hidden rounded-[22px]">
                       <img
                         src={EDITORIAL_SUETERES_IMAGE}
                         alt="Colección Suéteres"
                         loading="lazy"
                         className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                       />
+                      <span
+                        data-testid="editorial-sueteres-text"
+                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[20px] md:text-[28px] lg:text-[32px] tracking-[0.35em] text-[#F6F1E7]/90 font-light"
+                      >
+                        Suéteres
+                      </span>
                     </div>
                   </Link>
                 </div>
