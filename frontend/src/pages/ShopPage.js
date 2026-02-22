@@ -99,7 +99,7 @@ export default function ShopPage() {
               <button
                 data-testid="clear-filters-btn"
                 onClick={clearFilters}
-                className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-marble/40 hover:text-marble transition-colors duration-300"
+                className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/50 hover:text-obsidian transition-colors duration-300"
               >
                 <X size={12} /> Limpiar filtros
               </button>
