@@ -24,6 +24,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **22 Feb 2026**: subcategoría “Polos” añadida en filtros de Tienda.
 - **22 Feb 2026**: overlay editorial “Sport Club 2026” + CTA con transición suave en la imagen de campaña Home.
 - **22 Feb 2026**: nueva subcategoría “2026” en Tienda con Sport Club, Polo Golf y Suéter Captain.
 - **22 Feb 2026**: imagen hero superior en “Sobre TAMBVRINI” reemplazada.
