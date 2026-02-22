@@ -172,7 +172,7 @@ export const Header = () => {
             >
               <Heart size={20} strokeWidth={1.5} />
               {wishlistItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold text-obsidian text-[9px] font-montserrat font-medium flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-obsidian text-[#F5F2EA] text-[9px] font-montserrat font-medium flex items-center justify-center">
                   {wishlistItems.length}
                 </span>
               )}
@@ -184,7 +184,7 @@ export const Header = () => {
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold text-obsidian text-[9px] font-montserrat font-medium flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-obsidian text-[#F5F2EA] text-[9px] font-montserrat font-medium flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
