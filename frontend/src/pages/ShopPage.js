@@ -39,6 +39,10 @@ export default function ShopPage() {
   const page = parseInt(searchParams.get('page') || '1');
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [category, gender, collection, search, sort, page]);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
