@@ -42,11 +42,9 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 
 ## Backlog
 ### P0
-- Sincronización de carrito con backend para usuarios autenticados
-- Stripe Checkout (requiere login)
+- Conectar newsletter al endpoint
 
 ### P1
-- Conectar formulario de newsletter al endpoint
 - Expandir i18n al resto del sitio
 
 ### P2
