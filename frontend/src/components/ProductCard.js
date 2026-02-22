@@ -7,7 +7,7 @@ const TRAJE_ID = 'traje-monograma-tambvrini';
 const TRAJE_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/tf3t88bp_loop%20final%20model.mp4';
 
 const AUREUS_ID = 'polo-aureus';
-const AUREUS_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sf8pflhe_loop%20modelos.mp4';
+const AUREUS_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/2bvf26dc_0212%20%284%29%281%29.mp4';
 
 const BOLSO_ID = 'bolso-monograma-tambvrini';
 const BOLSO_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/9eqm94jq_0216.mp4';
