@@ -11,7 +11,7 @@ from datetime import datetime
 import json
 
 class TambvriniAPITester:
-    def __init__(self, base_url="https://fashion-boutique-136.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://tambvrini-luxury-3.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.session = requests.Session()
@@ -216,7 +216,7 @@ class TambvriniAPITester:
                             "size": "M",
                             "color": "Negro"
                         }],
-                        "origin_url": "https://fashion-boutique-136.preview.emergentagent.com"
+                        "origin_url": "https://tambvrini-luxury-3.preview.emergentagent.com"
                     }
                 )
                 
