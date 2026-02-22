@@ -65,6 +65,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: video “WEB 1” movido a Marca entre Artesanía y Valores; tarjetas añadidas debajo.
 - **22 Feb 2026**: margen entre tarjetas y “Nuestros valores” reducido.
 - **22 Feb 2026**: color base global del fondo actualizado a #F7F7F5.
+- **22 Feb 2026**: verificación de tono base global #F7F7F5 (off-white neutro).
 
 ## Backlog
 ### P0
