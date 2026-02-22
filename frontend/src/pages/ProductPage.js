@@ -165,7 +165,7 @@ export default function ProductPage() {
 
             {/* Size selector */}
             <div className="mb-8">
-              <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 mb-4">Talla</p>
+              <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-4">Talla</p>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((s, i) => {
                   const isSizeSoldOut =
@@ -184,7 +184,7 @@ export default function ProductPage() {
                         selectedSize === s
                           ? 'border-marble text-marble bg-marble/5'
                           : 'border-white/10 text-marble/40'
-                      } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-white/30 hover:text-marble'}`}
+                      } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'}`}
                     >
                       {s}
                     </button>
@@ -195,8 +195,8 @@ export default function ProductPage() {
 
             {/* Quantity */}
             <div className={`mb-10 ${product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}`}>
-              <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 mb-4">Cantidad</p>
-              <div className="flex items-center gap-0 border border-white/10 inline-flex">
+              <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-4">Cantidad</p>
+              <div className="flex items-center gap-0 border border-black/10 inline-flex">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="w-12 h-12 flex items-center justify-center text-marble/50 hover:text-marble border-r border-white/10"
