@@ -75,8 +75,8 @@ export default function AccountPage() {
                 onClick={() => navigate('/tienda')}
                 className="w-full flex items-center gap-3 py-4 px-5 border border-black/5 text-left hover:border-black/15 transition-colors duration-300"
               >
-                <Package size={16} className="text-marble/30" />
-                <span className="font-montserrat text-xs tracking-wide text-marble/60">Mis Pedidos</span>
+                <Package size={16} className="text-obsidian/30" />
+                <span className="font-montserrat text-xs tracking-wide text-obsidian/60">Mis Pedidos</span>
               </button>
             </div>
           </div>
