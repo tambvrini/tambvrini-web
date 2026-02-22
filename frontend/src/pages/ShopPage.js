@@ -11,6 +11,7 @@ const CATEGORY_LABELS = {
   novedades: 'Novedades',
   '2026': '2026',
   polos: 'Polos',
+  sueteres: 'Suéteres',
   hombre: 'Hombre',
   mujer: 'Mujer',
   accesorios: 'Accesorios',
