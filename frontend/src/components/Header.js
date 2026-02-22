@@ -128,7 +128,7 @@ export const Header = () => {
                                 setMenuOpen(false);
                                 if (link.href === '/#drops') scrollToDrops();
                               }}
-                              className="font-montserrat text-sm text-marble/70 hover:text-marble tracking-wide transition-colors duration-300 block"
+                              className="font-montserrat text-sm text-obsidian/70 hover:text-obsidian tracking-wide transition-colors duration-300 block"
                             >
                               {link.label}
                             </Link>
