@@ -247,29 +247,29 @@ export default function ProductPage() {
                   onClick={() => setInfoTab(infoTab === tab ? '' : tab)}
                   className="w-full py-5 border-b border-white/5 flex justify-between items-center text-left"
                 >
-                  <span className="font-montserrat text-xs tracking-[0.15em] uppercase text-marble/60">
+                  <span className="font-montserrat text-xs tracking-[0.15em] uppercase text-obsidian/60">
                     {tab === 'description' ? 'Descripción' : tab === 'composition' ? 'Composición' : 'Envío'}
                   </span>
-                  <Plus size={14} className={`text-marble/30 transition-transform duration-300 ${infoTab === tab ? 'rotate-45' : ''}`} />
+                  <Plus size={14} className={`text-obsidian/30 transition-transform duration-300 ${infoTab === tab ? 'rotate-45' : ''}`} />
                 </button>
               ))}
               {infoTab === 'description' && (
                 <div className="py-5 border-b border-white/5">
-                  <p className="font-montserrat text-sm text-marble/50 leading-relaxed">{product.description}</p>
+                  <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">{product.description}</p>
                 </div>
               )}
               {infoTab === 'composition' && (
                 <div className="py-5 border-b border-white/5">
-                  <p className="font-montserrat text-sm text-marble/50 leading-relaxed mb-2">{product.composition}</p>
-                  <p className="font-montserrat text-xs text-marble/30">{product.care}</p>
+                  <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed mb-2">{product.composition}</p>
+                  <p className="font-montserrat text-xs text-obsidian/40">{product.care}</p>
                 </div>
               )}
               {infoTab === 'shipping' && (
                 <div className="py-5 border-b border-white/5 space-y-2">
-                  <p className="font-montserrat text-sm text-marble/50">Envío estándar: 5-7 días laborables</p>
-                  <p className="font-montserrat text-sm text-marble/50">Envío express: 2-3 días laborables</p>
-                  <p className="font-montserrat text-sm text-marble/50">Envío gratuito en pedidos superiores a 500&euro;</p>
-                  <p className="font-montserrat text-xs text-marble/30 mt-3">Devoluciones gratuitas en 30 días</p>
+                  <p className="font-montserrat text-sm text-obsidian/60">Envío estándar: 5-7 días laborables</p>
+                  <p className="font-montserrat text-sm text-obsidian/60">Envío express: 2-3 días laborables</p>
+                  <p className="font-montserrat text-sm text-obsidian/60">Envío gratuito en pedidos superiores a 500&euro;</p>
+                  <p className="font-montserrat text-xs text-obsidian/40 mt-3">Devoluciones gratuitas en 30 días</p>
                 </div>
               )}
             </div>
@@ -280,7 +280,7 @@ export default function ProductPage() {
         {related.length > 0 && (
           <div className="mt-24 md:mt-32">
             <div className="section-divider mb-8" />
-            <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-marble/50 mb-3">También te puede gustar</h2>
+            <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50 mb-3">También te puede gustar</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 mt-10">
               {related.map((p, i) => (
                 <ProductCard key={p.product_id} product={p} index={i} />
