@@ -17,7 +17,7 @@ export const Footer = () => {
                   <li key={item}>
                     <button
                       type="button"
-                      className="font-montserrat text-xs text-marble/40 hover:text-gold tracking-wide transition-colors duration-300"
+                      className="font-montserrat text-xs text-obsidian/50 hover:text-obsidian tracking-wide transition-colors duration-300"
                     >
                       {item}
                     </button>
@@ -43,7 +43,7 @@ export const Footer = () => {
                   <li key={item}>
                     <button
                       type="button"
-                      className="font-montserrat text-xs text-marble/40 hover:text-gold tracking-wide transition-colors duration-300"
+                      className="font-montserrat text-xs text-obsidian/50 hover:text-obsidian tracking-wide transition-colors duration-300"
                     >
                       {item}
                     </button>
