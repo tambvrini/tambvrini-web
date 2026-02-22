@@ -127,7 +127,11 @@ export const Header = () => {
                               data-testid={link.testId}
                               onClick={() => {
                                 setMenuOpen(false);
-                                if (link.href === '/#drops') scrollToDrops();
+                                if (link.href === '/#drops') {
+                                  scrollToDrops();
+                                  return;
+                                }
+                                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
                               }}
                               className="font-montserrat text-sm text-obsidian/70 hover:text-obsidian tracking-wide transition-colors duration-300 block"
                             >
