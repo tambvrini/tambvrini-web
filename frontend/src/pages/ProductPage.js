@@ -123,16 +123,16 @@ export default function ProductPage() {
                 {product.name}
               </h1>
               {product.is_sold_out && (
-                <span className="mt-2 border border-marble/25 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-marble/70">
+                <span className="mt-2 border border-black/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/70">
                   SOLD OUT
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-marble/70 tracking-wide mb-4">
+            <p data-testid="product-price" className="font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4">
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (
-              <p className="font-montserrat text-xs text-marble/40 tracking-wide mb-8">
+              <p className="font-montserrat text-xs text-obsidian/50 tracking-wide mb-8">
                 Solo queda talla M disponible
               </p>
             )}
@@ -143,7 +143,7 @@ export default function ProductPage() {
             {/* Color selector */}
             {product.colors?.length > 0 && (
               <div className="mb-8">
-                <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-marble/40 mb-4">Color</p>
+                <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-4">Color</p>
                 <div className="flex gap-3">
                   {product.colors.map((c, i) => (
                     <button
@@ -152,7 +152,7 @@ export default function ProductPage() {
                       onClick={() => setSelectedColor(c.name)}
                       disabled={product.is_sold_out}
                       className={`flex items-center gap-2 px-4 py-2 border transition-colors duration-300 ${
-                        selectedColor === c.name ? 'border-gold text-gold' : 'border-white/10 text-marble/50'
+                        selectedColor === c.name ? 'border-gold text-gold' : 'border-black/10 text-obsidian/60'
                       } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-white/30'}`}
                     >
                       <span className="w-3 h-3 rounded-full" style={{ backgroundColor: c.hex }} />
