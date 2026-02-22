@@ -116,7 +116,6 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
           {product.is_sold_out && (
             <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
           )}
-        </div>
       </div>
 
       <div className="mt-4">
