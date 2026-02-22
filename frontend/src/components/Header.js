@@ -26,19 +26,19 @@ const MENU_SECTIONS = [
   {
     title: 'Tienda',
     links: [
-      { label: 'Novedades', href: '/#drops' },
-      { label: 'Hombre', href: '/tienda?gender=hombre' },
-      { label: 'Mujer', href: '/tienda?gender=mujer' },
+      { label: 'Novedades', href: '/#drops', testId: 'menu-link-novedades' },
+      { label: 'Hombre', href: '/tienda?gender=hombre', testId: 'menu-link-hombre' },
+      { label: 'Mujer', href: '/tienda?gender=mujer', testId: 'menu-link-mujer' },
     ]
   },
 
   {
     title: 'Marca',
     links: [
-      { label: 'Sobre TAMBVRINI', href: '/marca' },
-      { label: 'Filosofía', href: '/marca' },
-      { label: 'Artesanía', href: '/marca' },
-      { label: 'Editorial', href: '/marca' },
+      { label: 'Sobre TAMBVRINI', href: '/marca', testId: 'menu-link-sobre-tambvrini' },
+      { label: 'Filosofía', href: '/marca', testId: 'menu-link-filosofia' },
+      { label: 'Artesanía', href: '/marca', testId: 'menu-link-artesania' },
+      { label: 'Editorial', href: '/marca', testId: 'menu-link-editorial' },
     ]
   }
 ];
@@ -124,6 +124,7 @@ export const Header = () => {
                           <li key={j}>
                             <Link
                               to={link.href}
+                              data-testid={link.testId}
                               onClick={() => {
                                 setMenuOpen(false);
                                 if (link.href === '/#drops') scrollToDrops();
