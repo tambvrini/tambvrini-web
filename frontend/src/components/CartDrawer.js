@@ -141,7 +141,7 @@ export const CartDrawer = () => {
             <Link
               to="/carrito"
               onClick={() => setIsOpen(false)}
-              className="block text-center mt-3 font-montserrat text-[10px] tracking-widest uppercase text-marble/40 hover:text-marble transition-colors duration-300"
+              className="block text-center mt-3 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/50 hover:text-obsidian transition-colors duration-300"
             >
               Ver carrito completo
             </Link>
