@@ -84,7 +84,7 @@ export default function ShopPage() {
   const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
 
   return (
-    <div data-testid="shop-page" className="min-h-screen pt-32 md:pt-40 pb-24">
+    <div data-testid="shop-page" className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
