@@ -1,20 +1,28 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Sheet, SheetContent, SheetClose } from '../components/ui/sheet';
 import axios from 'axios';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export const CartDrawer = () => {
-  const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, clearCart } = useCart();
-  const { getHeaders } = useAuth();
+  const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice } = useCart();
+  const { user, getHeaders } = useAuth();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
+    if (!user) {
+      toast.error('Inicia sesión para finalizar la compra');
+      setIsOpen(false);
+      navigate('/cuenta');
+      return;
+    }
     setLoading(true);
     try {
       const checkoutItems = items.map(i => ({
@@ -136,7 +144,7 @@ export const CartDrawer = () => {
               disabled={loading}
               className="w-full py-4 bg-marble text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50"
             >
-              {loading ? 'Procesando...' : 'Finalizar Compra'}
+              {loading ? 'Procesando...' : (user ? 'Finalizar Compra' : 'Inicia sesión para pagar')}
             </button>
             <Link
               to="/carrito"
