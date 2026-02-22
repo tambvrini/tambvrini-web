@@ -354,7 +354,7 @@ const CinematicVideoSection = () => {
 /* ============ HOMEPAGE ============ */
 export default function HomePage() {
   return (
-    <div data-testid="home-page">
+    <div data-testid="home-page" className="noise-overlay editorial-noise">
       <HeroSection />
       <DropGridSection />
       <CinematicVideoSection />
