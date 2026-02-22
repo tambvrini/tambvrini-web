@@ -13,6 +13,7 @@ export default function CartPage() {
   const { user, getHeaders } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const freeShippingThreshold = 75;
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
@@ -104,8 +105,14 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-montserrat text-xs text-obsidian/50">Envío</span>
-                  <span className="font-montserrat text-xs text-obsidian/50">{totalPrice >= 500 ? 'Gratuito' : 'Se calcula al finalizar'}</span>
+                  <span className="font-montserrat text-xs text-obsidian/50">{totalPrice >= freeShippingThreshold ? 'Gratuito' : 'Se calcula al finalizar'}</span>
                 </div>
+                <p
+                  data-testid="cart-page-free-shipping-message"
+                  className="font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40"
+                >
+                  Envío gratuito en pedidos superiores a 75 €
+                </p>
               </div>
               <div className="border-t border-black/5 pt-6 mb-8">
                 <div className="flex justify-between items-center">
