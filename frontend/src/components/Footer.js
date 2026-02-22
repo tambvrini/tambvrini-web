@@ -70,7 +70,7 @@ export const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="mt-20 pt-8 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-4 opacity-30" />
           <p className="font-montserrat text-[10px] text-marble/25 tracking-widest uppercase">
             &copy; {new Date().getFullYear()} TAMBVRINI. Todos los derechos reservados.
