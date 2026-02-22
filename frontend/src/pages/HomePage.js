@@ -357,12 +357,7 @@ export default function HomePage() {
     <div data-testid="home-page" className="noise-overlay editorial-noise">
       <HeroSection />
 
-      {/* Editorial divider (Casablanca-style) */}
-      <section className="w-full flex items-center justify-center pt-[110px] md:pt-[120px] pb-[70px] md:pb-[90px]">
-        <h2 className="font-playfair font-normal text-[30px] sm:text-[32px] md:text-[40px] lg:text-[56px] leading-[1.05] tracking-[0.06em] text-[#2f3a34]">
-          Novedades
-        </h2>
-      </section>
+      {/* (removed editorial divider) */}
 
       <DropGridSection />
       <CinematicVideoSection />
