@@ -9,7 +9,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **Auth**: JWT + Emergent Google OAuth
 - **Pagos**: Stripe Checkout (test mode) con dirección de envío obligatoria
 - **Tipografías**: Cinzel (títulos), Playfair Display (editorial), Montserrat (cuerpo)
-- **Paleta**: Marfil editorial #F7F7F5 (global), Marfil claro #F8F6F1 (Home), Obsidian #0A0A0A, Dorado #C5A059
+- **Paleta**: Blanco galería #F8F8F8 (global), Marfil claro #F8F6F1 (Home), Obsidian #0A0A0A, Dorado #C5A059
 
 ## Estado actual (Feb 2026)
 - [x] Rediseño completo a estética marfil/luxury editorial
@@ -64,8 +64,8 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: orden invertido (campaign arriba, hero abajo) y márgenes reducidos entre imágenes.
 - **22 Feb 2026**: video “WEB 1” movido a Marca entre Artesanía y Valores; tarjetas añadidas debajo.
 - **22 Feb 2026**: margen entre tarjetas y “Nuestros valores” reducido.
-- **22 Feb 2026**: color base global del fondo actualizado a #F7F7F5.
-- **22 Feb 2026**: verificación de tono base global #F7F7F5 (off-white neutro).
+- **22 Feb 2026**: color base global del fondo actualizado a #F8F8F8.
+- **22 Feb 2026**: verificación de tono base global #F8F8F8 (blanco galería neutro).
 
 ## Backlog
 ### P0
