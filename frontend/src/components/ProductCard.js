@@ -110,17 +110,17 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
 
         <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${(isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain) ? 'bg-obsidian/5' : 'bg-obsidian/30'}`} />
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-marble/90">Ver producto</span>
+          <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
         </div>
 
         {product.is_sold_out && (
-          <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-marble/80">Sold out</span>
+          <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
         )}
       </div>
 
       <div className="mt-4">
-        <h3 className="font-playfair text-[13px] text-marble/90 leading-snug">{product.name}</h3>
-        <p className="mt-1 font-montserrat text-[11px] tracking-wide text-marble/55">
+        <h3 className="font-playfair text-[13px] text-obsidian/95 leading-snug">{product.name}</h3>
+        <p className="mt-1 font-montserrat text-[11px] tracking-wide text-[#6e6e6e]">
           {product.price?.toLocaleString('en-US', { minimumFractionDigits: 0 })} €
         </p>
       </div>
