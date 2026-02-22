@@ -22,7 +22,7 @@ const IMPERIUM_ID = 'camiseta-imperium';
 const IMPERIUM_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/d2xis2ec_0212%20%284%29.mp4';
 
 const UMBRA_ID = 'americana-umbra';
-const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/xgsml0mm_umbra.mp4';
+const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/fctdhexq_0212%20%284%29%281%29.mp4';
 
 const CAPTAIN_ID = 'sueter-captain';
 const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/pu3df808_0212%20%284%29.mp4';
