@@ -75,12 +75,12 @@ export default function ProductPage() {
     <div data-testid="product-page" className="min-h-screen pt-28 md:pt-32 pb-24">
       {/* Breadcrumb */}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
-        <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-marble/30">
-          <Link to="/" className="hover:text-marble transition-colors">Inicio</Link>
+        <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
+          <Link to="/" className="hover:text-obsidian transition-colors">Inicio</Link>
           <ChevronRight size={10} />
-          <Link to="/tienda" className="hover:text-marble transition-colors">Tienda</Link>
+          <Link to="/tienda" className="hover:text-obsidian transition-colors">Tienda</Link>
           <ChevronRight size={10} />
-          <span className="text-marble/60">{product.name}</span>
+          <span className="text-obsidian/60">{product.name}</span>
         </nav>
       </div>
 
@@ -104,7 +104,7 @@ export default function ProductPage() {
                   data-testid={`product-thumb-${i}`}
                   onClick={() => setSelectedImage(i)}
                   className={`w-20 h-28 overflow-hidden border transition-colors duration-300 ${
-                    selectedImage === i ? 'border-gold' : 'border-white/10 hover:border-white/30'
+                    selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
                   }`}
                 >
                   <img src={img} alt="" className="w-full h-full object-cover" />
@@ -119,7 +119,7 @@ export default function ProductPage() {
               {product.category?.join(' / ')}
             </p>
             <div className="flex items-start justify-between gap-6 mb-4">
-              <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-marble">
+              <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-obsidian">
                 {product.name}
               </h1>
               {product.is_sold_out && (
