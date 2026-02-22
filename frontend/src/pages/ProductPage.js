@@ -203,7 +203,7 @@ export default function ProductPage() {
                 >
                   <Minus size={14} />
                 </button>
-                <span className="w-16 h-12 flex items-center justify-center font-montserrat text-sm text-marble">{quantity}</span>
+                <span className="w-16 h-12 flex items-center justify-center font-montserrat text-sm text-obsidian">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
                   className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-l border-black/10"
