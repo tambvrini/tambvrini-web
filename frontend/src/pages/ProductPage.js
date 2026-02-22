@@ -64,7 +64,7 @@ export default function ProductPage() {
   if (!product) {
     return (
       <div className="min-h-screen pt-32 flex items-center justify-center">
-        <p className="font-playfair text-xl text-marble/40">Producto no encontrado</p>
+        <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
       </div>
     );
   }
