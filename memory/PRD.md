@@ -69,6 +69,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: fondos, tarjetas y overlays neutralizados a blanco puro + sombras frías rgba(0,0,0,0.04).
 - **22 Feb 2026**: miniatura de “Suéter Captain” actualizada.
 - **22 Feb 2026**: miniatura de “Suéter Captain” actualizada (v2).
+- **22 Feb 2026**: miniatura de “Polo Aureus” actualizada.
 
 ## Backlog
 ### P0
