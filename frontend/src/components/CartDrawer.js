@@ -14,6 +14,7 @@ export const CartDrawer = () => {
   const { user, getHeaders } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const freeShippingThreshold = 75;
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
@@ -132,12 +133,18 @@ export const CartDrawer = () => {
         {/* Footer */}
         {items.length > 0 && (
           <div className="p-6 border-t border-black/5">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-3">
               <span className="font-montserrat text-xs tracking-widest uppercase text-obsidian/50">Subtotal</span>
               <span className="font-playfair text-lg text-obsidian">
                 {totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;
               </span>
             </div>
+            <p
+              data-testid="cart-drawer-free-shipping-message"
+              className="font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 mb-6"
+            >
+              Envío gratuito en pedidos superiores a 75 €
+            </p>
             <button
               data-testid="checkout-btn"
               onClick={handleCheckout}
