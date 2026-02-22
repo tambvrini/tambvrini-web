@@ -26,6 +26,8 @@ function AppRouter() {
     return <AuthCallback />;
   }
 
+  const isHome = location.pathname === '/';
+
   return (
     <div>
       <Header />
@@ -42,7 +44,7 @@ function AppRouter() {
           <Route path="/marca" element={<BrandPage />} />
         </Routes>
       </main>
-      <Footer />
+      <Footer bgColor={isHome ? '#F8F6F1' : undefined} />
     </div>
   );
 }
