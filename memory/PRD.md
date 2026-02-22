@@ -1,54 +1,43 @@
-# TAMBVRINI - Luxury Fashion Ecommerce PRD
+# TAMBVRINI - PRD Ecommerce Lujo
 
-## Problem Statement
-High-end luxury fashion ecommerce for TAMBVRINI brand. European luxury house aesthetic (Gucci/Casablanca/Loro Piana) with Roman classical identity and elite tennis club aesthetic. Full functional ecommerce in Spanish.
+## Problema
+Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europea y narrativa clásica romana. Experiencia completa en español.
 
-## Architecture
-- **Frontend**: React + Tailwind + Shadcn UI + Framer Motion
+## Arquitectura
+- **Frontend**: React + TailwindCSS + Framer Motion
 - **Backend**: FastAPI + MongoDB
 - **Auth**: JWT + Emergent Google OAuth
-- **Payments**: Stripe (test mode)
-- **Fonts**: Cinzel (headings), Playfair Display (editorial), Montserrat (body)
-- **Colors**: Obsidian #0A0A0A, Marble #F5F5F0, Gold #C5A059, Emerald #1B4D3E
+- **Pagos**: Stripe (pendiente de integrar, test mode)
+- **Tipografías**: Cinzel (títulos), Playfair Display (editorial), Montserrat (cuerpo)
+- **Paleta**: Marfil #F5F2EA (global), Marfil claro #F8F6F1 (Home), Obsidian #0A0A0A, Dorado #C5A059
 
-## User Personas
-- High-net-worth luxury fashion consumers (25-55)
-- Mediterranean/European aesthetic lovers
-- Tennis/Riviera lifestyle enthusiasts
+## Estado actual (Feb 2026)
+- [x] Rediseño completo a estética marfil/luxury editorial
+- [x] Auth email/contraseña + Google OAuth
+- [x] Wishlist (guest con localStorage + sync backend en login)
+- [x] Homepage con grid de productos + tiles Novedades + sección cinemática
+- [x] Hover-videos en tarjetas seleccionadas
+- [x] Product page con lógica genérica de tallas agotadas (`sold_out_sizes`)
+- [x] Backend listo para newsletter (endpoint + DB)
+- [x] Contenidos en español
 
-## What's Implemented (Feb 2026)
-- [x] Fullscreen hero with TAMBVRINI/HISPANIA logo animation on scroll
-- [x] Transparent→solid header with search, menu, account, wishlist, cart
-- [x] Full navigation menu (Tienda, Colecciones, Marca, Atención al Cliente)
-- [x] Product catalog with 16 luxury products, filters, sorting
-- [x] Product detail pages with gallery, sizes, colors, composition, shipping
-- [x] Shopping cart (drawer + full page) with quantity management
-- [x] Stripe checkout (test mode) with order tracking
-- [x] User auth: email/password registration + Google OAuth
-- [x] Wishlist with localStorage persistence
-- [x] Newsletter subscription (DB storage)
-- [x] Homepage sections: Campaign, Categories, Featured, Story, Tennis Club, Newsletter
-- [x] Brand/About page with philosophy, craftsmanship, values
-- [x] Luxury footer with all links
-- [x] All content in Spanish
-- [x] Custom SVG logos (provided by client)
+## Última actualización
+- **22 Feb 2026**: miniatura de “Americana UMBRA” actualizada.
 
 ## Backlog
-### P0 (Next)
-- Replace mock product images with real TAMBVRINI product photography
-- Add order history to user account page
-- Implement multi-language support (EN, FR, IT)
+### P0
+- Sincronización de carrito con backend para usuarios autenticados
+- Stripe Checkout (requiere login)
 
 ### P1
-- Add product reviews/ratings
-- Size guide interactive overlay
-- Product zoom lightbox on click
-- Collection landing pages with editorial content
-- Email integration for newsletter (SendGrid/Resend)
+- Conectar formulario de newsletter al endpoint
+- Expandir i18n al resto del sitio
 
 ### P2
-- Inventory management system
-- Admin dashboard for products/orders
-- Customer address book
-- Gift wrapping option
-- Loyalty program
+- Refactor de hover-videos (data-driven en lugar de hardcoded)
+- Mejoras en catálogo (reemplazar mocks con fotos reales)
+
+### P3
+- Reviews/ratings y guía de tallas
+- Páginas de colección editoriales
+- Integración email marketing profesional
