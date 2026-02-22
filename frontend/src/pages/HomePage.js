@@ -92,8 +92,22 @@ const HeroSection = () => {
         className="absolute bottom-20 md:bottom-24 left-0 right-0 z-10 flex flex-col sm:flex-row justify-center gap-4 px-6"
         style={{ opacity: buttonsOpacity, y: buttonsY }}
       >
-        <Link to="/tienda?gender=hombre" data-testid="hero-shop-men" className="btn-luxury text-center">Comprar Hombre</Link>
-        <Link to="/tienda?gender=mujer" data-testid="hero-shop-women" className="btn-luxury text-center">Comprar Mujer</Link>
+        <Link
+          to="/tienda?gender=hombre"
+          data-testid="hero-shop-men"
+          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+          className="btn-luxury text-center"
+        >
+          Comprar Hombre
+        </Link>
+        <Link
+          to="/tienda?gender=mujer"
+          data-testid="hero-shop-women"
+          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+          className="btn-luxury text-center"
+        >
+          Comprar Mujer
+        </Link>
         <button
           type="button"
           data-testid="hero-explore"
@@ -135,6 +149,7 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
       data-testid={testId}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
       className="group text-left block"
       aria-label={title}
     >
