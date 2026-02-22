@@ -5,6 +5,8 @@ const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-
 const MARBLE_IMAGE = "https://images.unsplash.com/photo-1756287530100-c0b4412dee8b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzN8MHwxfHNlYXJjaHwxfHxtYXJibGUlMjB0ZXh0dXJlJTIwd2hpdGUlMjBjbGFzc2ljYWx8ZW58MHx8fHwxNzcwMzIxNzAzfDA&ixlib=rb-4.1.0&q=85";
 const TENNIS_IMAGE = "https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/zitxtlbr_IMG_1066.JPEG";
 const CINEMATIC_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/axoe4sux_VIDEO%20WEB%201.mp4";
+const ROMAN_CARD_WHITE_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/inwhbq34_logo%20romano%20blanco.png";
+const ROMAN_CARD_BLACK_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/vn85wlf1_logo%20romano%20negro.png";
 
 const BrandCinematicSection = () => {
   const videoRef = useRef(null);
@@ -43,6 +45,27 @@ const BrandCinematicSection = () => {
                 const p = v.play();
                 if (p && typeof p.catch === 'function') p.catch(() => {});
               }}
+            />
+          </div>
+        </div>
+
+        <div className="mt-10 flex items-center justify-center gap-10">
+          <div className="overflow-hidden rounded-[8px]">
+            <img
+              data-testid="brand-card-white"
+              src={ROMAN_CARD_WHITE_URL}
+              alt="Tarjeta romana blanca"
+              loading="lazy"
+              className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
+            />
+          </div>
+          <div className="overflow-hidden rounded-[8px]">
+            <img
+              data-testid="brand-card-black"
+              src={ROMAN_CARD_BLACK_URL}
+              alt="Tarjeta romana negra"
+              loading="lazy"
+              className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
             />
           </div>
         </div>
