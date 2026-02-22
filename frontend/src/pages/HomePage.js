@@ -16,7 +16,7 @@ const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a2
 const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/th2xfrpo_10.jpg";
 const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
-const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/xmrw8kes_campa%C3%B1a%202.jpg";
+const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 
