@@ -6,7 +6,7 @@ const ICON_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-
 export const Footer = () => {
   const { lang, setLang, t } = useI18n();
   return (
-    <footer data-testid="main-footer" className="bg-obsidian border-t border-white/5">
+    <footer data-testid="main-footer" className="bg-[#F5F2EA] border-t border-black/5">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
         <div className="flex justify-center">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 w-full items-start">
