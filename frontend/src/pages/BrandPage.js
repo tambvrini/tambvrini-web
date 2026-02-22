@@ -69,7 +69,7 @@ export default function BrandPage() {
           ].map((v, i) => (
             <div key={i} className="text-center">
               <h3 className="font-cinzel text-sm tracking-[0.2em] uppercase text-gold mb-6">{v.title}</h3>
-              <p className="font-montserrat text-xs text-marble/40 leading-relaxed">{v.text}</p>
+              <p className="font-montserrat text-xs text-obsidian/55 leading-relaxed">{v.text}</p>
             </div>
           ))}
         </div>
