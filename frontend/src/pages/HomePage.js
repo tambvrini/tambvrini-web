@@ -173,7 +173,7 @@ const NovedadesTile = ({ title, bg, videoSrc }) => {
         />
 
         {/* Keep luminosity consistent between image/video */}
-        <div className="absolute inset-0 bg-obsidian/15" />
+        <div className="absolute inset-0 bg-black/5" />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center px-10">
           <p className="font-cinzel text-[11px] tracking-[0.35em] uppercase text-marble/60">Novedades</p>
