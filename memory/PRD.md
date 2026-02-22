@@ -40,6 +40,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: imagen editorial full-width insertada entre los drops en Home.
 - **22 Feb 2026**: sincronización de carrito con backend verificada para usuarios autenticados.
 - **22 Feb 2026**: Stripe Checkout con login obligatorio implementado.
+- **22 Feb 2026**: título del navegador ajustado a “TAMBVRINI”.
 
 ## Backlog
 ### P0
