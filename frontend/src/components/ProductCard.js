@@ -77,7 +77,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
         if (hasHoverVideo && canHover) setHovered(false);
       }}
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[12px]">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[12px] bg-white">
           <img
             src={product.thumbnail_image || product.images?.[0]}
             alt={product.name}
