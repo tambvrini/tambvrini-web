@@ -153,7 +153,7 @@ export default function ProductPage() {
                       disabled={product.is_sold_out}
                       className={`flex items-center gap-2 px-4 py-2 border transition-colors duration-300 ${
                         selectedColor === c.name ? 'border-gold text-gold' : 'border-black/10 text-obsidian/60'
-                      } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-white/30'}`}
+                      } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-black/30'}`}
                     >
                       <span className="w-3 h-3 rounded-full" style={{ backgroundColor: c.hex }} />
                       <span className="font-montserrat text-[10px] tracking-wide">{c.name}</span>
