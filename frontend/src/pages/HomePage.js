@@ -220,7 +220,7 @@ const DropGridSection = () => {
   }, []);
 
   return (
-    <section id="drops" data-testid="drop-grid" className="py-24 md:py-32">
+    <section id="drops" data-testid="drop-grid" className="pb-24 md:pb-32">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         {/* 8 items: 2 rows of 4 on desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
@@ -356,6 +356,14 @@ export default function HomePage() {
   return (
     <div data-testid="home-page" className="noise-overlay editorial-noise">
       <HeroSection />
+
+      {/* Editorial divider (Casablanca-style) */}
+      <section className="w-full flex items-center justify-center pt-[110px] md:pt-[120px] pb-[70px] md:pb-[90px]">
+        <h2 className="font-playfair font-normal text-[30px] sm:text-[32px] md:text-[40px] lg:text-[56px] leading-[1.05] tracking-[0.06em] text-[#2f3a34]">
+          Novedades
+        </h2>
+      </section>
+
       <DropGridSection />
       <CinematicVideoSection />
     </div>
