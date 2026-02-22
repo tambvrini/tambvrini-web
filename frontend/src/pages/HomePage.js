@@ -354,7 +354,7 @@ const CinematicVideoSection = () => {
 /* ============ HOMEPAGE ============ */
 export default function HomePage() {
   return (
-    <div data-testid="home-page" className="noise-overlay editorial-noise">
+    <div data-testid="home-page" className="noise-overlay editorial-noise bg-[#F8F6F1]">
       <HeroSection />
 
       {/* (removed editorial divider) */}
