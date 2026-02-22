@@ -19,6 +19,7 @@ const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a2
 const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/th2xfrpo_10.jpg";
 const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
+const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/xmrw8kes_campa%C3%B1a%202.jpg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 /* ============ useInView hook ============ */
@@ -195,10 +196,6 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const scrollToNovedades = () => {
-    const el = document.getElementById('novedades');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   useEffect(() => {
     const fetchDrop = async () => {
@@ -297,14 +294,26 @@ const DropGridSection = () => {
                       className="absolute inset-0 w-full h-full object-cover object-center"
                       loading="lazy"
                     />
-                    <button
+                    <Link
                       data-testid="editorial-hero-cta"
-                      onClick={scrollToNovedades}
-                      className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 rounded-full border border-white/70 bg-white/80 px-6 py-2 text-[11px] tracking-[0.25em] uppercase font-montserrat text-[#1a1a1a] transition-opacity duration-300 hover:opacity-90"
+                      to="/tienda?category=novedades"
+                      className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 rounded-full border border-[#F5F2EA]/70 bg-transparent px-6 py-2 text-[11px] tracking-[0.25em] uppercase font-montserrat text-[#1a1a1a] transition-colors duration-300 hover:bg-[#F5F2EA] hover:text-[#1a1a1a]"
                     >
                       Descubrir
-                    </button>
+                    </Link>
                   </div>
+                </div>
+              </div>
+
+              <div className="my-8 md:my-10">
+                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                  <img
+                    data-testid="campaign-divider-image"
+                    src={DROP_CAMPAIGN_IMAGE}
+                    alt="Editorial Casablanca TAMBVRINI"
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </>
