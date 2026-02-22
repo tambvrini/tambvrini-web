@@ -101,18 +101,18 @@ export const Header = () => {
               <SheetTrigger asChild>
                 <button
                   data-testid="menu-toggle-btn"
-                  className="text-marble/80 hover:text-gold transition-colors duration-300"
+                  className="text-obsidian/80 hover:text-obsidian transition-colors duration-300"
                 >
                   <Menu size={20} strokeWidth={1.5} />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-obsidian border-r border-white/5 p-0 overflow-y-auto">
+              <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-[#F5F2EA] border-r border-black/5 p-0 overflow-y-auto">
                 <div className="p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
-                    <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-5" />
+                    <img src={logoSrc} alt="TAMBVRINI" className="h-5" />
                     <SheetClose asChild>
                       <button data-testid="menu-close-btn">
-                        <X size={24} className="text-marble/60 hover:text-marble" />
+                        <X size={24} className="text-obsidian/60 hover:text-obsidian" />
                       </button>
                     </SheetClose>
                   </div>
