@@ -27,7 +27,7 @@ function AppRouter() {
   }
 
   return (
-    <div className="noise-overlay">
+    <div>
       <Header />
       <CartDrawer />
       <main>
