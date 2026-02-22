@@ -127,7 +127,7 @@ export default function AccountPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-transparent border-b border-white/10 pb-3 font-montserrat text-sm text-marble focus:outline-none focus:border-gold placeholder:text-marble/15"
+                className="w-full bg-transparent border-b border-black/10 pb-3 font-montserrat text-sm text-obsidian focus:outline-none focus:border-gold placeholder:text-obsidian/20"
                 placeholder="Su nombre"
                 required={!isLogin}
               />
