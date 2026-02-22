@@ -118,7 +118,7 @@ export const Header = () => {
                   </div>
                   {MENU_SECTIONS.map((section, i) => (
                     <div key={i} className="mb-12">
-                      <h3 className="font-cinzel text-xs tracking-[0.3em] uppercase text-gold mb-6">{section.title}</h3>
+                      <h3 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50 mb-6">{section.title}</h3>
                       <ul className="space-y-4">
                         {section.links.map((link, j) => (
                           <li key={j}>
