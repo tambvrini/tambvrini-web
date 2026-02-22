@@ -10,8 +10,8 @@ module.exports = {
                 montserrat: ['Montserrat', 'sans-serif'],
             },
             colors: {
-                obsidian: '#0A0A0A',
-                marble: '#F5F5F0',
+                obsidian: '#111111',
+                marble: '#F5F2EA',
                 gold: '#C5A059',
                 emerald: '#1B4D3E',
                 terracotta: '#A0522D',
