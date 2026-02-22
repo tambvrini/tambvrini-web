@@ -45,6 +45,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: sección editorial hero con CTA “Descubrir” añadida en Home.
 - **22 Feb 2026**: CTA “Descubrir” redirige a /tienda?category=novedades (H/M/Accesorios).
 - **22 Feb 2026**: imagen campaign previa reubicada debajo del nuevo hero editorial.
+- **22 Feb 2026**: orden invertido (campaign arriba, hero abajo) y márgenes reducidos entre imágenes.
 
 ## Backlog
 ### P0
