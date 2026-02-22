@@ -32,9 +32,9 @@
 
 /* Luxury button styles */
 .btn-luxury {
-    border: 1px solid rgba(245, 245, 240, 0.2);
+    border: 1px solid rgba(17, 17, 17, 0.18);
     background: transparent;
-    color: #F5F5F0;
+    color: #111111;
     padding: 14px 32px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
@@ -53,13 +53,13 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: #F5F5F0;
+    background: #111111;
     transition: left 0.5s ease;
     z-index: -1;
 }
 .btn-luxury:hover {
-    color: #0A0A0A;
-    border-color: #F5F5F0;
+    color: #F5F2EA;
+    border-color: rgba(17, 17, 17, 0.35);
 }
 .btn-luxury:hover::before {
     left: 0;
@@ -73,7 +73,7 @@
     background: #C5A059;
 }
 .btn-gold:hover {
-    color: #0A0A0A;
+    color: #111111;
     border-color: #C5A059;
 }
 
