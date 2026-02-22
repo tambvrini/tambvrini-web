@@ -392,7 +392,7 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
     shipping_address_collection = {
         "allowed_countries": ["ES"]
     }
-    standard_amount = 0 if total >= 80 else 499
+    standard_amount = 0 if total >= 75 else 499
     shipping_options = [
         {
             "shipping_rate_data": {
