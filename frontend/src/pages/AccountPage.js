@@ -140,7 +140,7 @@ export default function AccountPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border-b border-white/10 pb-3 font-montserrat text-sm text-marble focus:outline-none focus:border-gold placeholder:text-marble/15"
+              className="w-full bg-transparent border-b border-black/10 pb-3 font-montserrat text-sm text-obsidian focus:outline-none focus:border-gold placeholder:text-obsidian/20"
               placeholder="su@email.com"
               required
             />
@@ -152,7 +152,7 @@ export default function AccountPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-transparent border-b border-white/10 pb-3 font-montserrat text-sm text-marble focus:outline-none focus:border-gold placeholder:text-marble/15"
+              className="w-full bg-transparent border-b border-black/10 pb-3 font-montserrat text-sm text-obsidian focus:outline-none focus:border-gold placeholder:text-obsidian/20"
               placeholder="••••••••"
               required
             />
