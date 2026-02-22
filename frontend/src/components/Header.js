@@ -150,7 +150,7 @@ export const Header = () => {
             style={{ opacity: headerLogoOpacity, pointerEvents: headerLogoVisible ? 'auto' : 'none' }}
           >
             <img
-              src={LOGO_WHITE}
+              src={logoSrc}
               alt="TAMBVRINI"
               className={`transition-all duration-500 ${isHomePage ? 'h-10 md:h-12' : (scrolled ? 'h-10 md:h-12' : 'h-16 md:h-28')}`}
             />
@@ -161,14 +161,14 @@ export const Header = () => {
             <Link
               to="/cuenta"
               data-testid="account-link"
-              className="text-marble/80 hover:text-gold transition-colors duration-300 hidden sm:block"
+              className="text-obsidian/80 hover:text-obsidian transition-colors duration-300 hidden sm:block"
             >
               <User size={20} strokeWidth={1.5} />
             </Link>
             <Link
               to="/favoritos"
               data-testid="wishlist-link"
-              className="text-marble/80 hover:text-gold transition-colors duration-300 relative"
+              className="text-obsidian/80 hover:text-obsidian transition-colors duration-300 relative"
             >
               <Heart size={20} strokeWidth={1.5} />
               {wishlistItems.length > 0 && (
@@ -180,7 +180,7 @@ export const Header = () => {
             <button
               data-testid="cart-toggle-btn"
               onClick={() => setIsOpen(true)}
-              className="text-marble/80 hover:text-gold transition-colors duration-300 relative"
+              className="text-obsidian/80 hover:text-obsidian transition-colors duration-300 relative"
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
               {totalItems > 0 && (
