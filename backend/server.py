@@ -336,10 +336,11 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
     if not STRIPE_API_KEY:
         raise HTTPException(500, "Stripe no configurado")
 
-    from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionRequest as StripeReq
+    import stripe
 
     total = 0.0
     order_items = []
+    line_items = []
     for item in data.items:
         product = await db.products.find_one({"product_id": item["product_id"]}, {"_id": 0})
         if not product:
@@ -347,10 +348,28 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
         qty = item.get("quantity", 1)
         item_total = product["price"] * qty
         total += item_total
+        size = item.get("size", "")
+        color = item.get("color", "")
+        description_parts = []
+        if size:
+            description_parts.append(f"Talla {size}")
+        if color:
+            description_parts.append(f"Color {color}")
+        product_data = {"name": product["name"]}
+        if description_parts:
+            product_data["description"] = " · ".join(description_parts)
+        line_items.append({
+            "price_data": {
+                "currency": "eur",
+                "product_data": product_data,
+                "unit_amount": int(product["price"] * 100)
+            },
+            "quantity": qty
+        })
         order_items.append({
             "product_id": item["product_id"], "name": product["name"],
             "price": product["price"], "quantity": qty,
-            "size": item.get("size", ""), "color": item.get("color", "")
+            "size": size, "color": color
         })
 
     user = await get_current_user(request)
@@ -366,18 +385,52 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
     if user_id:
         metadata["user_id"] = user_id
 
-    webhook_url = f"{str(request.base_url)}api/webhook/stripe"
-    stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=webhook_url)
+    stripe.api_key = STRIPE_API_KEY
+    if "sk_test_emergent" in STRIPE_API_KEY:
+        stripe.api_base = "https://integrations.emergentagent.com/stripe"
 
-    checkout_req = StripeReq(
-        amount=float(total), currency="eur",
-        success_url=success_url, cancel_url=cancel_url, metadata=metadata
+    shipping_address_collection = {
+        "allowed_countries": ["ES", "FR", "IT", "DE", "GB", "US", "CA"]
+    }
+    shipping_options = [
+        {
+            "shipping_rate_data": {
+                "type": "fixed_amount",
+                "fixed_amount": {"amount": 1500, "currency": "eur"},
+                "display_name": "Envío estándar",
+                "delivery_estimate": {
+                    "minimum": {"unit": "business_day", "value": 4},
+                    "maximum": {"unit": "business_day", "value": 7}
+                }
+            }
+        },
+        {
+            "shipping_rate_data": {
+                "type": "fixed_amount",
+                "fixed_amount": {"amount": 3500, "currency": "eur"},
+                "display_name": "Envío exprés",
+                "delivery_estimate": {
+                    "minimum": {"unit": "business_day", "value": 1},
+                    "maximum": {"unit": "business_day", "value": 3}
+                }
+            }
+        }
+    ]
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=line_items,
+        mode="payment",
+        success_url=success_url,
+        cancel_url=cancel_url,
+        metadata=metadata,
+        shipping_address_collection=shipping_address_collection,
+        shipping_options=shipping_options
     )
-    session = await stripe_checkout.create_checkout_session(checkout_req)
 
     await db.payment_transactions.insert_one({
         "transaction_id": f"txn_{uuid.uuid4().hex[:12]}",
-        "session_id": session.session_id,
+        "session_id": session.id,
         "user_id": user_id,
         "amount": total,
         "currency": "eur",
@@ -387,7 +440,7 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
         "metadata": metadata,
         "created_at": datetime.now(timezone.utc).isoformat()
     })
-    return {"url": session.url, "session_id": session.session_id}
+    return {"url": session.url, "session_id": session.id}
 
 @api_router.get("/checkout/status/{session_id}")
 async def get_checkout_status(session_id: str, request: Request):
