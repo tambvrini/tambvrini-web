@@ -74,7 +74,7 @@ export const CartDrawer = () => {
                   <Link
                     to={`/producto/${item.product_id}`}
                     onClick={() => setIsOpen(false)}
-                    className="w-20 h-28 bg-obsidian flex-shrink-0 overflow-hidden"
+                    className="w-20 h-28 bg-black/5 flex-shrink-0 overflow-hidden"
                   >
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </Link>
