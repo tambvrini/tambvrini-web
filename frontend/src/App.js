@@ -55,7 +55,7 @@ function App() {
           <WishlistProvider>
             <BrowserRouter>
               <AppRouter />
-              <Toaster position="bottom-right" theme="dark" />
+              <Toaster position="bottom-right" theme="light" />
             </BrowserRouter>
           </WishlistProvider>
         </CartProvider>
