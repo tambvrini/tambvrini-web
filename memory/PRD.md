@@ -66,6 +66,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: margen entre tarjetas y “Nuestros valores” reducido.
 - **22 Feb 2026**: color base global del fondo actualizado a #FFFFFF.
 - **22 Feb 2026**: verificación de tono base global #FFFFFF (blanco puro neutro).
+- **22 Feb 2026**: fondos, tarjetas y overlays neutralizados a blanco puro + sombras frías rgba(0,0,0,0.04).
 
 ## Backlog
 ### P0
