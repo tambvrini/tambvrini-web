@@ -110,7 +110,7 @@ const HeroSection = () => {
   );
 };
 
-const NovedadesTile = ({ title, bg, videoSrc }) => {
+const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
 
@@ -130,15 +130,12 @@ const NovedadesTile = ({ title, bg, videoSrc }) => {
   }, [hovered]);
 
   return (
-    <button
-      type="button"
+    <Link
+      to={to}
+      data-testid={testId}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => {
-        const el = document.getElementById('drops');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }}
-      className="group text-left"
+      className="group text-left block"
       aria-label={title}
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-white/5 rounded-[28px]">
@@ -170,7 +167,7 @@ const NovedadesTile = ({ title, bg, videoSrc }) => {
           </span>
         </div>
       </div>
-    </button>
+    </Link>
   );
 };
 
@@ -311,11 +308,15 @@ const DropGridSection = () => {
             title="Novedades para Hombre"
             bg={NOVEDADES_HOMBRE_BG}
             videoSrc={NOVEDADES_HOMBRE_VIDEO}
+            to="/tienda?gender=hombre"
+            testId="novedades-hombre-link"
           />
           <NovedadesTile
             title="Novedades para Mujer"
             bg={NOVEDADES_MUJER_BG}
             videoSrc={NOVEDADES_MUJER_VIDEO}
+            to="/tienda?gender=mujer"
+            testId="novedades-mujer-link"
           />
         </div>
       </div>
