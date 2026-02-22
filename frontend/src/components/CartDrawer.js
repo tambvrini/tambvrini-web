@@ -82,7 +82,7 @@ export const CartDrawer = () => {
                     <Link
                       to={`/producto/${item.product_id}`}
                       onClick={() => setIsOpen(false)}
-                      className="font-playfair text-sm text-marble block truncate"
+                      className="font-playfair text-sm text-obsidian block truncate"
                     >
                       {item.name}
                     </Link>
