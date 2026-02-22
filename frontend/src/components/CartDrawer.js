@@ -57,8 +57,8 @@ export const CartDrawer = () => {
         <div className="flex-1 overflow-y-auto p-6">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
-              <ShoppingBag size={40} className="text-marble/15 mb-4" />
-              <p className="font-montserrat text-sm text-marble/40">Tu carrito está vacío</p>
+              <ShoppingBag size={40} className="text-obsidian/15 mb-4" />
+              <p className="font-montserrat text-sm text-obsidian/50">Tu carrito está vacío</p>
               <Link
                 to="/tienda"
                 onClick={() => setIsOpen(false)}
