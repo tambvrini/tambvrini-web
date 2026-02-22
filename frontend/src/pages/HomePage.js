@@ -297,6 +297,7 @@ const DropGridSection = () => {
                     <Link
                       data-testid="editorial-hero-cta"
                       to="/tienda?category=novedades"
+                      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
                       className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 rounded-full border border-[#F5F2EA]/70 bg-transparent px-6 py-2 text-[11px] tracking-[0.25em] uppercase font-montserrat text-[#1a1a1a] transition-colors duration-300 hover:bg-[#F5F2EA] hover:text-[#1a1a1a]"
                     >
                       Descubrir
