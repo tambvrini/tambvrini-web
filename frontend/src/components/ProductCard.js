@@ -108,13 +108,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) =>
             />
           )}
 
-          <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-            isBolso || isTraje
-              ? 'bg-transparent'
-              : (isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain)
-                ? 'bg-obsidian/5'
-                : 'bg-obsidian/30'
-          }`} />
+          <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${(isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain || isBolso || isTraje) ? 'bg-obsidian/5' : 'bg-obsidian/30'}`} />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
           </div>
