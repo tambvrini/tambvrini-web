@@ -284,7 +284,19 @@ const DropGridSection = () => {
                 ))}
               </div>
 
-              <div className="my-14 md:my-16">
+              <div className="mt-8 md:mt-10 mb-6 md:mb-8">
+                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                  <img
+                    data-testid="campaign-divider-image"
+                    src={DROP_CAMPAIGN_IMAGE}
+                    alt="Editorial Casablanca TAMBVRINI"
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-8 md:mb-10">
                 <div className="w-[94%] max-w-[1760px] mx-auto">
                   <div className="relative w-full aspect-video rounded-[28px] overflow-hidden">
                     <img
@@ -305,24 +317,12 @@ const DropGridSection = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="my-8 md:my-10">
-                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-                  <img
-                    data-testid="campaign-divider-image"
-                    src={DROP_CAMPAIGN_IMAGE}
-                    alt="Editorial Casablanca TAMBVRINI"
-                    className="w-full h-auto"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
             </>
           );
         })()}
 
         {/* Aesthetic-only promo tiles (scroll to drops) */}
-        <div id="novedades" data-testid="novedades-section" className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div id="novedades" data-testid="novedades-section" className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-10">
           <NovedadesTile
             title="Novedades para Hombre"
             bg={NOVEDADES_HOMBRE_BG}
