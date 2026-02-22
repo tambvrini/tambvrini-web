@@ -354,7 +354,9 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
         })
 
     user = await get_current_user(request)
-    user_id = user["user_id"] if user else None
+    if not user:
+        raise HTTPException(401, "Debes iniciar sesión para pagar")
+    user_id = user["user_id"]
 
     origin = data.origin_url
     success_url = f"{origin}/checkout/success?session_id={{CHECKOUT_SESSION_ID}}"
