@@ -263,6 +263,8 @@ async def get_products(
             query["product_id"] = {
                 "$in": ["camiseta-sport-club", "polo-golf", "sueter-captain"]
             }
+        elif category == "sueteres":
+            query["category"] = "knitwear"
         else:
             query["category"] = category
     if gender:
