@@ -133,7 +133,7 @@ export default function ShopPage() {
               className={`font-montserrat text-[10px] tracking-[0.15em] uppercase py-2 px-5 border transition-colors duration-300 ${
                 category === key || gender === key
                   ? 'border-gold text-gold'
-                  : 'border-white/10 text-marble/40 hover:text-marble hover:border-white/30'
+                  : 'border-black/10 text-obsidian/50 hover:text-obsidian hover:border-black/30'
               }`}
             >
               {label}
