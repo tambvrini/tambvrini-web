@@ -300,48 +300,52 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div data-testid="editorial-collections-section" className="my-6 md:my-8">
+              <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-4 md:mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <Link
-                    to="/tienda?category=polos"
-                    data-testid="editorial-polos-link"
-                    className="group block"
-                  >
-                    <div className="relative overflow-hidden rounded-[22px]">
-                      <img
-                        src={EDITORIAL_POLOS_IMAGE}
-                        alt="Colección Polos"
-                        loading="lazy"
-                        className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                      />
-                      <span
-                        data-testid="editorial-polos-text"
-                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[22px] md:text-[30px] lg:text-[36px] tracking-[0.32em] text-[#1C2B26]/75 font-light"
-                      >
-                        Polos
-                      </span>
-                    </div>
-                  </Link>
-                  <Link
-                    to="/tienda?category=sueteres"
-                    data-testid="editorial-sueteres-link"
-                    className="group block"
-                  >
-                    <div className="relative overflow-hidden rounded-[22px]">
-                      <img
-                        src={EDITORIAL_SUETERES_IMAGE}
-                        alt="Colección Suéteres"
-                        loading="lazy"
-                        className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                      />
-                      <span
-                        data-testid="editorial-sueteres-text"
-                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[22px] md:text-[30px] lg:text-[36px] tracking-[0.32em] text-[#1C2B26]/75 font-light"
-                      >
-                        Suéteres
-                      </span>
-                    </div>
-                  </Link>
+                  <div className="text-center">
+                    <Link
+                      to="/tienda?category=polos"
+                      data-testid="editorial-polos-link"
+                      className="group block"
+                    >
+                      <div className="overflow-hidden rounded-[22px]">
+                        <img
+                          src={EDITORIAL_POLOS_IMAGE}
+                          alt="Colección Polos"
+                          loading="lazy"
+                          className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                        />
+                      </div>
+                    </Link>
+                    <span
+                      data-testid="editorial-polos-label"
+                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
+                    >
+                      POLOS
+                    </span>
+                  </div>
+                  <div className="text-center">
+                    <Link
+                      to="/tienda?category=sueteres"
+                      data-testid="editorial-sueteres-link"
+                      className="group block"
+                    >
+                      <div className="overflow-hidden rounded-[22px]">
+                        <img
+                          src={EDITORIAL_SUETERES_IMAGE}
+                          alt="Colección Suéteres"
+                          loading="lazy"
+                          className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                        />
+                      </div>
+                    </Link>
+                    <span
+                      data-testid="editorial-sueteres-label"
+                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
+                    >
+                      SUÉTERES
+                    </span>
+                  </div>
                 </div>
               </div>
 
