@@ -57,7 +57,7 @@ export const Footer = () => {
                   aria-label="Idioma"
                   value={lang}
                   onChange={(e) => setLang(e.target.value)}
-                  className="bg-transparent border border-white/10 px-4 py-2 font-montserrat text-xs text-marble/50 tracking-wide outline-none"
+                  className="bg-transparent border border-black/10 px-4 py-2 font-montserrat text-xs text-obsidian/60 tracking-wide outline-none"
                 >
                   <option value="es">Español</option>
                   <option value="en">English</option>
