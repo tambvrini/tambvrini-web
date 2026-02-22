@@ -154,7 +154,7 @@ const NovedadesTile = ({ title, bg, videoSrc }) => {
       className="group text-left"
       aria-label={title}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-white/5 rounded-[14px]">
+      <div className="relative aspect-[4/5] overflow-hidden bg-white/5 rounded-[28px]">
         <img
           src={bg}
           alt={title}
