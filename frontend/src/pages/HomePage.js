@@ -9,9 +9,6 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/hero-main.jpg";
-const CINEMATIC_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/axoe4sux_VIDEO%20WEB%201.mp4";
-const ROMAN_CARD_WHITE_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/inwhbq34_logo%20romano%20blanco.png";
-const ROMAN_CARD_BLACK_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/vn85wlf1_logo%20romano%20negro.png";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
 const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
@@ -22,19 +19,6 @@ const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/xmrw8kes_campa%C3%B1a%202.jpg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
-/* ============ useInView hook ============ */
-const useInView = (opts = {}) => {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.15, ...opts });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return [ref, visible];
-};
 
 /* ============ HERO with GUCCI-style animated logo ============ */
 const SCROLL_THRESHOLD = 500;
@@ -340,87 +324,6 @@ const DropGridSection = () => {
 };
 
 /* ============ CINEMATIC VIDEO LOOP (below promo tiles) ============ */
-const CinematicVideoSection = () => {
-  const [ref, visible] = useInView({ threshold: 0.2, rootMargin: '120px' });
-  const [shouldLoad, setShouldLoad] = useState(false);
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    if (visible) setShouldLoad(true);
-  }, [visible]);
-
-  useEffect(() => {
-    if (!shouldLoad) return;
-    const v = videoRef.current;
-    if (!v) return;
-    // When adding <source> dynamically, call load() so the browser starts fetching immediately.
-    v.load();
-    const p = v.play();
-    if (p && typeof p.catch === 'function') p.catch(() => {});
-  }, [shouldLoad]);
-
-  return (
-    <section className="mt-10 mb-[120px]">
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, scale: 1 }}
-          animate={visible ? { opacity: 1, scale: 1.02 } : { opacity: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto w-full max-w-[1008px]"
-        >
-          <div className="overflow-hidden rounded-[8px]">
-            <div className="relative w-full aspect-video bg-white/5">
-              <video
-                ref={videoRef}
-                data-testid="cinematic-loop-video"
-                className="absolute inset-0 w-full h-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload={shouldLoad ? 'auto' : 'none'}
-                controls={false}
-                disablePictureInPicture
-                controlsList="nodownload noplaybackrate noremoteplayback"
-                src={shouldLoad ? CINEMATIC_VIDEO_URL : undefined}
-                onError={() => {
-                  // Retry once in case of transient network abort (common on large mp4 streams)
-                  const v = videoRef.current;
-                  if (!v || v.dataset.retry === '1') return;
-                  v.dataset.retry = '1';
-                  v.load();
-                  const p = v.play();
-                  if (p && typeof p.catch === 'function') p.catch(() => {});
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Premium branding cards under video */}
-          <div className="mt-10 flex items-center justify-center gap-10">
-            <div className="overflow-hidden rounded-[8px]">
-              <img
-                src={ROMAN_CARD_WHITE_URL}
-                alt="Tarjeta romana blanca"
-                loading="lazy"
-                className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
-              />
-            </div>
-            <div className="overflow-hidden rounded-[8px]">
-              <img
-                src={ROMAN_CARD_BLACK_URL}
-                alt="Tarjeta romana negra"
-                loading="lazy"
-                className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
-              />
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
 
 
 /* ============ HOMEPAGE ============ */
@@ -432,7 +335,6 @@ export default function HomePage() {
       {/* (removed editorial divider) */}
 
       <DropGridSection />
-      <CinematicVideoSection />
     </div>
   );
 }
