@@ -29,7 +29,7 @@ export const Footer = () => {
             {/* Brand (true center) */}
             <div className="flex items-start justify-center">
               <div className="flex flex-col items-center text-center">
-                <img src={ICON_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-60" />
+                <img src={ICON_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-100 invert" />
                 <p className="font-montserrat text-xs text-obsidian/50 leading-relaxed tracking-wide">
                   {t('tambvrini_by')}
                 </p>
