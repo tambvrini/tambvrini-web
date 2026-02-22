@@ -76,10 +76,10 @@ export default function CartPage() {
                     </button>
                   </div>
                   <div className="col-span-2 text-right">
-                    <span className="font-montserrat text-sm text-marble">{(item.price * item.quantity).toLocaleString('es-ES')} &euro;</span>
+                    <span className="font-montserrat text-sm text-obsidian">{(item.price * item.quantity).toLocaleString('es-ES')} &euro;</span>
                   </div>
                   <div className="col-span-2 text-right">
-                    <button onClick={() => removeItem(item.product_id, item.size, item.color)} className="text-marble/20 hover:text-marble/50 transition-colors">
+                    <button onClick={() => removeItem(item.product_id, item.size, item.color)} className="text-obsidian/20 hover:text-obsidian/50 transition-colors">
                       <X size={16} />
                     </button>
                   </div>
@@ -88,12 +88,12 @@ export default function CartPage() {
             </div>
 
             {/* Summary */}
-            <div className="lg:border-l lg:border-white/5 lg:pl-16">
-              <h3 className="font-cinzel text-xs tracking-[0.2em] uppercase text-marble/50 mb-8">Resumen del Pedido</h3>
+            <div className="lg:border-l lg:border-black/5 lg:pl-16">
+              <h3 className="font-cinzel text-xs tracking-[0.2em] uppercase text-obsidian/50 mb-8">Resumen del Pedido</h3>
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between">
-                  <span className="font-montserrat text-xs text-marble/40">Subtotal</span>
-                  <span className="font-montserrat text-sm text-marble">{totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;</span>
+                  <span className="font-montserrat text-xs text-obsidian/50">Subtotal</span>
+                  <span className="font-montserrat text-sm text-obsidian">{totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-montserrat text-xs text-marble/40">Envío</span>
