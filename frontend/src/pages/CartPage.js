@@ -96,14 +96,14 @@ export default function CartPage() {
                   <span className="font-montserrat text-sm text-obsidian">{totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-montserrat text-xs text-marble/40">Envío</span>
-                  <span className="font-montserrat text-xs text-marble/40">{totalPrice >= 500 ? 'Gratuito' : 'Se calcula al finalizar'}</span>
+                  <span className="font-montserrat text-xs text-obsidian/50">Envío</span>
+                  <span className="font-montserrat text-xs text-obsidian/50">{totalPrice >= 500 ? 'Gratuito' : 'Se calcula al finalizar'}</span>
                 </div>
               </div>
-              <div className="border-t border-white/5 pt-6 mb-8">
+              <div className="border-t border-black/5 pt-6 mb-8">
                 <div className="flex justify-between items-center">
-                  <span className="font-montserrat text-xs tracking-widest uppercase text-marble/50">Total</span>
-                  <span className="font-playfair text-2xl text-marble">{totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;</span>
+                  <span className="font-montserrat text-xs tracking-widest uppercase text-obsidian/50">Total</span>
+                  <span className="font-playfair text-2xl text-obsidian">{totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;</span>
                 </div>
               </div>
               <button
@@ -114,7 +114,7 @@ export default function CartPage() {
               >
                 {loading ? 'Procesando...' : (<>Finalizar Compra <ArrowRight size={14} /></>)}
               </button>
-              <Link to="/tienda" className="block text-center mt-4 font-montserrat text-[10px] tracking-widest uppercase text-marble/30 hover:text-marble transition-colors">
+              <Link to="/tienda" className="block text-center mt-4 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 hover:text-obsidian transition-colors">
                 Continuar comprando
               </Link>
             </div>
