@@ -220,10 +220,10 @@ const DropGridSection = () => {
   }, []);
 
   return (
-    <section id="drops" data-testid="drop-grid" className="py-20 md:py-28">
+    <section id="drops" data-testid="drop-grid" className="py-24 md:py-32">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         {/* 8 items: 2 rows of 4 on desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
           {loading
             ? Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="animate-pulse">
