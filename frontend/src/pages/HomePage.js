@@ -18,7 +18,7 @@ const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b64
 const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sbeaj2rx_video%20hombre.mp4";
 const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/th2xfrpo_10.jpg";
-const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/xmrw8kes_campa%C3%B1a%202.jpg";
+const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 /* ============ useInView hook ============ */
@@ -195,6 +195,11 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const scrollToNovedades = () => {
+    const el = document.getElementById('novedades');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   useEffect(() => {
     const fetchDrop = async () => {
       setLoading(true);
@@ -282,15 +287,24 @@ const DropGridSection = () => {
                 ))}
               </div>
 
-              <div className="my-8 md:my-10">
-                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-                  <img
-                    data-testid="campaign-divider-image"
-                    src={DROP_CAMPAIGN_IMAGE}
-                    alt="Editorial Casablanca TAMBVRINI"
-                    className="w-full h-auto"
-                    loading="lazy"
-                  />
+              <div className="my-14 md:my-16">
+                <div className="w-[94%] max-w-[1760px] mx-auto">
+                  <div className="relative w-full aspect-video rounded-[28px] overflow-hidden">
+                    <img
+                      data-testid="editorial-hero-image"
+                      src={EDITORIAL_HERO_IMAGE}
+                      alt="Editorial TAMBVRINI"
+                      className="absolute inset-0 w-full h-full object-cover object-center"
+                      loading="lazy"
+                    />
+                    <button
+                      data-testid="editorial-hero-cta"
+                      onClick={scrollToNovedades}
+                      className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 rounded-full border border-white/70 bg-white/80 px-6 py-2 text-[11px] tracking-[0.25em] uppercase font-montserrat text-[#1a1a1a] transition-opacity duration-300 hover:opacity-90"
+                    >
+                      Descubrir
+                    </button>
+                  </div>
                 </div>
               </div>
             </>
@@ -298,7 +312,7 @@ const DropGridSection = () => {
         })()}
 
         {/* Aesthetic-only promo tiles (scroll to drops) */}
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div id="novedades" data-testid="novedades-section" className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-10">
           <NovedadesTile
             title="Novedades para Hombre"
             bg={NOVEDADES_HOMBRE_BG}
