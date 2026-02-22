@@ -199,14 +199,14 @@ export default function ProductPage() {
               <div className="flex items-center gap-0 border border-black/10 inline-flex">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-12 h-12 flex items-center justify-center text-marble/50 hover:text-marble border-r border-white/10"
+                  className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-r border-black/10"
                 >
                   <Minus size={14} />
                 </button>
                 <span className="w-16 h-12 flex items-center justify-center font-montserrat text-sm text-marble">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-12 h-12 flex items-center justify-center text-marble/50 hover:text-marble border-l border-white/10"
+                  className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-l border-black/10"
                 >
                   <Plus size={14} />
                 </button>
@@ -221,7 +221,7 @@ export default function ProductPage() {
                 disabled={product.is_sold_out}
                 className={`flex-1 py-4 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 ${
                   product.is_sold_out
-                    ? 'bg-white/10 text-marble/70 cursor-not-allowed'
+                    ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
                     : 'bg-marble text-obsidian hover:bg-gold'
                 }`}
               >
@@ -231,10 +231,10 @@ export default function ProductPage() {
                 data-testid="product-wishlist-btn"
                 onClick={() => toggleItem(product)}
                 className={`w-14 h-14 border flex items-center justify-center transition-colors duration-300 ${
-                  inWishlist ? 'border-gold' : 'border-white/10 hover:border-white/30'
+                  inWishlist ? 'border-gold' : 'border-black/10 hover:border-black/30'
                 }`}
               >
-                <Heart size={18} className={inWishlist ? 'fill-gold text-gold' : 'text-marble/50'} />
+                <Heart size={18} className={inWishlist ? 'fill-gold text-gold' : 'text-obsidian/50'} />
               </button>
             </div>
 
