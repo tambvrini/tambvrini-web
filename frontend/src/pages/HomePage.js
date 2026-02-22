@@ -294,7 +294,7 @@ const DropGridSection = () => {
                     data-testid="editorial-divider-image"
                     src={DROP_EDITORIAL_IMAGE}
                     alt="Editorial TAMBVRINI"
-                    className="w-full h-[360px] object-cover"
+                    className="mx-auto w-auto h-auto max-w-full object-contain"
                     loading="lazy"
                   />
                 </div>
