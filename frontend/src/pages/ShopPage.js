@@ -22,7 +22,7 @@ const COLLECTION_LABELS = {
   limited: 'Piezas Limitadas',
 };
 
-const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/83efnjx9_HOMBRE%20FINAL.jpg";
+const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
