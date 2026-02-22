@@ -46,6 +46,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: miniatura de “Camiseta Sport Club” actualizada.
 - **22 Feb 2026**: miniatura de “Polo Golf” actualizada.
 - **22 Feb 2026**: imagen editorial bajo los primeros 4 artículos en Home actualizada (altura fija).
+- **22 Feb 2026**: imagen editorial bajo los primeros 4 artículos ahora a tamaño real sin recorte.
 - **22 Feb 2026**: miniatura de “Polo Aureus” actualizada.
 - **22 Feb 2026**: miniatura de “Americana UMBRA” actualizada.
 - **22 Feb 2026**: miniatura de “Traje Monograma Tambvrini” actualizada.
