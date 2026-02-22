@@ -25,7 +25,7 @@ const UMBRA_ID = 'americana-umbra';
 const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/xgsml0mm_umbra.mp4';
 
 const CAPTAIN_ID = 'sueter-captain';
-const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/3n73eunc_captain.mp4';
+const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/pu3df808_0212%20%284%29.mp4';
 
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enableWishlistIcon = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
