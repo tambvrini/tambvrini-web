@@ -109,7 +109,7 @@ export const Header = () => {
               <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-[#F5F2EA] border-r border-black/5 p-0 overflow-y-auto">
                 <div className="p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
-                    <img src={logoSrc} alt="TAMBVRINI" className="h-5" />
+                    <img src={logoSrc} alt="TAMBVRINI" className={`h-5 ${scrolled ? 'invert' : ''}`} />
                     <SheetClose asChild>
                       <button data-testid="menu-close-btn">
                         <X size={24} className="text-obsidian/60 hover:text-obsidian" />
