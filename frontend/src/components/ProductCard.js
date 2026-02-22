@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import { Heart } from 'lucide-react';
+import { useWishlist } from '../contexts/WishlistContext';
 
 const TRAJE_ID = 'traje-monograma-tambvrini';
 const TRAJE_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/tf3t88bp_loop%20final%20model.mp4';
@@ -25,7 +27,7 @@ const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tam
 const CAPTAIN_ID = 'sueter-captain';
 const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/3n73eunc_captain.mp4';
 
-export const ProductCard = ({ product, index = 0, enableHoverVideo = false }) => {
+export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enableWishlistIcon = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
   const isBolso = enableHoverVideo && product.product_id === BOLSO_ID;
