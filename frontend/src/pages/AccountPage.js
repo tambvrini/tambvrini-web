@@ -83,7 +83,7 @@ export default function AccountPage() {
           <button
             data-testid="logout-btn"
             onClick={handleLogout}
-            className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-marble/30 hover:text-marble transition-colors"
+            className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 hover:text-obsidian transition-colors"
           >
             <LogOut size={14} /> Cerrar Sesión
           </button>
