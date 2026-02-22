@@ -259,7 +259,12 @@ async def get_products(
 ):
     query = {}
     if category:
-        query["category"] = category
+        if category == "2026":
+            query["product_id"] = {
+                "$in": ["camiseta-sport-club", "polo-golf", "sueter-captain"]
+            }
+        else:
+            query["category"] = category
     if gender:
         query["gender"] = {"$in": [gender, "unisex"]}
     if search:
