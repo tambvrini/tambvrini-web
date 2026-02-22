@@ -86,7 +86,7 @@ export const CartDrawer = () => {
                     >
                       {item.name}
                     </Link>
-                    <p className="font-montserrat text-[10px] text-marble/40 mt-1 tracking-wide">
+                    <p className="font-montserrat text-[10px] text-obsidian/50 mt-1 tracking-wide">
                       {item.size} {item.color && `/ ${item.color}`}
                     </p>
                     <p className="font-montserrat text-xs text-marble/60 mt-1">
