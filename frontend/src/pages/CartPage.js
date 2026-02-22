@@ -37,7 +37,7 @@ export default function CartPage() {
   return (
     <div data-testid="cart-page" className="min-h-screen pt-32 md:pt-40 pb-24">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
-        <h1 className="font-cinzel text-3xl md:text-4xl tracking-[0.1em] text-marble mb-16">Carrito</h1>
+        <h1 className="font-cinzel text-3xl md:text-4xl tracking-[0.1em] text-obsidian mb-16">Carrito</h1>
 
         {items.length === 0 ? (
           <div className="text-center py-20">
