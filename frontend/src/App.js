@@ -1,4 +1,5 @@
 import "@/App.css";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
@@ -20,6 +21,10 @@ import BrandPage from "./pages/BrandPage";
 
 function AppRouter() {
   const location = useLocation();
+
+  useEffect(() => {
+    document.title = 'TAMBVRINI';
+  }, [location.pathname]);
 
   // Check URL fragment for session_id (Google OAuth callback)
   if (location.hash?.includes('session_id=')) {
