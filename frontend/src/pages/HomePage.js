@@ -316,7 +316,7 @@ const DropGridSection = () => {
                       />
                       <span
                         data-testid="editorial-polos-text"
-                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[20px] md:text-[28px] lg:text-[32px] tracking-[0.35em] text-[#F6F1E7]/90 font-light"
+                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[22px] md:text-[30px] lg:text-[36px] tracking-[0.32em] text-[#1C2B26]/75 font-light"
                       >
                         Polos
                       </span>
@@ -336,7 +336,7 @@ const DropGridSection = () => {
                       />
                       <span
                         data-testid="editorial-sueteres-text"
-                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[20px] md:text-[28px] lg:text-[32px] tracking-[0.35em] text-[#F6F1E7]/90 font-light"
+                        className="pointer-events-none absolute top-6 md:top-8 left-1/2 -translate-x-1/2 font-playfair text-[22px] md:text-[30px] lg:text-[36px] tracking-[0.32em] text-[#1C2B26]/75 font-light"
                       >
                         Suéteres
                       </span>
