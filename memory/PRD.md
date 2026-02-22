@@ -15,6 +15,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Rediseño completo a estética marfil/luxury editorial
 - [x] Auth email/contraseña + Google OAuth
 - [x] Wishlist (guest con localStorage + sync backend en login)
+- [x] Carrito sincronizado con backend para usuarios autenticados
 - [x] Homepage con grid de productos + tiles Novedades + sección cinemática
 - [x] Hover-videos en tarjetas seleccionadas
 - [x] Product page con lógica genérica de tallas agotadas (`sold_out_sizes`)
