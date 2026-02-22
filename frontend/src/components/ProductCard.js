@@ -38,8 +38,12 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
   const isCaptain = enableHoverVideo && product.product_id === CAPTAIN_ID;
   const hasHoverVideo = isTraje || isAureus || isBolso || isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain;
 
+  const { toggleItem, isInWishlist } = useWishlist();
+
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
+
+  const inWishlist = enableWishlistIcon && isInWishlist(product.product_id);
 
   useEffect(() => {
     if (!hasHoverVideo) return;
