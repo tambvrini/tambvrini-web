@@ -6,48 +6,21 @@ const MARBLE_IMAGE = "https://images.unsplash.com/photo-1756287530100-c0b4412dee
 const TENNIS_IMAGE = "https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/zitxtlbr_IMG_1066.JPEG";
 const CINEMATIC_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/axoe4sux_VIDEO%20WEB%201.mp4";
 
-const useInView = (opts = {}) => {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return undefined;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.2, rootMargin: "120px", ...opts }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [opts]);
-
-  return [ref, visible];
-};
-
 const BrandCinematicSection = () => {
-  const [ref, visible] = useInView();
-  const [shouldLoad, setShouldLoad] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
-    if (visible) setShouldLoad(true);
-  }, [visible]);
-
-  useEffect(() => {
-    if (!shouldLoad) return;
     const v = videoRef.current;
     if (!v) return;
     v.load();
     const p = v.play();
     if (p && typeof p.catch === 'function') p.catch(() => {});
-  }, [shouldLoad]);
+  }, []);
 
   return (
     <section data-testid="brand-cinematic-section" className="py-16 md:py-24 bg-[#F5F2EA]">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <div ref={ref} className="overflow-hidden rounded-[12px]">
+        <div className="overflow-hidden rounded-[12px]">
           <div className="relative w-full aspect-video bg-white/5">
             <video
               ref={videoRef}
@@ -57,11 +30,11 @@ const BrandCinematicSection = () => {
               muted
               loop
               playsInline
-              preload={shouldLoad ? 'auto' : 'none'}
+              preload="auto"
               controls={false}
               disablePictureInPicture
               controlsList="nodownload noplaybackrate noremoteplayback"
-              src={shouldLoad ? CINEMATIC_VIDEO_URL : undefined}
+              src={CINEMATIC_VIDEO_URL}
               onError={() => {
                 const v = videoRef.current;
                 if (!v || v.dataset.retry === '1') return;
