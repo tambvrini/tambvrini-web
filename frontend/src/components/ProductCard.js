@@ -122,7 +122,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             <button
               type="button"
               aria-label={inWishlist ? 'Quitar de favoritos' : 'Añadir a favoritos'}
-              className={`absolute top-[14px] right-[14px] z-20 w-8 h-8 flex items-center justify-center rounded-full bg-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
+              className={`absolute top-[14px] right-[14px] z-20 w-8 h-8 flex items-center justify-center rounded-full bg-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 active:scale-[0.95] ${
                 inWishlist ? 'opacity-100' : ''
               }`}
               onClick={(e) => {
@@ -133,7 +133,8 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             >
               <Heart
                 size={16}
-                className={`text-obsidian transition-transform duration-200 ${inWishlist ? 'fill-obsidian scale-[1.03]' : 'scale-100'}`}
+                strokeWidth={1.5}
+                className={`text-obsidian transition-transform duration-200 ${inWishlist ? 'fill-obsidian scale-[1.0]' : 'scale-100'}`}
               />
             </button>
           )}
