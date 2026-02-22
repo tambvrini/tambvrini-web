@@ -66,7 +66,7 @@ const HeroSection = () => {
   const heroLogoOpacity = useTransform(progress, [0.9, 1], [1, 0]);
 
   // Hero overlay darkens as you scroll
-  const overlayOpacity = useTransform(progress, [0, 1], [0.35, 0.65]);
+  const overlayOpacity = useTransform(progress, [0, 1], [0.08, 0.22]);
 
   // CTA buttons fade out quickly
   const buttonsOpacity = useTransform(scrollY, [0, 250], [1, 0]);
