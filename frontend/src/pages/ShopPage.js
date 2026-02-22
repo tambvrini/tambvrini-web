@@ -22,6 +22,8 @@ const COLLECTION_LABELS = {
   limited: 'Piezas Limitadas',
 };
 
+const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/83efnjx9_HOMBRE%20FINAL.jpg";
+
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
@@ -82,6 +84,9 @@ export default function ShopPage() {
       : products;
 
   const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
+  const isMensView = gender === 'hombre';
+  const mensFirst = isMensView ? filteredProducts.slice(0, 4) : filteredProducts;
+  const mensRest = isMensView ? filteredProducts.slice(4) : [];
 
   return (
     <div data-testid="shop-page" className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise">
@@ -156,6 +161,38 @@ export default function ShopPage() {
           <div className="text-center py-20">
             <p className="font-playfair text-xl text-obsidian/50">No se encontraron productos</p>
             <button onClick={clearFilters} className="mt-6 btn-luxury text-xs">Ver todos los productos</button>
+          </div>
+        ) : isMensView && filteredProducts.length > 4 ? (
+          <div className="space-y-10 md:space-y-14">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
+              {mensFirst.map((p, i) => (
+                <ProductCard
+                  key={p.product_id}
+                  product={p}
+                  index={i}
+                  enableHoverVideo={p.product_id === 'camiseta-sport-club'}
+                />
+              ))}
+            </div>
+            <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+              <img
+                data-testid="mens-campaign-image"
+                src={HOMBRE_CAMPAIGN_IMAGE}
+                alt="Campaña Hombre TAMBVRINI"
+                className="w-full h-auto object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
+              {mensRest.map((p, i) => (
+                <ProductCard
+                  key={p.product_id}
+                  product={p}
+                  index={i + mensFirst.length}
+                  enableHoverVideo={p.product_id === 'camiseta-sport-club'}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
