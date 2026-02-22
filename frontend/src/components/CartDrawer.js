@@ -89,7 +89,7 @@ export const CartDrawer = () => {
                     <p className="font-montserrat text-[10px] text-obsidian/50 mt-1 tracking-wide">
                       {item.size} {item.color && `/ ${item.color}`}
                     </p>
-                    <p className="font-montserrat text-xs text-marble/60 mt-1">
+                    <p className="font-montserrat text-xs text-obsidian/60 mt-1">
                       {item.price.toLocaleString('es-ES')} &euro;
                     </p>
                     <div className="flex items-center gap-3 mt-3">
