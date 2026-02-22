@@ -33,6 +33,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: hover video de “Americana UMBRA” actualizado (v2).
 - **22 Feb 2026**: hover video de “Camiseta Imperium” actualizado.
 - **22 Feb 2026**: hover video de “Camiseta Imperium” actualizado (v2).
+- **22 Feb 2026**: hover video de “Polo Aureus” actualizado.
 
 ## Backlog
 ### P0
