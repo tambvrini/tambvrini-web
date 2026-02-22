@@ -89,7 +89,7 @@ export default function ShopPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
           <div>
-            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-marble">{getTitle()}</h1>
+            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-obsidian">{getTitle()}</h1>
             <p className="font-montserrat text-xs text-marble/40 mt-3 tracking-wide">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
@@ -105,14 +105,14 @@ export default function ShopPage() {
               </button>
             )}
             <Select value={sort} onValueChange={(v) => { const p = new URLSearchParams(searchParams); p.set('sort', v); setSearchParams(p); }}>
-              <SelectTrigger data-testid="sort-select" className="w-[200px] bg-transparent border-white/10 text-marble/60 font-montserrat text-xs">
+              <SelectTrigger data-testid="sort-select" className="w-[200px] bg-transparent border-black/10 text-obsidian/60 font-montserrat text-xs">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
-              <SelectContent className="bg-obsidian border-white/10">
-                <SelectItem value="newest" className="text-marble/80 font-montserrat text-xs">Más recientes</SelectItem>
-                <SelectItem value="price_asc" className="text-marble/80 font-montserrat text-xs">Precio: menor a mayor</SelectItem>
-                <SelectItem value="price_desc" className="text-marble/80 font-montserrat text-xs">Precio: mayor a menor</SelectItem>
-                <SelectItem value="name" className="text-marble/80 font-montserrat text-xs">Nombre A-Z</SelectItem>
+              <SelectContent className="bg-[#F5F2EA] border-black/10">
+                <SelectItem value="newest" className="text-obsidian/80 font-montserrat text-xs">Más recientes</SelectItem>
+                <SelectItem value="price_asc" className="text-obsidian/80 font-montserrat text-xs">Precio: menor a mayor</SelectItem>
+                <SelectItem value="price_desc" className="text-obsidian/80 font-montserrat text-xs">Precio: mayor a menor</SelectItem>
+                <SelectItem value="name" className="text-obsidian/80 font-montserrat text-xs">Nombre A-Z</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -154,7 +154,7 @@ export default function ShopPage() {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20">
-            <p className="font-playfair text-xl text-marble/40">No se encontraron productos</p>
+            <p className="font-playfair text-xl text-obsidian/50">No se encontraron productos</p>
             <button onClick={clearFilters} className="mt-6 btn-luxury text-xs">Ver todos los productos</button>
           </div>
         ) : (
