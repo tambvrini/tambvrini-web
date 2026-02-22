@@ -26,6 +26,7 @@ const COLLECTION_LABELS = {
 };
 
 const SUETERES_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/g945z4pt_eden1.jpg";
+const MUJER_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/udlexuwa_hf_20260222_200211_c5c76655-5b93-4052-adc1-45fea5a9cdc5.jpg";
 
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
 
@@ -138,6 +139,19 @@ export default function ShopPage() {
               <img
                 src={SUETERES_HERO_IMAGE}
                 alt="Editorial Suéteres TAMBVRINI"
+                loading="lazy"
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          </div>
+        )}
+
+        {gender === 'mujer' && (
+          <div data-testid="mujer-hero-image" className="my-6 md:my-8">
+            <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+              <img
+                src={MUJER_HERO_IMAGE}
+                alt="Editorial Mujer TAMBVRINI"
                 loading="lazy"
                 className="w-full h-auto object-contain"
               />
