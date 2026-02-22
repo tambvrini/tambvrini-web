@@ -16,6 +16,7 @@ import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
+const LOGO_DARK = "/logo-letras-final-blanco.svg";
 
 const SCROLL_THRESHOLD = 500;
 
