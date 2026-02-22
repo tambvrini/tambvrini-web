@@ -1,19 +1,26 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { X, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, totalPrice, clearCart } = useCart();
-  const { getHeaders } = useAuth();
+  const { items, removeItem, updateQuantity, totalPrice } = useCart();
+  const { user, getHeaders } = useAuth();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
+    if (!user) {
+      toast.error('Inicia sesión para finalizar la compra');
+      navigate('/cuenta');
+      return;
+    }
     setLoading(true);
     try {
       const checkoutItems = items.map(i => ({
@@ -112,7 +119,7 @@ export default function CartPage() {
                 disabled={loading}
                 className="w-full py-4 bg-marble text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {loading ? 'Procesando...' : (<>Finalizar Compra <ArrowRight size={14} /></>)}
+                {loading ? 'Procesando...' : (user ? (<>Finalizar Compra <ArrowRight size={14} /></>) : 'Inicia sesión para pagar')}
               </button>
               <Link to="/tienda" className="block text-center mt-4 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 hover:text-obsidian transition-colors">
                 Continuar comprando
