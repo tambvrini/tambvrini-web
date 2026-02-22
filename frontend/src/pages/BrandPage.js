@@ -20,7 +20,7 @@ const BrandCinematicSection = () => {
   }, []);
 
   return (
-    <section data-testid="brand-cinematic-section" className="py-16 md:py-24 bg-[#F5F2EA]">
+    <section data-testid="brand-cinematic-section" className="pt-16 md:pt-20 pb-6 md:pb-8 bg-[#F5F2EA]">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className="overflow-hidden rounded-[12px]">
           <div className="relative w-full aspect-video bg-white/5">
@@ -128,7 +128,7 @@ export default function BrandPage() {
       <BrandCinematicSection />
 
       {/* Values */}
-      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-[1920px] mx-auto">
+      <section className="pt-10 md:pt-12 pb-24 md:pb-32 px-6 md:px-12 lg:px-24 max-w-[1920px] mx-auto">
         <div className="text-center mb-16">
           <div className="section-divider mx-auto mb-8" />
           <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50">Nuestros Valores</h2>
