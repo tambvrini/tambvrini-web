@@ -26,6 +26,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: miniatura de “Polo Aureus” actualizada.
 - **22 Feb 2026**: miniatura de “Traje Monograma Tambvrini” actualizada.
 - **22 Feb 2026**: miniatura de “Bolso Monograma Tambvrini” actualizada.
+- **22 Feb 2026**: miniatura de “Polo Golf” actualizada.
 
 ## Backlog
 ### P0
