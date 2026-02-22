@@ -24,6 +24,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **22 Feb 2026**: imagen hero superior en “Sobre TAMBVRINI” reemplazada.
 - **22 Feb 2026**: navegación a Tienda Hombre/Mujer ahora inicia en la parte superior (scroll reset).
 - **22 Feb 2026**: Novedades Hombre/Mujer y menú lateral enlazan a subcategorías Hombre/Mujer.
 - **22 Feb 2026**: imagen Hombre reemplazada por versión final en la sección Tienda Hombre.
