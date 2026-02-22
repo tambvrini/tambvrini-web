@@ -77,7 +77,7 @@ const HeroSection = () => {
       {/* Background image */}
       <div className="absolute inset-0">
         <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-full object-cover brightness-105" />
-        <motion.div className="absolute inset-0 bg-obsidian" style={{ opacity: overlayOpacity }} />
+        <motion.div className="absolute inset-0 bg-[#F5F2EA]" style={{ opacity: overlayOpacity }} />
       </div>
 
       {/* Animated GIANT logo — fixed position, transforms from center to header */}
