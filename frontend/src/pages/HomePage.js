@@ -18,6 +18,7 @@ const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b64
 const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sbeaj2rx_video%20hombre.mp4";
 const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/th2xfrpo_10.jpg";
+const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/xmrw8kes_campa%C3%B1a%202.jpg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 /* ============ useInView hook ============ */
@@ -279,6 +280,18 @@ const DropGridSection = () => {
                     enableWishlistIcon
                   />
                 ))}
+              </div>
+
+              <div className="my-8 md:my-10">
+                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                  <img
+                    data-testid="campaign-divider-image"
+                    src={DROP_CAMPAIGN_IMAGE}
+                    alt="Editorial Casablanca TAMBVRINI"
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </>
           );
