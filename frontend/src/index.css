@@ -63,7 +63,7 @@ body {
     background: rgba(17, 17, 17, 0.18);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #C5A059;
+    background: rgba(17, 17, 17, 0.32);
 }
 
 @layer base {
