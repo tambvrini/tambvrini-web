@@ -47,6 +47,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - **22 Feb 2026**: imagen campaign previa reubicada debajo del nuevo hero editorial.
 - **22 Feb 2026**: orden invertido (campaign arriba, hero abajo) y márgenes reducidos entre imágenes.
 - **22 Feb 2026**: video “WEB 1” movido a Marca entre Artesanía y Valores; tarjetas añadidas debajo.
+- **22 Feb 2026**: margen entre tarjetas y “Nuestros valores” reducido.
 
 ## Backlog
 ### P0
