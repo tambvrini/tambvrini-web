@@ -390,28 +390,29 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
         stripe.api_base = "https://integrations.emergentagent.com/stripe"
 
     shipping_address_collection = {
-        "allowed_countries": ["ES", "FR", "IT", "DE", "GB", "US", "CA"]
+        "allowed_countries": ["ES"]
     }
+    standard_amount = 0 if total >= 80 else 499
     shipping_options = [
         {
             "shipping_rate_data": {
                 "type": "fixed_amount",
-                "fixed_amount": {"amount": 1500, "currency": "eur"},
+                "fixed_amount": {"amount": standard_amount, "currency": "eur"},
                 "display_name": "Envío estándar",
                 "delivery_estimate": {
-                    "minimum": {"unit": "business_day", "value": 4},
-                    "maximum": {"unit": "business_day", "value": 7}
+                    "minimum": {"unit": "business_day", "value": 2},
+                    "maximum": {"unit": "business_day", "value": 4}
                 }
             }
         },
         {
             "shipping_rate_data": {
                 "type": "fixed_amount",
-                "fixed_amount": {"amount": 3500, "currency": "eur"},
+                "fixed_amount": {"amount": 799, "currency": "eur"},
                 "display_name": "Envío exprés",
                 "delivery_estimate": {
                     "minimum": {"unit": "business_day", "value": 1},
-                    "maximum": {"unit": "business_day", "value": 3}
+                    "maximum": {"unit": "business_day", "value": 2}
                 }
             }
         }
