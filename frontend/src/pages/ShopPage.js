@@ -9,6 +9,7 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
+  '2026': '2026',
   hombre: 'Hombre',
   mujer: 'Mujer',
   accesorios: 'Accesorios',
