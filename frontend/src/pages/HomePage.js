@@ -268,7 +268,8 @@ const DropGridSection = () => {
         ) : (() => {
           // Force “Suéter Captain” to render as the 8th (last) item in the 2nd row on desktop.
           const captain = products.find((p) => p.product_id === 'sueter-captain');
-          const rest = products.filter((p) => p.product_id !== 'sueter-captain');
+          const domus = products.find((p) => p.product_id === 'polo-domus');
+          const rest = products.filter((p) => p.product_id !== 'sueter-captain' && p.product_id !== 'polo-domus');
           const base = rest.slice(0, captain ? 7 : 8);
           const displayed = captain ? [...base, captain] : base;
           const firstRow = displayed.slice(0, 4);
@@ -360,6 +361,18 @@ const DropGridSection = () => {
                   />
                 ))}
               </div>
+
+              {domus && (
+                <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
+                  <ProductCard
+                    key={domus.product_id}
+                    product={domus}
+                    index={displayed.length}
+                    enableHoverVideo={domus.product_id === 'camiseta-sport-club' || domus.product_id === 'polo-golf' || domus.product_id === 'camiseta-imperium' || domus.product_id === 'americana-umbra' || domus.product_id === 'sueter-captain' || domus.product_id === 'polo-aureus' || domus.product_id === 'traje-monograma-tambvrini' || domus.product_id === 'bolso-monograma-tambvrini'}
+                    enableWishlistIcon
+                  />
+                </div>
+              )}
 
               <div className="mt-8 md:mt-10 mb-6 md:mb-8">
                 <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
