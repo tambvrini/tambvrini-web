@@ -13,7 +13,7 @@ const BOLSO_ID = 'bolso-monograma-tambvrini';
 const BOLSO_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/9eqm94jq_0216.mp4';
 
 const SPORT_CLUB_ID = 'camiseta-sport-club';
-const SPORT_CLUB_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/r6zojqz1_video%20articulo.mp4';
+const SPORT_CLUB_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/4q03omes_0216%281%29.mp4';
 
 const POLO_GOLF_ID = 'polo-golf';
 const POLO_GOLF_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/rrxcz0pq_0216.mp4';
