@@ -16,7 +16,7 @@ const SPORT_CLUB_ID = 'camiseta-sport-club';
 const SPORT_CLUB_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/r6zojqz1_video%20articulo.mp4';
 
 const POLO_GOLF_ID = 'polo-golf';
-const POLO_GOLF_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/dcwhx6l3_articulo%202%20video.mp4';
+const POLO_GOLF_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/rrxcz0pq_0216.mp4';
 
 const IMPERIUM_ID = 'camiseta-imperium';
 const IMPERIUM_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/5muj0dwx_0212%20%284%29.mp4';
