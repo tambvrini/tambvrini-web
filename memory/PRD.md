@@ -24,6 +24,9 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **24 Feb 2026**: nuevo producto “Suéter Sylva” añadido (galería 9 imágenes + miniatura).
+- **24 Feb 2026**: nuevo producto “Polo Patricius” añadido (galería 7 imágenes + miniatura).
+- **24 Feb 2026**: fila destacada Home ahora muestra Polo Domus + Suéter Sylva + Polo Patricius.
 - **22 Feb 2026**: imagen hero full-width añadida al inicio de la subcategoría Suéteres.
 - **22 Feb 2026**: títulos “POLOS” y “SUÉTERES” movidos fuera de las imágenes (estilo Gucci minimal).
 - **22 Feb 2026**: sección editorial Polos/Suéteres movida debajo de la imagen horizontal y encima de los últimos 4 artículos.
