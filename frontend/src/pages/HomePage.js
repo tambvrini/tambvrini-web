@@ -270,14 +270,19 @@ const DropGridSection = () => {
           const captain = products.find((p) => p.product_id === 'sueter-captain');
           const domus = products.find((p) => p.product_id === 'polo-domus');
           const sylva = products.find((p) => p.product_id === 'sueter-sylva');
+          const patricius = products.find((p) => p.product_id === 'polo-patricius');
           const rest = products.filter(
-            (p) => p.product_id !== 'sueter-captain' && p.product_id !== 'polo-domus' && p.product_id !== 'sueter-sylva'
+            (p) =>
+              p.product_id !== 'sueter-captain' &&
+              p.product_id !== 'polo-domus' &&
+              p.product_id !== 'sueter-sylva' &&
+              p.product_id !== 'polo-patricius'
           );
           const base = rest.slice(0, captain ? 7 : 8);
           const displayed = captain ? [...base, captain] : base;
           const firstRow = displayed.slice(0, 4);
           const secondRow = displayed.slice(4, 8);
-          const spotlight = [domus, sylva].filter(Boolean);
+          const spotlight = [domus, sylva, patricius].filter(Boolean);
 
           return (
             <>
