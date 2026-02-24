@@ -9,7 +9,7 @@ import sys
 from datetime import datetime
 
 class ProductFilterAnalyzer:
-    def __init__(self, base_url="https://tambvrini-luxury-3.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://tambvrini-luxury-4.preview.emergentagent.com/api"):
         self.base_url = base_url
         
     def log(self, message):
