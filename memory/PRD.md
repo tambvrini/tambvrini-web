@@ -24,6 +24,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **27 Feb 2026**: eliminada la imagen hero en la sección “Suéteres” de la tienda.
 - **24 Feb 2026**: nuevo producto “Polo Regius” añadido (galería 10 imágenes + miniatura) y ubicado a la derecha de Polo Patricius en Home.
 - **24 Feb 2026**: nuevo producto “Suéter Sylva” añadido (galería 9 imágenes + miniatura).
 - **24 Feb 2026**: nuevo producto “Polo Patricius” añadido (galería 7 imágenes + miniatura).
