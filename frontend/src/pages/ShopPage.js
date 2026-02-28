@@ -125,10 +125,9 @@ export default function ShopPage() {
 
     const handleScroll = () => {
       if (!introRef.current) return;
-      const total = introRef.current.offsetHeight - window.innerHeight;
-      const rect = introRef.current.getBoundingClientRect();
-      const scrolled = Math.min(total, Math.max(0, -rect.top));
-      const progress = total > 0 ? scrolled / total : 1;
+      const start = introRef.current.offsetTop;
+      const end = start + introRef.current.offsetHeight - window.innerHeight;
+      const progress = end > start ? (window.scrollY - start) / (end - start) : 1;
       const clamped = Math.min(1, Math.max(0, progress));
       setIntroProgress(clamped);
       if (videoRef.current) {
