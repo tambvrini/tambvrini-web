@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
@@ -218,15 +218,12 @@ export default function ShopPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
             {mujerGridItems.map((item, i) => (
               item?.type === 'editorial' ? (
-                <Link
+                <div
                   key={item.id}
-                  to="/tienda?category=2026"
-                  data-testid="mujer-editorial-card"
-                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                  className="group block cursor-pointer"
-                  aria-label="Editorial Mujer"
+                  data-testid="mujer-editorial-insert"
+                  className="col-span-2 md:col-span-3 lg:col-span-2"
                 >
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-[22px] bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out group-hover:scale-[1.02]">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out hover:scale-[1.01]">
                     <img
                       data-testid="mujer-editorial-image"
                       src={MUJER_HERO_IMAGE}
@@ -235,7 +232,7 @@ export default function ShopPage() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                </Link>
+                </div>
               ) : (
                 <ProductCard
                   key={item.product_id}
