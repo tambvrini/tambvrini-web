@@ -95,9 +95,9 @@ export const Header = () => {
     ? Math.min(1, Math.max(0, (scrollY - headerFadeStart) / (headerFadeEnd - headerFadeStart)))
     : 1;
 
-  const mujerCinematicActive = isWomenCategory && mujerCinematicProgress < 0.98;
-  const navToneClass = mujerCinematicActive ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
-  const shouldInvertLogo = (scrolled || !isHomePage) && !mujerCinematicActive;
+  const mujerCinematicHidden = isWomenCategory && mujerCinematicProgress < 0.85;
+  const navToneClass = mujerCinematicHidden ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
+  const shouldInvertLogo = (scrolled || !isHomePage) && !mujerCinematicHidden;
 
   const logoSrc = LOGO_DARK;
 
@@ -109,11 +109,11 @@ export const Header = () => {
           scrolled
             ? `${isHomePage ? 'bg-white/95' : 'bg-white/95'} backdrop-blur-md py-5 border-b border-black/5`
             : 'bg-transparent py-6'
-        }`}
+        } ${mujerCinematicHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
-          <div className="flex items-center gap-5 w-[120px]" style={{ opacity: mujerCinematicActive ? 0.7 : 1 }}>
+          <div className="flex items-center gap-5 w-[120px]" style={{ opacity: mujerCinematicHidden ? 0.7 : 1 }}>
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
@@ -179,7 +179,7 @@ export const Header = () => {
           </Link>
 
           {/* Right: Account + Wishlist + Cart */}
-          <div className="flex items-center gap-5 w-[120px] justify-end" style={{ opacity: mujerCinematicActive ? 0.7 : 1 }}>
+          <div className="flex items-center gap-5 w-[120px] justify-end" style={{ opacity: mujerCinematicHidden ? 0.7 : 1 }}>
             <Link
               to="/cuenta"
               data-testid="account-link"
