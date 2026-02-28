@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import axios from 'axios';
@@ -26,6 +26,7 @@ const COLLECTION_LABELS = {
 };
 
 const MUJER_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/udlexuwa_hf_20260222_200211_c5c76655-5b93-4052-adc1-45fea5a9cdc5.jpg";
+const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/b92rzs04_ANUNCIO%20TAMBVRINI%203.mov";
 
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
 
@@ -35,6 +36,10 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [introProgress, setIntroProgress] = useState(0);
+  const [videoReady, setVideoReady] = useState(false);
+  const introRef = useRef(null);
+  const videoRef = useRef(null);
 
   const category = searchParams.get('category') || searchParams.get('filter') || '';
   const gender = searchParams.get('gender') || '';
@@ -108,8 +113,97 @@ export default function ShopPage() {
       ]
     : filteredProducts;
 
+  useEffect(() => {
+    if (!isWomenView) {
+      setIntroProgress(1);
+      return;
+    }
+
+    const handleScroll = () => {
+      if (!introRef.current) return;
+      const total = introRef.current.offsetHeight - window.innerHeight;
+      const rect = introRef.current.getBoundingClientRect();
+      const scrolled = Math.min(total, Math.max(0, -rect.top));
+      const progress = total > 0 ? scrolled / total : 1;
+      const clamped = Math.min(1, Math.max(0, progress));
+      setIntroProgress(clamped);
+      if (videoRef.current) {
+        const volume = Math.max(0, Math.pow(1 - clamped, 1.4));
+        videoRef.current.volume = volume;
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isWomenView]);
+
+  useEffect(() => {
+    if (!isWomenView || !videoRef.current) return;
+    const video = videoRef.current;
+    video.muted = false;
+    video.volume = 1;
+    const attempt = video.play();
+    if (attempt && typeof attempt.catch === 'function') {
+      attempt.catch(() => {});
+    }
+  }, [isWomenView]);
+
+  const cinematicBackground = useMemo(() => {
+    if (!isWomenView) return undefined;
+    const mix = (start, end, t) => Math.round(start + (end - start) * t);
+    const t = Math.min(1, Math.max(0, introProgress));
+    const r = mix(7, 255, t);
+    const g = mix(8, 255, t);
+    const b = mix(12, 255, t);
+    return `rgb(${r}, ${g}, ${b})`;
+  }, [introProgress, isWomenView]);
+
+  const overlayOpacity = isWomenView ? 0.75 * (1 - introProgress) : 0;
+  const videoScale = 1 - introProgress * 0.06;
+  const videoOpacity = videoReady ? 1 - introProgress * 0.9 : 0;
+  const productsReveal = isWomenView ? introProgress : 1;
+
   return (
-    <div data-testid="shop-page" className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise">
+    <div
+      data-testid="shop-page"
+      className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise"
+      style={cinematicBackground ? { backgroundColor: cinematicBackground } : undefined}
+    >
+      {isWomenView && (
+        <div
+          data-testid="mujer-cinematic-overlay"
+          className="fixed inset-0 pointer-events-none transition-opacity duration-500"
+          style={{ backgroundColor: 'rgba(5, 6, 10, 1)', opacity: overlayOpacity, zIndex: 10 }}
+        />
+      )}
+      {isWomenView && (
+        <div
+          ref={introRef}
+          data-testid="mujer-cinematic-intro"
+          className="relative w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-32 md:-mt-40 h-[160vh]"
+        >
+          <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C]">
+            <div className="relative z-20 flex items-center justify-center w-full h-full">
+              <div
+                className="w-[min(88vw,960px)] aspect-[4/3] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                style={{ transform: `scale(${videoScale})`, opacity: videoOpacity }}
+              >
+                <video
+                  ref={videoRef}
+                  data-testid="mujer-cinematic-video"
+                  src={MUJER_CINEMATIC_VIDEO}
+                  autoPlay
+                  loop
+                  playsInline
+                  onCanPlay={() => setVideoReady(true)}
+                  className="w-full h-full object-cover rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
@@ -215,7 +309,18 @@ export default function ShopPage() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
+          <div
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14"
+            style={
+              isWomenView
+                ? {
+                    opacity: productsReveal,
+                    transform: `translateY(${(1 - productsReveal) * 24}px)`,
+                    transition: 'opacity 500ms ease-out, transform 800ms cubic-bezier(0.22,1,0.36,1)',
+                  }
+                : undefined
+            }
+          >
             {mujerGridItems.map((item, i) => (
               item?.type === 'editorial' ? (
                 <div
