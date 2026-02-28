@@ -46,7 +46,7 @@ const MENU_SECTIONS = [
 export const Header = () => {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mujerCinematicProgress, setMujerCinematicProgress] = useState(1);
+  const [cinematicProgress, setCinematicProgress] = useState(1);
 
   const location = useLocation();
   const { user } = useAuth();
@@ -56,6 +56,8 @@ export const Header = () => {
   const isHomePage = location.pathname === '/';
   const isWomenCategory =
     location.pathname === '/tienda' && new URLSearchParams(location.search).get('gender') === 'mujer';
+  const isMenCategory =
+    location.pathname === '/tienda' && new URLSearchParams(location.search).get('gender') === 'hombre';
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -66,11 +68,11 @@ export const Header = () => {
   useEffect(() => {
     const handleCinematic = (event) => {
       if (typeof event.detail === 'number') {
-        setMujerCinematicProgress(event.detail);
+        setCinematicProgress(event.detail);
       }
     };
-    window.addEventListener('mujerCinematicProgress', handleCinematic);
-    return () => window.removeEventListener('mujerCinematicProgress', handleCinematic);
+    window.addEventListener('cinematicProgress', handleCinematic);
+    return () => window.removeEventListener('cinematicProgress', handleCinematic);
   }, []);
 
   // If we land on home with #drops, smooth scroll to the drop grid.
@@ -95,9 +97,9 @@ export const Header = () => {
     ? Math.min(1, Math.max(0, (scrollY - headerFadeStart) / (headerFadeEnd - headerFadeStart)))
     : 1;
 
-  const mujerCinematicHidden = isWomenCategory && mujerCinematicProgress < 0.85;
-  const navToneClass = mujerCinematicHidden ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
-  const shouldInvertLogo = (scrolled || !isHomePage) && !mujerCinematicHidden;
+  const cinematicHidden = (isWomenCategory || isMenCategory) && cinematicProgress < 0.85;
+  const navToneClass = cinematicHidden ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
+  const shouldInvertLogo = (scrolled || !isHomePage) && !cinematicHidden;
 
   const logoSrc = LOGO_DARK;
 
@@ -109,11 +111,11 @@ export const Header = () => {
           scrolled
             ? `${isHomePage ? 'bg-white/95' : 'bg-white/95'} backdrop-blur-md py-5 border-b border-black/5`
             : 'bg-transparent py-6'
-        } ${mujerCinematicHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        } ${cinematicHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
-          <div className="flex items-center gap-5 w-[120px]" style={{ opacity: mujerCinematicHidden ? 0.7 : 1 }}>
+          <div className="flex items-center gap-5 w-[120px]" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
@@ -179,7 +181,7 @@ export const Header = () => {
           </Link>
 
           {/* Right: Account + Wishlist + Cart */}
-          <div className="flex items-center gap-5 w-[120px] justify-end" style={{ opacity: mujerCinematicHidden ? 0.7 : 1 }}>
+          <div className="flex items-center gap-5 w-[120px] justify-end" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
             <Link
               to="/cuenta"
               data-testid="account-link"
