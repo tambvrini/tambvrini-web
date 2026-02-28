@@ -196,6 +196,8 @@ export default function ShopPage() {
                   autoPlay
                   loop
                   playsInline
+                  preload="auto"
+                  onLoadedData={() => setVideoReady(true)}
                   onCanPlay={() => setVideoReady(true)}
                   className="w-full h-full object-cover rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
                 />
