@@ -93,6 +93,10 @@ export const Header = () => {
     ? Math.min(1, Math.max(0, (scrollY - headerFadeStart) / (headerFadeEnd - headerFadeStart)))
     : 1;
 
+  const mujerCinematicActive = isWomenCategory && mujerCinematicProgress < 0.98;
+  const navToneClass = mujerCinematicActive ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
+  const shouldInvertLogo = (scrolled || !isHomePage) && !mujerCinematicActive;
+
   const logoSrc = LOGO_DARK;
 
   return (
