@@ -290,7 +290,18 @@ export default function ShopPage() {
             <button onClick={clearFilters} className="mt-6 btn-luxury text-xs">Ver todos los productos</button>
           </div>
         ) : isMensView && filteredProducts.length > 4 ? (
-          <div className="space-y-10 md:space-y-14">
+          <div
+            className="space-y-10 md:space-y-14"
+            style={
+              isCinematicView
+                ? {
+                    opacity: productsReveal,
+                    transform: `translateY(${(1 - productsReveal) * 24}px)`,
+                    transition: 'opacity 500ms ease-out, transform 800ms cubic-bezier(0.22,1,0.36,1)',
+                  }
+                : undefined
+            }
+          >
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
               {mensFirst.map((p, i) => (
                 <ProductCard
