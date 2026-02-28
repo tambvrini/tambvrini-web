@@ -61,6 +61,16 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleCinematic = (event) => {
+      if (typeof event.detail === 'number') {
+        setMujerCinematicProgress(event.detail);
+      }
+    };
+    window.addEventListener('mujerCinematicProgress', handleCinematic);
+    return () => window.removeEventListener('mujerCinematicProgress', handleCinematic);
+  }, []);
+
   // If we land on home with #drops, smooth scroll to the drop grid.
   useEffect(() => {
     if (location.pathname === '/' && location.hash === '#drops') {
