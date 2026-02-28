@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
@@ -94,8 +94,19 @@ export default function ShopPage() {
 
   const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
   const isMensView = gender === 'hombre';
+  const isWomenView = gender === 'mujer';
   const mensFirst = isMensView ? filteredProducts.slice(0, 4) : filteredProducts;
   const mensRest = isMensView ? filteredProducts.slice(4) : [];
+  const mujerImperiumIndex = isWomenView
+    ? filteredProducts.findIndex((p) => p.product_id === 'camiseta-imperium')
+    : -1;
+  const mujerGridItems = isWomenView && mujerImperiumIndex !== -1
+    ? [
+        ...filteredProducts.slice(0, mujerImperiumIndex + 1),
+        { type: 'editorial', id: 'mujer-editorial' },
+        ...filteredProducts.slice(mujerImperiumIndex + 1),
+      ]
+    : filteredProducts;
 
   return (
     <div data-testid="shop-page" className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise">
@@ -131,19 +142,6 @@ export default function ShopPage() {
             </Select>
           </div>
         </div>
-
-        {gender === 'mujer' && (
-          <div data-testid="mujer-hero-image" className="my-6 md:my-8">
-            <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-              <img
-                src={MUJER_HERO_IMAGE}
-                alt="Editorial Mujer TAMBVRINI"
-                loading="lazy"
-                className="w-full h-auto object-contain"
-              />
-            </div>
-          </div>
-        )}
 
         {/* Category pills */}
         <div className="flex flex-wrap gap-2 mb-12">
@@ -218,13 +216,34 @@ export default function ShopPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
-            {filteredProducts.map((p, i) => (
-              <ProductCard
-                key={p.product_id}
-                product={p}
-                index={i}
-                enableHoverVideo={p.product_id === 'camiseta-sport-club'}
-              />
+            {mujerGridItems.map((item, i) => (
+              item?.type === 'editorial' ? (
+                <Link
+                  key={item.id}
+                  to="/tienda?category=2026"
+                  data-testid="mujer-editorial-card"
+                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+                  className="group block cursor-pointer"
+                  aria-label="Editorial Mujer"
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-[22px] bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out group-hover:scale-[1.02]">
+                    <img
+                      data-testid="mujer-editorial-image"
+                      src={MUJER_HERO_IMAGE}
+                      alt="Editorial Mujer TAMBVRINI"
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </Link>
+              ) : (
+                <ProductCard
+                  key={item.product_id}
+                  product={item}
+                  index={i}
+                  enableHoverVideo={item.product_id === 'camiseta-sport-club'}
+                />
+              )
             ))}
           </div>
         )}
