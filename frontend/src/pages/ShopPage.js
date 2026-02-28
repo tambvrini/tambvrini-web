@@ -308,7 +308,7 @@ export default function ShopPage() {
                   key={p.product_id}
                   product={p}
                   index={i}
-                  enableHoverVideo={p.product_id === 'camiseta-sport-club'}
+                enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-domus' || p.product_id === 'sueter-sylva' || p.product_id === 'polo-patricius'}
                 />
               ))}
             </div>
@@ -367,7 +367,7 @@ export default function ShopPage() {
                   key={item.product_id}
                   product={item}
                   index={i}
-                  enableHoverVideo={item.product_id === 'camiseta-sport-club'}
+                  enableHoverVideo={item.product_id === 'camiseta-sport-club' || item.product_id === 'polo-domus' || item.product_id === 'sueter-sylva' || item.product_id === 'polo-patricius'}
                 />
               )
             ))}
