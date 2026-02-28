@@ -172,7 +172,7 @@ export default function ShopPage() {
 
   const overlayOpacity = isWomenView ? 0.75 * (1 - introProgress) : 0;
   const videoScale = 1 - introProgress * 0.06;
-  const videoOpacity = introVisible ? 1 - introProgress * 0.9 : 0;
+  const videoOpacity = introVisible ? 1 : 0;
   const productsReveal = isWomenView ? introProgress : 1;
 
   return (
