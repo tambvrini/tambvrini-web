@@ -27,6 +27,7 @@ const COLLECTION_LABELS = {
 
 const MUJER_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/udlexuwa_hf_20260222_200211_c5c76655-5b93-4052-adc1-45fea5a9cdc5.jpg";
 const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/b92rzs04_ANUNCIO%20TAMBVRINI%203.mov";
+const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/nqiyik78_video%20final%20tambvrini%202.mov";
 
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
 
@@ -100,6 +101,7 @@ export default function ShopPage() {
   const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
   const isMensView = gender === 'hombre';
   const isWomenView = gender === 'mujer';
+  const isCinematicView = isWomenView || isMensView;
   const mensFirst = isMensView ? filteredProducts.slice(0, 4) : filteredProducts;
   const mensRest = isMensView ? filteredProducts.slice(4) : [];
   const mujerImperiumIndex = isWomenView
@@ -114,10 +116,10 @@ export default function ShopPage() {
     : filteredProducts;
 
   useEffect(() => {
-    if (!isWomenView) {
+    if (!isCinematicView) {
       setIntroProgress(1);
       setIntroVisible(false);
-      window.dispatchEvent(new CustomEvent('mujerCinematicProgress', { detail: 1 }));
+      window.dispatchEvent(new CustomEvent('cinematicProgress', { detail: 1 }));
       return;
     }
 
@@ -141,15 +143,15 @@ export default function ShopPage() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isWomenView]);
+  }, [isCinematicView]);
 
   useEffect(() => {
-    if (!isWomenView) return;
-    window.dispatchEvent(new CustomEvent('mujerCinematicProgress', { detail: introProgress }));
-  }, [introProgress, isWomenView]);
+    if (!isCinematicView) return;
+    window.dispatchEvent(new CustomEvent('cinematicProgress', { detail: introProgress }));
+  }, [introProgress, isCinematicView]);
 
   useEffect(() => {
-    if (!isWomenView || !videoRef.current) return;
+    if (!isCinematicView || !videoRef.current) return;
     const video = videoRef.current;
     video.muted = false;
     video.volume = 1;
@@ -157,22 +159,23 @@ export default function ShopPage() {
     if (attempt && typeof attempt.catch === 'function') {
       attempt.catch(() => {});
     }
-  }, [isWomenView]);
+  }, [isCinematicView]);
 
   const cinematicBackground = useMemo(() => {
-    if (!isWomenView) return undefined;
+    if (!isCinematicView) return undefined;
     const mix = (start, end, t) => Math.round(start + (end - start) * t);
     const t = Math.min(1, Math.max(0, introProgress));
     const r = mix(7, 255, t);
     const g = mix(8, 255, t);
     const b = mix(12, 255, t);
     return `rgb(${r}, ${g}, ${b})`;
-  }, [introProgress, isWomenView]);
+  }, [introProgress, isCinematicView]);
 
-  const overlayOpacity = isWomenView ? 0.75 * (1 - introProgress) : 0;
+  const overlayOpacity = isCinematicView ? 0.75 * (1 - introProgress) : 0;
   const videoScale = 1 - introProgress * 0.06;
   const videoOpacity = introVisible ? 1 : 0;
-  const productsReveal = isWomenView ? introProgress : 1;
+  const productsReveal = isCinematicView ? introProgress : 1;
+  const cinematicVideoSrc = isMensView ? HOMBRE_CINEMATIC_VIDEO : MUJER_CINEMATIC_VIDEO;
 
   return (
     <div
@@ -180,17 +183,17 @@ export default function ShopPage() {
       className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise"
       style={cinematicBackground ? { backgroundColor: cinematicBackground } : undefined}
     >
-      {isWomenView && (
+      {isCinematicView && (
         <div
-          data-testid="mujer-cinematic-overlay"
+          data-testid="category-cinematic-overlay"
           className="fixed inset-0 pointer-events-none transition-opacity duration-500"
           style={{ backgroundColor: 'rgba(5, 6, 10, 1)', opacity: overlayOpacity, zIndex: 5 }}
         />
       )}
-      {isWomenView && (
+      {isCinematicView && (
         <div
           ref={introRef}
-          data-testid="mujer-cinematic-intro"
+          data-testid="category-cinematic-intro"
           className="relative w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-32 md:-mt-40 h-[160vh]"
         >
           <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C] relative z-[20]">
@@ -201,8 +204,8 @@ export default function ShopPage() {
               >
                 <video
                   ref={videoRef}
-                  data-testid="mujer-cinematic-video"
-                  src={MUJER_CINEMATIC_VIDEO}
+                  data-testid="category-cinematic-video"
+                  src={cinematicVideoSrc}
                   autoPlay
                   loop
                   playsInline
