@@ -37,7 +37,7 @@ export default function ShopPage() {
   const [total, setTotal] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [introProgress, setIntroProgress] = useState(0);
-  const [videoReady, setVideoReady] = useState(false);
+  const [introVisible, setIntroVisible] = useState(false);
   const introRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -116,8 +116,11 @@ export default function ShopPage() {
   useEffect(() => {
     if (!isWomenView) {
       setIntroProgress(1);
+      setIntroVisible(false);
       return;
     }
+
+    const timer = setTimeout(() => setIntroVisible(true), 80);
 
     const handleScroll = () => {
       if (!introRef.current) return;
@@ -135,7 +138,10 @@ export default function ShopPage() {
 
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [isWomenView]);
 
   useEffect(() => {
@@ -161,7 +167,7 @@ export default function ShopPage() {
 
   const overlayOpacity = isWomenView ? 0.75 * (1 - introProgress) : 0;
   const videoScale = 1 - introProgress * 0.06;
-  const videoOpacity = videoReady ? 1 - introProgress * 0.9 : 0;
+  const videoOpacity = introVisible ? 1 - introProgress * 0.9 : 0;
   const productsReveal = isWomenView ? introProgress : 1;
 
   return (
@@ -193,12 +199,11 @@ export default function ShopPage() {
                   ref={videoRef}
                   data-testid="mujer-cinematic-video"
                   src={MUJER_CINEMATIC_VIDEO}
+                  poster={MUJER_HERO_IMAGE}
                   autoPlay
                   loop
                   playsInline
                   preload="auto"
-                  onLoadedData={() => setVideoReady(true)}
-                  onCanPlay={() => setVideoReady(true)}
                   className="w-full h-full object-cover rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
                 />
               </div>
