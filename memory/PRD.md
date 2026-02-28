@@ -24,6 +24,7 @@ Ecommerce de moda de lujo para la marca TAMBVRINI con estética editorial europe
 - [x] Contenidos en español
 
 ## Última actualización
+- **28 Feb 2026**: intro Mujer ajustada (header oculto al inicio y video sin poster/overlay sobre el video).
 - **28 Feb 2026**: intro cinematográfica en Mujer con video full-screen, overlay oscuro, transición por scroll y atenuación de audio.
 - **28 Feb 2026**: imagen editorial de Mujer integrada en la cuadrícula (span 2 columnas, 16:9, sin estilo de tarjeta de producto).
 - **27 Feb 2026**: eliminada la imagen hero en la sección “Suéteres” de la tienda.
