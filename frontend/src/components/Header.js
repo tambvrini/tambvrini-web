@@ -177,18 +177,18 @@ export const Header = () => {
           </Link>
 
           {/* Right: Account + Wishlist + Cart */}
-          <div className="flex items-center gap-5 w-[120px] justify-end">
+          <div className="flex items-center gap-5 w-[120px] justify-end" style={{ opacity: mujerCinematicActive ? 0.7 : 1 }}>
             <Link
               to="/cuenta"
               data-testid="account-link"
-              className="text-obsidian/80 hover:text-obsidian transition-colors duration-300 hidden sm:block"
+              className={`${navToneClass} transition-colors duration-300 hidden sm:block`}
             >
               <User size={20} strokeWidth={1.5} />
             </Link>
             <Link
               to="/favoritos"
               data-testid="wishlist-link"
-              className="text-obsidian/80 hover:text-obsidian transition-colors duration-300 relative"
+              className={`${navToneClass} transition-colors duration-300 relative`}
             >
               <Heart size={20} strokeWidth={1.5} />
               {wishlistItems.length > 0 && (
@@ -200,7 +200,7 @@ export const Header = () => {
             <button
               data-testid="cart-toggle-btn"
               onClick={() => setIsOpen(true)}
-              className="text-obsidian/80 hover:text-obsidian transition-colors duration-300 relative"
+              className={`${navToneClass} transition-colors duration-300 relative`}
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
               {totalItems > 0 && (
