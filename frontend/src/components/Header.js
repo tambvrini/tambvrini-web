@@ -54,6 +54,8 @@ export const Header = () => {
   const { items: wishlistItems } = useWishlist();
 
   const isHomePage = location.pathname === '/';
+  const isWomenCategory =
+    location.pathname === '/tienda' && new URLSearchParams(location.search).get('gender') === 'mujer';
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
