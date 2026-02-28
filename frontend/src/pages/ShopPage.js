@@ -117,6 +117,7 @@ export default function ShopPage() {
     if (!isWomenView) {
       setIntroProgress(1);
       setIntroVisible(false);
+      window.dispatchEvent(new CustomEvent('mujerCinematicProgress', { detail: 1 }));
       return;
     }
 
@@ -143,6 +144,11 @@ export default function ShopPage() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [isWomenView]);
+
+  useEffect(() => {
+    if (!isWomenView) return;
+    window.dispatchEvent(new CustomEvent('mujerCinematicProgress', { detail: introProgress }));
+  }, [introProgress, isWomenView]);
 
   useEffect(() => {
     if (!isWomenView || !videoRef.current) return;
