@@ -46,6 +46,7 @@ const MENU_SECTIONS = [
 export const Header = () => {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mujerCinematicProgress, setMujerCinematicProgress] = useState(1);
 
   const location = useLocation();
   const { user } = useAuth();
