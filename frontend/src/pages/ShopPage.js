@@ -185,7 +185,7 @@ export default function ShopPage() {
         <div
           data-testid="mujer-cinematic-overlay"
           className="fixed inset-0 pointer-events-none transition-opacity duration-500"
-          style={{ backgroundColor: 'rgba(5, 6, 10, 1)', opacity: overlayOpacity, zIndex: 10 }}
+          style={{ backgroundColor: 'rgba(5, 6, 10, 1)', opacity: overlayOpacity, zIndex: 5 }}
         />
       )}
       {isWomenView && (
@@ -194,8 +194,8 @@ export default function ShopPage() {
           data-testid="mujer-cinematic-intro"
           className="relative w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-32 md:-mt-40 h-[160vh]"
         >
-          <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C]">
-            <div className="relative z-20 flex items-center justify-center w-full h-full">
+          <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C] relative z-[20]">
+            <div className="relative z-[40] flex items-center justify-center w-full h-full">
               <div
                 className="w-[min(88vw,960px)] aspect-[4/3] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                 style={{ transform: `scale(${videoScale})`, opacity: videoOpacity }}
