@@ -121,7 +121,7 @@ export default function ShopPage() {
       return;
     }
 
-    const timer = setTimeout(() => setIntroVisible(true), 80);
+    setIntroVisible(true);
 
     const handleScroll = () => {
       if (!introRef.current) return;
@@ -139,7 +139,6 @@ export default function ShopPage() {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [isWomenView]);
@@ -204,7 +203,6 @@ export default function ShopPage() {
                   ref={videoRef}
                   data-testid="mujer-cinematic-video"
                   src={MUJER_CINEMATIC_VIDEO}
-                  poster={MUJER_HERO_IMAGE}
                   autoPlay
                   loop
                   playsInline
