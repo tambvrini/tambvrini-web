@@ -103,7 +103,7 @@ export const Header = () => {
     <>
       <header
         data-testid="main-header"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
           scrolled
             ? `${isHomePage ? 'bg-white/95' : 'bg-white/95'} backdrop-blur-md py-5 border-b border-black/5`
             : 'bg-transparent py-6'
@@ -111,12 +111,12 @@ export const Header = () => {
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
-          <div className="flex items-center gap-5 w-[120px]">
+          <div className="flex items-center gap-5 w-[120px]" style={{ opacity: mujerCinematicActive ? 0.7 : 1 }}>
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
                   data-testid="menu-toggle-btn"
-                  className="text-obsidian/80 hover:text-obsidian transition-colors duration-300"
+                  className={`${navToneClass} transition-colors duration-300`}
                 >
                   <Menu size={20} strokeWidth={1.5} />
                 </button>
