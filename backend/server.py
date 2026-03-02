@@ -30,11 +30,11 @@ JWT_SECRET = require_env('JWT_SECRET')
 STRIPE_API_KEY = require_env('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
 CORS_ORIGINS = require_env('CORS_ORIGINS')
-LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "https://customer-assets.emergentagent.com").rstrip("/")
+LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 ASSET_BASE_URL = os.environ.get("ASSET_BASE_URL", LEGACY_ASSET_BASE_URL).rstrip("/")
 
 def resolve_asset_url(url: str) -> str:
-    if url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
+    if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
         return f"{ASSET_BASE_URL}{url[len(LEGACY_ASSET_BASE_URL):]}"
     return url
 
@@ -886,15 +886,15 @@ SEED_PRODUCTS = [
         "price": 299.00,
         "currency": "EUR",
         "images": [
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/y7v5nwm1_2.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/q6ej9bx3_hf_20260209_005423_81aed519-78ff-4ad0-a98c-31ded5afb2f1.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qt1e9qlx_hf_20260210_013900_45cb2e8a-fe02-498b-826c-fa5c03b904e1.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gfxx8pdm_4.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/ahyaof7a_5.png"
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/y7v5nwm1_2.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/q6ej9bx3_hf_20260209_005423_81aed519-78ff-4ad0-a98c-31ded5afb2f1.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qt1e9qlx_hf_20260210_013900_45cb2e8a-fe02-498b-826c-fa5c03b904e1.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gfxx8pdm_4.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/ahyaof7a_5.png"
         ],
-        "thumbnail_image": "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
+        "thumbnail_image": f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
         "category": ["accesorios", "marroquineria"],
         "gender": "unisex",
         "sizes": ["Única"],
@@ -935,16 +935,16 @@ SEED_PRODUCTS = [
         "price": 895.00,
         "currency": "EUR",
         "images": [
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/4qb570r6_hf_20260212_010024_44d8a05a-42ab-47b3-8108-336617ff9a07.jpeg",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fj5208jf_hf_20260212_010238_58178657-ba5a-4aea-a92b-7d3895ba334b.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/6nqsv06s_hf_20260212_005309_5351456d-b40e-4e56-a6ba-4aefda582ec8.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/kuf48n49_hf_20260212_005319_45c4a329-ec62-4e20-848f-4fe0d03812b2.jpeg",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fhe2l2xc_hf_20260212_010115_9a4c25de-deef-4847-892e-b4dc16d78ba0.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qjdgn1uj_hf_20260212_001854_d4114cf5-7dca-411a-a8b3-046e68c293e6.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/7bb8vczl_hf_20260212_000927_165fb028-8aab-48b4-80af-974531a1f414.jpeg"
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/4qb570r6_hf_20260212_010024_44d8a05a-42ab-47b3-8108-336617ff9a07.jpeg",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fj5208jf_hf_20260212_010238_58178657-ba5a-4aea-a92b-7d3895ba334b.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/6nqsv06s_hf_20260212_005309_5351456d-b40e-4e56-a6ba-4aefda582ec8.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/kuf48n49_hf_20260212_005319_45c4a329-ec62-4e20-848f-4fe0d03812b2.jpeg",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fhe2l2xc_hf_20260212_010115_9a4c25de-deef-4847-892e-b4dc16d78ba0.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qjdgn1uj_hf_20260212_001854_d4114cf5-7dca-411a-a8b3-046e68c293e6.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/7bb8vczl_hf_20260212_000927_165fb028-8aab-48b4-80af-974531a1f414.jpeg"
         ],
-        "thumbnail_image": "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
+        "thumbnail_image": f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
         "category": ["camisetas", "apparel"],
         "gender": "unisex",
         "sizes": ["S", "M", "L", "XL"],
@@ -964,11 +964,11 @@ SEED_PRODUCTS = [
         "price": 399.00,
         "currency": "EUR",
         "images": [
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/j8yehypp_hf_20260208_220603_61c0624c-085d-470b-9e36-3b1d627c6093.jpeg",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/f0lyuia5_hf_20260208_222545_269ad1ab-bb74-4e4a-b589-045346511340.jpeg",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/5jns2eeo_hf_20260208_221348_52bbd817-b422-409d-a7ef-5348747545fa.png",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png"
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/j8yehypp_hf_20260208_220603_61c0624c-085d-470b-9e36-3b1d627c6093.jpeg",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/f0lyuia5_hf_20260208_222545_269ad1ab-bb74-4e4a-b589-045346511340.jpeg",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/5jns2eeo_hf_20260208_221348_52bbd817-b422-409d-a7ef-5348747545fa.png",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png"
         ],
         "category": ["sastrería", "set"],
         "gender": "unisex",
