@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
-import axios from 'axios';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import { toast } from 'sonner';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import { getProductById } from '@/data/productHelpers';
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -23,12 +21,12 @@ export default function ProductPage() {
   const { toggleItem, isInWishlist } = useWishlist();
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchProduct = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${API}/products/${productId}`);
-        setProduct(res.data);
-        setRelated(res.data.related_products || []);
+        const data = getProductById(productId);
+        setProduct(data);
+        setRelated(data?.related_products || []);
         setSelectedImage(0);
         setSelectedSize('');
         setSelectedColor('');
@@ -39,7 +37,7 @@ export default function ProductPage() {
         setLoading(false);
       }
     };
-    fetch();
+    fetchProduct();
     window.scrollTo(0, 0);
   }, [productId]);
 
@@ -90,13 +88,20 @@ export default function ProductPage() {
           {/* Left: Gallery */}
           <div>
             <div className="img-zoom aspect-[3/4] mb-4 overflow-hidden bg-white/5">
-              <img
-                data-testid="product-main-image"
-                src={product.images[selectedImage]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+              {(product.images?.length > 0) ? (
+                <img
+                  data-testid="product-main-image"
+                  src={product.images[selectedImage]}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+                  <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+                </div>
+              )}
             </div>
+            {product.images?.length > 0 && (
             <div className="flex gap-3">
               {product.images.map((img, i) => (
                 <button
@@ -111,6 +116,7 @@ export default function ProductPage() {
                 </button>
               ))}
             </div>
+            )}
           </div>
 
           {/* Right: Product info */}

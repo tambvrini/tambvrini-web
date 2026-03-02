@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
-import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import { queryProducts } from '@/data/productHelpers';
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
@@ -57,18 +55,19 @@ export default function ShopPage() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const params = new URLSearchParams();
-        if (category) params.set('category', category);
-        if (gender) params.set('gender', gender);
-        if (collection) params.set('collection', collection);
-        if (search) params.set('search', search);
-        if (sort) params.set('sort', sort);
-        if (category === 'novedades' || searchParams.get('filter') === 'novedades') params.set('is_new', 'true');
-        params.set('page', page.toString());
-        params.set('limit', '20');
-        const res = await axios.get(`${API}/products?${params.toString()}`);
-        setProducts(res.data.products);
-        setTotal(res.data.total);
+        const isNew = category === 'novedades' || searchParams.get('filter') === 'novedades';
+        const result = queryProducts({
+          category: category || undefined,
+          gender: gender || undefined,
+          collection: collection || undefined,
+          search: search || undefined,
+          sort: sort || undefined,
+          is_new: isNew || undefined,
+          page,
+          limit: 20,
+        });
+        setProducts(result.products);
+        setTotal(result.total);
       } catch (err) {
         console.error(err);
       } finally {
