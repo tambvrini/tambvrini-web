@@ -104,7 +104,7 @@ export default products;
   for (const p of cleaned) {
     const imgs = (p.images || []).length;
     const thumb = p.thumbnail_image ? "Y" : "N";
-    console.log(`  ${p.product_id.padEnd(30)} imgs=${imgs}  thumb=${thumb}  ${p.price} EUR`);
+    console.log(`  ${p.product_id.padEnd(30)} imgs=${imgs}  thumb=${thumb}  ${p.price} ${p.currency || 'EUR'}`);
   }
 }
 
