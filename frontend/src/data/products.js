@@ -42,7 +42,7 @@ const products = [
       `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
       `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
     ],
-    thumbnail_image: "/products/traje-monograma-tambvrini/01.jpeg",
+    thumbnail_image: `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
     category: ["sastrería", "set"],
     gender: "unisex",
     sizes: ["S", "M", "L", "XL"],
