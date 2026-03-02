@@ -219,9 +219,16 @@ export default function ShopPage() {
       )}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-          <div>
-            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-obsidian">{getTitle()}</h1>
+        <div className={`flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 ${isMensView ? 'mt-[50px] md:mt-[80px]' : ''}`}>
+          <div className={isMensView ? 'w-full' : undefined}>
+            <h1
+              data-testid="shop-title"
+              className={isMensView
+                ? 'font-playfair text-[36px] md:text-[48px] lg:text-[64px] font-normal tracking-[0.08em] text-[#C63A3A] uppercase text-center w-full'
+                : 'font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-obsidian'}
+            >
+              {isMensView ? 'POUR HOMME' : getTitle()}
+            </h1>
             <p className="font-montserrat text-xs text-obsidian/50 mt-3 tracking-wide">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
