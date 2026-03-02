@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
-import axios from 'axios';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import { toast } from 'sonner';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import { getProductById } from '@/data/productHelpers';
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -23,12 +21,12 @@ export default function ProductPage() {
   const { toggleItem, isInWishlist } = useWishlist();
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchProduct = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${API}/products/${productId}`);
-        setProduct(res.data);
-        setRelated(res.data.related_products || []);
+        const data = getProductById(productId);
+        setProduct(data);
+        setRelated(data?.related_products || []);
         setSelectedImage(0);
         setSelectedSize('');
         setSelectedColor('');
@@ -39,7 +37,7 @@ export default function ProductPage() {
         setLoading(false);
       }
     };
-    fetch();
+    fetchProduct();
     window.scrollTo(0, 0);
   }, [productId]);
 
