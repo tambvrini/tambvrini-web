@@ -20,6 +20,7 @@ jobs:
       DB_NAME: ci_database
       JWT_SECRET: ci-jwt-secret
       CORS_ORIGINS: "*"
+      ASSET_BASE_URL: https://assets.example.com
       STRIPE_WEBHOOK_SECRET: ci-webhook-secret
       STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
     steps:
