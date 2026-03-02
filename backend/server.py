@@ -30,7 +30,7 @@ JWT_SECRET = require_env('JWT_SECRET')
 STRIPE_API_KEY = require_env('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
 CORS_ORIGINS = require_env('CORS_ORIGINS')
-LEGACY_ASSET_BASE_URL = "https://customer-assets.emergentagent.com"
+LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "https://customer-assets.emergentagent.com").rstrip("/")
 ASSET_BASE_URL = os.environ.get("ASSET_BASE_URL", LEGACY_ASSET_BASE_URL).rstrip("/")
 
 def resolve_asset_url(url: str) -> str:
@@ -66,6 +66,7 @@ class NewsletterRequest(BaseModel):
 
 @api_router.get("/health")
 async def health():
+    """Simple API health check for deployment and monitoring."""
     return {"status": "ok"}
 
 def hash_password(password: str) -> str:
@@ -1004,10 +1005,14 @@ SEED_PRODUCTS = [
     }
 ]
 
-for product in SEED_PRODUCTS:
-    product["images"] = [resolve_asset_url(image_url) for image_url in product.get("images", [])]
-    if product.get("thumbnail_image"):
-        product["thumbnail_image"] = resolve_asset_url(product["thumbnail_image"])
+def normalize_product_asset_urls(product: Dict) -> Dict:
+    normalized = dict(product)
+    normalized["images"] = [resolve_asset_url(image_url) for image_url in normalized.get("images", [])]
+    if normalized.get("thumbnail_image"):
+        normalized["thumbnail_image"] = resolve_asset_url(normalized["thumbnail_image"])
+    return normalized
+
+SEED_PRODUCTS = [normalize_product_asset_urls(product) for product in SEED_PRODUCTS]
 
 @api_router.post("/seed")
 async def seed_products():
