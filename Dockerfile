@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install -r backend/requirements.txt
+RUN pip install --no-cache-dir -r backend/requirements.txt
 
-CMD ["sh", "-c", "python -m uvicorn backend.server:app --host 0.0.0.0 --port $PORT"]
+ENV PYTHONUNBUFFERED=1
+
+CMD ["python", "-m", "uvicorn", "backend.server:app", "--host", "0.0.0.0", "--port", "8080"]
