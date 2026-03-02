@@ -1,0 +1,41 @@
+name: Backend Validation
+
+on:
+  push:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-validation.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-validation.yml"
+
+jobs:
+  backend-validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      MONGO_URL: mongodb://localhost:27017
+      DB_NAME: ci_database
+      JWT_SECRET: ci-jwt-secret
+      CORS_ORIGINS: "*"
+      STRIPE_WEBHOOK_SECRET: ci-webhook-secret
+      STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install backend dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Compile backend
+        run: python -m py_compile backend/server.py
+
+      - name: Import backend module
+        run: python -c "import backend.server"
