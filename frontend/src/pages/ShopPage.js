@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
-import axios from 'axios';
+import productsData from '@/data/products.json';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
@@ -30,6 +28,7 @@ const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c
 const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/nqiyik78_video%20final%20tambvrini%202.mov";
 
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
+const CATEGORY_2026_PRODUCT_IDS = ['camiseta-sport-club', 'polo-golf', 'sueter-captain'];
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -54,28 +53,46 @@ export default function ShopPage() {
   }, [category, gender, collection, search, sort, page]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams();
-        if (category) params.set('category', category);
-        if (gender) params.set('gender', gender);
-        if (collection) params.set('collection', collection);
-        if (search) params.set('search', search);
-        if (sort) params.set('sort', sort);
-        if (category === 'novedades' || searchParams.get('filter') === 'novedades') params.set('is_new', 'true');
-        params.set('page', page.toString());
-        params.set('limit', '20');
-        const res = await axios.get(`${API}/products?${params.toString()}`);
-        setProducts(res.data.products);
-        setTotal(res.data.total);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+    setLoading(true);
+    let filtered = [...productsData];
+
+    const activeCategory = category;
+    if (activeCategory) {
+      if (activeCategory === '2026') {
+        filtered = filtered.filter((p) => CATEGORY_2026_PRODUCT_IDS.includes(p.product_id));
+      } else if (activeCategory === 'sueteres') {
+        filtered = filtered.filter((p) => (Array.isArray(p.category) ? p.category : []).includes('knitwear'));
+      } else {
+        filtered = filtered.filter((p) => (Array.isArray(p.category) ? p.category : []).includes(activeCategory));
       }
-    };
-    fetchProducts();
+    }
+
+    if (gender) {
+      filtered = filtered.filter((p) => p.gender === gender || p.gender === 'unisex');
+    }
+    if (collection) {
+      filtered = filtered.filter((p) => (Array.isArray(p.collections) ? p.collections : []).includes(collection));
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      filtered = filtered.filter((p) =>
+        (p.name || '').toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q)
+      );
+    }
+    if (activeCategory === 'novedades') {
+      filtered = filtered.filter((p) => p.is_new);
+    }
+
+    if (sort === 'price_asc') filtered.sort((a, b) => a.price - b.price);
+    else if (sort === 'price_desc') filtered.sort((a, b) => b.price - a.price);
+    else if (sort === 'name') filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    else filtered.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+    const limit = 20;
+    const skip = (page - 1) * limit;
+    setTotal(filtered.length);
+    setProducts(filtered.slice(skip, skip + limit));
+    setLoading(false);
   }, [category, gender, collection, search, sort, page]);
 
   const getTitle = () => {

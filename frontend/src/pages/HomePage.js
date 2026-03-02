@@ -2,10 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import axios from 'axios';
+import productsData from '@/data/products.json';
 import ProductCard from '../components/ProductCard';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/hero-main.jpg";
@@ -206,29 +204,16 @@ const DropGridSection = () => {
 
 
   useEffect(() => {
-    const fetchDrop = async () => {
-      setLoading(true);
-      try {
-        // Fetch more than 12 so we can filter out unwanted categories/collections
-        // while still rendering exactly 12 items.
-        const res = await axios.get(`${API}/products?limit=50`);
-        const all = res.data.products || [];
-        // Option A (confirmed): only remove Tennis Club items. Keep other collections.
-        const filtered = all.filter((p) => {
-          const cats = Array.isArray(p.category) ? p.category : [];
-          const cols = Array.isArray(p.collections) ? p.collections : [];
-          if (cats.includes('tennis-club')) return false;
-          if (cols.includes('tennis-club')) return false;
-          return true;
-        });
-        setProducts(filtered);
-      } catch {
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDrop();
+    setLoading(true);
+    const filtered = productsData.filter((p) => {
+      const cats = Array.isArray(p.category) ? p.category : [];
+      const cols = Array.isArray(p.collections) ? p.collections : [];
+      if (cats.includes('tennis-club')) return false;
+      if (cols.includes('tennis-club')) return false;
+      return true;
+    });
+    setProducts(filtered);
+    setLoading(false);
   }, []);
 
   return (

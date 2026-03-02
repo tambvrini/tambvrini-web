@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
-import axios from 'axios';
+import productsData from '@/data/products.json';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import { toast } from 'sonner';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -23,23 +21,27 @@ export default function ProductPage() {
   const { toggleItem, isInWishlist } = useWishlist();
 
   useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(`${API}/products/${productId}`);
-        setProduct(res.data);
-        setRelated(res.data.related_products || []);
-        setSelectedImage(0);
-        setSelectedSize('');
-        setSelectedColor('');
-        setQuantity(1);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
+    setLoading(true);
+    const currentProduct = productsData.find((p) => p.product_id === productId) || null;
+    setProduct(currentProduct);
+    if (currentProduct) {
+      const relatedProducts = productsData
+        .filter((p) =>
+          p.product_id !== productId &&
+          (Array.isArray(p.category) ? p.category : []).some((cat) =>
+            (Array.isArray(currentProduct.category) ? currentProduct.category : []).includes(cat)
+          )
+        )
+        .slice(0, 4);
+      setRelated(relatedProducts);
+    } else {
+      setRelated([]);
+    }
+    setSelectedImage(0);
+    setSelectedSize('');
+    setSelectedColor('');
+    setQuantity(1);
+    setLoading(false);
     window.scrollTo(0, 0);
   }, [productId]);
 
