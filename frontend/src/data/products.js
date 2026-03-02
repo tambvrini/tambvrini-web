@@ -4,6 +4,7 @@
  * Sources used to recover this dataset:
  *   • backend/server.py  SEED_PRODUCTS  (bolso-monograma, camiseta-sport-club, traje-monograma)
  *   • tmp/traje_product_replace_payload.json  (traje latest images + thumbnail)
+ *   • tmp/traje_imgs/  (5 locally-recovered product images)
  *   • frontend/src/components/ProductCard.js   (hover-video URLs)
  *   • frontend/src/pages/ProductPage.js        (sold-out-size rules)
  *   • frontend/src/pages/HomePage.js           (layout / spotlight references)
@@ -12,15 +13,18 @@
  *   • test_result.md                           (Polo Aureus price, colors, sizes)
  *
  * Products whose image URLs existed ONLY in the live MongoDB (never committed)
- * have empty `images` arrays — thumbnails / galleries must be re-imported from
- * the CDN or database backup.
+ * still reference the original CDN so they display correctly when the CDN is
+ * reachable (e.g. in production).  Products with locally-recovered images use
+ * paths under /products/{product_id}/.
  */
 
 const ASSET = "https://customer-assets.emergentagent.com";
 
 const products = [
   // ──────────────────────────────────────────────────
-  // 1. Traje Monograma Tambvrini  (latest version from replace payload)
+  // 1. Traje Monograma Tambvrini
+  //    5 images recovered locally from tmp/traje_imgs/;
+  //    remaining 2 from CDN (replace-payload latest version).
   // ──────────────────────────────────────────────────
   {
     product_id: "traje-monograma-tambvrini",
@@ -30,15 +34,15 @@ const products = [
     price: 399.0,
     currency: "EUR",
     images: [
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/j8yehypp_hf_20260208_220603_61c0624c-085d-470b-9e36-3b1d627c6093.jpeg`,
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png`,
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/f0lyuia5_hf_20260208_222545_269ad1ab-bb74-4e4a-b589-045346511340.jpeg`,
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/qhsouwh0_hf_20260208_224916_24111877-953c-44b9-a4bc-ae56ca0ce547.jpeg`,
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/5jns2eeo_hf_20260208_221348_52bbd817-b422-409d-a7ef-5348747545fa.png`,
+      "/products/traje-monograma-tambvrini/01.jpeg",
+      "/products/traje-monograma-tambvrini/02.png",
+      "/products/traje-monograma-tambvrini/03.jpeg",
+      "/products/traje-monograma-tambvrini/04.jpeg",
+      "/products/traje-monograma-tambvrini/05.png",
       `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
       `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
     ],
-    thumbnail_image: `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
+    thumbnail_image: "/products/traje-monograma-tambvrini/01.jpeg",
     category: ["sastrería", "set"],
     gender: "unisex",
     sizes: ["S", "M", "L", "XL"],
