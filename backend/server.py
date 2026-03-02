@@ -7,7 +7,7 @@ import logging
 import uuid
 import bcrypt
 import jwt
-import httpx
+import stripe
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from pydantic import BaseModel, Field
@@ -16,12 +16,27 @@ from typing import List, Optional, Dict
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+def require_env(name: str) -> str:
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
 
-JWT_SECRET = os.environ.get('JWT_SECRET', uuid.uuid4().hex)
-STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
+mongo_url = require_env('MONGO_URL')
+client = AsyncIOMotorClient(mongo_url)
+db = client[require_env('DB_NAME')]
+
+JWT_SECRET = require_env('JWT_SECRET')
+STRIPE_API_KEY = require_env('STRIPE_API_KEY')
+STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
+CORS_ORIGINS = require_env('CORS_ORIGINS')
+ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
+LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
+
+def resolve_asset_url(url: str) -> str:
+    if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
+        return f"{ASSET_BASE_URL}{url[len(LEGACY_ASSET_BASE_URL):]}"
+    return url
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -40,9 +55,6 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
-class SessionRequest(BaseModel):
-    session_id: str
-
 class CheckoutRequest(BaseModel):
     items: List[Dict]
     origin_url: str
@@ -51,6 +63,11 @@ class NewsletterRequest(BaseModel):
     email: str
 
 # ==================== AUTH HELPERS ====================
+
+@api_router.get("/health")
+async def health():
+    """Simple API health check for deployment and monitoring."""
+    return {"status": "ok"}
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
@@ -152,53 +169,6 @@ async def get_me(request: Request):
         "name": user["name"],
         "picture": user.get("picture")
     }
-
-# REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
-@api_router.post("/auth/session")
-async def exchange_session(data: SessionRequest, response: Response):
-    try:
-        async with httpx.AsyncClient() as http_client:
-            resp = await http_client.get(
-                "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data",
-                headers={"X-Session-ID": data.session_id}
-            )
-            if resp.status_code != 200:
-                raise HTTPException(400, "Sesión inválida")
-            oauth_data = resp.json()
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"OAuth error: {e}")
-        raise HTTPException(400, "Error de verificación")
-
-    email = oauth_data["email"]
-    name = oauth_data.get("name", "")
-    picture = oauth_data.get("picture", "")
-    session_token = oauth_data.get("session_token", "")
-
-    existing = await db.users.find_one({"email": email}, {"_id": 0})
-    if existing:
-        user_id = existing["user_id"]
-        await db.users.update_one({"email": email}, {"$set": {"name": name, "picture": picture}})
-    else:
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
-        await db.users.insert_one({
-            "user_id": user_id, "email": email, "name": name,
-            "picture": picture, "created_at": datetime.now(timezone.utc).isoformat()
-        })
-
-    await db.user_sessions.insert_one({
-        "user_id": user_id,
-        "session_token": session_token,
-        "expires_at": (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
-        "created_at": datetime.now(timezone.utc).isoformat()
-    })
-
-    response.set_cookie(
-        key="session_token", value=session_token,
-        httponly=True, secure=True, samesite="none", path="/", max_age=7*24*60*60
-    )
-    return {"user_id": user_id, "email": email, "name": name, "picture": picture, "token": session_token}
 
 @api_router.post("/auth/logout")
 async def logout(request: Request, response: Response):
@@ -343,8 +313,6 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
     if not STRIPE_API_KEY:
         raise HTTPException(500, "Stripe no configurado")
 
-    import stripe
-
     total = 0.0
     order_items = []
     line_items = []
@@ -393,8 +361,6 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
         metadata["user_id"] = user_id
 
     stripe.api_key = STRIPE_API_KEY
-    if "sk_test_emergent" in STRIPE_API_KEY:
-        stripe.api_base = "https://integrations.emergentagent.com/stripe"
 
     shipping_address_collection = {
         "allowed_countries": ["ES"]
@@ -451,15 +417,14 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
     return {"url": session.url, "session_id": session.id}
 
 @api_router.get("/checkout/status/{session_id}")
-async def get_checkout_status(session_id: str, request: Request):
+async def get_checkout_status(session_id: str):
     if not STRIPE_API_KEY:
         raise HTTPException(500, "Stripe no configurado")
 
-    from emergentintegrations.payments.stripe.checkout import StripeCheckout
-
-    webhook_url = f"{str(request.base_url)}api/webhook/stripe"
-    stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=webhook_url)
-    status = await stripe_checkout.get_checkout_status(session_id)
+    stripe.api_key = STRIPE_API_KEY
+    session = stripe.checkout.Session.retrieve(session_id)
+    payment_status = session.get("payment_status")
+    status = "complete" if payment_status == "paid" else "pending"
 
     existing_paid = await db.payment_transactions.find_one(
         {"session_id": session_id, "payment_status": "paid"}
@@ -468,34 +433,40 @@ async def get_checkout_status(session_id: str, request: Request):
         await db.payment_transactions.update_one(
             {"session_id": session_id},
             {"$set": {
-                "payment_status": status.payment_status,
-                "status": status.status,
+                "payment_status": payment_status,
+                "status": status,
                 "updated_at": datetime.now(timezone.utc).isoformat()
             }}
         )
     return {
-        "status": status.status,
-        "payment_status": status.payment_status,
-        "amount_total": status.amount_total,
-        "currency": status.currency
+        "status": status,
+        "payment_status": payment_status,
+        "amount_total": session.get("amount_total"),
+        "currency": session.get("currency")
     }
 
 @api_router.post("/webhook/stripe")
 async def stripe_webhook(request: Request):
+    if not STRIPE_API_KEY:
+        raise HTTPException(500, "Stripe no configurado")
+
     body = await request.body()
     signature = request.headers.get("Stripe-Signature", "")
+    stripe.api_key = STRIPE_API_KEY
     try:
-        from emergentintegrations.payments.stripe.checkout import StripeCheckout
-        webhook_url = f"{str(request.base_url)}api/webhook/stripe"
-        stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=webhook_url)
-        webhook_response = await stripe_checkout.handle_webhook(body, signature)
-        if webhook_response.payment_status == "paid":
+        event = stripe.Webhook.construct_event(body, signature, STRIPE_WEBHOOK_SECRET)
+
+        if event.get("type") == "checkout.session.completed":
+            session_data = event.get("data", {}).get("object", {})
+            session_id = session_data.get("id")
+            if not session_id:
+                return {"status": "ok"}
             existing = await db.payment_transactions.find_one(
-                {"session_id": webhook_response.session_id, "payment_status": "paid"}
+                {"session_id": session_id, "payment_status": "paid"}
             )
             if not existing:
                 await db.payment_transactions.update_one(
-                    {"session_id": webhook_response.session_id},
+                    {"session_id": session_id},
                     {"$set": {
                         "payment_status": "paid",
                         "status": "complete",
@@ -915,15 +886,15 @@ SEED_PRODUCTS = [
         "price": 299.00,
         "currency": "EUR",
         "images": [
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/y7v5nwm1_2.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/q6ej9bx3_hf_20260209_005423_81aed519-78ff-4ad0-a98c-31ded5afb2f1.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qt1e9qlx_hf_20260210_013900_45cb2e8a-fe02-498b-826c-fa5c03b904e1.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gfxx8pdm_4.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/ahyaof7a_5.png"
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/y7v5nwm1_2.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/q6ej9bx3_hf_20260209_005423_81aed519-78ff-4ad0-a98c-31ded5afb2f1.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qt1e9qlx_hf_20260210_013900_45cb2e8a-fe02-498b-826c-fa5c03b904e1.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gfxx8pdm_4.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/ahyaof7a_5.png"
         ],
-        "thumbnail_image": "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
+        "thumbnail_image": f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg",
         "category": ["accesorios", "marroquineria"],
         "gender": "unisex",
         "sizes": ["Única"],
@@ -964,16 +935,16 @@ SEED_PRODUCTS = [
         "price": 895.00,
         "currency": "EUR",
         "images": [
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/4qb570r6_hf_20260212_010024_44d8a05a-42ab-47b3-8108-336617ff9a07.jpeg",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fj5208jf_hf_20260212_010238_58178657-ba5a-4aea-a92b-7d3895ba334b.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/6nqsv06s_hf_20260212_005309_5351456d-b40e-4e56-a6ba-4aefda582ec8.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/kuf48n49_hf_20260212_005319_45c4a329-ec62-4e20-848f-4fe0d03812b2.jpeg",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fhe2l2xc_hf_20260212_010115_9a4c25de-deef-4847-892e-b4dc16d78ba0.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qjdgn1uj_hf_20260212_001854_d4114cf5-7dca-411a-a8b3-046e68c293e6.png",
-            "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/7bb8vczl_hf_20260212_000927_165fb028-8aab-48b4-80af-974531a1f414.jpeg"
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/4qb570r6_hf_20260212_010024_44d8a05a-42ab-47b3-8108-336617ff9a07.jpeg",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fj5208jf_hf_20260212_010238_58178657-ba5a-4aea-a92b-7d3895ba334b.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/6nqsv06s_hf_20260212_005309_5351456d-b40e-4e56-a6ba-4aefda582ec8.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/kuf48n49_hf_20260212_005319_45c4a329-ec62-4e20-848f-4fe0d03812b2.jpeg",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fhe2l2xc_hf_20260212_010115_9a4c25de-deef-4847-892e-b4dc16d78ba0.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qjdgn1uj_hf_20260212_001854_d4114cf5-7dca-411a-a8b3-046e68c293e6.png",
+            f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/7bb8vczl_hf_20260212_000927_165fb028-8aab-48b4-80af-974531a1f414.jpeg"
         ],
-        "thumbnail_image": "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
+        "thumbnail_image": f"{ASSET_BASE_URL}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png",
         "category": ["camisetas", "apparel"],
         "gender": "unisex",
         "sizes": ["S", "M", "L", "XL"],
@@ -993,11 +964,11 @@ SEED_PRODUCTS = [
         "price": 399.00,
         "currency": "EUR",
         "images": [
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/j8yehypp_hf_20260208_220603_61c0624c-085d-470b-9e36-3b1d627c6093.jpeg",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/f0lyuia5_hf_20260208_222545_269ad1ab-bb74-4e4a-b589-045346511340.jpeg",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/5jns2eeo_hf_20260208_221348_52bbd817-b422-409d-a7ef-5348747545fa.png",
-            "https://customer-assets.emergentagent.com/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png"
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/j8yehypp_hf_20260208_220603_61c0624c-085d-470b-9e36-3b1d627c6093.jpeg",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/f0lyuia5_hf_20260208_222545_269ad1ab-bb74-4e4a-b589-045346511340.jpeg",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/5jns2eeo_hf_20260208_221348_52bbd817-b422-409d-a7ef-5348747545fa.png",
+            f"{ASSET_BASE_URL}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/4zxsm680_hf_20260208_222552_13824fcc-dd57-4738-a486-3b9513d40709.png"
         ],
         "category": ["sastrería", "set"],
         "gender": "unisex",
@@ -1034,6 +1005,15 @@ SEED_PRODUCTS = [
     }
 ]
 
+def normalize_product_asset_urls(product: Dict) -> Dict:
+    normalized = dict(product)
+    normalized["images"] = [resolve_asset_url(image_url) for image_url in normalized.get("images", [])]
+    if normalized.get("thumbnail_image"):
+        normalized["thumbnail_image"] = resolve_asset_url(normalized["thumbnail_image"])
+    return normalized
+
+SEED_PRODUCTS = [normalize_product_asset_urls(product) for product in SEED_PRODUCTS]
+
 @api_router.post("/seed")
 async def seed_products():
     count = await db.products.count_documents({})
@@ -1062,7 +1042,7 @@ app.include_router(api_router)
 # ==================== CORS ====================
 # NOTE: When allow_credentials=True, the CORS response cannot use '*' as Access-Control-Allow-Origin.
 # If CORS_ORIGINS is set to '*', we switch to allow_origin_regex so Starlette echoes back the request Origin.
-cors_origins = [o.strip() for o in os.environ.get('CORS_ORIGINS', '*').split(',') if o.strip()]
+cors_origins = [o.strip() for o in CORS_ORIGINS.split(',') if o.strip()]
 allow_origin_regex = None
 allow_origins = cors_origins
 if '*' in cors_origins:
