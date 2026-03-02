@@ -46,6 +46,10 @@ logger = logging.getLogger(__name__)
 
 # ==================== MODELS ====================
 
+@app.get("/health")
+async def root_health():
+    return {"status": "ok"}
+
 class UserCreate(BaseModel):
     email: str
     password: str
