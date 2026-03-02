@@ -7,7 +7,6 @@ import logging
 import uuid
 import bcrypt
 import jwt
-import json
 import stripe
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -17,15 +16,27 @@ from typing import List, Optional, Dict
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+def require_env(name: str) -> str:
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
 
-JWT_SECRET = os.environ.get('JWT_SECRET')
-if not JWT_SECRET:
-    raise RuntimeError("JWT_SECRET no configurado")
-STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
-STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
+mongo_url = require_env('MONGO_URL')
+client = AsyncIOMotorClient(mongo_url)
+db = client[require_env('DB_NAME')]
+
+JWT_SECRET = require_env('JWT_SECRET')
+STRIPE_API_KEY = require_env('STRIPE_API_KEY')
+STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
+CORS_ORIGINS = require_env('CORS_ORIGINS')
+LEGACY_ASSET_BASE_URL = "https://customer-assets.emergentagent.com"
+ASSET_BASE_URL = os.environ.get("ASSET_BASE_URL", LEGACY_ASSET_BASE_URL).rstrip("/")
+
+def resolve_asset_url(url: str) -> str:
+    if url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
+        return f"{ASSET_BASE_URL}{url[len(LEGACY_ASSET_BASE_URL):]}"
+    return url
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -52,6 +63,10 @@ class NewsletterRequest(BaseModel):
     email: str
 
 # ==================== AUTH HELPERS ====================
+
+@api_router.get("/health")
+async def health():
+    return {"status": "ok"}
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
@@ -438,9 +453,6 @@ async def stripe_webhook(request: Request):
     signature = request.headers.get("Stripe-Signature", "")
     stripe.api_key = STRIPE_API_KEY
     try:
-        if not STRIPE_WEBHOOK_SECRET:
-            logger.warning("STRIPE_WEBHOOK_SECRET no configurado; webhook ignorado")
-            return {"status": "ignored"}
         event = stripe.Webhook.construct_event(body, signature, STRIPE_WEBHOOK_SECRET)
 
         if event.get("type") == "checkout.session.completed":
@@ -992,6 +1004,11 @@ SEED_PRODUCTS = [
     }
 ]
 
+for product in SEED_PRODUCTS:
+    product["images"] = [resolve_asset_url(image_url) for image_url in product.get("images", [])]
+    if product.get("thumbnail_image"):
+        product["thumbnail_image"] = resolve_asset_url(product["thumbnail_image"])
+
 @api_router.post("/seed")
 async def seed_products():
     count = await db.products.count_documents({})
@@ -1020,7 +1037,7 @@ app.include_router(api_router)
 # ==================== CORS ====================
 # NOTE: When allow_credentials=True, the CORS response cannot use '*' as Access-Control-Allow-Origin.
 # If CORS_ORIGINS is set to '*', we switch to allow_origin_regex so Starlette echoes back the request Origin.
-cors_origins = [o.strip() for o in os.environ.get('CORS_ORIGINS', '*').split(',') if o.strip()]
+cors_origins = [o.strip() for o in CORS_ORIGINS.split(',') if o.strip()]
 allow_origin_regex = None
 allow_origins = cors_origins
 if '*' in cors_origins:
