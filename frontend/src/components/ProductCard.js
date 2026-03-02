@@ -78,12 +78,18 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
       }}
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-[12px] bg-white">
-          <img
-            src={product.thumbnail_image || product.images?.[0]}
-            alt={product.name}
-            className={`w-full h-full object-cover ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
-            loading="lazy"
-          />
+          {(product.thumbnail_image || product.images?.[0]) ? (
+            <img
+              src={product.thumbnail_image || product.images?.[0]}
+              alt={product.name}
+              className={`w-full h-full object-cover ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+              <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+            </div>
+          )}
 
           {hasHoverVideo && (
             <video
