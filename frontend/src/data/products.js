@@ -1,5 +1,6 @@
-const products = {
-  "americana-umbra": {
+const products = [
+  {
+    product_id: "americana-umbra",
     images: [
       "/products/americana-umbra/1.jpg",
       "/products/americana-umbra/10.jpg",
@@ -16,7 +17,8 @@ const products = {
     ],
     thumbnail_image: "/products/americana-umbra/1.jpg",
   },
-  "bolso-monograma-tambvrini": {
+  {
+    product_id: "bolso-monograma-tambvrini",
     images: [
       "/products/bolso-monograma-tambvrini/1.jpg",
       "/products/bolso-monograma-tambvrini/10.jpg",
@@ -32,7 +34,8 @@ const products = {
     ],
     thumbnail_image: "/products/bolso-monograma-tambvrini/1.jpg",
   },
-  "camiseta-imperium": {
+  {
+    product_id: "camiseta-imperium",
     images: [
       "/products/camiseta-imperium/1.jpg",
       "/products/camiseta-imperium/10.jpg",
@@ -53,7 +56,8 @@ const products = {
     ],
     thumbnail_image: "/products/camiseta-imperium/1.jpg",
   },
-  "camiseta-sport-club": {
+  {
+    product_id: "camiseta-sport-club",
     images: [
       "/products/camiseta-sport-club/1.jpg",
       "/products/camiseta-sport-club/10.jpg",
@@ -72,7 +76,8 @@ const products = {
     ],
     thumbnail_image: "/products/camiseta-sport-club/1.jpg",
   },
-  "polo-aureus": {
+  {
+    product_id: "polo-aureus",
     images: [
       "/products/polo-aureus/1.jpg",
       "/products/polo-aureus/10.jpg",
@@ -87,7 +92,8 @@ const products = {
     ],
     thumbnail_image: "/products/polo-aureus/1.jpg",
   },
-  "polo-domus": {
+  {
+    product_id: "polo-domus",
     images: [
       "/products/polo-domus/1.jpg",
       "/products/polo-domus/10.jpg",
@@ -109,7 +115,8 @@ const products = {
     ],
     thumbnail_image: "/products/polo-domus/1.jpg",
   },
-  "polo-golf": {
+  {
+    product_id: "polo-golf",
     images: [
       "/products/polo-golf/1.jpg",
       "/products/polo-golf/10.jpg",
@@ -127,7 +134,8 @@ const products = {
     ],
     thumbnail_image: "/products/polo-golf/1.jpg",
   },
-  "polo-patricius": {
+  {
+    product_id: "polo-patricius",
     images: [
       "/products/polo-patricius/1.jpg",
       "/products/polo-patricius/10.jpg",
@@ -147,7 +155,8 @@ const products = {
     ],
     thumbnail_image: "/products/polo-patricius/1.jpg",
   },
-  "polo-regius": {
+  {
+    product_id: "polo-regius",
     images: [
       "/products/polo-regius/1.jpg",
       "/products/polo-regius/10.jpg",
@@ -170,7 +179,8 @@ const products = {
     ],
     thumbnail_image: "/products/polo-regius/1.jpg",
   },
-  "sueter-captain": {
+  {
+    product_id: "sueter-captain",
     images: [
       "/products/sueter-captain/1.jpg",
       "/products/sueter-captain/10.jpg",
@@ -187,7 +197,8 @@ const products = {
     ],
     thumbnail_image: "/products/sueter-captain/1.jpg",
   },
-  "sueter-sylva": {
+  {
+    product_id: "sueter-sylva",
     images: [
       "/products/sueter-sylva/1.jpg",
       "/products/sueter-sylva/10.jpg",
@@ -207,7 +218,8 @@ const products = {
     ],
     thumbnail_image: "/products/sueter-sylva/1.jpg",
   },
-  "traje-monograma-tambvrini": {
+  {
+    product_id: "traje-monograma-tambvrini",
     images: [
       "/products/traje-monograma-tambvrini/1.jpg",
       "/products/traje-monograma-tambvrini/10.jpg",
@@ -223,6 +235,6 @@ const products = {
     ],
     thumbnail_image: "/products/traje-monograma-tambvrini/1.jpg",
   },
-};
+];
 
 export default products;
