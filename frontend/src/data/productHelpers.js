@@ -16,7 +16,9 @@ export function getProductById(productId) {
     .filter(
       (p) =>
         p.product_id !== productId &&
-        p.category?.some((c) => product.category?.includes(c))
+        product.category?.length > 0 &&
+        p.category?.length > 0 &&
+        p.category.some((c) => product.category.includes(c))
     )
     .slice(0, 4);
 
