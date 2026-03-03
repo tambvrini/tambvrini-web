@@ -126,7 +126,7 @@ export const AuthProvider = ({ children }) => {
       return googleAuthPromiseRef.current;
     }
     if (!GOOGLE_CLIENT_ID) {
-      throw new Error('Google Client ID no configurado');
+      throw new Error('Google Client ID no configurado en variables de entorno');
     }
     await loadGoogleIdentityScript();
     googleAuthPromiseRef.current = new Promise((resolve, reject) => {

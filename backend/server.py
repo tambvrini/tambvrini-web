@@ -35,6 +35,8 @@ ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
 MIN_GOOGLE_TOKEN_TTL_SECONDS = 60
+GOOGLE_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo"
+GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -191,7 +193,7 @@ async def login_with_google(data: GoogleAuthRequest):
         raise HTTPException(400, "Token inválido")
     async with httpx.AsyncClient(timeout=10.0) as client:
         token_info_response = await client.post(
-            "https://www.googleapis.com/oauth2/v3/tokeninfo",
+            GOOGLE_TOKENINFO_URL,
             data={"access_token": access_token}
         )
         if token_info_response.status_code != 200:
@@ -202,12 +204,13 @@ async def login_with_google(data: GoogleAuthRequest):
             raise HTTPException(401, "Token de Google no corresponde al cliente")
         try:
             expires_in = int(token_info.get("expires_in", 0))
-        except (TypeError, ValueError):
+        except (TypeError, ValueError) as exc:
+            logger.warning("Invalid expires_in from Google token info: %s", exc)
             expires_in = 0
         if expires_in < MIN_GOOGLE_TOKEN_TTL_SECONDS:
             raise HTTPException(401, "Token de Google expirado")
         profile_response = await client.get(
-            "https://www.googleapis.com/oauth2/v3/userinfo",
+            GOOGLE_USERINFO_URL,
             headers={"Authorization": f"Bearer {access_token}"}
         )
         if profile_response.status_code != 200:
@@ -237,7 +240,9 @@ async def login_with_google(data: GoogleAuthRequest):
         await db.users.insert_one(user_doc)
         user = user_doc
     else:
-        field_updates = {"google_sub": google_sub, "picture": picture, "name": name}
+        field_updates = {"google_sub": google_sub, "picture": picture}
+        if not user.get("name") and name:
+            field_updates["name"] = name
         updates = {
             field_name: value
             for field_name, value in field_updates.items()
