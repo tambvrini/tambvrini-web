@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
+  const googleAuthPromiseRef = useRef(null);
 
   const getHeaders = useCallback(() => {
     if (token) return { Authorization: `Bearer ${token}` };
@@ -60,10 +61,18 @@ export const AuthProvider = ({ children }) => {
     return new Promise((resolve, reject) => {
       const existingScript = document.getElementById('google-identity-service');
       if (existingScript) {
+        if (existingScript.dataset.loaded === 'true' && window.google?.accounts?.oauth2) {
+          resolve();
+          return;
+        }
+        if (existingScript.dataset.error === 'true') {
+          reject(new Error('No se pudo cargar Google Identity Services.'));
+          return;
+        }
         existingScript.addEventListener('load', resolve, { once: true });
         existingScript.addEventListener(
           'error',
-          () => reject(new Error('No se pudo cargar Google Identity Services. Verifique su conexión.')),
+          () => reject(new Error('No se pudo cargar Google Identity Services.')),
           { once: true }
         );
         return;
@@ -73,8 +82,14 @@ export const AuthProvider = ({ children }) => {
       script.async = true;
       script.defer = true;
       script.id = 'google-identity-service';
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error('No se pudo cargar Google Identity Services. Verifique su conexión.'));
+      script.onload = () => {
+        script.dataset.loaded = 'true';
+        resolve();
+      };
+      script.onerror = () => {
+        script.dataset.error = 'true';
+        reject(new Error('No se pudo cargar Google Identity Services.'));
+      };
       document.head.appendChild(script);
     });
   };
@@ -89,16 +104,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = async () => {
+    if (googleAuthPromiseRef.current) {
+      return googleAuthPromiseRef.current;
+    }
     if (!GOOGLE_CLIENT_ID) {
       throw new Error('Google Client ID no configurado');
     }
     await loadGoogleIdentityScript();
-    return new Promise((resolve, reject) => {
+    googleAuthPromiseRef.current = new Promise((resolve, reject) => {
       const tokenClient = window.google.accounts.oauth2.initTokenClient({
         client_id: GOOGLE_CLIENT_ID,
         scope: 'openid email profile',
         callback: async (response) => {
+          const finalize = () => {
+            googleAuthPromiseRef.current = null;
+          };
           if (response?.error || !response?.access_token) {
+            finalize();
             reject(new Error(response?.error || 'Google OAuth falló'));
             return;
           }
@@ -111,14 +133,17 @@ export const AuthProvider = ({ children }) => {
             setToken(res.data.token);
             localStorage.setItem('auth_token', res.data.token);
             setUser(res.data.user);
+            finalize();
             resolve(res.data);
           } catch (err) {
+            finalize();
             reject(err);
           }
         }
       });
       tokenClient.requestAccessToken({ prompt: 'select_account' });
     });
+    return googleAuthPromiseRef.current;
   };
 
   return (

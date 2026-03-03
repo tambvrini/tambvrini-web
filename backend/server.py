@@ -193,17 +193,23 @@ async def login_with_google(data: GoogleAuthRequest):
             params={"access_token": data.access_token}
         )
         if token_info_response.status_code != 200:
-            raise HTTPException(401, "Token inválido")
+            raise HTTPException(401, "Token de Google inválido")
         token_info = token_info_response.json()
         audience = token_info.get("aud") or token_info.get("audience")
         if audience != GOOGLE_CLIENT_ID:
-            raise HTTPException(401, "Token inválido")
+            raise HTTPException(401, "Token de Google no corresponde al cliente")
+        try:
+            expires_in = int(token_info.get("expires_in", 0))
+        except (TypeError, ValueError):
+            expires_in = 0
+        if expires_in <= 0:
+            raise HTTPException(401, "Token de Google expirado")
         profile_response = await client.get(
             "https://www.googleapis.com/oauth2/v3/userinfo",
             headers={"Authorization": f"Bearer {data.access_token}"}
         )
         if profile_response.status_code != 200:
-            raise HTTPException(401, "Token inválido")
+            raise HTTPException(401, "No se pudo obtener el perfil de Google")
     profile = profile_response.json()
     email = profile.get("email")
     if not email:
@@ -229,13 +235,11 @@ async def login_with_google(data: GoogleAuthRequest):
         await db.users.insert_one(user_doc)
         user = user_doc
     else:
-        updates = {}
-        if google_sub and user.get("google_sub") != google_sub:
-            updates["google_sub"] = google_sub
-        if picture and user.get("picture") != picture:
-            updates["picture"] = picture
-        if name and user.get("name") != name:
-            updates["name"] = name
+        updates = {
+            field_name: value
+            for field_name, value in {"google_sub": google_sub, "picture": picture, "name": name}.items()
+            if value and user.get(field_name) != value
+        }
         if updates:
             await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})
             user.update(updates)
