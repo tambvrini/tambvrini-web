@@ -2,30 +2,31 @@ import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '../contexts/WishlistContext';
+import { ASSETS } from '../../lib/assets';
 
 const TRAJE_ID = 'traje-monograma-tambvrini';
-const TRAJE_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/tf3t88bp_loop%20final%20model.mp4';
+const TRAJE_HOVER_VIDEO_URL = ASSETS.videos.productHover.trajeMonogramaTambvrini;
 
 const AUREUS_ID = 'polo-aureus';
-const AUREUS_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/2bvf26dc_0212%20%284%29%281%29.mp4';
+const AUREUS_HOVER_VIDEO_URL = ASSETS.videos.productHover.poloAureus;
 
 const BOLSO_ID = 'bolso-monograma-tambvrini';
-const BOLSO_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/ll0mphlg_0216%282%29.mp4';
+const BOLSO_HOVER_VIDEO_URL = ASSETS.videos.productHover.bolsoMonogramaTambvrini;
 
 const SPORT_CLUB_ID = 'camiseta-sport-club';
-const SPORT_CLUB_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/4q03omes_0216%281%29.mp4';
+const SPORT_CLUB_HOVER_VIDEO_URL = ASSETS.videos.productHover.camisetaSportClub;
 
 const POLO_GOLF_ID = 'polo-golf';
-const POLO_GOLF_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/rrxcz0pq_0216.mp4';
+const POLO_GOLF_HOVER_VIDEO_URL = ASSETS.videos.productHover.poloGolf;
 
 const IMPERIUM_ID = 'camiseta-imperium';
-const IMPERIUM_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/5muj0dwx_0212%20%284%29.mp4';
+const IMPERIUM_HOVER_VIDEO_URL = ASSETS.videos.productHover.camisetaImperium;
 
 const UMBRA_ID = 'americana-umbra';
-const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/eotmn5eb_0212%20%284%29%282%29.mp4';
+const UMBRA_HOVER_VIDEO_URL = ASSETS.videos.productHover.americanaUmbra;
 
 const CAPTAIN_ID = 'sueter-captain';
-const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/pu3df808_0212%20%284%29.mp4';
+const CAPTAIN_HOVER_VIDEO_URL = ASSETS.videos.productHover.sueterCaptain;
 
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enableWishlistIcon = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;

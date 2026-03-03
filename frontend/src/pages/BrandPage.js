@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { ASSETS } from '../../lib/assets';
 
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
-const MARBLE_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/x8y69m45_IMG_1064.JPEG";
-const TENNIS_IMAGE = "https://customer-assets.emergentagent.com/job_tambvrini-luxury-2/artifacts/zitxtlbr_IMG_1066.JPEG";
-const CINEMATIC_VIDEO_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/axoe4sux_VIDEO%20WEB%201.mp4";
-const ROMAN_CARD_WHITE_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/inwhbq34_logo%20romano%20blanco.png";
-const ROMAN_CARD_BLACK_URL = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/vn85wlf1_logo%20romano%20negro.png";
+const LOGO_WHITE = ASSETS.logos.white;
+const MARBLE_IMAGE = ASSETS.brand.marble;
+const TENNIS_IMAGE = ASSETS.brand.tennis;
+const CINEMATIC_VIDEO_URL = ASSETS.videos.brand.cinematic;
+const ROMAN_CARD_WHITE_URL = ASSETS.brand.romanCardWhite;
+const ROMAN_CARD_BLACK_URL = ASSETS.brand.romanCardBlack;
 
 const BrandCinematicSection = () => {
   const videoRef = useRef(null);

@@ -12,19 +12,15 @@
  *   • memory/PRD.md + .emergent/summary.txt    (product names, gallery sizes, dates)
  *   • test_result.md                           (Polo Aureus price, colors, sizes)
  *
- * Products whose image URLs existed ONLY in the live MongoDB (never committed)
- * still reference the original CDN so they display correctly when the CDN is
- * reachable (e.g. in production).  Products with locally-recovered images use
- * paths under /products/{product_id}/.
+ * All product images and thumbnails are served from /frontend/public using
+ * root-relative paths under /products/{product_id}/ and /thumbnails/.
  */
-
-const ASSET = "https://customer-assets.emergentagent.com";
+import { ASSETS } from '../../lib/assets';
 
 const products = [
   // ──────────────────────────────────────────────────
   // 1. Traje Monograma Tambvrini
-  //    5 images recovered locally from tmp/traje_imgs/;
-  //    remaining 2 from CDN (replace-payload latest version).
+  //    Images sourced from /public/products/traje-monograma-tambvrini/.
   // ──────────────────────────────────────────────────
   {
     product_id: "traje-monograma-tambvrini",
@@ -33,16 +29,8 @@ const products = [
       "Set de traje Tambvrini con bordado monograma romano integral. Sastrería contemporánea de inspiración italiana con silueta elegante y estructura ligera.",
     price: 399.0,
     currency: "EUR",
-    images: [
-      "/products/traje-monograma-tambvrini/01.jpeg",
-      "/products/traje-monograma-tambvrini/02.png",
-      "/products/traje-monograma-tambvrini/03.jpeg",
-      "/products/traje-monograma-tambvrini/04.jpeg",
-      "/products/traje-monograma-tambvrini/05.png",
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
-    ],
-    thumbnail_image: `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
+    images: ASSETS.products.trajeMonogramaTambvrini.images,
+    thumbnail_image: ASSETS.thumbnails.trajeMonogramaTambvrini,
     category: ["sastrería", "set"],
     gender: "unisex",
     sizes: ["S", "M", "L", "XL"],
@@ -67,16 +55,8 @@ const products = [
       "El Bolso Monograma Tambvrini representa la visión contemporánea del lujo clásico de la casa.\nUna pieza diseñada para viajes elegantes y uso diario refinado, donde el equilibrio entre estructura, textura y detalles define su carácter.\n\nSu silueta arquitectónica se combina con un lienzo monograma exclusivo y bandas centrales en tonos pastel que aportan identidad visual distintiva. Cada elemento ha sido pensado para transmitir presencia, sofisticación y durabilidad.\n\nDiseñado para acompañar movimiento, viajes y estilo con una estética limpia y atemporal.",
     price: 299.0,
     currency: "EUR",
-    images: [
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/y7v5nwm1_2.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/q6ej9bx3_hf_20260209_005423_81aed519-78ff-4ad0-a98c-31ded5afb2f1.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qt1e9qlx_hf_20260210_013900_45cb2e8a-fe02-498b-826c-fa5c03b904e1.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gfxx8pdm_4.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/ahyaof7a_5.png`,
-    ],
-    thumbnail_image: `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/xyu4i868_1.jpeg`,
+    images: ASSETS.products.bolsoMonogramaTambvrini.images,
+    thumbnail_image: ASSETS.thumbnails.bolsoMonogramaTambvrini,
     category: ["accesorios", "marroquineria"],
     gender: "unisex",
     sizes: ["Única"],
@@ -101,17 +81,8 @@ const products = [
       "Camiseta Sport Club de inspiración europea clásica.\nAlgodón premium de alto gramaje con caída estructurada y tacto suave.\n\nDiseño minimalista frontal con emblema romano y gráfica trasera de gran formato estilo sport club europeo.\nPensada para un equilibrio entre lujo relajado, estética deportiva y cultura contemporánea.\n\nAjuste regular elegante.\nFabricación premium.\nUso diario o editorial.\n\nComposición:\n100% algodón premium pesado.\n\nFit: regular luxury fit.",
     price: 895.0,
     currency: "EUR",
-    images: [
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/4qb570r6_hf_20260212_010024_44d8a05a-42ab-47b3-8108-336617ff9a07.jpeg`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fj5208jf_hf_20260212_010238_58178657-ba5a-4aea-a92b-7d3895ba334b.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/6nqsv06s_hf_20260212_005309_5351456d-b40e-4e56-a6ba-4aefda582ec8.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/kuf48n49_hf_20260212_005319_45c4a329-ec62-4e20-848f-4fe0d03812b2.jpeg`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/fhe2l2xc_hf_20260212_010115_9a4c25de-deef-4847-892e-b4dc16d78ba0.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/qjdgn1uj_hf_20260212_001854_d4114cf5-7dca-411a-a8b3-046e68c293e6.png`,
-      `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/7bb8vczl_hf_20260212_000927_165fb028-8aab-48b4-80af-974531a1f414.jpeg`,
-    ],
-    thumbnail_image: `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png`,
+    images: ASSETS.products.camisetaSportClub.images,
+    thumbnail_image: ASSETS.thumbnails.camisetaSportClub,
     category: ["camisetas", "apparel"],
     gender: "unisex",
     sizes: ["S", "M", "L", "XL"],
@@ -127,7 +98,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 4. Polo Golf  (recovered from backend category mapping + frontend refs)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  //    Images sourced from /public/products/polo-golf/.
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-golf",
@@ -136,7 +107,8 @@ const products = [
       "Polo Golf de la colección Sport Club 2026. Algodón premium con bordado del escudo Sport Club. Estética deportiva europea con acabado de lujo.",
     price: 895.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.poloGolf.images,
+    thumbnail_image: ASSETS.thumbnails.poloGolf,
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -152,7 +124,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 5. Suéter Captain  (recovered from category-2026 mapping + frontend refs)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  //    Images sourced from /public/products/sueter-captain/.
   // ──────────────────────────────────────────────────
   {
     product_id: "sueter-captain",
@@ -161,7 +133,8 @@ const products = [
       "Suéter Captain de la colección Sport Club 2026. Punto fino premium con bordado del escudo Sport Club. Diseñado para el rendimiento con estética de club privado europeo.",
     price: 895.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.sueterCaptain.images,
+    thumbnail_image: ASSETS.thumbnails.sueterCaptain,
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -176,7 +149,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 6. Polo Aureus  (recovered from test_result.md verification data)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  //    Images sourced from /public/products/polo-aureus/.
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-aureus",
@@ -185,7 +158,8 @@ const products = [
       "Polo Aureus de algodón premium con acabado de lujo. Una pieza atemporal que combina la elegancia deportiva con el refinamiento mediterráneo.",
     price: 49.99,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.poloAureus.images,
+    thumbnail_image: ASSETS.thumbnails.poloAureus,
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -201,7 +175,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 7. Camiseta Imperium  (recovered from frontend women's section refs)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  //    Images sourced from /public/products/camiseta-imperium/.
   // ──────────────────────────────────────────────────
   {
     product_id: "camiseta-imperium",
@@ -210,7 +184,8 @@ const products = [
       "Camiseta Imperium de algodón premium con diseño editorial. Inspiración clásica romana con acabado contemporáneo de lujo.",
     price: 895.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.camisetaImperium.images,
+    thumbnail_image: ASSETS.thumbnails.camisetaImperium,
     category: ["camisetas", "apparel"],
     gender: "mujer",
     sizes: ["XS", "S", "M", "L"],
@@ -225,7 +200,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 8. Americana UMBRA  (recovered from frontend refs + sold-out sizes)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  //    Images sourced from /public/products/americana-umbra/.
   // ──────────────────────────────────────────────────
   {
     product_id: "americana-umbra",
@@ -234,7 +209,8 @@ const products = [
       "Americana UMBRA de sastrería contemporánea. Silueta elegante con estructura ligera e inspiración clásica mediterránea.",
     price: 1250.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.americanaUmbra.images,
+    thumbnail_image: ASSETS.thumbnails.americanaUmbra,
     category: ["sastrería", "apparel"],
     gender: "mujer",
     sizes: ["S", "M", "L", "XL"],
@@ -250,7 +226,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 9. Polo Domus  (recovered from PRD + homepage spotlight refs)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  //    Images sourced from /public/products/polo-domus/.
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-domus",
@@ -259,7 +235,8 @@ const products = [
       "Polo Domus de algodón premium con bordado exclusivo. Estética de club privado europeo con acabado de lujo contemporáneo.",
     price: 895.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.poloDomus.images,
+    thumbnail_image: ASSETS.thumbnails.poloDomus,
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -274,7 +251,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 10. Suéter Sylva  (recovered from PRD — 9 images + thumbnail noted)
-  //     Images only existed in MongoDB — URLs pending re-import.
+  //     Images sourced from /public/products/sueter-sylva/.
   // ──────────────────────────────────────────────────
   {
     product_id: "sueter-sylva",
@@ -283,7 +260,8 @@ const products = [
       "Suéter Sylva de punto fino premium. Diseño elegante con acabado de lujo y estética de club privado europeo.",
     price: 895.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.sueterSylva.images,
+    thumbnail_image: ASSETS.thumbnails.sueterSylva,
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -298,7 +276,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 11. Polo Patricius  (recovered from PRD — 7 images + thumbnail noted)
-  //     Images only existed in MongoDB — URLs pending re-import.
+  //     Images sourced from /public/products/polo-patricius/.
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-patricius",
@@ -307,7 +285,8 @@ const products = [
       "Polo Patricius de algodón premium con bordado exclusivo. Inspiración clásica romana con estética de lujo contemporáneo.",
     price: 895.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.poloPatricius.images,
+    thumbnail_image: ASSETS.thumbnails.poloPatricius,
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -322,7 +301,7 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 12. Polo Regius  (recovered from PRD — 10 images + thumbnail noted)
-  //     Images only existed in MongoDB — URLs pending re-import.
+  //     Images sourced from /public/products/polo-regius/.
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-regius",
@@ -331,7 +310,8 @@ const products = [
       "Polo Regius de algodón premium con bordado exclusivo. La máxima expresión de la elegancia deportiva mediterránea.",
     price: 895.0,
     currency: "EUR",
-    images: [],
+    images: ASSETS.products.poloRegius.images,
+    thumbnail_image: ASSETS.thumbnails.poloRegius,
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
