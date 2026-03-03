@@ -102,6 +102,9 @@ export const Header = () => {
   const shouldInvertLogo = (scrolled || !isHomePage) && !cinematicHidden;
 
   const logoSrc = LOGO_DARK;
+  const compactLogoHeight = 'clamp(2.4rem, 3vw, 3rem)';
+  const expandedLogoHeight = 'clamp(3.5rem, 6vw, 7rem)';
+  const logoHeight = isHomePage ? compactLogoHeight : (scrolled ? compactLogoHeight : expandedLogoHeight);
 
   return (
     <>
@@ -115,7 +118,7 @@ export const Header = () => {
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
-          <div className="flex items-center gap-5 w-[120px]" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
+          <div className="flex min-w-[120px] flex-1 items-center gap-5" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
@@ -176,12 +179,13 @@ export const Header = () => {
             <img
               src={logoSrc}
               alt="TAMBVRINI"
-              className={`transition-all duration-500 ${shouldInvertLogo ? 'invert' : ''} ${isHomePage ? 'h-10 md:h-12' : (scrolled ? 'h-10 md:h-12' : 'h-16 md:h-28')}`}
+              className={`transition-all duration-500 ${shouldInvertLogo ? 'invert' : ''}`}
+              style={{ height: logoHeight }}
             />
           </Link>
 
           {/* Right: Account + Wishlist + Cart */}
-          <div className="flex items-center gap-5 w-[120px] justify-end" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
+          <div className="flex min-w-[120px] flex-1 items-center justify-end gap-5" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
             <Link
               to="/cuenta"
               data-testid="account-link"
