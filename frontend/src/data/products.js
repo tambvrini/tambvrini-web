@@ -28,6 +28,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "traje-monograma-tambvrini",
+    slug: "traje-monograma-tambvrini",
     name: "Traje Monograma Tambvrini",
     description:
       "Set de traje Tambvrini con bordado monograma romano integral. Sastrería contemporánea de inspiración italiana con silueta elegante y estructura ligera.",
@@ -62,6 +63,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "bolso-monograma-tambvrini",
+    slug: "bolso-monograma-tambvrini",
     name: "Bolso Monograma Tambvrini",
     description:
       "El Bolso Monograma Tambvrini representa la visión contemporánea del lujo clásico de la casa.\nUna pieza diseñada para viajes elegantes y uso diario refinado, donde el equilibrio entre estructura, textura y detalles define su carácter.\n\nSu silueta arquitectónica se combina con un lienzo monograma exclusivo y bandas centrales en tonos pastel que aportan identidad visual distintiva. Cada elemento ha sido pensado para transmitir presencia, sofisticación y durabilidad.\n\nDiseñado para acompañar movimiento, viajes y estilo con una estética limpia y atemporal.",
@@ -96,6 +98,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "camiseta-sport-club",
+    slug: "camiseta-sport-club",
     name: "Camiseta Sport Club",
     description:
       "Camiseta Sport Club de inspiración europea clásica.\nAlgodón premium de alto gramaje con caída estructurada y tacto suave.\n\nDiseño minimalista frontal con emblema romano y gráfica trasera de gran formato estilo sport club europeo.\nPensada para un equilibrio entre lujo relajado, estética deportiva y cultura contemporánea.\n\nAjuste regular elegante.\nFabricación premium.\nUso diario o editorial.\n\nComposición:\n100% algodón premium pesado.\n\nFit: regular luxury fit.",
@@ -131,6 +134,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-golf",
+    slug: "polo-golf",
     name: "Polo Golf",
     description:
       "Polo Golf de la colección Sport Club 2026. Algodón premium con bordado del escudo Sport Club. Estética deportiva europea con acabado de lujo.",
@@ -156,6 +160,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "sueter-captain",
+    slug: "sueter-captain",
     name: "Suéter Captain",
     description:
       "Suéter Captain de la colección Sport Club 2026. Punto fino premium con bordado del escudo Sport Club. Diseñado para el rendimiento con estética de club privado europeo.",
@@ -180,6 +185,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-aureus",
+    slug: "polo-aureus",
     name: "Polo Aureus",
     description:
       "Polo Aureus de algodón premium con acabado de lujo. Una pieza atemporal que combina la elegancia deportiva con el refinamiento mediterráneo.",
@@ -205,6 +211,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "camiseta-imperium",
+    slug: "camiseta-imperium",
     name: "Camiseta Imperium",
     description:
       "Camiseta Imperium de algodón premium con diseño editorial. Inspiración clásica romana con acabado contemporáneo de lujo.",
@@ -229,6 +236,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "americana-umbra",
+    slug: "americana-umbra",
     name: "Americana UMBRA",
     description:
       "Americana UMBRA de sastrería contemporánea. Silueta elegante con estructura ligera e inspiración clásica mediterránea.",
@@ -254,6 +262,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-domus",
+    slug: "polo-domus",
     name: "Polo Domus",
     description:
       "Polo Domus de algodón premium con bordado exclusivo. Estética de club privado europeo con acabado de lujo contemporáneo.",
@@ -278,6 +287,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "sueter-sylva",
+    slug: "sueter-sylva",
     name: "Suéter Sylva",
     description:
       "Suéter Sylva de punto fino premium. Diseño elegante con acabado de lujo y estética de club privado europeo.",
@@ -302,6 +312,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-patricius",
+    slug: "polo-patricius",
     name: "Polo Patricius",
     description:
       "Polo Patricius de algodón premium con bordado exclusivo. Inspiración clásica romana con estética de lujo contemporáneo.",
@@ -326,6 +337,7 @@ const products = [
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-regius",
+    slug: "polo-regius",
     name: "Polo Regius",
     description:
       "Polo Regius de algodón premium con bordado exclusivo. La máxima expresión de la elegancia deportiva mediterránea.",
