@@ -64,32 +64,46 @@ export const AuthProvider = ({ children }) => {
       return googleScriptPromiseRef.current;
     }
     googleScriptPromiseRef.current = new Promise((resolve, reject) => {
+      let settled = false;
+      const resolveOnce = () => {
+        if (settled) return;
+        settled = true;
+        googleScriptPromiseRef.current = null;
+        resolve();
+      };
+      const rejectOnce = () => {
+        if (settled) return;
+        settled = true;
+        googleScriptPromiseRef.current = null;
+        reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
+      };
       const existingScript = document.getElementById('google-identity-service');
       if (existingScript) {
         if (existingScript.dataset.loaded === 'true' && window.google?.accounts?.oauth2) {
-          googleScriptPromiseRef.current = null;
-          resolve();
+          resolveOnce();
           return;
         }
         if (existingScript.dataset.error === 'true') {
-          googleScriptPromiseRef.current = null;
-          reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
+          rejectOnce();
           return;
         }
-        existingScript.addEventListener('load', () => {
+        const handleLoad = () => {
           existingScript.dataset.loaded = 'true';
-          googleScriptPromiseRef.current = null;
-          resolve();
-        }, { once: true });
+          resolveOnce();
+        };
+        const handleError = () => {
+          existingScript.dataset.error = 'true';
+          rejectOnce();
+        };
+        existingScript.addEventListener('load', handleLoad, { once: true });
         existingScript.addEventListener(
           'error',
-          () => {
-            existingScript.dataset.error = 'true';
-            googleScriptPromiseRef.current = null;
-            reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
-          },
+          handleError,
           { once: true }
         );
+        if (window.google?.accounts?.oauth2) {
+          handleLoad();
+        }
         return;
       }
       const script = document.createElement('script');
@@ -99,13 +113,11 @@ export const AuthProvider = ({ children }) => {
       script.id = 'google-identity-service';
       script.onload = () => {
         script.dataset.loaded = 'true';
-        googleScriptPromiseRef.current = null;
-        resolve();
+        resolveOnce();
       };
       script.onerror = () => {
         script.dataset.error = 'true';
-        googleScriptPromiseRef.current = null;
-        reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
+        rejectOnce();
       };
       document.head.appendChild(script);
     });

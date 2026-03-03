@@ -208,7 +208,7 @@ async def login_with_google(data: GoogleAuthRequest):
             logger.warning("Invalid expires_in from Google token info: %s", exc)
             expires_in = 0
         if expires_in < MIN_GOOGLE_TOKEN_TTL_SECONDS:
-            raise HTTPException(401, "Token de Google expirado")
+            raise HTTPException(401, "Token de Google inválido o expirado")
         profile_response = await client.get(
             GOOGLE_USERINFO_URL,
             headers={"Authorization": f"Bearer {access_token}"}
@@ -240,14 +240,13 @@ async def login_with_google(data: GoogleAuthRequest):
         await db.users.insert_one(user_doc)
         user = user_doc
     else:
-        field_updates = {"google_sub": google_sub, "picture": picture}
-        if not user.get("name") and name:
-            field_updates["name"] = name
-        updates = {
-            field_name: value
-            for field_name, value in field_updates.items()
-            if value is not None and user.get(field_name) != value
-        }
+        updates = {}
+        if google_sub is not None and user.get("google_sub") != google_sub:
+            updates["google_sub"] = google_sub
+        if picture is not None and user.get("picture") != picture:
+            updates["picture"] = picture
+        if not user.get("name") and name is not None and user.get("name") != name:
+            updates["name"] = name
         if updates:
             await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})
             user.update(updates)
