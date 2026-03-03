@@ -4,6 +4,7 @@ import { SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { queryProducts } from '@/data/productHelpers';
+import catalogProducts from '@/data/products';
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
@@ -102,22 +103,57 @@ export default function ShopPage() {
       ? products.filter((p) => p.product_id !== 'traje-monograma-tambvrini')
       : products;
 
-  const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
   const isMensView = gender === 'hombre';
   const isWomenView = gender === 'mujer';
+  const mujerProducts = useMemo(() => {
+    if (!isWomenView) return filteredProducts;
+    const poloAureus = catalogProducts.find((p) => p.product_id === 'polo-aureus');
+    const poloPatricius = catalogProducts.find((p) => p.product_id === 'polo-patricius');
+    const ordered = [...filteredProducts];
+    let imperiumIndex = -1;
+    let umbraIndex = -1;
+    let hasAureus = false;
+    let hasPatricius = false;
+
+    for (let index = 0; index < ordered.length; index += 1) {
+      const productId = ordered[index].product_id;
+      if (imperiumIndex === -1 && productId === 'camiseta-imperium') imperiumIndex = index;
+      if (umbraIndex === -1 && productId === 'americana-umbra') umbraIndex = index;
+      if (!hasAureus && productId === 'polo-aureus') hasAureus = true;
+      if (!hasPatricius && productId === 'polo-patricius') hasPatricius = true;
+      if (imperiumIndex !== -1 && umbraIndex !== -1 && hasAureus && hasPatricius) {
+        break;
+      }
+    }
+
+    if (poloAureus && !hasAureus && imperiumIndex !== -1) {
+      ordered.splice(imperiumIndex, 0, poloAureus);
+      if (umbraIndex >= imperiumIndex) {
+        umbraIndex += 1;
+      }
+    }
+
+    if (poloPatricius && !hasPatricius && umbraIndex !== -1) {
+      ordered.splice(umbraIndex + 1, 0, poloPatricius);
+    }
+
+    return ordered;
+  }, [filteredProducts, isWomenView]);
+  const gridProducts = isWomenView ? mujerProducts : filteredProducts;
+  const displayTotal = isMensView ? filteredProducts.length : isWomenView ? mujerProducts.length : total;
   const isCinematicView = isWomenView || isMensView;
   const mensFirst = isMensView ? filteredProducts.slice(0, 4) : filteredProducts;
   const mensRest = isMensView ? filteredProducts.slice(4) : [];
   const mujerImperiumIndex = isWomenView
-    ? filteredProducts.findIndex((p) => p.product_id === 'camiseta-imperium')
+    ? mujerProducts.findIndex((p) => p.product_id === 'camiseta-imperium')
     : -1;
   const mujerGridItems = isWomenView && mujerImperiumIndex !== -1
     ? [
-        ...filteredProducts.slice(0, mujerImperiumIndex + 1),
+        ...mujerProducts.slice(0, mujerImperiumIndex + 1),
         { type: 'editorial', id: 'mujer-editorial' },
-        ...filteredProducts.slice(mujerImperiumIndex + 1),
+        ...mujerProducts.slice(mujerImperiumIndex + 1),
       ]
-    : filteredProducts;
+    : gridProducts;
 
   useEffect(() => {
     if (!isCinematicView) {
@@ -288,7 +324,7 @@ export default function ShopPage() {
               </div>
             ))}
           </div>
-        ) : filteredProducts.length === 0 ? (
+        ) : gridProducts.length === 0 ? (
           <div className="text-center py-20">
             <p className="font-playfair text-xl text-obsidian/50">No se encontraron productos</p>
             <button onClick={clearFilters} className="mt-6 btn-luxury text-xs">Ver todos los productos</button>
