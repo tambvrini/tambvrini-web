@@ -185,7 +185,7 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    if not data.access_token:
+    if not data.access_token.strip():
         raise HTTPException(400, "Token inválido")
     async with httpx.AsyncClient(timeout=10.0) as client:
         token_info_response = await client.get(
@@ -202,8 +202,8 @@ async def login_with_google(data: GoogleAuthRequest):
             "https://www.googleapis.com/oauth2/v3/userinfo",
             headers={"Authorization": f"Bearer {data.access_token}"}
         )
-    if profile_response.status_code != 200:
-        raise HTTPException(401, "Token inválido")
+        if profile_response.status_code != 200:
+            raise HTTPException(401, "Token inválido")
     profile = profile_response.json()
     email = profile.get("email")
     if not email:

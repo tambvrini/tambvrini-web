@@ -61,7 +61,11 @@ export const AuthProvider = ({ children }) => {
       const existingScript = document.getElementById('google-identity-service');
       if (existingScript) {
         existingScript.addEventListener('load', resolve, { once: true });
-        existingScript.addEventListener('error', () => reject(new Error('Google Identity no disponible')), { once: true });
+        existingScript.addEventListener(
+          'error',
+          () => reject(new Error('No se pudo cargar Google Identity Services. Verifique su conexión.')),
+          { once: true }
+        );
         return;
       }
       const script = document.createElement('script');
@@ -70,7 +74,7 @@ export const AuthProvider = ({ children }) => {
       script.defer = true;
       script.id = 'google-identity-service';
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Google Identity no disponible'));
+      script.onerror = () => reject(new Error('No se pudo cargar Google Identity Services. Verifique su conexión.'));
       document.head.appendChild(script);
     });
   };
