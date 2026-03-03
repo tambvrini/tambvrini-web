@@ -138,11 +138,10 @@ export const AuthProvider = ({ children }) => {
         scope: 'openid email profile',
         callback: async (response) => {
           if (response?.error || !response?.access_token) {
-            const errorMessage = response?.error === 'access_denied'
+            const errorCode = response?.error;
+            const errorMessage = errorCode === 'access_denied' || errorCode === 'popup_closed_by_user'
               ? 'Autenticación con Google cancelada.'
-              : response?.error
-                ? `No se pudo iniciar sesión con Google (${response.error}).`
-                : 'No se pudo iniciar sesión con Google.';
+              : 'No se pudo iniciar sesión con Google.';
             finalize();
             reject(new Error(errorMessage));
             return;
