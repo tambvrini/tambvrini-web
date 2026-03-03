@@ -32,7 +32,7 @@ const products = [
     name: "Traje Monograma Tambvrini",
     description:
       "Set de traje Tambvrini con bordado monograma romano integral. Sastrería contemporánea de inspiración italiana con silueta elegante y estructura ligera.",
-    price: 399.0,
+    price: 210.0,
     currency: "EUR",
     images: [
       "/products/traje-monograma-tambvrini/01.jpeg",
@@ -67,7 +67,7 @@ const products = [
     name: "Bolso Monograma Tambvrini",
     description:
       "El Bolso Monograma Tambvrini representa la visión contemporánea del lujo clásico de la casa.\nUna pieza diseñada para viajes elegantes y uso diario refinado, donde el equilibrio entre estructura, textura y detalles define su carácter.\n\nSu silueta arquitectónica se combina con un lienzo monograma exclusivo y bandas centrales en tonos pastel que aportan identidad visual distintiva. Cada elemento ha sido pensado para transmitir presencia, sofisticación y durabilidad.\n\nDiseñado para acompañar movimiento, viajes y estilo con una estética limpia y atemporal.",
-    price: 299.0,
+    price: 260.0,
     currency: "EUR",
     images: [
       `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png`,
