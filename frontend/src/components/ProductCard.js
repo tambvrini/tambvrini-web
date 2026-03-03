@@ -80,7 +80,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
       <div className="relative aspect-[3/4] overflow-hidden rounded-[12px] bg-white">
           {(product.thumbnail_image || product.images?.[0]) ? (
             <img
-              src={product.thumbnail_image || product.images?.[0]}
+              src={`/thumbnails/${product.product_id}.jpg`}
               alt={product.name}
               className={`w-full h-full object-cover ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
               loading="lazy"
