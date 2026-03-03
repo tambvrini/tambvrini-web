@@ -87,13 +87,13 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left: Gallery */}
           <div>
-            <div className="img-zoom aspect-[3/4] mb-4 overflow-hidden bg-white/5">
+            <div className="img-zoom aspect-[3/4] mb-4 overflow-hidden bg-white/5 flex items-center justify-center">
               {(product.images?.length > 0) ? (
                 <img
                   data-testid="product-main-image"
                   src={product.images[selectedImage]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto max-h-full object-contain object-center"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
@@ -108,11 +108,11 @@ export default function ProductPage() {
                   key={i}
                   data-testid={`product-thumb-${i}`}
                   onClick={() => setSelectedImage(i)}
-                  className={`w-20 h-28 overflow-hidden border transition-colors duration-300 ${
+                  className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
                     selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
                 </button>
               ))}
             </div>
