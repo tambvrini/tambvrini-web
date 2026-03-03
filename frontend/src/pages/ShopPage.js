@@ -4,6 +4,7 @@ import { SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { queryProducts } from '@/data/productHelpers';
+import { ASSETS } from '../../lib/assets';
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
@@ -23,11 +24,11 @@ const COLLECTION_LABELS = {
   limited: 'Piezas Limitadas',
 };
 
-const MUJER_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/udlexuwa_hf_20260222_200211_c5c76655-5b93-4052-adc1-45fea5a9cdc5.jpg";
-const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/b92rzs04_ANUNCIO%20TAMBVRINI%203.mov";
-const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/nqiyik78_video%20final%20tambvrini%202.mov";
+const MUJER_HERO_IMAGE = ASSETS.shop.mujerHero;
+const MUJER_CINEMATIC_VIDEO = ASSETS.videos.shop.mujerCinematic;
+const HOMBRE_CINEMATIC_VIDEO = ASSETS.videos.shop.hombreCinematic;
 
-const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
+const HOMBRE_CAMPAIGN_IMAGE = ASSETS.shop.hombreCampaign;
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();

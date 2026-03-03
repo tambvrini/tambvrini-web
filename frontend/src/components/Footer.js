@@ -1,7 +1,7 @@
 import { useI18n } from "../contexts/I18nContext";
+import { ASSETS } from '../../lib/assets';
 
-const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
-const ICON_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/krjmn5r6_LOGO%20ICONO%20blanco%20svg%20web.svg";
+const LOGO_WHITE = ASSETS.logos.white;
 
 export const Footer = ({ bgColor = '#FFFFFF' }) => {
   const { lang, setLang, t } = useI18n();
@@ -33,7 +33,7 @@ export const Footer = ({ bgColor = '#FFFFFF' }) => {
             {/* Brand (true center) */}
             <div className="flex items-start justify-center">
               <div className="flex flex-col items-center text-center">
-                <img src={ICON_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-100 invert" />
+                <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-100 invert" />
                 <p className="font-montserrat text-xs text-obsidian/50 leading-relaxed tracking-wide">
                   {t('tambvrini_by')}
                 </p>

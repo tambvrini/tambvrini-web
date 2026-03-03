@@ -3,20 +3,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
+import IntroVideoSection from '../components/IntroVideoSection';
 import { queryProducts } from '@/data/productHelpers';
+import { ASSETS } from '../../lib/assets';
 
-const LOGO_WHITE = "/logo-letras-final-blanco.svg";
-const HERO_IMAGE = "/hero-main.jpg";
+const LOGO_WHITE = ASSETS.logos.white;
+const HERO_IMAGE = ASSETS.hero.main;
 
-const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
-const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
-const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sbeaj2rx_video%20hombre.mp4";
-const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
-const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
-const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
-const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
-const EDITORIAL_POLOS_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/v4zs6ugs_hf_20260222_181550_e58e110a-c888-46f9-818a-7daac73fbd28.jpeg";
-const EDITORIAL_SUETERES_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/lks43ws5_hf_20260222_183135_094a5ad6-f6e8-407f-8fd4-6dceef064698.jpeg";
+const NOVEDADES_HOMBRE_BG = ASSETS.home.novedadesHombreBg;
+const NOVEDADES_MUJER_BG = ASSETS.home.novedadesMujerBg;
+const NOVEDADES_HOMBRE_VIDEO = ASSETS.videos.home.novedadesHombre;
+const NOVEDADES_MUJER_VIDEO = ASSETS.videos.home.novedadesMujer;
+const DROP_EDITORIAL_IMAGE = ASSETS.home.dropEditorial;
+const EDITORIAL_HERO_IMAGE = ASSETS.home.editorialHero;
+const DROP_CAMPAIGN_IMAGE = ASSETS.home.dropCampaign;
+const EDITORIAL_POLOS_IMAGE = ASSETS.home.editorialPolos;
+const EDITORIAL_SUETERES_IMAGE = ASSETS.home.editorialSueteres;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 
@@ -472,7 +474,7 @@ export default function HomePage() {
     <div data-testid="home-page" className="noise-overlay editorial-noise bg-white">
       <HeroSection />
 
-      {/* (removed editorial divider) */}
+      <IntroVideoSection />
 
       <DropGridSection />
     </div>

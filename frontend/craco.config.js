@@ -1,5 +1,6 @@
 // craco.config.js
 const path = require("path");
+const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 require("dotenv").config();
 
 // Check if we're in development/preview mode (not production build)
@@ -47,6 +48,32 @@ const webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
+      const extensions = webpackConfig.resolve.extensions || [];
+      ['.ts', '.tsx'].forEach((ext) => {
+        if (!extensions.includes(ext)) {
+          extensions.push(ext);
+        }
+      });
+      webpackConfig.resolve.extensions = extensions;
+
+      if (webpackConfig.resolve.plugins) {
+        webpackConfig.resolve.plugins = webpackConfig.resolve.plugins.filter(
+          (plugin) => !(plugin instanceof ModuleScopePlugin),
+        );
+      }
+
+      const rules = webpackConfig.module.rules.find((rule) => Array.isArray(rule.oneOf));
+      if (rules) {
+        const babelRule = rules.oneOf.find(
+          (rule) => rule.loader && rule.loader.includes('babel-loader'),
+        );
+        if (babelRule && babelRule.include) {
+          const libPath = path.resolve(__dirname, 'lib');
+          babelRule.include = Array.isArray(babelRule.include)
+            ? [...babelRule.include, libPath]
+            : [babelRule.include, libPath];
+        }
+      }
 
       // Add ignored patterns to reduce watched directories
         webpackConfig.watchOptions = {
