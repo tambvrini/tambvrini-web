@@ -79,6 +79,8 @@ export default function ShopPage() {
 
   const getTitle = () => {
     if (search) return `Resultados: "${search}"`;
+    if (gender === 'hombre') return 'UOMO';
+    if (gender === 'mujer') return 'DONNA';
     if (gender) return CATEGORY_LABELS[gender] || gender;
     if (category) return CATEGORY_LABELS[category] || category;
     if (collection) return COLLECTION_LABELS[collection] || collection;
@@ -219,8 +221,8 @@ export default function ShopPage() {
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-          <div>
-            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-obsidian">{getTitle()}</h1>
+          <div className="mx-auto">
+            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-[#B23A3A] mt-10 md:mt-12">{getTitle()}</h1>
             <p className="font-montserrat text-xs text-obsidian/50 mt-3 tracking-wide">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
