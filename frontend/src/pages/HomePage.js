@@ -80,7 +80,7 @@ const HeroSection = () => {
             alt="TAMBVRINI"
             className="max-w-full origin-center"
             style={{
-              width: 'clamp(260px, 78vw, 1250px)',
+              width: 'clamp(260px, 72vw, 1250px)',
               scale: logoScale,
               y: logoY,
               willChange: 'transform',
