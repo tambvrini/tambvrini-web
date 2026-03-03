@@ -61,10 +61,10 @@ const HeroSection = () => {
   const buttonsY = useTransform(scrollY, [0, 250], [0, 40]);
 
   return (
-    <section data-testid="hero-section" className="relative h-screen overflow-hidden">
+    <section data-testid="hero-section" className="relative w-full">
       {/* Background image */}
-      <div className="absolute inset-0">
-        <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-full object-cover brightness-105" />
+      <div className="relative w-full">
+        <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-auto object-contain object-center brightness-105" />
         <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
       </div>
 
@@ -154,12 +154,12 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
       className="group text-left block"
       aria-label={title}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-white/5 rounded-[28px]">
+      <div className="relative overflow-hidden bg-white/5 rounded-[28px]">
         <img
           src={bg}
           alt={title}
           loading="lazy"
-          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'hidden' : 'block'}`}
+          className={`w-full h-auto object-contain object-center ${hovered ? 'hidden' : 'block'}`}
         />
         <video
           ref={videoRef}
@@ -169,7 +169,7 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
           preload="metadata"
           poster={bg}
           src={videoSrc}
-          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'block' : 'hidden'}`}
+          className={`w-full h-auto max-w-full object-contain object-center ${hovered ? 'block' : 'hidden'}`}
         />
 
         {/* Keep luminosity consistent between image/video */}
@@ -322,7 +322,7 @@ const DropGridSection = () => {
                           src={EDITORIAL_POLOS_IMAGE}
                           alt="Colección Polos"
                           loading="lazy"
-                          className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                         />
                       </div>
                     </Link>
@@ -344,7 +344,7 @@ const DropGridSection = () => {
                           src={EDITORIAL_SUETERES_IMAGE}
                           alt="Colección Suéteres"
                           loading="lazy"
-                          className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                         />
                       </div>
                     </Link>
@@ -391,7 +391,7 @@ const DropGridSection = () => {
                       data-testid="campaign-divider-image"
                       src={DROP_CAMPAIGN_IMAGE}
                       alt="Editorial Casablanca TAMBVRINI"
-                      className="w-full h-auto"
+                      className="w-full h-auto object-contain object-center"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/10" />
@@ -419,12 +419,12 @@ const DropGridSection = () => {
 
               <div className="mb-8 md:mb-10">
                 <div className="w-[94%] max-w-[1760px] mx-auto">
-                  <div className="relative w-full aspect-video rounded-[28px] overflow-hidden">
+                  <div className="relative w-full rounded-[28px]">
                     <img
                       data-testid="editorial-hero-image"
                       src={EDITORIAL_HERO_IMAGE}
                       alt="Editorial TAMBVRINI"
-                      className="absolute inset-0 w-full h-full object-cover object-center"
+                      className="w-full h-auto object-contain object-center rounded-[28px]"
                       loading="lazy"
                     />
                     <Link
