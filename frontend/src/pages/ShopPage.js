@@ -218,10 +218,10 @@ export default function ShopPage() {
       )}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
-        <div className="relative flex flex-col md:flex-row justify-between md:justify-center items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
-          <div className="w-full text-center">
-            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.12em] text-[#B33A3A] font-normal">{getTitle()}</h1>
-            <p className="font-montserrat text-[11px] md:text-xs text-obsidian/40 mt-2 tracking-[0.12em]">
+        <div className="relative flex flex-col md:flex-row justify-center items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
+          <div className="w-full text-center md:px-56">
+            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.12em] text-editorial-red font-normal">{getTitle()}</h1>
+            <p className="font-montserrat text-xxs md:text-xs text-obsidian/40 mt-2 tracking-[0.12em]">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
           </div>

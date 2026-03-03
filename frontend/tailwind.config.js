@@ -4,12 +4,16 @@ module.exports = {
     content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
     theme: {
         extend: {
+            fontSize: {
+                xxs: ['0.6875rem', '1rem'],
+            },
             fontFamily: {
                 cinzel: ['Cinzel', 'serif'],
                 playfair: ['"Playfair Display"', 'serif'],
                 montserrat: ['Montserrat', 'sans-serif'],
             },
             colors: {
+                'editorial-red': '#B33A3A',
                 obsidian: '#111111',
                 marble: '#F5F2EA',
                 gold: '#C5A059',
