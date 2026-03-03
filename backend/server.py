@@ -34,6 +34,7 @@ CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
+MIN_ACCESS_TOKEN_LENGTH = 20
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -186,7 +187,7 @@ async def logout(request: Request, response: Response):
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
     access_token = data.access_token.strip()
-    if not access_token or len(access_token) < 20:
+    if not access_token or len(access_token) < MIN_ACCESS_TOKEN_LENGTH:
         raise HTTPException(400, "Token inválido")
     async with httpx.AsyncClient(timeout=10.0) as client:
         token_info_response = await client.post(

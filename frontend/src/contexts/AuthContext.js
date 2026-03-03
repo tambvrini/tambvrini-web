@@ -129,13 +129,13 @@ export const AuthProvider = ({ children }) => {
     }
     await loadGoogleIdentityScript();
     googleAuthPromiseRef.current = new Promise((resolve, reject) => {
+      const finalize = () => {
+        googleAuthPromiseRef.current = null;
+      };
       const tokenClient = window.google.accounts.oauth2.initTokenClient({
         client_id: GOOGLE_CLIENT_ID,
         scope: 'openid email profile',
         callback: async (response) => {
-          const finalize = () => {
-            googleAuthPromiseRef.current = null;
-          };
           if (response?.error || !response?.access_token) {
             const errorMessage = response?.error === 'access_denied'
               ? 'Autenticación con Google cancelada.'
@@ -161,7 +161,12 @@ export const AuthProvider = ({ children }) => {
           }
         }
       });
-      tokenClient.requestAccessToken({ prompt: 'select_account' });
+      try {
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
+      } catch (err) {
+        finalize();
+        reject(err);
+      }
     });
     return googleAuthPromiseRef.current;
   };
