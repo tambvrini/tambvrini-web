@@ -115,12 +115,16 @@ export default function ShopPage() {
     let hasAureus = false;
     let hasPatricius = false;
 
-    ordered.forEach((p, index) => {
-      if (p.product_id === 'camiseta-imperium') imperiumIndex = index;
-      if (p.product_id === 'americana-umbra') umbraIndex = index;
-      if (p.product_id === 'polo-aureus') hasAureus = true;
-      if (p.product_id === 'polo-patricius') hasPatricius = true;
-    });
+    for (let index = 0; index < ordered.length; index += 1) {
+      const productId = ordered[index].product_id;
+      if (productId === 'camiseta-imperium') imperiumIndex = index;
+      if (productId === 'americana-umbra') umbraIndex = index;
+      if (productId === 'polo-aureus') hasAureus = true;
+      if (productId === 'polo-patricius') hasPatricius = true;
+      if (imperiumIndex !== -1 && umbraIndex !== -1 && hasAureus && hasPatricius) {
+        break;
+      }
+    }
 
     if (poloAureus && !hasAureus && imperiumIndex !== -1) {
       ordered.splice(imperiumIndex, 0, poloAureus);
@@ -134,7 +138,7 @@ export default function ShopPage() {
     }
 
     return ordered;
-  }, [filteredProducts, isWomenView]);
+  }, [catalogProducts, filteredProducts, isWomenView]);
   const gridProducts = isWomenView ? mujerProducts : filteredProducts;
   const displayTotal = isMensView ? filteredProducts.length : isWomenView ? mujerProducts.length : total;
   const isCinematicView = isWomenView || isMensView;
