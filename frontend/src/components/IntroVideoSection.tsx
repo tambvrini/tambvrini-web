@@ -63,7 +63,7 @@ const IntroVideoSection = () => {
           muted
           playsInline
           preload="auto"
-          loop={hasStarted}
+          aria-label="Tambvrini intro video"
           onPause={handlePause}
         />
       </div>
