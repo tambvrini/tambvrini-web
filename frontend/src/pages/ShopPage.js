@@ -4,6 +4,7 @@ import { SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { queryProducts } from '@/data/productHelpers';
+import catalogProducts from '@/data/products';
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
@@ -102,22 +103,53 @@ export default function ShopPage() {
       ? products.filter((p) => p.product_id !== 'traje-monograma-tambvrini')
       : products;
 
-  const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
   const isMensView = gender === 'hombre';
   const isWomenView = gender === 'mujer';
+  const mujerProducts = useMemo(() => {
+    if (!isWomenView) return filteredProducts;
+    const poloAureus = catalogProducts.find((p) => p.product_id === 'polo-aureus');
+    const poloPatricius = catalogProducts.find((p) => p.product_id === 'polo-patricius');
+    let ordered = [...filteredProducts];
+
+    if (poloAureus && !ordered.some((p) => p.product_id === 'polo-aureus')) {
+      const imperiumIndex = ordered.findIndex((p) => p.product_id === 'camiseta-imperium');
+      if (imperiumIndex !== -1) {
+        ordered = [
+          ...ordered.slice(0, imperiumIndex),
+          poloAureus,
+          ...ordered.slice(imperiumIndex),
+        ];
+      }
+    }
+
+    if (poloPatricius && !ordered.some((p) => p.product_id === 'polo-patricius')) {
+      const umbraIndex = ordered.findIndex((p) => p.product_id === 'americana-umbra');
+      if (umbraIndex !== -1) {
+        ordered = [
+          ...ordered.slice(0, umbraIndex + 1),
+          poloPatricius,
+          ...ordered.slice(umbraIndex + 1),
+        ];
+      }
+    }
+
+    return ordered;
+  }, [filteredProducts, isWomenView]);
+  const gridProducts = isWomenView ? mujerProducts : filteredProducts;
+  const displayTotal = isMensView ? filteredProducts.length : isWomenView ? mujerProducts.length : total;
   const isCinematicView = isWomenView || isMensView;
   const mensFirst = isMensView ? filteredProducts.slice(0, 4) : filteredProducts;
   const mensRest = isMensView ? filteredProducts.slice(4) : [];
   const mujerImperiumIndex = isWomenView
-    ? filteredProducts.findIndex((p) => p.product_id === 'camiseta-imperium')
+    ? mujerProducts.findIndex((p) => p.product_id === 'camiseta-imperium')
     : -1;
   const mujerGridItems = isWomenView && mujerImperiumIndex !== -1
     ? [
-        ...filteredProducts.slice(0, mujerImperiumIndex + 1),
+        ...mujerProducts.slice(0, mujerImperiumIndex + 1),
         { type: 'editorial', id: 'mujer-editorial' },
-        ...filteredProducts.slice(mujerImperiumIndex + 1),
+        ...mujerProducts.slice(mujerImperiumIndex + 1),
       ]
-    : filteredProducts;
+    : gridProducts;
 
   useEffect(() => {
     if (!isCinematicView) {
@@ -288,7 +320,7 @@ export default function ShopPage() {
               </div>
             ))}
           </div>
-        ) : filteredProducts.length === 0 ? (
+        ) : gridProducts.length === 0 ? (
           <div className="text-center py-20">
             <p className="font-playfair text-xl text-obsidian/50">No se encontraron productos</p>
             <button onClick={clearFilters} className="mt-6 btn-luxury text-xs">Ver todos los productos</button>
