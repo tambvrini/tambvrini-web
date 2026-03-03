@@ -109,32 +109,24 @@ export default function ShopPage() {
     if (!isWomenView) return filteredProducts;
     const poloAureus = catalogProducts.find((p) => p.product_id === 'polo-aureus');
     const poloPatricius = catalogProducts.find((p) => p.product_id === 'polo-patricius');
-    let ordered = [...filteredProducts];
+    const ordered = [...filteredProducts];
 
     if (poloAureus && !ordered.some((p) => p.product_id === 'polo-aureus')) {
       const imperiumIndex = ordered.findIndex((p) => p.product_id === 'camiseta-imperium');
       if (imperiumIndex !== -1) {
-        ordered = [
-          ...ordered.slice(0, imperiumIndex),
-          poloAureus,
-          ...ordered.slice(imperiumIndex),
-        ];
+        ordered.splice(imperiumIndex, 0, poloAureus);
       }
     }
 
     if (poloPatricius && !ordered.some((p) => p.product_id === 'polo-patricius')) {
       const umbraIndex = ordered.findIndex((p) => p.product_id === 'americana-umbra');
       if (umbraIndex !== -1) {
-        ordered = [
-          ...ordered.slice(0, umbraIndex + 1),
-          poloPatricius,
-          ...ordered.slice(umbraIndex + 1),
-        ];
+        ordered.splice(umbraIndex + 1, 0, poloPatricius);
       }
     }
 
     return ordered;
-  }, [filteredProducts, isWomenView]);
+  }, [catalogProducts, filteredProducts, isWomenView]);
   const gridProducts = isWomenView ? mujerProducts : filteredProducts;
   const displayTotal = isMensView ? filteredProducts.length : isWomenView ? mujerProducts.length : total;
   const isCinematicView = isWomenView || isMensView;
