@@ -71,57 +71,65 @@ const HeroSection = () => {
 
       {/* Animated GIANT logo — fixed position, transforms from center to header */}
       <motion.div
-        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[52] pointer-events-none"
+        className="fixed inset-0 z-[52] pointer-events-none flex items-center justify-center"
         style={{ opacity: heroLogoOpacity }}
       >
-        <motion.img
-          src={LOGO_WHITE}
-          alt="TAMBVRINI"
-          className="w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px] origin-center"
-          style={{
-            scale: logoScale,
-            y: logoY,
-            willChange: 'transform',
-          }}
-        />
+        <div className="w-full max-w-[90%] mx-auto flex items-center justify-center">
+          <motion.img
+            src={LOGO_WHITE}
+            alt="TAMBVRINI"
+            className="max-w-full origin-center"
+            style={{
+              width: 'clamp(260px, 72vw, 1250px)',
+              scale: logoScale,
+              y: logoY,
+              willChange: 'transform',
+            }}
+          />
+        </div>
       </motion.div>
 
       {/* CTA Buttons at bottom of hero */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        className="absolute bottom-20 md:bottom-24 left-0 right-0 z-10 flex flex-col sm:flex-row justify-center gap-4 px-6"
-        style={{ opacity: buttonsOpacity, y: buttonsY }}
+      <div
+        className="absolute bottom-0 left-0 right-0 z-10 flex items-end justify-center px-6"
+        style={{ paddingBottom: 'clamp(3rem, 8vw, 6rem)' }}
       >
-        <Link
-          to="/tienda?gender=hombre"
-          data-testid="hero-shop-men"
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-          className="btn-luxury text-center"
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          className="flex w-full max-w-[90%] mx-auto flex-col items-center justify-center gap-4 sm:flex-row"
+          style={{ opacity: buttonsOpacity, y: buttonsY }}
         >
-          Comprar Hombre
-        </Link>
-        <Link
-          to="/tienda?gender=mujer"
-          data-testid="hero-shop-women"
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-          className="btn-luxury text-center"
-        >
-          Comprar Mujer
-        </Link>
-        <button
-          type="button"
-          data-testid="hero-explore"
-          onClick={() => {
-            const el = document.getElementById('drops');
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }}
-          className="btn-luxury btn-gold text-center"
-        >
-          Explorar
-        </button>
-      </motion.div>
+          <Link
+            to="/tienda?gender=hombre"
+            data-testid="hero-shop-men"
+            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+            className="btn-luxury text-center"
+          >
+            Comprar Hombre
+          </Link>
+          <Link
+            to="/tienda?gender=mujer"
+            data-testid="hero-shop-women"
+            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+            className="btn-luxury text-center"
+          >
+            Comprar Mujer
+          </Link>
+          <button
+            type="button"
+            data-testid="hero-explore"
+            onClick={() => {
+              const el = document.getElementById('drops');
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            className="btn-luxury btn-gold text-center"
+          >
+            Explorar
+          </button>
+        </motion.div>
+      </div>
     </section>
   );
 };
@@ -400,7 +408,8 @@ const DropGridSection = () => {
                       <div className="text-center max-w-[640px]">
                         <h2
                           data-testid="campaign-collection-title"
-                          className="font-playfair text-[34px] md:text-[56px] lg:text-[64px] tracking-[0.08em] text-[#F6F1E7]/90 font-light"
+                          className="font-playfair tracking-[0.08em] text-[#F6F1E7]/90 font-light"
+                          style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}
                         >
                           Sport Club 2026
                         </h2>

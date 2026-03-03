@@ -35,10 +35,10 @@
     border: 1px solid rgba(17, 17, 17, 0.18);
     background: transparent;
     color: #111111;
-    padding: 14px 32px;
+    padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px);
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
-    font-size: 11px;
+    font-size: clamp(0.65rem, 1vw, 0.75rem);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     cursor: pointer;
@@ -63,6 +63,10 @@
 }
 .btn-luxury:hover::before {
     left: 0;
+}
+
+.responsive-dialog-title {
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
 }
 
 .btn-gold {
