@@ -88,7 +88,7 @@ export default function ProductPage() {
           {/* Left: Gallery */}
           <div>
             <div className="img-zoom aspect-[3/4] mb-4 overflow-hidden bg-white/5">
-              {(product.images?.length > 0) ? (
+              {product.images?.[selectedImage] ? (
                 <img
                   data-testid="product-main-image"
                   src={product.images[selectedImage]}
