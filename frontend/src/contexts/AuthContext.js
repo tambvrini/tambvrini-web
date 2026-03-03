@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const AuthContext = createContext(null);
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -52,12 +53,26 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const exchangeSession = async (sessionId) => {
-    const res = await axios.post(`${API}/auth/session`, { session_id: sessionId }, { withCredentials: true });
-    setToken(res.data.token);
-    localStorage.setItem('auth_token', res.data.token);
-    setUser(res.data);
-    return res.data;
+  const loadGoogleIdentityScript = () => {
+    if (window.google?.accounts?.oauth2) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve, reject) => {
+      const existingScript = document.getElementById('google-identity-service');
+      if (existingScript) {
+        existingScript.addEventListener('load', resolve, { once: true });
+        existingScript.addEventListener('error', () => reject(new Error('Google Identity no disponible')), { once: true });
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.id = 'google-identity-service';
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Google Identity no disponible'));
+      document.head.appendChild(script);
+    });
   };
 
   const logout = async () => {
@@ -69,14 +84,41 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth_token');
   };
 
-  // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
-  const loginWithGoogle = () => {
-    const redirectUrl = window.location.origin + '/cuenta';
-    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+  const loginWithGoogle = async () => {
+    if (!GOOGLE_CLIENT_ID) {
+      throw new Error('Google Client ID no configurado');
+    }
+    await loadGoogleIdentityScript();
+    return new Promise((resolve, reject) => {
+      const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'openid email profile',
+        callback: async (response) => {
+          if (response?.error || !response?.access_token) {
+            reject(new Error(response?.error || 'Google OAuth falló'));
+            return;
+          }
+          try {
+            const res = await axios.post(
+              `${API}/auth/google`,
+              { access_token: response.access_token },
+              { withCredentials: true }
+            );
+            setToken(res.data.token);
+            localStorage.setItem('auth_token', res.data.token);
+            setUser(res.data.user);
+            resolve(res.data);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      });
+      tokenClient.requestAccessToken({ prompt: 'select_account' });
+    });
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, token, login, register, logout, loginWithGoogle, exchangeSession, getHeaders }}>
+    <AuthContext.Provider value={{ user, loading, token, login, register, logout, loginWithGoogle, getHeaders }}>
       {children}
     </AuthContext.Provider>
   );
