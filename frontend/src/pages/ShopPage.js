@@ -10,8 +10,8 @@ const CATEGORY_LABELS = {
   '2026': '2026',
   polos: 'Polos',
   sueteres: 'Suéteres',
-  hombre: 'Hombre',
-  mujer: 'Mujer',
+  hombre: 'UOMO',
+  mujer: 'DONNA',
   accesorios: 'Accesorios',
   marroquineria: 'Marroquinería',
   calzado: 'Calzado',
@@ -218,14 +218,14 @@ export default function ShopPage() {
       )}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-          <div>
-            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-obsidian">{getTitle()}</h1>
-            <p className="font-montserrat text-xs text-obsidian/50 mt-3 tracking-wide">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center mb-12 md:mb-16 gap-6">
+          <div className="flex flex-col items-center justify-center text-center mt-[100px] md:col-start-2 md:col-end-3">
+            <h1 data-testid="shop-title" className="font-cinzel font-normal text-4xl md:text-5xl lg:text-6xl tracking-[0.08em] text-[#C43A3A] uppercase text-center mb-6">{getTitle()}</h1>
+            <p className="font-montserrat text-xs md:text-sm text-[#9B9B9B] tracking-[0.05em] text-center">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 md:justify-self-end">
             {hasActiveFilters && (
               <button
                 data-testid="clear-filters-btn"
