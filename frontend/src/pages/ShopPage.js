@@ -218,14 +218,14 @@ export default function ShopPage() {
       )}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-          <div>
-            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-obsidian">{getTitle()}</h1>
-            <p className="font-montserrat text-xs text-obsidian/50 mt-3 tracking-wide">
+        <div className="relative flex flex-col md:flex-row justify-between md:justify-center items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
+          <div className="w-full text-center">
+            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.12em] text-[#B33A3A] font-normal">{getTitle()}</h1>
+            <p className="font-montserrat text-[11px] md:text-xs text-obsidian/40 mt-2 tracking-[0.12em]">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 md:absolute md:right-0 md:bottom-0">
             {hasActiveFilters && (
               <button
                 data-testid="clear-filters-btn"
