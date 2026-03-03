@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
+import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
@@ -472,7 +473,7 @@ export default function HomePage() {
     <div data-testid="home-page" className="noise-overlay editorial-noise bg-white">
       <HeroSection />
 
-      {/* (removed editorial divider) */}
+      <IntroVideoSection />
 
       <DropGridSection />
     </div>
