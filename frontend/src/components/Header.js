@@ -102,9 +102,9 @@ export const Header = () => {
   const shouldInvertLogo = (scrolled || !isHomePage) && !cinematicHidden;
 
   const logoSrc = LOGO_DARK;
-  const compactLogoHeight = 'clamp(2.4rem, 3vw, 3rem)';
-  const expandedLogoHeight = 'clamp(3.5rem, 6vw, 7rem)';
-  const logoHeight = isHomePage ? compactLogoHeight : (scrolled ? compactLogoHeight : expandedLogoHeight);
+  const defaultLogoHeight = 'clamp(2.4rem, 3vw, 3rem)';
+  const largeLogoHeight = 'clamp(3.5rem, 6vw, 7rem)';
+  const logoHeight = isHomePage ? defaultLogoHeight : (scrolled ? defaultLogoHeight : largeLogoHeight);
 
   return (
     <>
