@@ -260,6 +260,7 @@ const products = [
     price: 895.0,
     currency: "EUR",
     images: [],
+    thumbnail_image: "/thumbnails/polo-domus.jpg",
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
