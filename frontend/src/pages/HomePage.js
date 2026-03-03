@@ -8,6 +8,7 @@ import { queryProducts } from '@/data/productHelpers';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/hero-main.jpg";
+const HERO_ASPECT_RATIO_CLASS = "aspect-[43/24]";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
 const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
@@ -63,8 +64,8 @@ const HeroSection = () => {
   return (
     <section data-testid="hero-section" className="relative w-full">
       {/* Background image */}
-      <div className="relative w-full">
-        <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-auto object-contain object-center brightness-105" />
+      <div className={`relative w-full ${HERO_ASPECT_RATIO_CLASS}`}>
+        <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="block w-full h-auto object-contain object-center brightness-105" />
         <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
       </div>
 
@@ -154,7 +155,7 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
       className="group text-left block"
       aria-label={title}
     >
-      <div className="relative overflow-hidden bg-white/5 rounded-[28px]">
+      <div className="relative aspect-[4/5] overflow-hidden bg-white/5 rounded-[28px]">
         <img
           src={bg}
           alt={title}
@@ -419,12 +420,12 @@ const DropGridSection = () => {
 
               <div className="mb-8 md:mb-10">
                 <div className="w-[94%] max-w-[1760px] mx-auto">
-                  <div className="relative w-full rounded-[28px]">
+                  <div className="relative w-full aspect-video rounded-[28px] overflow-hidden">
                     <img
                       data-testid="editorial-hero-image"
                       src={EDITORIAL_HERO_IMAGE}
                       alt="Editorial TAMBVRINI"
-                      className="w-full h-auto object-contain object-center rounded-[28px]"
+                      className="w-full h-auto object-contain object-center"
                       loading="lazy"
                     />
                     <Link
