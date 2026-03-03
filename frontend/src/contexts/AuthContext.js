@@ -137,8 +137,11 @@ export const AuthProvider = ({ children }) => {
             googleAuthPromiseRef.current = null;
           };
           if (response?.error || !response?.access_token) {
+            const errorMessage = response?.error === 'access_denied'
+              ? 'Autenticación con Google cancelada.'
+              : 'No se pudo iniciar sesión con Google.';
             finalize();
-            reject(new Error(response?.error || 'Google OAuth falló'));
+            reject(new Error(errorMessage));
             return;
           }
           try {

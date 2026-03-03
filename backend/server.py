@@ -185,12 +185,13 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    if not data.access_token.strip():
+    access_token = data.access_token.strip()
+    if not access_token or len(access_token) < 20:
         raise HTTPException(400, "Token inválido")
     async with httpx.AsyncClient(timeout=10.0) as client:
         token_info_response = await client.post(
             "https://www.googleapis.com/oauth2/v3/tokeninfo",
-            data={"access_token": data.access_token}
+            data={"access_token": access_token}
         )
         if token_info_response.status_code != 200:
             raise HTTPException(401, "Token de Google inválido")
@@ -206,11 +207,11 @@ async def login_with_google(data: GoogleAuthRequest):
             raise HTTPException(401, "Token de Google expirado")
         profile_response = await client.get(
             "https://www.googleapis.com/oauth2/v3/userinfo",
-            headers={"Authorization": f"Bearer {data.access_token}"}
+            headers={"Authorization": f"Bearer {access_token}"}
         )
         if profile_response.status_code != 200:
             raise HTTPException(401, "No se pudo obtener el perfil de Google")
-    profile = profile_response.json()
+        profile = profile_response.json()
     email = profile.get("email")
     if not email:
         raise HTTPException(400, "Email no disponible")
@@ -235,9 +236,10 @@ async def login_with_google(data: GoogleAuthRequest):
         await db.users.insert_one(user_doc)
         user = user_doc
     else:
+        field_updates = {"google_sub": google_sub, "picture": picture, "name": name}
         updates = {
             field_name: value
-            for field_name, value in {"google_sub": google_sub, "picture": picture, "name": name}.items()
+            for field_name, value in field_updates.items()
             if value is not None and user.get(field_name) != value
         }
         if updates:
