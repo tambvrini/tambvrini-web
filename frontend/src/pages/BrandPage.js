@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { ASSETS } from '../../lib/assets';
 
 const LOGO_WHITE = ASSETS.logos.white;
-const MARBLE_IMAGE = ASSETS.brand.marble;
+const MARBLE_IMAGE = ASSETS.brand.marbleBackground;
 const TENNIS_IMAGE = ASSETS.brand.tennis;
 const CINEMATIC_VIDEO_URL = ASSETS.videos.brand.cinematic;
-const ROMAN_CARD_WHITE_URL = ASSETS.brand.romanCardWhite;
-const ROMAN_CARD_BLACK_URL = ASSETS.brand.romanCardBlack;
+const ROMAN_CARD_URL = ASSETS.brand.romanCard;
 
 const BrandCinematicSection = () => {
   const videoRef = useRef(null);
@@ -54,7 +53,7 @@ const BrandCinematicSection = () => {
           <div className="overflow-hidden rounded-[8px]">
             <img
               data-testid="brand-card-white"
-              src={ROMAN_CARD_WHITE_URL}
+              src={ROMAN_CARD_URL}
               alt="Tarjeta romana blanca"
               loading="lazy"
               className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
@@ -63,7 +62,7 @@ const BrandCinematicSection = () => {
           <div className="overflow-hidden rounded-[8px]">
             <img
               data-testid="brand-card-black"
-              src={ROMAN_CARD_BLACK_URL}
+              src={ROMAN_CARD_URL}
               alt="Tarjeta romana negra"
               loading="lazy"
               className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"

@@ -17,7 +17,7 @@ import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
 
 const LOGO_WHITE = ASSETS.logos.white;
-const LOGO_DARK = ASSETS.logos.dark;
+const LOGO_DARK = ASSETS.logos.white;
 
 const SCROLL_THRESHOLD = 500;
 

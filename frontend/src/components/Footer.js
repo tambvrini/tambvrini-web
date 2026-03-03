@@ -2,7 +2,6 @@ import { useI18n } from "../contexts/I18nContext";
 import { ASSETS } from '../../lib/assets';
 
 const LOGO_WHITE = ASSETS.logos.white;
-const ICON_WHITE = ASSETS.logos.iconWhite;
 
 export const Footer = ({ bgColor = '#FFFFFF' }) => {
   const { lang, setLang, t } = useI18n();
@@ -34,7 +33,7 @@ export const Footer = ({ bgColor = '#FFFFFF' }) => {
             {/* Brand (true center) */}
             <div className="flex items-start justify-center">
               <div className="flex flex-col items-center text-center">
-                <img src={ICON_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-100 invert" />
+                <img src={LOGO_WHITE} alt="TAMBVRINI" className="h-28 mb-6 opacity-100 invert" />
                 <p className="font-montserrat text-xs text-obsidian/50 leading-relaxed tracking-wide">
                   {t('tambvrini_by')}
                 </p>

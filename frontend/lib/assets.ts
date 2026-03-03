@@ -2,8 +2,6 @@
 export const ASSETS = {
   logos: {
     white: '/logo-letras-final-blanco.svg',
-    dark: '/logo-letras-final-blanco.svg',
-    iconWhite: '/logo-letras-final-blanco.svg',
   },
   hero: {
     main: '/hero-main.jpg',
@@ -251,10 +249,9 @@ export const ASSETS = {
     editorialSueteres: '/products/sueter-sylva/1.jpg',
   },
   brand: {
-    marble: '/hero-main.jpg',
+    marbleBackground: '/hero-main.jpg',
     tennis: '/products/polo-golf/2.jpg',
-    romanCardWhite: '/logo-letras-final-blanco.svg',
-    romanCardBlack: '/logo-letras-final-blanco.svg',
+    romanCard: '/logo-letras-final-blanco.svg',
   },
   shop: {
     mujerHero: '/products/camiseta-imperium/2.jpg',
