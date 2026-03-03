@@ -188,9 +188,9 @@ async def login_with_google(data: GoogleAuthRequest):
     if not data.access_token.strip():
         raise HTTPException(400, "Token inválido")
     async with httpx.AsyncClient(timeout=10.0) as client:
-        token_info_response = await client.get(
+        token_info_response = await client.post(
             "https://www.googleapis.com/oauth2/v3/tokeninfo",
-            params={"access_token": data.access_token}
+            data={"access_token": data.access_token}
         )
         if token_info_response.status_code != 200:
             raise HTTPException(401, "Token de Google inválido")
@@ -214,7 +214,7 @@ async def login_with_google(data: GoogleAuthRequest):
     email = profile.get("email")
     if not email:
         raise HTTPException(400, "Email no disponible")
-    if profile.get("email_verified") is False:
+    if profile.get("email_verified") is not True:
         raise HTTPException(401, "Email no verificado")
     google_sub = profile.get("sub")
     name = profile.get("name") or email
@@ -238,7 +238,7 @@ async def login_with_google(data: GoogleAuthRequest):
         updates = {
             field_name: value
             for field_name, value in {"google_sub": google_sub, "picture": picture, "name": name}.items()
-            if value and user.get(field_name) != value
+            if value is not None and user.get(field_name) != value
         }
         if updates:
             await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})

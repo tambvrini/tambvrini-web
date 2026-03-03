@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
   const googleAuthPromiseRef = useRef(null);
+  const googleScriptPromiseRef = useRef(null);
 
   const getHeaders = useCallback(() => {
     if (token) return { Authorization: `Bearer ${token}` };
@@ -58,21 +59,34 @@ export const AuthProvider = ({ children }) => {
     if (window.google?.accounts?.oauth2) {
       return Promise.resolve();
     }
-    return new Promise((resolve, reject) => {
+    if (googleScriptPromiseRef.current) {
+      return googleScriptPromiseRef.current;
+    }
+    googleScriptPromiseRef.current = new Promise((resolve, reject) => {
       const existingScript = document.getElementById('google-identity-service');
       if (existingScript) {
         if (existingScript.dataset.loaded === 'true' && window.google?.accounts?.oauth2) {
+          googleScriptPromiseRef.current = null;
           resolve();
           return;
         }
         if (existingScript.dataset.error === 'true') {
+          googleScriptPromiseRef.current = null;
           reject(new Error('No se pudo cargar Google Identity Services.'));
           return;
         }
-        existingScript.addEventListener('load', resolve, { once: true });
+        existingScript.addEventListener('load', () => {
+          existingScript.dataset.loaded = 'true';
+          googleScriptPromiseRef.current = null;
+          resolve();
+        }, { once: true });
         existingScript.addEventListener(
           'error',
-          () => reject(new Error('No se pudo cargar Google Identity Services.')),
+          () => {
+            existingScript.dataset.error = 'true';
+            googleScriptPromiseRef.current = null;
+            reject(new Error('No se pudo cargar Google Identity Services.'));
+          },
           { once: true }
         );
         return;
@@ -84,14 +98,17 @@ export const AuthProvider = ({ children }) => {
       script.id = 'google-identity-service';
       script.onload = () => {
         script.dataset.loaded = 'true';
+        googleScriptPromiseRef.current = null;
         resolve();
       };
       script.onerror = () => {
         script.dataset.error = 'true';
+        googleScriptPromiseRef.current = null;
         reject(new Error('No se pudo cargar Google Identity Services.'));
       };
       document.head.appendChild(script);
     });
+    return googleScriptPromiseRef.current;
   };
 
   const logout = async () => {
