@@ -99,7 +99,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
               playsInline
               preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
               poster={`/thumbnails/${product.slug}.jpg`}
-              className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 w-full h-auto max-h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
               src={
                 isTraje
                   ? TRAJE_HOVER_VIDEO_URL

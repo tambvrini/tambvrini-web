@@ -78,8 +78,8 @@ export default function BrandPage() {
   return (
     <div data-testid="brand-page" className="min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <img src={MARBLE_IMAGE} alt="Marble" className="w-full h-auto object-contain object-center" />
+      <section className="relative overflow-hidden min-h-[420px] flex items-center justify-center">
+        <img src={MARBLE_IMAGE} alt="Marble" className="w-full h-auto max-h-full object-contain object-center" />
         <div className="absolute inset-0 bg-black/20" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6" />
       </section>
