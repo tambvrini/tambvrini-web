@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import IntroVideoSection from '../components/IntroVideoSection.tsx';
+import IntroVideoSection from '../components/IntroVideoSection';
 import { queryProducts } from '@/data/productHelpers';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
