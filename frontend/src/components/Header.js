@@ -120,7 +120,7 @@ export const Header = () => {
           {/* Left: Menu */}
           <div
             className="flex items-center gap-5"
-            style={{ opacity: cinematicHidden ? 0.7 : 1, width: 'clamp(7rem, 12vw, 10rem)' }}
+            style={{ opacity: cinematicHidden ? 0.7 : 1, width: 'clamp(6rem, 12vw, 10rem)' }}
           >
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
@@ -190,7 +190,7 @@ export const Header = () => {
           {/* Right: Account + Wishlist + Cart */}
           <div
             className="flex items-center justify-end gap-5"
-            style={{ opacity: cinematicHidden ? 0.7 : 1, width: 'clamp(7rem, 12vw, 10rem)' }}
+            style={{ opacity: cinematicHidden ? 0.7 : 1, width: 'clamp(6rem, 12vw, 10rem)' }}
           >
             <Link
               to="/cuenta"

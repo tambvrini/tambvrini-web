@@ -91,7 +91,7 @@ const HeroSection = () => {
 
       {/* CTA Buttons at bottom of hero */}
       <div
-        className="absolute inset-0 z-10 flex items-end justify-center px-6"
+        className="absolute bottom-0 left-0 right-0 z-10 flex items-end justify-center px-6"
         style={{ paddingBottom: 'clamp(3rem, 8vw, 6rem)' }}
       >
         <motion.div
