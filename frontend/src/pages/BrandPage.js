@@ -23,11 +23,11 @@ const BrandCinematicSection = () => {
     <section data-testid="brand-cinematic-section" className="pt-16 md:pt-20 pb-6 md:pb-8 bg-white">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <div className="overflow-hidden rounded-[12px]">
-          <div className="relative w-full aspect-video bg-white/5">
+          <div className="relative w-full aspect-video bg-white/5 flex items-center justify-center">
             <video
               ref={videoRef}
               data-testid="brand-cinematic-video"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="w-full h-auto max-h-full object-contain object-center"
               autoPlay
               muted
               loop
@@ -56,7 +56,7 @@ const BrandCinematicSection = () => {
               src={ROMAN_CARD_WHITE_URL}
               alt="Tarjeta romana blanca"
               loading="lazy"
-              className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
+              className="w-full h-auto max-h-[184px] object-contain object-center transform transition-transform duration-300 ease-out hover:scale-105"
             />
           </div>
           <div className="overflow-hidden rounded-[8px]">
@@ -65,7 +65,7 @@ const BrandCinematicSection = () => {
               src={ROMAN_CARD_BLACK_URL}
               alt="Tarjeta romana negra"
               loading="lazy"
-              className="h-[184px] w-auto object-contain transform transition-transform duration-300 ease-out hover:scale-105"
+              className="w-full h-auto max-h-[184px] object-contain object-center transform transition-transform duration-300 ease-out hover:scale-105"
             />
           </div>
         </div>
@@ -78,8 +78,8 @@ export default function BrandPage() {
   return (
     <div data-testid="brand-page" className="min-h-screen">
       {/* Hero */}
-      <section className="relative h-[70vh] overflow-hidden">
-        <img src={MARBLE_IMAGE} alt="Marble" className="w-full h-full object-cover" />
+      <section className="relative overflow-hidden">
+        <img src={MARBLE_IMAGE} alt="Marble" className="w-full h-auto object-contain object-center" />
         <div className="absolute inset-0 bg-black/20" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6" />
       </section>
@@ -119,8 +119,8 @@ export default function BrandPage() {
               Desde Barcelona, seleccionamos materiales de la más alta calidad para crear prendas que duran generaciones.
             </p>
           </div>
-          <div className="img-zoom aspect-square lg:aspect-auto overflow-hidden">
-            <img src={TENNIS_IMAGE} alt="Craftsmanship" className="w-full h-full object-cover" />
+          <div className="img-zoom aspect-square lg:aspect-auto overflow-hidden flex items-center justify-center">
+            <img src={TENNIS_IMAGE} alt="Craftsmanship" className="w-full h-auto max-h-full object-contain object-center" />
           </div>
         </div>
       </section>
