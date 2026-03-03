@@ -1,3 +1,4 @@
+// trigger vercel deploy
 /**
  * TAMBVRINI — Real product catalog restored from the Emergent export.
  *
