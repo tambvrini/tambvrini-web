@@ -34,7 +34,7 @@ CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
-MIN_ACCESS_TOKEN_LENGTH = 20
+MIN_GOOGLE_TOKEN_TTL_SECONDS = 60
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -187,7 +187,7 @@ async def logout(request: Request, response: Response):
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
     access_token = data.access_token.strip()
-    if not access_token or len(access_token) < MIN_ACCESS_TOKEN_LENGTH:
+    if not access_token:
         raise HTTPException(400, "Token inválido")
     async with httpx.AsyncClient(timeout=10.0) as client:
         token_info_response = await client.post(
@@ -204,7 +204,7 @@ async def login_with_google(data: GoogleAuthRequest):
             expires_in = int(token_info.get("expires_in", 0))
         except (TypeError, ValueError):
             expires_in = 0
-        if expires_in <= 0:
+        if expires_in < MIN_GOOGLE_TOKEN_TTL_SECONDS:
             raise HTTPException(401, "Token de Google expirado")
         profile_response = await client.get(
             "https://www.googleapis.com/oauth2/v3/userinfo",

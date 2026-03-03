@@ -4,6 +4,7 @@ import axios from 'axios';
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const AuthContext = createContext(null);
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const GOOGLE_SCRIPT_ERROR_MESSAGE = 'No se pudo cargar Google Identity Services.';
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -72,7 +73,7 @@ export const AuthProvider = ({ children }) => {
         }
         if (existingScript.dataset.error === 'true') {
           googleScriptPromiseRef.current = null;
-          reject(new Error('No se pudo cargar Google Identity Services.'));
+          reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
           return;
         }
         existingScript.addEventListener('load', () => {
@@ -85,7 +86,7 @@ export const AuthProvider = ({ children }) => {
           () => {
             existingScript.dataset.error = 'true';
             googleScriptPromiseRef.current = null;
-            reject(new Error('No se pudo cargar Google Identity Services.'));
+            reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
           },
           { once: true }
         );
@@ -104,7 +105,7 @@ export const AuthProvider = ({ children }) => {
       script.onerror = () => {
         script.dataset.error = 'true';
         googleScriptPromiseRef.current = null;
-        reject(new Error('No se pudo cargar Google Identity Services.'));
+        reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
       };
       document.head.appendChild(script);
     });
@@ -139,7 +140,9 @@ export const AuthProvider = ({ children }) => {
           if (response?.error || !response?.access_token) {
             const errorMessage = response?.error === 'access_denied'
               ? 'Autenticación con Google cancelada.'
-              : 'No se pudo iniciar sesión con Google.';
+              : response?.error
+                ? `No se pudo iniciar sesión con Google (${response.error}).`
+                : 'No se pudo iniciar sesión con Google.';
             finalize();
             reject(new Error(errorMessage));
             return;
