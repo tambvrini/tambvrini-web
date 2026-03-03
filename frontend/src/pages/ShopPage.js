@@ -23,6 +23,11 @@ const COLLECTION_LABELS = {
   limited: 'Piezas Limitadas',
 };
 
+const HEADER_LABEL_OVERRIDES = {
+  hombre: 'UOMO',
+  mujer: 'DONNA',
+};
+
 const MUJER_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/udlexuwa_hf_20260222_200211_c5c76655-5b93-4052-adc1-45fea5a9cdc5.jpg";
 const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/b92rzs04_ANUNCIO%20TAMBVRINI%203.mov";
 const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/nqiyik78_video%20final%20tambvrini%202.mov";
@@ -79,8 +84,8 @@ export default function ShopPage() {
 
   const getTitle = () => {
     if (search) return `Resultados: "${search}"`;
-    if (gender) return CATEGORY_LABELS[gender] || gender;
-    if (category) return CATEGORY_LABELS[category] || category;
+    if (gender) return HEADER_LABEL_OVERRIDES[gender] || CATEGORY_LABELS[gender] || gender;
+    if (category) return HEADER_LABEL_OVERRIDES[category] || CATEGORY_LABELS[category] || category;
     if (collection) return COLLECTION_LABELS[collection] || collection;
     return 'Tienda';
   };
@@ -218,8 +223,8 @@ export default function ShopPage() {
       )}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
-        <div className="relative flex flex-col md:flex-row justify-center items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
-          <div className="w-full text-center md:px-56">
+        <div className="relative flex flex-col md:flex-row justify-start items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
+          <div className="w-full text-left">
             <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.12em] text-editorial-red font-normal">{getTitle()}</h1>
             <p className="font-montserrat text-xxs md:text-xs text-obsidian/40 mt-2 tracking-[0.12em]">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
