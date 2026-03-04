@@ -13,6 +13,7 @@ export default function ProductPage() {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [activeImage, setActiveImage] = useState(0);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
@@ -29,6 +30,7 @@ export default function ProductPage() {
         setProduct(data);
         setRelated(data?.related_products || []);
         setSelectedImage(0);
+        setActiveImage(0);
         setIsImageLoaded(false);
         setSelectedSize('');
         setSelectedColor('');
@@ -102,17 +104,34 @@ export default function ProductPage() {
           {/* Left: Gallery */}
           <div>
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="img-zoom aspect-[3/4] md:flex-1 overflow-hidden bg-white/5 flex items-center justify-center">
+              <div className="img-zoom aspect-[3/4] md:flex-1 overflow-hidden bg-white/5 flex items-center justify-center relative">
                 {(galleryImages.length > 0) ? (
-                  <img
-                    data-testid="product-main-image"
-                    src={galleryImages[selectedImage]}
-                    alt={product.name}
-                    onLoad={() => setIsImageLoaded(true)}
-                    className={`w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
-                      isImageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
+                  <>
+                    <img
+                      data-testid="product-main-image"
+                      src={galleryImages[activeImage]}
+                      alt={product.name}
+                      className={`w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
+                        selectedImage !== activeImage && isImageLoaded ? 'opacity-0' : 'opacity-100'
+                      }`}
+                    />
+                    {selectedImage !== activeImage && (
+                      <img
+                        src={galleryImages[selectedImage]}
+                        alt={product.name}
+                        onLoad={() => setIsImageLoaded(true)}
+                        onTransitionEnd={() => {
+                          if (isImageLoaded) {
+                            setActiveImage(selectedImage);
+                            setIsImageLoaded(false);
+                          }
+                        }}
+                        className={`absolute inset-0 w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
+                          isImageLoaded ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      />
+                    )}
+                  </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
                     <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
@@ -126,6 +145,7 @@ export default function ProductPage() {
                     key={i}
                     data-testid={`product-thumb-${i}`}
                     onClick={() => {
+                      if (i === selectedImage) return;
                       setIsImageLoaded(false);
                       setSelectedImage(i);
                     }}
