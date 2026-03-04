@@ -238,9 +238,9 @@ export default function ProductPage() {
                               if (i === selectedImage) return;
                               setIsImageLoaded(false);
                               setSelectedImage(i);
-                              const shouldSyncActiveImage = media.type === 'model'
+                              const shouldSyncActiveImageForModelToggle = media.type === 'model'
                                 || galleryMedia[activeImage]?.type === 'model';
-                              if (shouldSyncActiveImage) {
+                              if (shouldSyncActiveImageForModelToggle) {
                                 setActiveImage(i);
                               }
                             }}
