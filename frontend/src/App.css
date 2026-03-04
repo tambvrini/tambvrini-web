@@ -162,6 +162,21 @@ input[type="password"] {
     z-index: 2;
 }
 
+.umbra-background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.umbra-gallery {
+    position: relative;
+    z-index: 2;
+}
+
 body.umbra-mode {
     background-color: #000000;
     color: #cfcfcf;
@@ -193,18 +208,18 @@ body.umbra-mode .umbra-page [class*="bg-black/5"] {
 .umbra-atmosphere,
 .umbra-particles,
 .umbra-vignette {
-    position: fixed;
+    position: absolute;
     inset: 0;
     pointer-events: none;
     opacity: 0;
     transition: opacity 1s ease;
-    z-index: 1;
+    z-index: 0;
 }
 
 .umbra-ink {
-    position: fixed;
+    position: absolute;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
     width: 45vmin;
     height: 45vmin;
     top: var(--umbra-focus-y, 50%);
@@ -275,6 +290,16 @@ body.umbra-mode .umbra-page [class*="bg-black/5"] {
 .umbra-product-frame img {
     position: relative;
     z-index: 1;
+}
+
+.umbra-page .img-zoom img,
+.umbra-page .img-zoom:hover img {
+    transform: none;
+}
+
+.umbra-page .umbra-zoom img {
+    animation: none;
+    transform: none;
 }
 
 .umbra-glow::after {
