@@ -200,6 +200,7 @@ const DropGridSection = () => {
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
   const [limitedBannerVisible, setLimitedBannerVisible] = useState(false);
+  const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
 
@@ -213,11 +214,21 @@ const DropGridSection = () => {
 
   useEffect(() => {
     const element = limitedBannerRef.current;
-    if (!element) return;
+    if (!element || typeof IntersectionObserver === 'undefined') {
+      setLimitedBannerVisible(true);
+      return;
+    }
+
+    setLimitedBannerAnimated(true);
+
+    const fallbackTimer = window.setTimeout(() => {
+      setLimitedBannerVisible(true);
+    }, 2000);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          window.clearTimeout(fallbackTimer);
           setLimitedBannerVisible(true);
           observer.unobserve(entry.target);
         }
@@ -227,7 +238,10 @@ const DropGridSection = () => {
 
     observer.observe(element);
 
-    return () => observer.disconnect();
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      observer.disconnect();
+    };
   }, []);
 
 
@@ -449,12 +463,7 @@ const DropGridSection = () => {
                   to="/limited-editions"
                   data-testid="limited-editions-banner-link"
                   ref={limitedBannerRef}
-                  className="limited-editions-banner block w-full"
-                  style={{
-                    opacity: limitedBannerVisible ? 1 : 0,
-                    transform: limitedBannerVisible ? 'translateY(0)' : 'translateY(40px)',
-                    transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-                  }}
+                  className={`limited-editions-banner block w-full relative z-[1]${limitedBannerAnimated ? ' limited-editions-banner--fade-init' : ''}${limitedBannerVisible ? ' limited-editions-banner--fade-visible' : ''}`}
                 >
                   <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                     <div className="w-full flex justify-center">

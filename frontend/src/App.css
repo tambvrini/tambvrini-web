@@ -675,6 +675,22 @@ body.limited-editions-mode [data-testid="main-header"] [data-testid="header-logo
     opacity: 1;
 }
 
+.limited-editions-banner {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.limited-editions-banner--fade-init {
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.limited-editions-banner--fade-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
 .limited-editions-banner-image {
     transition: transform 400ms ease;
 }
