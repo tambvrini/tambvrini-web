@@ -134,7 +134,9 @@ export default function ProductPage() {
   const fallbackPoster = product.thumbnail_image
     || galleryMedia.find((media) => media.type === 'image')?.src
     || '';
-  const modelPoster = product.model_poster || fallbackPoster;
+  const modelPoster = product.model_poster
+    || fallbackPoster
+    || '/logo-letras-final-blanco.svg';
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
   const activeMedia = galleryMedia[activeImage];
