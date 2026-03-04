@@ -17,6 +17,7 @@ const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
 const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
+const LIMITED_EDITIONS_BANNER_IMAGE = "/products/americana-umbra/americana-umbra-look-04.jpg";
 const EDITORIAL_POLOS_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/v4zs6ugs_hf_20260222_181550_e58e110a-c888-46f9-818a-7daac73fbd28.jpeg";
 const EDITORIAL_SUETERES_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/lks43ws5_hf_20260222_183135_094a5ad6-f6e8-407f-8fd4-6dceef064698.jpeg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
@@ -420,6 +421,33 @@ const DropGridSection = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="mb-8 md:mb-10">
+                <Link
+                  to="/limited-editions"
+                  data-testid="limited-editions-banner-link"
+                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+                  className="group block w-full"
+                >
+                  <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                    <div className="w-full flex justify-center">
+                      <div className="relative w-full">
+                        <img
+                          data-testid="limited-editions-banner-image"
+                          src={LIMITED_EDITIONS_BANNER_IMAGE}
+                          alt="Limited Editions"
+                          className="w-full h-auto object-contain object-center transition-transform group-hover:scale-[1.02]"
+                          style={{ transition: 'transform 400ms ease' }}
+                          loading="lazy"
+                        />
+                        <span className="pointer-events-none absolute bottom-10 left-10 rounded-full bg-white/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.28em] uppercase text-white/85">
+                          LIMITED EDITIONS
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
               </div>
 
               <div className="mb-8 md:mb-10">
