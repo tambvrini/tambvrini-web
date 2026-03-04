@@ -686,8 +686,6 @@ body.limited-editions-mode [data-testid="main-header"] [data-testid="header-logo
 }
 
 .limited-editions-banner--fade-visible {
-    opacity: 1;
-    transform: translateY(0);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 

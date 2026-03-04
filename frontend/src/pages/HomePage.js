@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -204,18 +204,22 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
-  const limitedBannerClassName = [
-    'limited-editions-banner',
-    'limited-editions-banner--fade-default',
-    'block',
-    'w-full',
-    'relative',
-    'z-[1]',
-    limitedBannerAnimated ? 'limited-editions-banner--fade-init' : '',
-    limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const limitedBannerClassName = useMemo(
+    () =>
+      [
+        'limited-editions-banner',
+        'limited-editions-banner--fade-default',
+        'block',
+        'w-full',
+        'relative',
+        'z-[1]',
+        limitedBannerAnimated && !limitedBannerVisible ? 'limited-editions-banner--fade-init' : '',
+        limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+    [limitedBannerAnimated, limitedBannerVisible]
+  );
 
   const handleCollectionClick = () => {
     if (showCollectionTransition) return;
