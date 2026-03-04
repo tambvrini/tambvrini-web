@@ -204,21 +204,21 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
+  const limitedBannerFadeInit = limitedBannerAnimated && !limitedBannerVisible;
   const limitedBannerClassName = useMemo(
     () =>
       [
         'limited-editions-banner',
-        'limited-editions-banner--fade-default',
         'block',
         'w-full',
         'relative',
         'z-[1]',
-        limitedBannerAnimated && !limitedBannerVisible ? 'limited-editions-banner--fade-init' : '',
+        limitedBannerFadeInit ? 'limited-editions-banner--fade-init' : '',
         limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
       ]
         .filter(Boolean)
         .join(' '),
-    [limitedBannerAnimated, limitedBannerVisible]
+    [limitedBannerFadeInit, limitedBannerVisible]
   );
 
   const handleCollectionClick = () => {
