@@ -12,7 +12,7 @@ export default function ProductPage() {
   const isUmbraProduct = productId === 'americana-umbra';
   const isIgnatiusProduct = productId === 'sueter-ignatius';
   const umbraTransitionDelay = 800;
-  const ignatiusTransitionDelay = 120;
+  const ignatiusTransitionDelay = 300;
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +79,7 @@ export default function ProductPage() {
       window.clearTimeout(timer);
       document.body.classList.remove('ignatius-mode');
     };
-  }, [isIgnatiusProduct, ignatiusTransitionDelay]);
+  }, [isIgnatiusProduct]);
 
   const handleAddToCart = () => {
     if (product.is_sold_out) return;
