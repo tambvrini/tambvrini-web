@@ -136,11 +136,13 @@ export default function ProductPage() {
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
   const activeMedia = galleryMedia[activeImage];
-  const activeImageSrc = activeMedia?.type === 'image'
-    ? activeMedia.src
-    : (selectedMedia?.type === 'image' ? selectedMedia.src : '');
+  const selectedImageSrc = selectedMedia?.type === 'image' ? selectedMedia.src : '';
+  const activeImageSrc = activeMedia?.type === 'image' ? activeMedia.src : selectedImageSrc;
   const shouldFade = selectedImage !== activeImage
     && isImageLoaded
+    && activeMedia?.type === 'image'
+    && selectedMedia?.type === 'image';
+  const shouldShowTransitionImage = selectedImage !== activeImage
     && activeMedia?.type === 'image'
     && selectedMedia?.type === 'image';
 
@@ -202,7 +204,7 @@ export default function ProductPage() {
                                 shouldFade ? 'opacity-0' : 'opacity-100'
                               }`}
                             />
-                            {selectedImage !== activeImage && activeMedia?.type === 'image' && (
+                            {shouldShowTransitionImage && (
                               <img
                                 src={selectedMedia.src}
                                 alt={product.name}
@@ -236,7 +238,9 @@ export default function ProductPage() {
                               if (i === selectedImage) return;
                               setIsImageLoaded(false);
                               setSelectedImage(i);
-                              if (media.type === 'model' || galleryMedia[activeImage]?.type === 'model') {
+                              const shouldSyncActiveImage = media.type === 'model'
+                                || galleryMedia[activeImage]?.type === 'model';
+                              if (shouldSyncActiveImage) {
                                 setActiveImage(i);
                               }
                             }}
