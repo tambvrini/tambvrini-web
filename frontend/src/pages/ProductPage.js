@@ -124,10 +124,21 @@ export default function ProductPage() {
       ]
     : (product.images || []);
 
-  const hasModelViewer = Boolean(product.model_url);
-  const modelPoster = product.model_poster || product.thumbnail_image;
+  const galleryMedia = isUmbraProduct
+    ? [
+        { type: 'model', src: product.model_url || '/models/umbra.glb' },
+        ...galleryImages.map((img) => ({ type: 'image', src: img })),
+      ]
+    : galleryImages.map((img) => ({ type: 'image', src: img }));
+  const hasModelViewer = Boolean(product.model_url) && !isUmbraProduct;
+  const modelPoster = product.model_poster || product.thumbnail_image || galleryImages[0];
   const inWishlist = isInWishlist(product.product_id);
-  const shouldFade = selectedImage !== activeImage && isImageLoaded;
+  const selectedMedia = galleryMedia[selectedImage];
+  const activeMedia = galleryMedia[activeImage];
+  const shouldFade = selectedImage !== activeImage
+    && isImageLoaded
+    && activeMedia?.type === 'image'
+    && selectedMedia?.type === 'image';
 
   return (
     <div
@@ -165,63 +176,80 @@ export default function ProductPage() {
                     className="product-model-viewer"
                   />
                 </div>
-              ) : (
-                <>
-                  <div className="img-zoom product-main-image md:flex-1 bg-white/5">
-                    {(galleryImages.length > 0) ? (
-                      <>
-                        <img
-                          data-testid="product-main-image"
-                          src={galleryImages[activeImage]}
-                          alt={product.name}
-                          className={`transition-opacity duration-500 ease-out ${
-                            shouldFade ? 'opacity-0' : 'opacity-100'
-                          }`}
-                        />
-                        {selectedImage !== activeImage && (
-                          <img
-                            src={galleryImages[selectedImage]}
-                            alt={product.name}
-                            onLoad={() => setIsImageLoaded(true)}
-                            onTransitionEnd={() => {
-                              if (isImageLoaded) {
-                                setActiveImage(selectedImage);
-                                setIsImageLoaded(false);
+                ) : (
+                  <>
+                    <div className="img-zoom product-main-image md:flex-1 bg-white/5">
+                      {(galleryMedia.length > 0) ? (
+                        selectedMedia?.type === 'model' ? (
+                          <ModelViewer
+                            data-testid="product-model-viewer"
+                            src={selectedMedia.src}
+                            alt={`Vista 3D de ${product.name}`}
+                            poster={modelPoster}
+                            className="product-model-viewer"
+                          />
+                        ) : (
+                          <>
+                            <img
+                              data-testid="product-main-image"
+                              src={activeMedia?.type === 'image' ? activeMedia.src : selectedMedia?.src}
+                              alt={product.name}
+                              className={`transition-opacity duration-500 ease-out ${
+                                shouldFade ? 'opacity-0' : 'opacity-100'
+                              }`}
+                            />
+                            {selectedImage !== activeImage && activeMedia?.type === 'image' && selectedMedia?.type === 'image' && (
+                              <img
+                                src={selectedMedia.src}
+                                alt={product.name}
+                                onLoad={() => setIsImageLoaded(true)}
+                                onTransitionEnd={() => {
+                                  if (isImageLoaded) {
+                                    setActiveImage(selectedImage);
+                                    setIsImageLoaded(false);
+                                  }
+                                }}
+                                className={`absolute inset-0 transition-opacity duration-500 ease-out ${
+                                  shouldFade ? 'opacity-100' : 'opacity-0'
+                                }`}
+                              />
+                            )}
+                          </>
+                        )
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+                          <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+                        </div>
+                      )}
+                    </div>
+                    {galleryMedia.length > 0 && (
+                      <div className="flex flex-col gap-3">
+                        {galleryMedia.map((media, i) => (
+                          <button
+                            key={i}
+                            data-testid={`product-thumb-${i}`}
+                            onClick={() => {
+                              if (i === selectedImage) return;
+                              setIsImageLoaded(false);
+                              setSelectedImage(i);
+                              if (media.type === 'image' && galleryMedia[activeImage]?.type !== 'image') {
+                                setActiveImage(i);
                               }
                             }}
-                            className={`absolute inset-0 transition-opacity duration-500 ease-out ${
-                              shouldFade ? 'opacity-100' : 'opacity-0'
+                            className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
+                              selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
                             }`}
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
-                        <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+                          >
+                            <img
+                              src={media.type === 'model' ? (modelPoster || galleryImages[0]) : media.src}
+                              alt=""
+                              className="w-full h-auto max-h-full object-contain object-center"
+                            />
+                          </button>
+                        ))}
                       </div>
                     )}
-                  </div>
-                  {galleryImages.length > 0 && (
-                    <div className="flex flex-col gap-3">
-                      {galleryImages.map((img, i) => (
-                        <button
-                          key={i}
-                          data-testid={`product-thumb-${i}`}
-                          onClick={() => {
-                            if (i === selectedImage) return;
-                            setIsImageLoaded(false);
-                            setSelectedImage(i);
-                          }}
-                          className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
-                            selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
-                          }`}
-                        >
-                          <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </>
+                  </>
               )}
             </div>
           </div>

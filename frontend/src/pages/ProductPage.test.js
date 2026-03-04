@@ -24,10 +24,12 @@ jest.mock('../data/productHelpers', () => ({
   getProductById: jest.fn(),
 }));
 
+let mockProductId = 'sueter-ignatius';
+
 jest.mock(
   'react-router-dom',
   () => ({
-    useParams: () => ({ productId: 'sueter-ignatius' }),
+    useParams: () => ({ productId: mockProductId }),
     Link: ({ children, ...props }) => <a {...props}>{children}</a>,
   }),
   { virtual: true }
@@ -50,6 +52,25 @@ const baseProduct = {
   related_products: [],
 };
 
+const umbraProduct = {
+  product_id: 'americana-umbra',
+  name: 'Americana UMBRA',
+  description: 'Descripción',
+  price: 150,
+  currency: 'EUR',
+  images: [],
+  model_url: '/models/umbra.glb',
+  model_poster: '/thumbnails/americana-umbra.jpg',
+  category: ['sastrería', 'apparel'],
+  gender: 'mujer',
+  sizes: ['S', 'M', 'L', 'XL'],
+  colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  composition: 'Lana premium',
+  care: 'Solo limpieza en seco',
+  is_sold_out: false,
+  related_products: [],
+};
+
 const renderProductPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -67,6 +88,7 @@ describe('ProductPage', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     window.scrollTo = jest.fn();
+    mockProductId = 'sueter-ignatius';
     getProductById.mockReset();
   });
 
@@ -123,6 +145,38 @@ describe('ProductPage', () => {
 
     expect(colorButton).not.toBeNull();
     expect(colorButton.textContent).toContain('Magma');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('toggles between the UMBRA model and images in the gallery', async () => {
+    mockProductId = 'americana-umbra';
+    getProductById.mockReturnValue(umbraProduct);
+
+    const { container, root } = await renderProductPage();
+    const modelViewer = container.querySelector('[data-testid="product-model-viewer"]');
+    const firstImageThumb = container.querySelector('[data-testid="product-thumb-1"]');
+
+    expect(modelViewer).not.toBeNull();
+    expect(firstImageThumb).not.toBeNull();
+
+    act(() => {
+      firstImageThumb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(container.querySelector('[data-testid="product-main-image"]')).not.toBeNull();
+    expect(container.querySelector('[data-testid="product-model-viewer"]')).toBeNull();
+
+    const modelThumb = container.querySelector('[data-testid="product-thumb-0"]');
+    expect(modelThumb).not.toBeNull();
+    act(() => {
+      modelThumb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(container.querySelector('[data-testid="product-model-viewer"]')).not.toBeNull();
 
     act(() => {
       root.unmount();

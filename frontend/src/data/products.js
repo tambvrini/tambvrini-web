@@ -243,6 +243,8 @@ const products = [
     price: 150.0,
     currency: "EUR",
     images: [],
+    model_url: "/models/umbra.glb",
+    model_poster: "/thumbnails/americana-umbra.jpg",
     category: ["sastrería", "apparel"],
     gender: "mujer",
     sizes: ["S", "M", "L", "XL"],
