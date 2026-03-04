@@ -348,6 +348,7 @@ body.ignatius-mode .product-page-ignatius {
     z-index: 1;
     color: #ffffff;
     transition: color 1.1s ease;
+    --ignatius-text-secondary: #e6e6e6;
 }
 
 body.ignatius-mode .product-page-ignatius::before {
@@ -355,12 +356,8 @@ body.ignatius-mode .product-page-ignatius::before {
     position: absolute;
     inset: 0;
     z-index: 0;
+    background: rgba(0, 0, 0, 0.05);
     pointer-events: none;
-}
-
-body.ignatius-mode .product-page-ignatius,
-body.ignatius-mode .product-page-ignatius * {
-    color: #ffffff;
 }
 
 body.ignatius-mode .product-page-ignatius > :not(.ignatius-background) {
@@ -369,8 +366,8 @@ body.ignatius-mode .product-page-ignatius > :not(.ignatius-background) {
 }
 
 body.ignatius-mode .product-page-ignatius .product-content {
-    opacity: 1 !important;
-    filter: none !important;
+    opacity: 1;
+    filter: none;
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-obsidian"] {
@@ -379,15 +376,15 @@ body.ignatius-mode .product-page-ignatius [class*="text-obsidian"] {
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-obsidian/"] {
-    color: #e6e6e6;
+    color: var(--ignatius-text-secondary);
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-[#6e6e6e]"] {
-    color: #e6e6e6;
+    color: var(--ignatius-text-secondary);
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-gold/"] {
-    color: #e6e6e6;
+    color: var(--ignatius-text-secondary);
 }
 
 body.ignatius-mode .product-page-ignatius .hover\:text-obsidian:hover {
