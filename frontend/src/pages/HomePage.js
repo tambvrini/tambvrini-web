@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import clsx from 'clsx';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import IntroVideoSection from '../components/IntroVideoSection.tsx';
@@ -204,12 +205,15 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
-  const limitedBannerAnimationClasses = [
-    limitedBannerAnimated && !limitedBannerVisible ? 'limited-editions-banner--fade-init' : '',
-    limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const limitedBannerClassName = clsx(
+    'limited-editions-banner',
+    'block',
+    'w-full',
+    'relative',
+    'z-[1]',
+    limitedBannerAnimated && !limitedBannerVisible && 'limited-editions-banner--fade-init',
+    limitedBannerVisible && 'limited-editions-banner--fade-visible'
+  );
 
   const handleCollectionClick = () => {
     if (showCollectionTransition) return;
@@ -476,7 +480,7 @@ const DropGridSection = () => {
                   to="/limited-editions"
                   data-testid="limited-editions-banner-link"
                   ref={limitedBannerRef}
-                  className={`limited-editions-banner block w-full relative z-[1]${limitedBannerAnimationClasses ? ` ${limitedBannerAnimationClasses}` : ''}`}
+                  className={limitedBannerClassName}
                 >
                   <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                     <div className="w-full flex justify-center">
