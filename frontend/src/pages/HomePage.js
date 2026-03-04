@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -204,21 +204,17 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
-  const limitedBannerClassName = useMemo(
-    () =>
-      [
-        'limited-editions-banner',
-        'block',
-        'w-full',
-        'relative',
-        'z-[1]',
-        limitedBannerAnimated ? 'limited-editions-banner--fade-init' : '',
-        limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
-      ]
-        .filter(Boolean)
-        .join(' '),
-    [limitedBannerAnimated, limitedBannerVisible]
-  );
+  const limitedBannerClassName = [
+    'limited-editions-banner',
+    'block',
+    'w-full',
+    'relative',
+    'z-[1]',
+    limitedBannerAnimated ? 'limited-editions-banner--fade-init' : '',
+    limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const handleCollectionClick = () => {
     if (showCollectionTransition) return;
@@ -237,14 +233,14 @@ const DropGridSection = () => {
 
     setLimitedBannerAnimated(true);
 
-    const fallbackTimer = window.setTimeout(() => {
+    const fallbackTimer = setTimeout(() => {
       setLimitedBannerVisible(true);
     }, LIMITED_BANNER_FALLBACK_MS);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          window.clearTimeout(fallbackTimer);
+          clearTimeout(fallbackTimer);
           setLimitedBannerVisible(true);
           observer.unobserve(entry.target);
         }
@@ -255,7 +251,7 @@ const DropGridSection = () => {
     observer.observe(element);
 
     return () => {
-      window.clearTimeout(fallbackTimer);
+      clearTimeout(fallbackTimer);
       observer.disconnect();
     };
   }, []);
