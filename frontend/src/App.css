@@ -674,3 +674,11 @@ body.limited-editions-mode [data-testid="main-header"] [data-testid="header-logo
 .limited-editions-section:hover .limited-editions-cursor {
     opacity: 1;
 }
+
+.limited-editions-banner-image {
+    transition: transform 400ms ease;
+}
+
+.limited-editions-banner:hover .limited-editions-banner-image {
+    transform: scale(1.02);
+}
