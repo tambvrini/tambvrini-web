@@ -130,7 +130,7 @@ export default function ProductPage() {
         ...galleryImages.map((img) => ({ type: 'image', src: img })),
       ]
     : galleryImages.map((img) => ({ type: 'image', src: img }));
-  const hasModelViewer = Boolean(product.model_url) && !isUmbraProduct;
+  const hasStandaloneModelViewer = Boolean(product.model_url) && !isUmbraProduct;
   const modelPoster = product.model_poster || product.thumbnail_image || galleryImages[0];
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
@@ -166,7 +166,7 @@ export default function ProductPage() {
           {/* Left: Gallery */}
           <div>
             <div className="flex flex-col md:flex-row gap-4 items-start">
-              {hasModelViewer ? (
+              {hasStandaloneModelViewer ? (
                 <div className="product-main-image md:flex-1 bg-white">
                   <ModelViewer
                     data-testid="product-model-viewer"
@@ -198,7 +198,7 @@ export default function ProductPage() {
                                 shouldFade ? 'opacity-0' : 'opacity-100'
                               }`}
                             />
-                            {selectedImage !== activeImage && activeMedia?.type === 'image' && selectedMedia?.type === 'image' && (
+                            {selectedImage !== activeImage && activeMedia?.type === 'image' && (
                               <img
                                 src={selectedMedia.src}
                                 alt={product.name}
@@ -232,7 +232,9 @@ export default function ProductPage() {
                               if (i === selectedImage) return;
                               setIsImageLoaded(false);
                               setSelectedImage(i);
-                              if (media.type === 'image' && galleryMedia[activeImage]?.type !== 'image') {
+                              if (media.type === 'model') {
+                                setActiveImage(i);
+                              } else if (galleryMedia[activeImage]?.type !== 'image') {
                                 setActiveImage(i);
                               }
                             }}
