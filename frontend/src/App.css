@@ -146,3 +146,239 @@ input[type="password"] {
     visibility: hidden !important;
     pointer-events: none !important;
 }
+
+/* Umbra cinematic experience (Americana Umbra only) */
+.umbra-page {
+    position: relative;
+    --umbra-cursor-x: 0px;
+    --umbra-cursor-y: 0px;
+    --umbra-scroll: 0px;
+    --umbra-focus-x: 50%;
+    --umbra-focus-y: 50%;
+}
+
+.umbra-content {
+    position: relative;
+    z-index: 2;
+}
+
+body.umbra-mode {
+    background-color: #000000;
+    color: #cfcfcf;
+}
+
+body.umbra-mode .umbra-page {
+    color: #cfcfcf;
+}
+
+body.umbra-mode .umbra-page .umbra-primary {
+    color: #ffffff !important;
+}
+
+body.umbra-mode .umbra-page [class*="text-obsidian"],
+body.umbra-mode .umbra-page [class*="text-[#6e6e6e]"] {
+    color: inherit !important;
+}
+
+body.umbra-mode .umbra-page [class*="border-black"],
+body.umbra-mode .umbra-page [class*="border-white/5"] {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.umbra-mode .umbra-page [class*="bg-black/5"] {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.umbra-parallax,
+.umbra-atmosphere,
+.umbra-particles,
+.umbra-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+    z-index: 1;
+}
+
+.umbra-ink {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    width: 45vmin;
+    height: 45vmin;
+    top: var(--umbra-focus-y, 50%);
+    left: var(--umbra-focus-x, 50%);
+    transform: translate(-50%, -50%) scale(0.1);
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.95) 45%, rgba(0, 0, 0, 1) 70%);
+    filter: blur(22px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.umbra-ink.umbra-ink-active {
+    opacity: 1;
+    animation: umbra-ink 1s ease-out forwards;
+}
+
+.umbra-parallax {
+    background: radial-gradient(circle at 30% 20%, rgba(18, 18, 18, 0.9), transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(10, 10, 10, 0.85), transparent 60%);
+    transform: translate3d(calc(var(--umbra-cursor-x, 0px) * 0.3), calc(var(--umbra-cursor-y, 0px) * 0.3), 0)
+        translateY(calc(var(--umbra-scroll, 0px) * -0.02));
+}
+
+.umbra-atmosphere {
+    background: radial-gradient(circle at 15% 25%, rgba(14, 14, 14, 0.9), transparent 60%),
+        radial-gradient(circle at 70% 80%, rgba(8, 8, 8, 0.9), transparent 55%);
+    mix-blend-mode: screen;
+    animation: umbra-breathe 16s ease-in-out infinite;
+    transform: translate3d(calc(var(--umbra-cursor-x, 0px) * 0.18), calc(var(--umbra-cursor-y, 0px) * 0.18), 0);
+}
+
+.umbra-particles {
+    background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.08) 0, rgba(255, 255, 255, 0) 60%),
+        radial-gradient(circle, rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0) 50%),
+        radial-gradient(circle, rgba(255, 255, 255, 0.07) 0, rgba(255, 255, 255, 0) 55%);
+    background-size: 220px 220px, 300px 300px, 260px 260px;
+    background-position: 0 0, 40px 120px, 140px 60px;
+    animation: umbra-particles 22s linear infinite;
+}
+
+.umbra-vignette {
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.78) 100%);
+}
+
+.umbra-page.umbra-active .umbra-parallax {
+    opacity: 0.65;
+}
+
+.umbra-page.umbra-active .umbra-atmosphere {
+    opacity: 0.55;
+}
+
+.umbra-page.umbra-active .umbra-particles {
+    opacity: 0.12;
+}
+
+.umbra-page.umbra-active .umbra-vignette {
+    opacity: 0.75;
+}
+
+.umbra-product-frame {
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.04);
+    transition: box-shadow 1s ease;
+}
+
+.umbra-product-frame img {
+    position: relative;
+    z-index: 1;
+}
+
+.umbra-glow::after {
+    content: '';
+    position: absolute;
+    inset: -12%;
+    background: radial-gradient(circle at calc(50% + var(--umbra-cursor-x, 0px) * 0.15) calc(45% + var(--umbra-cursor-y, 0px) * 0.15),
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0) 65%);
+    opacity: 0;
+    transition: opacity 1s ease, transform 1s ease;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    z-index: 0;
+}
+
+.umbra-page.umbra-active .umbra-glow::after {
+    opacity: 1;
+}
+
+.umbra-zoom img {
+    animation: umbra-zoom 0.5s ease-out forwards;
+}
+
+.umbra-add-to-cart {
+    position: relative;
+    overflow: hidden;
+}
+
+.umbra-add-to-cart::after {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 65%);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.umbra-add-to-cart:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+body.umbra-mode .umbra-add-to-cart {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+body.umbra-mode .umbra-add-to-cart:hover {
+    background: rgba(255, 255, 255, 0.14) !important;
+}
+
+@keyframes umbra-zoom {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.03);
+    }
+}
+
+@keyframes umbra-ink {
+    0% {
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0.3;
+    }
+    65% {
+        opacity: 0.95;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(6);
+        opacity: 0;
+    }
+}
+
+@keyframes umbra-breathe {
+    0%,
+    100% {
+        transform: translate3d(calc(var(--umbra-cursor-x, 0px) * 0.18), calc(var(--umbra-cursor-y, 0px) * 0.18), 0) scale(1);
+    }
+    50% {
+        transform: translate3d(calc(var(--umbra-cursor-x, 0px) * 0.18), calc(var(--umbra-cursor-y, 0px) * 0.18), 0) scale(1.05);
+    }
+}
+
+@keyframes umbra-particles {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(-20px, 30px, 0);
+    }
+    100% {
+        transform: translate3d(-40px, 60px, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .umbra-ink.umbra-ink-active,
+    .umbra-zoom img,
+    .umbra-atmosphere,
+    .umbra-particles {
+        animation: none !important;
+    }
+}

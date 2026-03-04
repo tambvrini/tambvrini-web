@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -6,6 +6,8 @@ import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import { toast } from 'sonner';
 import { getProductById } from '@/data/productHelpers';
+
+const UMBRA_ID = 'americana-umbra';
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -21,6 +23,11 @@ export default function ProductPage() {
   const [infoTab, setInfoTab] = useState('description');
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
+  const [isUmbraZoom, setIsUmbraZoom] = useState(false);
+  const [isUmbraShadow, setIsUmbraShadow] = useState(false);
+  const [isUmbraMode, setIsUmbraMode] = useState(false);
+  const umbraRef = useRef(null);
+  const productImageRef = useRef(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -55,6 +62,106 @@ export default function ProductPage() {
     toast.success('Añadido al carrito');
   };
 
+  const isUmbraProduct = product?.product_id === UMBRA_ID;
+
+  useEffect(() => {
+    if (!isUmbraProduct) {
+      setIsUmbraZoom(false);
+      setIsUmbraShadow(false);
+      setIsUmbraMode(false);
+      document.body.classList.remove('umbra-mode');
+      return;
+    }
+
+    setIsUmbraZoom(false);
+    setIsUmbraShadow(false);
+    setIsUmbraMode(false);
+
+    const zoomTimer = setTimeout(() => setIsUmbraZoom(true), 200);
+    const shadowTimer = setTimeout(() => setIsUmbraShadow(true), 700);
+    const modeTimer = setTimeout(() => setIsUmbraMode(true), 1700);
+
+    return () => {
+      clearTimeout(zoomTimer);
+      clearTimeout(shadowTimer);
+      clearTimeout(modeTimer);
+      document.body.classList.remove('umbra-mode');
+    };
+  }, [isUmbraProduct]);
+
+  useEffect(() => {
+    if (!isUmbraProduct) return;
+    if (isUmbraMode) {
+      document.body.classList.add('umbra-mode');
+    } else {
+      document.body.classList.remove('umbra-mode');
+    }
+    return () => document.body.classList.remove('umbra-mode');
+  }, [isUmbraMode, isUmbraProduct]);
+
+  useEffect(() => {
+    if (!isUmbraProduct) return;
+    const root = umbraRef.current;
+    const image = productImageRef.current;
+    if (!root || !image) return;
+
+    const updateFocus = () => {
+      const rect = image.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      root.style.setProperty('--umbra-focus-x', `${x}px`);
+      root.style.setProperty('--umbra-focus-y', `${y}px`);
+    };
+
+    updateFocus();
+    window.addEventListener('resize', updateFocus);
+
+    return () => window.removeEventListener('resize', updateFocus);
+  }, [isUmbraProduct, activeImage]);
+
+  useEffect(() => {
+    if (!isUmbraProduct) return;
+    const root = umbraRef.current;
+    if (!root) return;
+
+    let moveFrame = null;
+    let scrollFrame = null;
+    let nextX = 0;
+    let nextY = 0;
+
+    const handleMove = (event) => {
+      nextX = (event.clientX / window.innerWidth - 0.5) * 30;
+      nextY = (event.clientY / window.innerHeight - 0.5) * 30;
+      if (moveFrame) return;
+      moveFrame = window.requestAnimationFrame(() => {
+        root.style.setProperty('--umbra-cursor-x', `${nextX}px`);
+        root.style.setProperty('--umbra-cursor-y', `${nextY}px`);
+        moveFrame = null;
+      });
+    };
+
+    const handleScroll = () => {
+      if (scrollFrame) return;
+      scrollFrame = window.requestAnimationFrame(() => {
+        root.style.setProperty('--umbra-scroll', `${window.scrollY}px`);
+        scrollFrame = null;
+      });
+    };
+
+    root.style.setProperty('--umbra-cursor-x', '0px');
+    root.style.setProperty('--umbra-cursor-y', '0px');
+    root.style.setProperty('--umbra-scroll', `${window.scrollY}px`);
+    window.addEventListener('mousemove', handleMove, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('scroll', handleScroll);
+      if (moveFrame) window.cancelAnimationFrame(moveFrame);
+      if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+    };
+  }, [isUmbraProduct]);
+
   if (loading) {
     return (
       <div className="min-h-screen pt-32 flex items-center justify-center">
@@ -71,7 +178,7 @@ export default function ProductPage() {
     );
   }
 
-  const galleryImages = product.product_id === 'americana-umbra'
+  const galleryImages = product.product_id === UMBRA_ID
     ? [
         '/products/americana-umbra/americana-umbra-main.jpg',
         '/products/americana-umbra/americana-umbra-look-01.jpg',
@@ -87,7 +194,26 @@ export default function ProductPage() {
   const shouldFade = selectedImage !== activeImage && isImageLoaded;
 
   return (
-    <div data-testid="product-page" className="min-h-screen pt-28 md:pt-32 pb-24">
+    <div
+      data-testid="product-page"
+      ref={umbraRef}
+      className={`min-h-screen pt-28 md:pt-32 pb-24 ${isUmbraProduct ? 'umbra-page' : ''} ${
+        isUmbraProduct && isUmbraMode ? 'umbra-active' : ''
+      }`}
+    >
+      {isUmbraProduct && (
+        <>
+          <div
+            className={`umbra-ink ${isUmbraShadow ? 'umbra-ink-active' : ''}`}
+            aria-hidden="true"
+          />
+          <div className="umbra-parallax" aria-hidden="true" />
+          <div className="umbra-atmosphere" aria-hidden="true" />
+          <div className="umbra-particles" aria-hidden="true" />
+          <div className="umbra-vignette" aria-hidden="true" />
+        </>
+      )}
+      <div className={isUmbraProduct ? 'umbra-content' : undefined}>
       {/* Breadcrumb */}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
         <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
@@ -104,8 +230,15 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left: Gallery */}
           <div>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="img-zoom aspect-[3/4] md:flex-1 overflow-hidden bg-white/5 flex items-center justify-center relative">
+              <div className="flex flex-col md:flex-row gap-4">
+              <div
+                ref={productImageRef}
+                className={`img-zoom aspect-[3/4] md:flex-1 overflow-hidden bg-white/5 flex items-center justify-center relative ${
+                  isUmbraProduct ? 'umbra-product-frame' : ''
+                } ${isUmbraProduct && isUmbraZoom ? 'umbra-zoom' : ''} ${
+                  isUmbraProduct && isUmbraMode ? 'umbra-glow' : ''
+                }`}
+              >
                 {(galleryImages.length > 0) ? (
                   <>
                     <img
@@ -168,16 +301,28 @@ export default function ProductPage() {
               {product.category?.join(' / ')}
             </p>
             <div className="flex items-start justify-between gap-6 mb-4">
-              <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-obsidian">
+              <h1
+                data-testid="product-name"
+                className={`font-playfair text-3xl md:text-4xl text-obsidian ${isUmbraProduct ? 'umbra-primary' : ''}`}
+              >
                 {product.name}
               </h1>
               {product.is_sold_out && (
-                <span className="mt-2 border border-black/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/70">
+                <span
+                  className={`mt-2 border border-black/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/70 ${
+                    isUmbraProduct ? 'umbra-primary' : ''
+                  }`}
+                >
                   SOLD OUT
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4">
+            <p
+              data-testid="product-price"
+              className={`font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4 ${
+                isUmbraProduct ? 'umbra-primary' : ''
+              }`}
+            >
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (
@@ -272,7 +417,7 @@ export default function ProductPage() {
                   product.is_sold_out
                     ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
                     : 'bg-white text-obsidian hover:bg-gold'
-                }`}
+                } ${isUmbraProduct ? 'umbra-add-to-cart' : ''}`}
               >
                 {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
               </button>
@@ -337,6 +482,7 @@ export default function ProductPage() {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
