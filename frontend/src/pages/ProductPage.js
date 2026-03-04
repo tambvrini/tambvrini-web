@@ -6,7 +6,7 @@ import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import ModelViewer from '../components/ModelViewer';
 import { toast } from 'sonner';
-import { getProductById } from '@/data/productHelpers';
+import { getProductById } from '../data/productHelpers';
 
 export default function ProductPage() {
   const { productId } = useParams();
