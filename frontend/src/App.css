@@ -147,7 +147,11 @@ input[type="password"] {
     pointer-events: none !important;
 }
 
-/* Americana Umbra cinematic background */
+/* Americana Umbra cinematic background - animated ink spread from center to full viewport */
+:root {
+    --umbra-transition-duration: 800ms;
+}
+
 .umbra-background {
     position: fixed;
     top: 0;
@@ -156,11 +160,17 @@ input[type="password"] {
     height: 100%;
     z-index: -1;
     pointer-events: none;
-    background: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.85) 70%, #000000 100%);
-    transform: scale(0.2);
+    background: radial-gradient(
+        circle at 50% 45%,
+        rgba(0, 0, 0, 0.12) 0%,
+        rgba(0, 0, 0, 0.45) 40%,
+        rgba(0, 0, 0, 0.85) 70%,
+        #000000 100%
+    );
+    transform: scale(0.15);
     opacity: 0;
     transform-origin: center;
-    animation: umbra-ink 0.8s ease-out forwards;
+    animation: umbra-ink var(--umbra-transition-duration) ease-out forwards;
 }
 
 @keyframes umbra-ink {
@@ -179,8 +189,7 @@ body.umbra-mode {
     color: #ffffff;
 }
 
-body.umbra-mode .umbra-page .text-obsidian,
-body.umbra-mode .umbra-page .text-obsidian\/80 {
+body.umbra-mode .umbra-page .text-obsidian {
     color: #ffffff;
 }
 
@@ -189,6 +198,7 @@ body.umbra-mode .umbra-page .text-obsidian\/40,
 body.umbra-mode .umbra-page .text-obsidian\/50,
 body.umbra-mode .umbra-page .text-obsidian\/60,
 body.umbra-mode .umbra-page .text-obsidian\/70,
+body.umbra-mode .umbra-page .text-obsidian\/80,
 body.umbra-mode .umbra-page .text-\[\#6e6e6e\] {
     color: #cfcfcf;
 }
