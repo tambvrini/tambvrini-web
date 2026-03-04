@@ -147,7 +147,7 @@ export default function ProductPage() {
       </div>
 
       {/* Product layout */}
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
+      <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left: Gallery */}
           <div>

@@ -346,8 +346,31 @@ body.ignatius-mode {
 body.ignatius-mode .product-page-ignatius {
     position: relative;
     z-index: 1;
-    color: #f7f2f2;
+    color: #ffffff;
     transition: color 1.1s ease;
+}
+
+body.ignatius-mode .product-page-ignatius::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+body.ignatius-mode .product-page-ignatius,
+body.ignatius-mode .product-page-ignatius * {
+    color: #ffffff;
+}
+
+body.ignatius-mode .product-page-ignatius > :not(.ignatius-background) {
+    position: relative;
+    z-index: 1;
+}
+
+body.ignatius-mode .product-page-ignatius .product-content {
+    opacity: 1 !important;
+    filter: none !important;
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-obsidian"] {
@@ -356,15 +379,15 @@ body.ignatius-mode .product-page-ignatius [class*="text-obsidian"] {
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-obsidian/"] {
-    color: rgba(235, 225, 225, 0.78);
+    color: #e6e6e6;
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-[#6e6e6e]"] {
-    color: rgba(222, 210, 210, 0.78);
+    color: #e6e6e6;
 }
 
 body.ignatius-mode .product-page-ignatius [class*="text-gold/"] {
-    color: rgba(245, 220, 220, 0.8);
+    color: #e6e6e6;
 }
 
 body.ignatius-mode .product-page-ignatius .hover\:text-obsidian:hover {
@@ -389,13 +412,13 @@ body.ignatius-mode .product-page-ignatius .ignatius-glow-text {
 }
 
 body.ignatius-mode .product-page-ignatius [data-testid="add-to-cart-btn"] {
-    background-color: rgba(26, 0, 0, 0.9);
+    background-color: rgba(120, 0, 0, 0.9);
     color: #ffffff;
-    border: 1px solid rgba(120, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 body.ignatius-mode .product-page-ignatius [data-testid="add-to-cart-btn"]:hover {
-    background-color: rgba(58, 0, 0, 0.95);
+    background-color: rgba(150, 0, 0, 0.95);
 }
 
 body.ignatius-mode .product-page-ignatius [data-testid="add-to-cart-btn"][disabled] {
