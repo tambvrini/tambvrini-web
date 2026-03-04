@@ -13,6 +13,8 @@ export default function ProductPage() {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [activeImage, setActiveImage] = useState(0);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -28,6 +30,8 @@ export default function ProductPage() {
         setProduct(data);
         setRelated(data?.related_products || []);
         setSelectedImage(0);
+        setActiveImage(0);
+        setIsImageLoaded(false);
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
@@ -67,7 +71,20 @@ export default function ProductPage() {
     );
   }
 
+  const galleryImages = product.product_id === 'americana-umbra'
+    ? [
+        '/products/americana-umbra/americana-umbra-main.jpg',
+        '/products/americana-umbra/americana-umbra-look-01.jpg',
+        '/products/americana-umbra/americana-umbra-look-02.jpg',
+        '/products/americana-umbra/americana-umbra-look-03.jpg',
+        '/products/americana-umbra/americana-umbra-look-04.jpg',
+        '/products/americana-umbra/americana-umbra-detail-01.jpg',
+        '/products/americana-umbra/americana-umbra-detail-02.jpg',
+      ]
+    : (product.images || []);
+
   const inWishlist = isInWishlist(product.product_id);
+  const shouldFade = selectedImage !== activeImage && isImageLoaded;
 
   return (
     <div data-testid="product-page" className="min-h-screen pt-28 md:pt-32 pb-24">
@@ -87,36 +104,62 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left: Gallery */}
           <div>
-            <div className="img-zoom aspect-[3/4] mb-4 overflow-hidden bg-white/5 flex items-center justify-center">
-              {(product.images?.length > 0) ? (
-                <img
-                  data-testid="product-main-image"
-                  src={product.images[selectedImage]}
-                  alt={product.name}
-                  className="w-full h-auto max-h-full object-contain object-center"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
-                  <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
-                </div>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="img-zoom aspect-[3/4] md:flex-1 overflow-hidden bg-white/5 flex items-center justify-center relative">
+                {(galleryImages.length > 0) ? (
+                  <>
+                    <img
+                      data-testid="product-main-image"
+                      src={galleryImages[activeImage]}
+                      alt={product.name}
+                      className={`w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
+                        shouldFade ? 'opacity-0' : 'opacity-100'
+                      }`}
+                    />
+                    {selectedImage !== activeImage && (
+                      <img
+                        src={galleryImages[selectedImage]}
+                        alt={product.name}
+                        onLoad={() => setIsImageLoaded(true)}
+                        onTransitionEnd={() => {
+                          if (isImageLoaded) {
+                            setActiveImage(selectedImage);
+                            setIsImageLoaded(false);
+                          }
+                        }}
+                        className={`absolute inset-0 w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
+                          shouldFade ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+                    <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+                  </div>
+                )}
+              </div>
+              {galleryImages.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {galleryImages.map((img, i) => (
+                  <button
+                    key={i}
+                    data-testid={`product-thumb-${i}`}
+                    onClick={() => {
+                      if (i === selectedImage) return;
+                      setIsImageLoaded(false);
+                      setSelectedImage(i);
+                    }}
+                    className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
+                      selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
+                  </button>
+                ))}
+              </div>
               )}
             </div>
-            {product.images?.length > 0 && (
-            <div className="flex gap-3">
-              {product.images.map((img, i) => (
-                <button
-                  key={i}
-                  data-testid={`product-thumb-${i}`}
-                  onClick={() => setSelectedImage(i)}
-                  className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
-                    selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
-                </button>
-              ))}
-            </div>
-            )}
           </div>
 
           {/* Right: Product info */}
