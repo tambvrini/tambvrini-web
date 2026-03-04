@@ -43,10 +43,6 @@ export default function ProductPage() {
     window.scrollTo(0, 0);
   }, [productId]);
 
-  useEffect(() => {
-    setIsImageLoaded(false);
-  }, [selectedImage]);
-
   const handleAddToCart = () => {
     if (product.is_sold_out) return;
     if (!selectedSize) {
@@ -129,7 +125,10 @@ export default function ProductPage() {
                   <button
                     key={i}
                     data-testid={`product-thumb-${i}`}
-                    onClick={() => setSelectedImage(i)}
+                    onClick={() => {
+                      setIsImageLoaded(false);
+                      setSelectedImage(i);
+                    }}
                     className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
                       selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
                     }`}
