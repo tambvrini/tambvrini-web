@@ -10,6 +10,7 @@ import { getProductById } from '@/data/productHelpers';
 export default function ProductPage() {
   const { productId } = useParams();
   const isUmbraProduct = productId === 'americana-umbra';
+  const umbraTransitionDelay = 800;
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,10 +53,9 @@ export default function ProductPage() {
       return;
     }
 
-    document.body.classList.remove('umbra-mode');
     const timer = window.setTimeout(() => {
       document.body.classList.add('umbra-mode');
-    }, 800);
+    }, umbraTransitionDelay);
 
     return () => {
       window.clearTimeout(timer);
