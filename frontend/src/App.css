@@ -675,7 +675,7 @@ body.limited-editions-mode [data-testid="main-header"] [data-testid="header-logo
     opacity: 1;
 }
 
-.limited-editions-banner {
+.limited-editions-banner--fade-default {
     opacity: 1;
     transform: translateY(0);
 }

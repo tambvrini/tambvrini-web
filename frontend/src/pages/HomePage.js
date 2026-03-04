@@ -206,6 +206,7 @@ const DropGridSection = () => {
   const navigate = useNavigate();
   const limitedBannerClassName = [
     'limited-editions-banner',
+    'limited-editions-banner--fade-default',
     'block',
     'w-full',
     'relative',
