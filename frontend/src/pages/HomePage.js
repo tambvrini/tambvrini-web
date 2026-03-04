@@ -206,9 +206,9 @@ const DropGridSection = () => {
   const navigate = useNavigate();
   const limitedBannerAnimationClasses = useMemo(
     () => {
-      const shouldShowFadeInitClass = limitedBannerAnimated && !limitedBannerVisible;
+      const showFadeInit = limitedBannerAnimated && !limitedBannerVisible;
       return [
-        shouldShowFadeInitClass ? 'limited-editions-banner--fade-init' : '',
+        showFadeInit ? 'limited-editions-banner--fade-init' : '',
         limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
       ]
         .filter(Boolean)
@@ -233,16 +233,21 @@ const DropGridSection = () => {
     }
 
     setLimitedBannerAnimated(true);
+    let isMounted = true;
 
     const fallbackTimer = setTimeout(() => {
-      setLimitedBannerVisible(true);
+      if (isMounted) {
+        setLimitedBannerVisible(true);
+      }
     }, LIMITED_BANNER_FALLBACK_MS);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           clearTimeout(fallbackTimer);
-          setLimitedBannerVisible(true);
+          if (isMounted) {
+            setLimitedBannerVisible(true);
+          }
           observer.unobserve(entry.target);
         }
       },
@@ -252,6 +257,7 @@ const DropGridSection = () => {
     observer.observe(element);
 
     return () => {
+      isMounted = false;
       clearTimeout(fallbackTimer);
       observer.disconnect();
     };
