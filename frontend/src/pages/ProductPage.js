@@ -84,6 +84,7 @@ export default function ProductPage() {
     : (product.images || []);
 
   const inWishlist = isInWishlist(product.product_id);
+  const shouldFade = selectedImage !== activeImage && isImageLoaded;
 
   return (
     <div data-testid="product-page" className="min-h-screen pt-28 md:pt-32 pb-24">
@@ -112,7 +113,7 @@ export default function ProductPage() {
                       src={galleryImages[activeImage]}
                       alt={product.name}
                       className={`w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
-                        selectedImage !== activeImage && isImageLoaded ? 'opacity-0' : 'opacity-100'
+                        shouldFade ? 'opacity-0' : 'opacity-100'
                       }`}
                     />
                     {selectedImage !== activeImage && (
@@ -127,7 +128,7 @@ export default function ProductPage() {
                           }
                         }}
                         className={`absolute inset-0 w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
-                          isImageLoaded ? 'opacity-100' : 'opacity-0'
+                          shouldFade ? 'opacity-100' : 'opacity-0'
                         }`}
                       />
                     )}
