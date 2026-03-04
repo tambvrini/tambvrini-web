@@ -17,7 +17,7 @@ const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
 const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
-const LIMITED_EDITIONS_BANNER_IMAGE = `${process.env.PUBLIC_URL}/products/americana-umbra/americana-umbra-look-04.jpg`;
+const LIMITED_EDITIONS_BANNER_IMAGE = "/images/limited-editions-banner.jpg";
 const EDITORIAL_POLOS_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/v4zs6ugs_hf_20260222_181550_e58e110a-c888-46f9-818a-7daac73fbd28.jpeg";
 const EDITORIAL_SUETERES_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/lks43ws5_hf_20260222_183135_094a5ad6-f6e8-407f-8fd4-6dceef064698.jpeg";
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
@@ -199,6 +199,8 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
+  const [limitedBannerVisible, setLimitedBannerVisible] = useState(false);
+  const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
 
   const handleCollectionClick = () => {
@@ -208,6 +210,25 @@ const DropGridSection = () => {
       navigate('/tienda?category=2026');
     }, 450);
   };
+
+  useEffect(() => {
+    const element = limitedBannerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLimitedBannerVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
 
 
   useEffect(() => {
@@ -427,7 +448,13 @@ const DropGridSection = () => {
                 <Link
                   to="/limited-editions"
                   data-testid="limited-editions-banner-link"
+                  ref={limitedBannerRef}
                   className="limited-editions-banner block w-full"
+                  style={{
+                    opacity: limitedBannerVisible ? 1 : 0,
+                    transform: limitedBannerVisible ? 'translateY(0)' : 'translateY(40px)',
+                    transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
+                  }}
                 >
                   <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                     <div className="w-full flex justify-center">
@@ -436,7 +463,7 @@ const DropGridSection = () => {
                           data-testid="limited-editions-banner-image"
                           src={LIMITED_EDITIONS_BANNER_IMAGE}
                           alt="Limited Editions collection banner - explore exclusive pieces"
-                          className="w-full h-auto object-contain object-center limited-editions-banner-image"
+                          className="block w-full h-auto limited-editions-banner-image"
                           loading="lazy"
                         />
                         <span
