@@ -131,7 +131,8 @@ export default function ProductPage() {
       ]
     : galleryImages.map((img) => ({ type: 'image', src: img }));
   const hasStandaloneModelViewer = Boolean(product.model_url) && !isUmbraProduct;
-  const modelPoster = product.model_poster || product.thumbnail_image || galleryImages[0];
+  const fallbackPoster = galleryImages.length > 0 ? galleryImages[0] : '';
+  const modelPoster = product.model_poster || product.thumbnail_image || fallbackPoster;
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
   const activeMedia = galleryMedia[activeImage];
@@ -234,7 +235,7 @@ export default function ProductPage() {
                               setSelectedImage(i);
                               if (media.type === 'model') {
                                 setActiveImage(i);
-                              } else if (galleryMedia[activeImage]?.type !== 'image') {
+                              } else if (galleryMedia[activeImage]?.type === 'model') {
                                 setActiveImage(i);
                               }
                             }}
@@ -243,7 +244,7 @@ export default function ProductPage() {
                             }`}
                           >
                             <img
-                              src={media.type === 'model' ? (modelPoster || galleryImages[0]) : media.src}
+                              src={media.type === 'model' ? modelPoster : media.src}
                               alt=""
                               className="w-full h-auto max-h-full object-contain object-center"
                             />
