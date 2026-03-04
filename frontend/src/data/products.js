@@ -365,7 +365,7 @@ const products = [
     name: "Suéter Ignatius",
     description:
       "El Suéter Ignatius reinterpreta el knitwear clásico con un carácter deliberadamente imperfecto. Confeccionado en algodón de tacto suave, presenta un acabado desgastado artesanal que revela capas interiores en contraste rojo, creando una estética cruda y contemporánea.\n\nCada pieza expresa una elegancia desestructurada, donde el desgaste controlado y los cortes irregulares evocan la tradición del trabajo manual y la individualidad de la prenda. Un equilibrio entre sofisticación clásica y rebeldía moderna.",
-    price: 50.0,
+    price: 300.0,
     currency: "EUR",
     images: [],
     thumbnail_image: "/thumbnails/ignatius-sweater-thumb.jpg",

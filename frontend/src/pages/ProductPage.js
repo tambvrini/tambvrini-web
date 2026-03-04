@@ -10,7 +10,9 @@ import { getProductById } from '@/data/productHelpers';
 export default function ProductPage() {
   const { productId } = useParams();
   const isUmbraProduct = productId === 'americana-umbra';
+  const isIgnatiusProduct = productId === 'sueter-ignatius';
   const umbraTransitionDelay = 800;
+  const ignatiusTransitionDelay = 120;
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,6 +65,22 @@ export default function ProductPage() {
     };
   }, [isUmbraProduct]);
 
+  useEffect(() => {
+    if (!isIgnatiusProduct) {
+      document.body.classList.remove('ignatius-mode');
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      document.body.classList.add('ignatius-mode');
+    }, ignatiusTransitionDelay);
+
+    return () => {
+      window.clearTimeout(timer);
+      document.body.classList.remove('ignatius-mode');
+    };
+  }, [isIgnatiusProduct, ignatiusTransitionDelay]);
+
   const handleAddToCart = () => {
     if (product.is_sold_out) return;
     if (!selectedSize) {
@@ -75,8 +93,9 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+        {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin" />
       </div>
     );
@@ -84,8 +103,9 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+        {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
       </div>
     );
@@ -107,8 +127,14 @@ export default function ProductPage() {
   const shouldFade = selectedImage !== activeImage && isImageLoaded;
 
   return (
-    <div data-testid="product-page" className={`min-h-screen pt-28 md:pt-32 pb-24 ${isUmbraProduct ? 'umbra-product-page' : ''}`}>
+    <div
+      data-testid="product-page"
+      className={`min-h-screen pt-28 md:pt-32 pb-24 ${isUmbraProduct ? 'umbra-product-page' : ''} ${
+        isIgnatiusProduct ? 'product-page-ignatius' : ''
+      }`}
+    >
       {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+      {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
       {/* Breadcrumb */}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
         <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
@@ -189,7 +215,10 @@ export default function ProductPage() {
               {product.category?.join(' / ')}
             </p>
             <div className="flex items-start justify-between gap-6 mb-4">
-              <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-obsidian">
+              <h1
+                data-testid="product-name"
+                className={`font-playfair text-3xl md:text-4xl text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
+              >
                 {product.name}
               </h1>
               {product.is_sold_out && (
@@ -254,7 +283,9 @@ export default function ProductPage() {
                         selectedSize === s
                           ? 'border-obsidian text-obsidian bg-black/5'
                           : 'border-black/10 text-obsidian/50'
-                      } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'}`}
+                      } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'} ${
+                        isIgnatiusProduct && selectedSize === s ? 'ignatius-glow' : ''
+                      }`}
                     >
                       {s}
                     </button>
@@ -293,7 +324,7 @@ export default function ProductPage() {
                   product.is_sold_out
                     ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
                     : 'bg-white text-obsidian hover:bg-gold'
-                }`}
+                } ${isIgnatiusProduct ? 'ignatius-glow' : ''}`}
               >
                 {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
               </button>
