@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
@@ -7,8 +7,8 @@ import { queryProducts } from '@/data/productHelpers';
 import catalogProducts from '@/data/products';
 
 const CATEGORY_LABELS = {
-  novedades: 'Novedades',
   '2026': '2026',
+  novedades: 'Novedades',
   polos: 'Polos',
   sueteres: 'Suéteres',
   hombre: 'Hombre',
@@ -17,6 +17,12 @@ const CATEGORY_LABELS = {
   marroquineria: 'Marroquinería',
   calzado: 'Calzado',
 };
+
+const CATEGORY_NAV_ITEMS = [
+  ['2026', '2026'],
+  ['limited-editions', 'Limited Editions'],
+  ...Object.entries(CATEGORY_LABELS).filter(([key]) => key !== '2026'),
+];
 
 const COLLECTION_LABELS = {
   roma: 'Roma',
@@ -37,6 +43,7 @@ const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -292,11 +299,15 @@ export default function ShopPage() {
 
         {/* Category pills */}
         <div className="flex flex-wrap gap-2 mb-12">
-          {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+          {CATEGORY_NAV_ITEMS.map(([key, label]) => (
             <button
               key={key}
               data-testid={`filter-${key}`}
               onClick={() => {
+                if (key === 'limited-editions') {
+                  navigate('/limited-editions');
+                  return;
+                }
                 const p = new URLSearchParams();
                 if (key === 'hombre' || key === 'mujer') p.set('gender', key);
                 else p.set('category', key);

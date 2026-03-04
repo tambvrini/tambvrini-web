@@ -17,6 +17,7 @@ import AccountPage from "./pages/AccountPage";
 import WishlistPage from "./pages/WishlistPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import BrandPage from "./pages/BrandPage";
+import LimitedEditionsPage from "./pages/LimitedEditionsPage";
 
 function AppRouter() {
   const location = useLocation();
@@ -35,6 +36,7 @@ function AppRouter() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/tienda" element={<ShopPage />} />
+          <Route path="/limited-editions" element={<LimitedEditionsPage />} />
           <Route path="/producto/:productId" element={<ProductPage />} />
           <Route path="/carrito" element={<CartPage />} />
           <Route path="/cuenta" element={<AccountPage />} />
