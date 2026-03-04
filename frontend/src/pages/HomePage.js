@@ -203,6 +203,19 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
+  const LIMITED_BANNER_FALLBACK_MS = 2000;
+
+  const limitedBannerClassName = [
+    'limited-editions-banner',
+    'block',
+    'w-full',
+    'relative',
+    'z-[1]',
+    limitedBannerAnimated ? 'limited-editions-banner--fade-init' : '',
+    limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const handleCollectionClick = () => {
     if (showCollectionTransition) return;
@@ -223,7 +236,7 @@ const DropGridSection = () => {
 
     const fallbackTimer = window.setTimeout(() => {
       setLimitedBannerVisible(true);
-    }, 2000);
+    }, LIMITED_BANNER_FALLBACK_MS);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -463,7 +476,7 @@ const DropGridSection = () => {
                   to="/limited-editions"
                   data-testid="limited-editions-banner-link"
                   ref={limitedBannerRef}
-                  className={`limited-editions-banner block w-full relative z-[1]${limitedBannerAnimated ? ' limited-editions-banner--fade-init' : ''}${limitedBannerVisible ? ' limited-editions-banner--fade-visible' : ''}`}
+                  className={limitedBannerClassName}
                 >
                   <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                     <div className="w-full flex justify-center">
