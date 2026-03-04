@@ -136,6 +136,9 @@ export default function ProductPage() {
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
   const activeMedia = galleryMedia[activeImage];
+  const activeImageSrc = activeMedia?.type === 'image'
+    ? activeMedia.src
+    : (selectedMedia?.type === 'image' ? selectedMedia.src : '');
   const shouldFade = selectedImage !== activeImage
     && isImageLoaded
     && activeMedia?.type === 'image'
@@ -193,7 +196,7 @@ export default function ProductPage() {
                           <>
                             <img
                               data-testid="product-main-image"
-                              src={activeMedia?.type === 'image' ? activeMedia.src : selectedMedia?.src}
+                              src={activeImageSrc}
                               alt={product.name}
                               className={`transition-opacity duration-500 ease-out ${
                                 shouldFade ? 'opacity-0' : 'opacity-100'
@@ -233,9 +236,7 @@ export default function ProductPage() {
                               if (i === selectedImage) return;
                               setIsImageLoaded(false);
                               setSelectedImage(i);
-                              if (media.type === 'model') {
-                                setActiveImage(i);
-                              } else if (galleryMedia[activeImage]?.type === 'model') {
+                              if (media.type === 'model' || galleryMedia[activeImage]?.type === 'model') {
                                 setActiveImage(i);
                               }
                             }}
