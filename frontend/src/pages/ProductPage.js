@@ -9,6 +9,7 @@ import { getProductById } from '@/data/productHelpers';
 
 export default function ProductPage() {
   const { productId } = useParams();
+  const isUmbraPage = productId === 'americana-umbra';
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,8 @@ export default function ProductPage() {
   const [infoTab, setInfoTab] = useState('description');
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
+  const umbraBackground = isUmbraPage ? <div className="umbra-background" aria-hidden="true" /> : null;
+  const umbraPageClassName = isUmbraPage ? 'umbra-page' : '';
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,6 +48,23 @@ export default function ProductPage() {
     window.scrollTo(0, 0);
   }, [productId]);
 
+  useEffect(() => {
+    let umbraTimer;
+    if (isUmbraPage) {
+      umbraTimer = window.setTimeout(() => {
+        document.body.classList.add('umbra-mode');
+      }, 800);
+    } else {
+      document.body.classList.remove('umbra-mode');
+    }
+    return () => {
+      if (umbraTimer) {
+        window.clearTimeout(umbraTimer);
+      }
+      document.body.classList.remove('umbra-mode');
+    };
+  }, [isUmbraPage]);
+
   const handleAddToCart = () => {
     if (product.is_sold_out) return;
     if (!selectedSize) {
@@ -57,7 +77,8 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-32 flex items-center justify-center">
+      <div className={`min-h-screen pt-32 flex items-center justify-center ${umbraPageClassName}`}>
+        {umbraBackground}
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin" />
       </div>
     );
@@ -65,7 +86,8 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen pt-32 flex items-center justify-center">
+      <div className={`min-h-screen pt-32 flex items-center justify-center ${umbraPageClassName}`}>
+        {umbraBackground}
         <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
       </div>
     );
@@ -87,7 +109,8 @@ export default function ProductPage() {
   const shouldFade = selectedImage !== activeImage && isImageLoaded;
 
   return (
-    <div data-testid="product-page" className="min-h-screen pt-28 md:pt-32 pb-24">
+    <div data-testid="product-page" className={`min-h-screen pt-28 md:pt-32 pb-24 ${umbraPageClassName}`}>
+      {umbraBackground}
       {/* Breadcrumb */}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
         <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
