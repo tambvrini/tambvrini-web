@@ -204,7 +204,7 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
-  const limitedBannerFadeInit = limitedBannerAnimated && !limitedBannerVisible;
+  const isLimitedBannerFadeInitial = limitedBannerAnimated && !limitedBannerVisible;
   const limitedBannerClassName = useMemo(
     () =>
       [
@@ -213,12 +213,12 @@ const DropGridSection = () => {
         'w-full',
         'relative',
         'z-[1]',
-        limitedBannerFadeInit ? 'limited-editions-banner--fade-init' : '',
+        isLimitedBannerFadeInitial ? 'limited-editions-banner--fade-init' : '',
         limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
       ]
         .filter(Boolean)
         .join(' '),
-    [limitedBannerFadeInit, limitedBannerVisible]
+    [isLimitedBannerFadeInitial, limitedBannerVisible]
   );
 
   const handleCollectionClick = () => {

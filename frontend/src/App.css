@@ -675,6 +675,7 @@ body.limited-editions-mode [data-testid="main-header"] [data-testid="header-logo
     opacity: 1;
 }
 
+/* Default visible state so the banner renders even if the fade-in observer never fires. */
 .limited-editions-banner {
     opacity: 1;
     transform: translateY(0);
