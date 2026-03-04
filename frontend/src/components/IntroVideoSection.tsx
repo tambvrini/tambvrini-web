@@ -47,9 +47,9 @@ const IntroVideoSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="w-full h-screen">
+    <section ref={sectionRef} className="w-full">
       <div
-        className="w-full h-full overflow-hidden"
+        className="w-full"
         style={{
           opacity: hasStarted ? 1 : 0,
           transform: hasStarted ? 'scale(1)' : 'scale(1.02)',
@@ -58,7 +58,7 @@ const IntroVideoSection = () => {
       >
         <video
           ref={videoRef}
-          className="w-full h-full object-cover"
+          className="w-full h-auto max-w-full object-contain object-center"
           src="/videos/tambvrini-intro-loop.mp4"
           muted
           playsInline

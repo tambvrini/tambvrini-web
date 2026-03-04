@@ -8,6 +8,7 @@ import { queryProducts } from '@/data/productHelpers';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/hero-main.jpg";
+const HERO_ASPECT_RATIO_CLASS = "h-screen";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
 const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
@@ -61,12 +62,52 @@ const HeroSection = () => {
   const buttonsY = useTransform(scrollY, [0, 250], [0, 40]);
 
   return (
-    <section data-testid="hero-section" className="relative h-screen overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="w-full h-full object-cover brightness-105" />
-        <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
-      </div>
+      <section data-testid="hero-section" className="relative w-full">
+        {/* Background image */}
+        <div className={`relative w-full ${HERO_ASPECT_RATIO_CLASS}`}>
+          <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="block w-full h-full object-cover object-center brightness-105" />
+          <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
+          <div className="absolute inset-0 z-10">
+            <div className="relative w-full h-full">
+              {/* CTA Buttons at bottom of hero */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.8 }}
+                className="absolute bottom-20 md:bottom-24 left-0 right-0 z-10 flex flex-col sm:flex-row justify-center gap-4 px-6"
+                style={{ opacity: buttonsOpacity, y: buttonsY }}
+              >
+                <Link
+                  to="/tienda?gender=hombre"
+                  data-testid="hero-shop-men"
+                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+                  className="btn-luxury text-center"
+                >
+                  Comprar Hombre
+                </Link>
+                <Link
+                  to="/tienda?gender=mujer"
+                  data-testid="hero-shop-women"
+                  onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+                  className="btn-luxury text-center"
+                >
+                  Comprar Mujer
+                </Link>
+                <button
+                  type="button"
+                  data-testid="hero-explore"
+                  onClick={() => {
+                    const el = document.getElementById('drops');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="btn-luxury btn-gold text-center"
+                >
+                  Explorar
+                </button>
+              </motion.div>
+            </div>
+          </div>
+        </div>
 
       {/* Animated GIANT logo — fixed position, transforms from center to header */}
       <motion.div
@@ -85,42 +126,6 @@ const HeroSection = () => {
         />
       </motion.div>
 
-      {/* CTA Buttons at bottom of hero */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        className="absolute bottom-20 md:bottom-24 left-0 right-0 z-10 flex flex-col sm:flex-row justify-center gap-4 px-6"
-        style={{ opacity: buttonsOpacity, y: buttonsY }}
-      >
-        <Link
-          to="/tienda?gender=hombre"
-          data-testid="hero-shop-men"
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-          className="btn-luxury text-center"
-        >
-          Comprar Hombre
-        </Link>
-        <Link
-          to="/tienda?gender=mujer"
-          data-testid="hero-shop-women"
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-          className="btn-luxury text-center"
-        >
-          Comprar Mujer
-        </Link>
-        <button
-          type="button"
-          data-testid="hero-explore"
-          onClick={() => {
-            const el = document.getElementById('drops');
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }}
-          className="btn-luxury btn-gold text-center"
-        >
-          Explorar
-        </button>
-      </motion.div>
     </section>
   );
 };
@@ -159,7 +164,7 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
           src={bg}
           alt={title}
           loading="lazy"
-          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'hidden' : 'block'}`}
+          className={`w-full h-auto object-contain object-center ${hovered ? 'hidden' : 'block'}`}
         />
         <video
           ref={videoRef}
@@ -169,7 +174,7 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
           preload="metadata"
           poster={bg}
           src={videoSrc}
-          className={`absolute inset-0 w-full h-full object-contain object-center ${hovered ? 'block' : 'hidden'}`}
+          className={`w-full h-auto max-w-full object-contain object-center ${hovered ? 'block' : 'hidden'}`}
         />
 
         {/* Keep luminosity consistent between image/video */}
@@ -303,7 +308,7 @@ const DropGridSection = () => {
                     data-testid="editorial-divider-image"
                     src={DROP_EDITORIAL_IMAGE}
                     alt="Editorial TAMBVRINI"
-                    className="mx-auto w-auto h-auto max-w-full object-contain"
+                    className="mx-auto w-full h-auto object-contain object-center"
                     loading="lazy"
                   />
                 </div>
@@ -322,7 +327,7 @@ const DropGridSection = () => {
                           src={EDITORIAL_POLOS_IMAGE}
                           alt="Colección Polos"
                           loading="lazy"
-                          className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                         />
                       </div>
                     </Link>
@@ -344,7 +349,7 @@ const DropGridSection = () => {
                           src={EDITORIAL_SUETERES_IMAGE}
                           alt="Colección Suéteres"
                           loading="lazy"
-                          className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                         />
                       </div>
                     </Link>
@@ -391,7 +396,7 @@ const DropGridSection = () => {
                       data-testid="campaign-divider-image"
                       src={DROP_CAMPAIGN_IMAGE}
                       alt="Editorial Casablanca TAMBVRINI"
-                      className="w-full h-auto"
+                      className="w-full h-auto object-contain object-center"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/10" />
@@ -424,7 +429,7 @@ const DropGridSection = () => {
                       data-testid="editorial-hero-image"
                       src={EDITORIAL_HERO_IMAGE}
                       alt="Editorial TAMBVRINI"
-                      className="absolute inset-0 w-full h-full object-cover object-center"
+                      className="w-full h-auto object-contain object-center"
                       loading="lazy"
                     />
                     <Link
