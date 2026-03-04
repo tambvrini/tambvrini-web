@@ -30,7 +30,7 @@
     transform: scale(1.06);
 }
 
-.main-product-image img {
+.umbra-product-frame.main-product-image img {
     width: 100%;
     height: auto;
     object-fit: contain;
