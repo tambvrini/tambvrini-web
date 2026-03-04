@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import catalogProducts from '@/data/products';
+
+const resolveProductName = (productId, fallback) =>
+  catalogProducts.find((product) => product.product_id === productId)?.name || fallback;
 
 const LIMITED_EDITIONS_PRODUCTS = [
   {
     id: 'americana-umbra',
-    title: 'Americana Umbra',
+    title: resolveProductName('americana-umbra', 'Americana Umbra'),
     description: 'Tailored darkness in its purest form.',
     image: '/products/americana-umbra/americana-umbra-main.jpg',
     href: '/producto/americana-umbra',
   },
   {
     id: 'ignatius-sweater',
-    title: 'Ignatius Sweater',
+    title: resolveProductName('sueter-ignatius', 'Ignatius Sweater'),
     description: 'Knitwear shaped by infernal contrast.',
     image: '/thumbnails/ignatius-sweater-thumb.jpg',
     href: '/producto/sueter-ignatius',
@@ -27,8 +31,6 @@ export default function LimitedEditionsPage() {
   const cursorRefs = useRef([]);
   const cursorRafRefs = useRef([]);
   const scrollRaf = useRef(null);
-
-  const sections = useMemo(() => LIMITED_EDITIONS_PRODUCTS, []);
 
   useEffect(() => {
     document.body.classList.add('limited-editions-mode');
@@ -123,8 +125,8 @@ export default function LimitedEditionsPage() {
       cancelAnimationFrame(cursorRafRefs.current[index]);
     }
     cursorRafRefs.current[index] = requestAnimationFrame(() => {
-      cursor.style.left = `${x.toFixed(1)}px`;
-      cursor.style.top = `${y.toFixed(1)}px`;
+      cursor.style.left = `${x}px`;
+      cursor.style.top = `${y}px`;
     });
   };
 
@@ -148,7 +150,7 @@ export default function LimitedEditionsPage() {
           </div>
         </section>
         <div className="limited-editions-sections">
-          {sections.map((product, index) => (
+        {LIMITED_EDITIONS_PRODUCTS.map((product, index) => (
             <section
               key={product.id}
               ref={(el) => {

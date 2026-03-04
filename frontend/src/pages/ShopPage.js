@@ -7,8 +7,8 @@ import { queryProducts } from '@/data/productHelpers';
 import catalogProducts from '@/data/products';
 
 const CATEGORY_LABELS = {
-  '2026': '2026',
   novedades: 'Novedades',
+  '2026': '2026',
   polos: 'Polos',
   sueteres: 'Suéteres',
   hombre: 'Hombre',
@@ -19,9 +19,16 @@ const CATEGORY_LABELS = {
 };
 
 const CATEGORY_NAV_ITEMS = [
-  ['2026', '2026'],
+  ['2026', CATEGORY_LABELS['2026']],
   ['limited-editions', 'Limited Editions'],
-  ...Object.entries(CATEGORY_LABELS).filter(([key]) => key !== '2026'),
+  ['novedades', CATEGORY_LABELS.novedades],
+  ['polos', CATEGORY_LABELS.polos],
+  ['sueteres', CATEGORY_LABELS.sueteres],
+  ['hombre', CATEGORY_LABELS.hombre],
+  ['mujer', CATEGORY_LABELS.mujer],
+  ['accesorios', CATEGORY_LABELS.accesorios],
+  ['marroquineria', CATEGORY_LABELS.marroquineria],
+  ['calzado', CATEGORY_LABELS.calzado],
 ];
 
 const COLLECTION_LABELS = {
