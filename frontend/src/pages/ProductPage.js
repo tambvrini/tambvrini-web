@@ -10,6 +10,7 @@ import { getProductById } from '@/data/productHelpers';
 export default function ProductPage() {
   const { productId } = useParams();
   const isUmbraProduct = productId === 'americana-umbra';
+  const isIgnatiusProduct = productId === 'sueter-ignatius';
   const umbraTransitionDelay = 800;
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
@@ -75,8 +76,15 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+        {isIgnatiusProduct && (
+          <>
+            <div className="ignatius-atmosphere" aria-hidden="true" />
+            <div className="ignatius-heat" aria-hidden="true" />
+            <div className="ignatius-smoke" aria-hidden="true" />
+          </>
+        )}
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin" />
       </div>
     );
@@ -84,8 +92,15 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+        {isIgnatiusProduct && (
+          <>
+            <div className="ignatius-atmosphere" aria-hidden="true" />
+            <div className="ignatius-heat" aria-hidden="true" />
+            <div className="ignatius-smoke" aria-hidden="true" />
+          </>
+        )}
         <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
       </div>
     );
@@ -107,8 +122,15 @@ export default function ProductPage() {
   const shouldFade = selectedImage !== activeImage && isImageLoaded;
 
   return (
-    <div data-testid="product-page" className={`min-h-screen pt-28 md:pt-32 pb-24 ${isUmbraProduct ? 'umbra-product-page' : ''}`}>
+    <div data-testid="product-page" className={`min-h-screen pt-28 md:pt-32 pb-24 ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
       {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+      {isIgnatiusProduct && (
+        <>
+          <div className="ignatius-atmosphere" aria-hidden="true" />
+          <div className="ignatius-heat" aria-hidden="true" />
+          <div className="ignatius-smoke" aria-hidden="true" />
+        </>
+      )}
       {/* Breadcrumb */}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
         <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
@@ -189,7 +211,7 @@ export default function ProductPage() {
               {product.category?.join(' / ')}
             </p>
             <div className="flex items-start justify-between gap-6 mb-4">
-              <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-obsidian">
+              <h1 data-testid="product-name" className={`font-playfair text-3xl md:text-4xl text-obsidian ${isIgnatiusProduct ? 'ignatius-title ignatius-glow' : ''}`}>
                 {product.name}
               </h1>
               {product.is_sold_out && (
@@ -198,7 +220,7 @@ export default function ProductPage() {
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4">
+            <p data-testid="product-price" className={`font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4 ${isIgnatiusProduct ? 'ignatius-price' : ''}`}>
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (
@@ -254,7 +276,7 @@ export default function ProductPage() {
                         selectedSize === s
                           ? 'border-obsidian text-obsidian bg-black/5'
                           : 'border-black/10 text-obsidian/50'
-                      } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'}`}
+                      } ${isIgnatiusProduct && selectedSize === s ? 'ignatius-size-selected ignatius-glow' : ''} ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'}`}
                     >
                       {s}
                     </button>
@@ -289,7 +311,7 @@ export default function ProductPage() {
                 data-testid="add-to-cart-btn"
                 onClick={handleAddToCart}
                 disabled={product.is_sold_out}
-                className={`umbra-keep-dark flex-1 py-4 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 ${
+                className={`umbra-keep-dark flex-1 py-4 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 ${isIgnatiusProduct ? 'ignatius-cta ignatius-glow' : ''} ${
                   product.is_sold_out
                     ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
                     : 'bg-white text-obsidian hover:bg-gold'
