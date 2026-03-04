@@ -231,7 +231,7 @@ export default function ProductPage() {
               <div
                 ref={productImageRef}
                 className={`img-zoom aspect-[3/4] md:flex-1 overflow-hidden bg-white/5 flex items-center justify-center relative ${
-                  isUmbraProduct ? 'umbra-product-frame' : ''
+                  isUmbraProduct ? 'umbra-product-frame main-product-image' : ''
                 } ${isUmbraProduct && isUmbraZoom ? 'umbra-zoom' : ''} ${
                   isUmbraProduct && isUmbraMode ? 'umbra-glow' : ''
                 }`}

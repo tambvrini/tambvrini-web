@@ -30,6 +30,13 @@
     transform: scale(1.06);
 }
 
+.main-product-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
 /* Luxury button styles */
 .btn-luxury {
     border: 1px solid rgba(17, 17, 17, 0.18);
