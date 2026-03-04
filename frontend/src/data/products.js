@@ -355,6 +355,32 @@ const products = [
     collections: ["roma"],
     created_at: "2026-02-24T00:00:00+00:00",
   },
+
+  // ──────────────────────────────────────────────────
+  // 13. Suéter Ignatius
+  // ──────────────────────────────────────────────────
+  {
+    product_id: "sueter-ignatius",
+    slug: "ignatius-sweater-thumb",
+    name: "Suéter Ignatius",
+    description:
+      "El Suéter Ignatius reinterpreta el knitwear clásico con un carácter deliberadamente imperfecto. Confeccionado en algodón de tacto suave, presenta un acabado desgastado artesanal que revela capas interiores en contraste rojo, creando una estética cruda y contemporánea.\n\nCada pieza expresa una elegancia desestructurada, donde el desgaste controlado y los cortes irregulares evocan la tradición del trabajo manual y la individualidad de la prenda. Un equilibrio entre sofisticación clásica y rebeldía moderna.",
+    price: 50.0,
+    currency: "EUR",
+    images: [],
+    thumbnail_image: "/thumbnails/ignatius-sweater-thumb.jpg",
+    category: ["knitwear", "apparel"],
+    gender: "hombre",
+    sizes: ["S", "M"],
+    colors: [{ name: "Negro", hex: "#0A0A0A" }],
+    composition:
+      "100% algodón de alta calidad.\n\nTejido de gramaje medio con acabado suavizado para mayor confort. Detalles desgastados realizados manualmente que hacen que cada pieza sea única.",
+    care: "Lavado a mano. Secar en plano.",
+    is_new: true,
+    is_featured: true,
+    collections: ["roma"],
+    created_at: "2026-03-04T00:00:00+00:00",
+  },
 ];
 
 export default products;
