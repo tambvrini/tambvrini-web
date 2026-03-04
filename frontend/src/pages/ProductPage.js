@@ -21,6 +21,7 @@ export default function ProductPage() {
   const [infoTab, setInfoTab] = useState('description');
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
+  const isUmbra = product?.product_id === 'americana-umbra';
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -44,6 +45,22 @@ export default function ProductPage() {
     fetchProduct();
     window.scrollTo(0, 0);
   }, [productId]);
+
+  useEffect(() => {
+    if (!isUmbra) {
+      document.body.classList.remove('umbra-mode');
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      document.body.classList.add('umbra-mode');
+    }, 800);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      document.body.classList.remove('umbra-mode');
+    };
+  }, [isUmbra]);
 
   const handleAddToCart = () => {
     if (product.is_sold_out) return;
@@ -88,6 +105,7 @@ export default function ProductPage() {
 
   return (
     <div data-testid="product-page" className="min-h-screen pt-28 md:pt-32 pb-24">
+      {isUmbra && <div className="umbra-background" aria-hidden="true" />}
       {/* Breadcrumb */}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
         <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
