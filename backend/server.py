@@ -12,6 +12,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
+import httpx
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -32,6 +33,10 @@ STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
 CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
+GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
+MIN_GOOGLE_TOKEN_TTL_SECONDS = 60
+GOOGLE_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo"
+GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -54,6 +59,9 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+class GoogleAuthRequest(BaseModel):
+    access_token: str = Field(..., alias="access_token")
 
 class CheckoutRequest(BaseModel):
     items: List[Dict]
@@ -177,6 +185,82 @@ async def logout(request: Request, response: Response):
         await db.user_sessions.delete_one({"session_token": session_token})
     response.delete_cookie("session_token", path="/", samesite="none", secure=True)
     return {"message": "Sesión cerrada"}
+
+@api_router.post("/auth/google")
+async def login_with_google(data: GoogleAuthRequest):
+    access_token = data.access_token.strip()
+    if not access_token:
+        raise HTTPException(400, "Token inválido")
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        token_info_response = await client.post(
+            GOOGLE_TOKENINFO_URL,
+            data={"access_token": access_token}
+        )
+        if token_info_response.status_code != 200:
+            raise HTTPException(401, "Token de Google inválido")
+        token_info = token_info_response.json()
+        audience = token_info.get("aud") or token_info.get("audience")
+        if audience != GOOGLE_CLIENT_ID:
+            raise HTTPException(401, "Token de Google no corresponde al cliente")
+        try:
+            expires_in = int(token_info.get("expires_in", 0))
+        except (TypeError, ValueError) as exc:
+            logger.warning("Invalid expires_in from Google token info: %s", exc)
+            expires_in = 0
+        if expires_in < MIN_GOOGLE_TOKEN_TTL_SECONDS:
+            raise HTTPException(401, "Token de Google inválido o expirado")
+        profile_response = await client.get(
+            GOOGLE_USERINFO_URL,
+            headers={"Authorization": f"Bearer {access_token}"}
+        )
+        if profile_response.status_code != 200:
+            raise HTTPException(401, "No se pudo obtener el perfil de Google")
+        profile = profile_response.json()
+    email = profile.get("email")
+    if not email:
+        raise HTTPException(400, "Email no disponible")
+    if profile.get("email_verified") is not True:
+        raise HTTPException(401, "Email no verificado")
+    google_sub = profile.get("sub")
+    name = profile.get("name") or email
+    picture = profile.get("picture")
+
+    user = await db.users.find_one({"email": email}, {"_id": 0})
+    if not user:
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        user_doc = {
+            "user_id": user_id,
+            "email": email,
+            "name": name,
+            "password_hash": None,
+            "picture": picture,
+            "google_sub": google_sub,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.users.insert_one(user_doc)
+        user = user_doc
+    else:
+        updates = {}
+        if google_sub is not None and user.get("google_sub") != google_sub:
+            updates["google_sub"] = google_sub
+        if picture is not None and user.get("picture") != picture:
+            updates["picture"] = picture
+        if not user.get("name") and name is not None and user.get("name") != name:
+            updates["name"] = name
+        if updates:
+            await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})
+            user.update(updates)
+
+    token = create_token(user["user_id"], user["email"])
+    return {
+        "token": token,
+        "user": {
+            "user_id": user["user_id"],
+            "email": user["email"],
+            "name": user["name"],
+            "picture": user.get("picture")
+        }
+    }
 
 
 # ==================== CART + WISHLIST MODELS ====================

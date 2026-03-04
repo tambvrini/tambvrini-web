@@ -1,8 +1,10 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const AuthContext = createContext(null);
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const GOOGLE_SCRIPT_ERROR_MESSAGE = 'No se pudo cargar Google Identity Services.';
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -10,6 +12,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
+  const googleAuthPromiseRef = useRef(null);
+  const googleScriptPromiseRef = useRef(null);
 
   const getHeaders = useCallback(() => {
     if (token) return { Authorization: `Bearer ${token}` };
@@ -52,12 +56,72 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const exchangeSession = async (sessionId) => {
-    const res = await axios.post(`${API}/auth/session`, { session_id: sessionId }, { withCredentials: true });
-    setToken(res.data.token);
-    localStorage.setItem('auth_token', res.data.token);
-    setUser(res.data);
-    return res.data;
+  const loadGoogleIdentityScript = () => {
+    if (window.google?.accounts?.oauth2) {
+      return Promise.resolve();
+    }
+    if (googleScriptPromiseRef.current) {
+      return googleScriptPromiseRef.current;
+    }
+    googleScriptPromiseRef.current = new Promise((resolve, reject) => {
+      let settled = false;
+      const resolveOnce = () => {
+        if (settled) return;
+        settled = true;
+        googleScriptPromiseRef.current = null;
+        resolve();
+      };
+      const rejectOnce = () => {
+        if (settled) return;
+        settled = true;
+        googleScriptPromiseRef.current = null;
+        reject(new Error(GOOGLE_SCRIPT_ERROR_MESSAGE));
+      };
+      const existingScript = document.getElementById('google-identity-service');
+      if (existingScript) {
+        if (existingScript.dataset.loaded === 'true' && window.google?.accounts?.oauth2) {
+          resolveOnce();
+          return;
+        }
+        if (existingScript.dataset.error === 'true') {
+          rejectOnce();
+          return;
+        }
+        const handleLoad = () => {
+          existingScript.dataset.loaded = 'true';
+          resolveOnce();
+        };
+        const handleError = () => {
+          existingScript.dataset.error = 'true';
+          rejectOnce();
+        };
+        existingScript.addEventListener('load', handleLoad, { once: true });
+        existingScript.addEventListener(
+          'error',
+          handleError,
+          { once: true }
+        );
+        if (window.google?.accounts?.oauth2) {
+          handleLoad();
+        }
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.id = 'google-identity-service';
+      script.onload = () => {
+        script.dataset.loaded = 'true';
+        resolveOnce();
+      };
+      script.onerror = () => {
+        script.dataset.error = 'true';
+        rejectOnce();
+      };
+      document.head.appendChild(script);
+    });
+    return googleScriptPromiseRef.current;
   };
 
   const logout = async () => {
@@ -69,14 +133,60 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth_token');
   };
 
-  // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
-  const loginWithGoogle = () => {
-    const redirectUrl = window.location.origin + '/cuenta';
-    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+  const loginWithGoogle = async () => {
+    if (googleAuthPromiseRef.current) {
+      return googleAuthPromiseRef.current;
+    }
+    if (!GOOGLE_CLIENT_ID) {
+      throw new Error('Google Client ID no configurado en variables de entorno');
+    }
+    await loadGoogleIdentityScript();
+    googleAuthPromiseRef.current = new Promise((resolve, reject) => {
+      const finalize = () => {
+        googleAuthPromiseRef.current = null;
+      };
+      const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'openid email profile',
+        callback: async (response) => {
+          if (response?.error || !response?.access_token) {
+            const errorCode = response?.error;
+            const errorMessage = errorCode === 'access_denied' || errorCode === 'popup_closed_by_user'
+              ? 'Autenticación con Google cancelada.'
+              : 'No se pudo iniciar sesión con Google.';
+            finalize();
+            reject(new Error(errorMessage));
+            return;
+          }
+          try {
+            const res = await axios.post(
+              `${API}/auth/google`,
+              { access_token: response.access_token },
+              { withCredentials: true }
+            );
+            setToken(res.data.token);
+            localStorage.setItem('auth_token', res.data.token);
+            setUser(res.data.user);
+            finalize();
+            resolve(res.data);
+          } catch (err) {
+            finalize();
+            reject(err);
+          }
+        }
+      });
+      try {
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
+      } catch (err) {
+        finalize();
+        reject(err);
+      }
+    });
+    return googleAuthPromiseRef.current;
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, token, login, register, logout, loginWithGoogle, exchangeSession, getHeaders }}>
+    <AuthContext.Provider value={{ user, loading, token, login, register, logout, loginWithGoogle, getHeaders }}>
       {children}
     </AuthContext.Provider>
   );

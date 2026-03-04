@@ -4,6 +4,7 @@ import { SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { queryProducts } from '@/data/productHelpers';
+import catalogProducts from '@/data/products';
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
@@ -21,6 +22,11 @@ const COLLECTION_LABELS = {
   roma: 'Roma',
   atelier: 'Atelier',
   limited: 'Piezas Limitadas',
+};
+
+const HEADER_LABEL_OVERRIDES = {
+  hombre: 'UOMO',
+  mujer: 'DONNA',
 };
 
 const MUJER_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/udlexuwa_hf_20260222_200211_c5c76655-5b93-4052-adc1-45fea5a9cdc5.jpg";
@@ -79,8 +85,8 @@ export default function ShopPage() {
 
   const getTitle = () => {
     if (search) return `Resultados: "${search}"`;
-    if (gender) return CATEGORY_LABELS[gender] || gender;
-    if (category) return CATEGORY_LABELS[category] || category;
+    if (gender) return HEADER_LABEL_OVERRIDES[gender] || CATEGORY_LABELS[gender] || gender;
+    if (category) return HEADER_LABEL_OVERRIDES[category] || CATEGORY_LABELS[category] || category;
     if (collection) return COLLECTION_LABELS[collection] || collection;
     return 'Tienda';
   };
@@ -97,22 +103,57 @@ export default function ShopPage() {
       ? products.filter((p) => p.product_id !== 'traje-monograma-tambvrini')
       : products;
 
-  const displayTotal = gender === 'hombre' ? filteredProducts.length : total;
   const isMensView = gender === 'hombre';
   const isWomenView = gender === 'mujer';
+  const mujerProducts = useMemo(() => {
+    if (!isWomenView) return filteredProducts;
+    const poloAureus = catalogProducts.find((p) => p.product_id === 'polo-aureus');
+    const poloPatricius = catalogProducts.find((p) => p.product_id === 'polo-patricius');
+    const ordered = [...filteredProducts];
+    let imperiumIndex = -1;
+    let umbraIndex = -1;
+    let hasAureus = false;
+    let hasPatricius = false;
+
+    for (let index = 0; index < ordered.length; index += 1) {
+      const productId = ordered[index].product_id;
+      if (imperiumIndex === -1 && productId === 'camiseta-imperium') imperiumIndex = index;
+      if (umbraIndex === -1 && productId === 'americana-umbra') umbraIndex = index;
+      if (!hasAureus && productId === 'polo-aureus') hasAureus = true;
+      if (!hasPatricius && productId === 'polo-patricius') hasPatricius = true;
+      if (imperiumIndex !== -1 && umbraIndex !== -1 && hasAureus && hasPatricius) {
+        break;
+      }
+    }
+
+    if (poloAureus && !hasAureus && imperiumIndex !== -1) {
+      ordered.splice(imperiumIndex, 0, poloAureus);
+      if (umbraIndex >= imperiumIndex) {
+        umbraIndex += 1;
+      }
+    }
+
+    if (poloPatricius && !hasPatricius && umbraIndex !== -1) {
+      ordered.splice(umbraIndex + 1, 0, poloPatricius);
+    }
+
+    return ordered;
+  }, [filteredProducts, isWomenView]);
+  const gridProducts = isWomenView ? mujerProducts : filteredProducts;
+  const displayTotal = isMensView ? filteredProducts.length : isWomenView ? mujerProducts.length : total;
   const isCinematicView = isWomenView || isMensView;
   const mensFirst = isMensView ? filteredProducts.slice(0, 4) : filteredProducts;
   const mensRest = isMensView ? filteredProducts.slice(4) : [];
   const mujerImperiumIndex = isWomenView
-    ? filteredProducts.findIndex((p) => p.product_id === 'camiseta-imperium')
+    ? mujerProducts.findIndex((p) => p.product_id === 'camiseta-imperium')
     : -1;
   const mujerGridItems = isWomenView && mujerImperiumIndex !== -1
     ? [
-        ...filteredProducts.slice(0, mujerImperiumIndex + 1),
+        ...mujerProducts.slice(0, mujerImperiumIndex + 1),
         { type: 'editorial', id: 'mujer-editorial' },
-        ...filteredProducts.slice(mujerImperiumIndex + 1),
+        ...mujerProducts.slice(mujerImperiumIndex + 1),
       ]
-    : filteredProducts;
+    : gridProducts;
 
   useEffect(() => {
     if (!isCinematicView) {
@@ -198,7 +239,7 @@ export default function ShopPage() {
           <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C] relative z-[20]">
             <div className="relative z-[40] flex items-center justify-center w-full h-full">
               <div
-                className="w-[min(88vw,960px)] aspect-[4/3] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="w-[min(88vw,960px)] aspect-[4/3] flex items-center justify-center transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                 style={{ transform: `scale(${videoScale})`, opacity: videoOpacity }}
               >
                 <video
@@ -209,7 +250,7 @@ export default function ShopPage() {
                   loop
                   playsInline
                   preload="auto"
-                  className="w-full h-full object-cover rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
+                  className="w-full h-auto object-contain object-center rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
                 />
               </div>
             </div>
@@ -218,14 +259,14 @@ export default function ShopPage() {
       )}
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6">
-          <div>
-            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.1em] text-obsidian">{getTitle()}</h1>
-            <p className="font-montserrat text-xs text-obsidian/50 mt-3 tracking-wide">
+        <div className="relative flex flex-col md:flex-row justify-start items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
+          <div className="w-full text-left">
+            <h1 data-testid="shop-title" className="font-cinzel text-3xl md:text-4xl lg:text-5xl tracking-[0.12em] text-editorial-red font-normal">{getTitle()}</h1>
+            <p className="font-montserrat text-xxs md:text-xs text-obsidian/40 mt-2 tracking-[0.12em]">
               {displayTotal} {displayTotal === 1 ? 'producto' : 'productos'}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 md:absolute md:right-0 md:bottom-0">
             {hasActiveFilters && (
               <button
                 data-testid="clear-filters-btn"
@@ -283,7 +324,7 @@ export default function ShopPage() {
               </div>
             ))}
           </div>
-        ) : filteredProducts.length === 0 ? (
+        ) : gridProducts.length === 0 ? (
           <div className="text-center py-20">
             <p className="font-playfair text-xl text-obsidian/50">No se encontraron productos</p>
             <button onClick={clearFilters} className="mt-6 btn-luxury text-xs">Ver todos los productos</button>
@@ -316,7 +357,7 @@ export default function ShopPage() {
                 data-testid="mens-campaign-image"
                 src={HOMBRE_CAMPAIGN_IMAGE}
                 alt="Campaña Hombre TAMBVRINI"
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-contain object-center"
                 loading="lazy"
               />
             </div>
@@ -351,13 +392,13 @@ export default function ShopPage() {
                   data-testid="mujer-editorial-insert"
                   className="col-span-2 md:col-span-3 lg:col-span-2"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out hover:scale-[1.01]">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out hover:scale-[1.01] flex items-center justify-center">
                     <img
                       data-testid="mujer-editorial-image"
                       src={MUJER_HERO_IMAGE}
                       alt="Editorial Mujer TAMBVRINI"
                       loading="lazy"
-                      className="w-full h-full object-cover"
+                      className="w-full h-auto max-h-full object-contain object-center"
                     />
                   </div>
                 </div>

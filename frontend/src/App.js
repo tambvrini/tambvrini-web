@@ -16,7 +16,6 @@ import CartPage from "./pages/CartPage";
 import AccountPage from "./pages/AccountPage";
 import WishlistPage from "./pages/WishlistPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
-import AuthCallback from "./pages/AuthCallback";
 import BrandPage from "./pages/BrandPage";
 
 function AppRouter() {
@@ -25,11 +24,6 @@ function AppRouter() {
   useEffect(() => {
     document.title = 'TAMBVRINI';
   }, [location.pathname]);
-
-  // Check URL fragment for session_id (Google OAuth callback)
-  if (location.hash?.includes('session_id=')) {
-    return <AuthCallback />;
-  }
 
   const isHome = location.pathname === '/';
 

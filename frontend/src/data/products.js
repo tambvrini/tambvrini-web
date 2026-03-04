@@ -102,7 +102,7 @@ const products = [
     name: "Camiseta Sport Club",
     description:
       "Camiseta Sport Club de inspiración europea clásica.\nAlgodón premium de alto gramaje con caída estructurada y tacto suave.\n\nDiseño minimalista frontal con emblema romano y gráfica trasera de gran formato estilo sport club europeo.\nPensada para un equilibrio entre lujo relajado, estética deportiva y cultura contemporánea.\n\nAjuste regular elegante.\nFabricación premium.\nUso diario o editorial.\n\nComposición:\n100% algodón premium pesado.\n\nFit: regular luxury fit.",
-    price: 895.0,
+    price: 20.0,
     currency: "EUR",
     images: [
       `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/79qq3jhd_hf_20260212_010716_e54abf26-8fbd-407b-a1a1-d841e2e3946d.png`,
@@ -138,7 +138,7 @@ const products = [
     name: "Polo Golf",
     description:
       "Polo Golf de la colección Sport Club 2026. Algodón premium con bordado del escudo Sport Club. Estética deportiva europea con acabado de lujo.",
-    price: 895.0,
+    price: 30.0,
     currency: "EUR",
     images: [],
     category: ["polos", "apparel"],
@@ -164,7 +164,7 @@ const products = [
     name: "Suéter Captain",
     description:
       "Suéter Captain de la colección Sport Club 2026. Punto fino premium con bordado del escudo Sport Club. Diseñado para el rendimiento con estética de club privado europeo.",
-    price: 895.0,
+    price: 50.0,
     currency: "EUR",
     images: [],
     category: ["knitwear", "apparel"],
@@ -189,7 +189,7 @@ const products = [
     name: "Polo Aureus",
     description:
       "Polo Aureus de algodón premium con acabado de lujo. Una pieza atemporal que combina la elegancia deportiva con el refinamiento mediterráneo.",
-    price: 49.99,
+    price: 30.0,
     currency: "EUR",
     images: [],
     category: ["polos", "apparel"],
@@ -215,7 +215,7 @@ const products = [
     name: "Camiseta Imperium",
     description:
       "Camiseta Imperium de algodón premium con diseño editorial. Inspiración clásica romana con acabado contemporáneo de lujo.",
-    price: 895.0,
+    price: 20.0,
     currency: "EUR",
     images: [],
     category: ["camisetas", "apparel"],
@@ -240,7 +240,7 @@ const products = [
     name: "Americana UMBRA",
     description:
       "Americana UMBRA de sastrería contemporánea. Silueta elegante con estructura ligera e inspiración clásica mediterránea.",
-    price: 1250.0,
+    price: 150.0,
     currency: "EUR",
     images: [],
     category: ["sastrería", "apparel"],
@@ -266,7 +266,7 @@ const products = [
     name: "Polo Domus",
     description:
       "Polo Domus de algodón premium con bordado exclusivo. Estética de club privado europeo con acabado de lujo contemporáneo.",
-    price: 895.0,
+    price: 25.0,
     currency: "EUR",
     images: [],
     category: ["polos", "apparel"],
@@ -291,7 +291,7 @@ const products = [
     name: "Suéter Sylva",
     description:
       "Suéter Sylva de punto fino premium. Diseño elegante con acabado de lujo y estética de club privado europeo.",
-    price: 895.0,
+    price: 40.0,
     currency: "EUR",
     images: [],
     category: ["knitwear", "apparel"],
@@ -316,7 +316,7 @@ const products = [
     name: "Polo Patricius",
     description:
       "Polo Patricius de algodón premium con bordado exclusivo. Inspiración clásica romana con estética de lujo contemporáneo.",
-    price: 895.0,
+    price: 25.0,
     currency: "EUR",
     images: [],
     category: ["polos", "apparel"],
@@ -341,7 +341,7 @@ const products = [
     name: "Polo Regius",
     description:
       "Polo Regius de algodón premium con bordado exclusivo. La máxima expresión de la elegancia deportiva mediterránea.",
-    price: 895.0,
+    price: 30.0,
     currency: "EUR",
     images: [],
     category: ["polos", "apparel"],
