@@ -65,8 +65,8 @@ export default function CartPage() {
               {items.map((item) => (
                 <div key={`${item.product_id}-${item.size}-${item.color}`} className="border-b border-black/5 py-6 md:grid md:grid-cols-12 md:gap-4 md:items-center flex flex-col gap-4">
                   <div className="col-span-6 flex gap-5">
-                    <Link to={`/producto/${item.product_id}`} className="w-24 h-32 bg-black/5 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                      <img src={item.image} alt={item.name} className="w-full h-auto max-h-full object-contain object-center" />
+                    <Link to={`/producto/${item.product_id}`} className="w-24 h-32 bg-black/5 flex-shrink-0 overflow-hidden">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     </Link>
                     <div>
                       <Link to={`/producto/${item.product_id}`} className="font-playfair text-sm text-obsidian hover:text-obsidian transition-colors">{item.name}</Link>

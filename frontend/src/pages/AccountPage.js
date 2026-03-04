@@ -61,7 +61,7 @@ export default function AccountPage() {
           <div className="border border-black/5 p-8 md:p-12 mb-8">
             <div className="flex items-center gap-5 mb-8">
               {user.picture ? (
-                <img src={user.picture} alt="" className="w-14 h-14 rounded-full object-contain object-center" />
+                <img src={user.picture} alt="" className="w-14 h-14 rounded-full object-cover" />
               ) : (
                 <div className="w-14 h-14 bg-gold/10 flex items-center justify-center">
                   <User size={24} className="text-gold/50" />

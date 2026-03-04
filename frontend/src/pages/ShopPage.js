@@ -239,7 +239,7 @@ export default function ShopPage() {
           <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C] relative z-[20]">
             <div className="relative z-[40] flex items-center justify-center w-full h-full">
               <div
-                className="w-[min(88vw,960px)] aspect-[4/3] flex items-center justify-center transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="w-[min(88vw,960px)] aspect-[4/3] transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                 style={{ transform: `scale(${videoScale})`, opacity: videoOpacity }}
               >
                 <video
@@ -250,7 +250,7 @@ export default function ShopPage() {
                   loop
                   playsInline
                   preload="auto"
-                  className="w-full h-auto object-contain object-center rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
+                  className="w-full h-full object-cover rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
                 />
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function ShopPage() {
                 data-testid="mens-campaign-image"
                 src={HOMBRE_CAMPAIGN_IMAGE}
                 alt="Campaña Hombre TAMBVRINI"
-                className="w-full h-auto object-contain object-center"
+                className="w-full h-auto object-cover"
                 loading="lazy"
               />
             </div>
@@ -392,13 +392,13 @@ export default function ShopPage() {
                   data-testid="mujer-editorial-insert"
                   className="col-span-2 md:col-span-3 lg:col-span-2"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out hover:scale-[1.01] flex items-center justify-center">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out hover:scale-[1.01]">
                     <img
                       data-testid="mujer-editorial-image"
                       src={MUJER_HERO_IMAGE}
                       alt="Editorial Mujer TAMBVRINI"
                       loading="lazy"
-                      className="w-full h-auto max-h-full object-contain object-center"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 </div>

@@ -83,9 +83,9 @@ export const CartDrawer = () => {
                   <Link
                     to={`/producto/${item.product_id}`}
                     onClick={() => setIsOpen(false)}
-                    className="w-20 h-28 bg-black/5 flex-shrink-0 overflow-hidden flex items-center justify-center"
+                    className="w-20 h-28 bg-black/5 flex-shrink-0 overflow-hidden"
                   >
-                    <img src={item.image} alt={item.name} className="w-full h-auto max-h-full object-contain object-center" />
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <Link

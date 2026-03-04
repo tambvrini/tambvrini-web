@@ -77,12 +77,12 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
         if (hasHoverVideo && canHover) setHovered(false);
       }}
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[12px] bg-white flex items-center justify-center">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[12px] bg-white">
           {`/thumbnails/${product.slug}.jpg` ? (
             <img
               src={`/thumbnails/${product.slug}.jpg`}
               alt={product.name}
-              className={`w-full h-auto max-h-full object-contain object-center ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
+              className={`w-full h-full object-cover ${hasHoverVideo ? '' : 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]'}`}
               loading="lazy"
             />
           ) : (
@@ -99,7 +99,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
               playsInline
               preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
               poster={`/thumbnails/${product.slug}.jpg`}
-              className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
               src={
                 isTraje
                   ? TRAJE_HOVER_VIDEO_URL
