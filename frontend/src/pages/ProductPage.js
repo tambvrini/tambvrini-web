@@ -131,7 +131,7 @@ export default function ProductPage() {
       ]
     : galleryImages.map((img) => ({ type: 'image', src: img }));
   const hasStandaloneModelViewer = Boolean(product.model_url) && !isUmbraProduct;
-  const fallbackPoster = galleryImages.length > 0 ? galleryImages[0] : '';
+  const fallbackPoster = galleryMedia.find((media) => media.type === 'image')?.src || '';
   const modelPoster = product.model_poster || product.thumbnail_image || fallbackPoster;
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
@@ -238,9 +238,9 @@ export default function ProductPage() {
                               if (i === selectedImage) return;
                               setIsImageLoaded(false);
                               setSelectedImage(i);
-                              const shouldSyncActiveImageForModelToggle = media.type === 'model'
+                              const isModelTransition = media.type === 'model'
                                 || galleryMedia[activeImage]?.type === 'model';
-                              if (shouldSyncActiveImageForModelToggle) {
+                              if (isModelTransition) {
                                 setActiveImage(i);
                               }
                             }}
