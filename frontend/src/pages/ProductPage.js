@@ -126,14 +126,14 @@ export default function ProductPage() {
 
   const galleryMedia = isUmbraProduct
     ? [
-        { type: 'model', src: product.model_url || '/models/umbra.glb' },
+        { type: 'model', src: product.model_url },
         ...galleryImages.map((img) => ({ type: 'image', src: img })),
       ]
     : galleryImages.map((img) => ({ type: 'image', src: img }));
   const hasStandaloneModelViewer = Boolean(product.model_url) && !isUmbraProduct;
   const fallbackPoster = product.thumbnail_image
     || galleryMedia.find((media) => media.type === 'image')?.src
-    || (isUmbraProduct ? '/thumbnails/americana-umbra.jpg' : '');
+    || '';
   const modelPoster = product.model_poster || fallbackPoster;
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
@@ -240,9 +240,9 @@ export default function ProductPage() {
                               if (i === selectedImage) return;
                               setIsImageLoaded(false);
                               setSelectedImage(i);
-                              const isModelInvolved = media.type === 'model'
+                              const shouldSkipTransition = media.type === 'model'
                                 || galleryMedia[activeImage]?.type === 'model';
-                              if (isModelInvolved) {
+                              if (shouldSkipTransition) {
                                 setActiveImage(i);
                               }
                             }}
