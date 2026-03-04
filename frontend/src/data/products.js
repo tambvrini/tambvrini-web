@@ -355,6 +355,30 @@ const products = [
     collections: ["roma"],
     created_at: "2026-02-24T00:00:00+00:00",
   },
+
+  // ──────────────────────────────────────────────────
+  // 13. Suéter Ignatius
+  // ──────────────────────────────────────────────────
+  {
+    product_id: "sueter-ignatius",
+    slug: "ignatius-sweater-thumb",
+    name: "Suéter Ignatius",
+    description: "Suéter Ignatius, echo a mano, pieza única",
+    price: 390.0,
+    currency: "EUR",
+    images: [],
+    thumbnail_image: "/thumbnails/ignatius-sweater-thumb.jpg",
+    category: ["knitwear", "apparel"],
+    gender: "hombre",
+    sizes: ["S", "M"],
+    colors: [{ name: "Beige", hex: "#D2B48C" }],
+    composition: "materiales de la mejor calidad, cosido a mano",
+    care: "",
+    is_new: true,
+    is_featured: true,
+    collections: ["roma"],
+    created_at: "2026-03-04T00:00:00+00:00",
+  },
 ];
 
 export default products;
