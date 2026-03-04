@@ -43,7 +43,7 @@ const baseProduct = {
   category: ['knitwear', 'apparel'],
   gender: 'hombre',
   sizes: ['S', 'M'],
-  colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  colors: [{ name: 'Magma', hex: '#0A0A0A' }],
   composition: 'Algodón',
   care: 'Lavado a mano',
   is_sold_out: false,
@@ -108,6 +108,21 @@ describe('ProductPage', () => {
 
     expect(viewer).toBeNull();
     expect(mainImage).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('renders the color label from product data', async () => {
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const colorButton = container.querySelector('[data-testid="color-btn-0"]');
+
+    expect(colorButton).not.toBeNull();
+    expect(colorButton.textContent).toContain('Magma');
 
     act(() => {
       root.unmount();

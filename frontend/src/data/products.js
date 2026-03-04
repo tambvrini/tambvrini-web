@@ -373,7 +373,7 @@ const products = [
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M"],
-    colors: [{ name: "Negro", hex: "#0A0A0A" }],
+    colors: [{ name: "Magma", hex: "#0A0A0A" }],
     composition:
       "100% algodón de alta calidad.\n\nTejido de gramaje medio con acabado suavizado para mayor confort. Detalles desgastados realizados manualmente que hacen que cada pieza sea única.",
     care: "Lavado a mano. Secar en plano.",
