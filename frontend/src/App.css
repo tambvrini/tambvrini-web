@@ -30,6 +30,19 @@
     transform: scale(1.06);
 }
 
+.product-main-image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    position: relative;
+    overflow: hidden;
+}
+.product-main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
 /* Luxury button styles */
 .btn-luxury {
     border: 1px solid rgba(17, 17, 17, 0.18);

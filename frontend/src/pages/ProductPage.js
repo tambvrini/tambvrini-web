@@ -125,15 +125,15 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left: Gallery */}
           <div>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="img-zoom aspect-[3/4] md:flex-1 overflow-hidden bg-white/5 flex items-center justify-center relative">
+            <div className="flex flex-col md:flex-row gap-4 items-start">
+              <div className="img-zoom product-main-image md:flex-1 bg-white/5">
                 {(galleryImages.length > 0) ? (
                   <>
                     <img
                       data-testid="product-main-image"
                       src={galleryImages[activeImage]}
                       alt={product.name}
-                      className={`w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
+                      className={`transition-opacity duration-500 ease-out ${
                         shouldFade ? 'opacity-0' : 'opacity-100'
                       }`}
                     />
@@ -148,7 +148,7 @@ export default function ProductPage() {
                             setIsImageLoaded(false);
                           }
                         }}
-                        className={`absolute inset-0 w-full h-auto max-h-full object-contain object-center transition-opacity duration-500 ease-out ${
+                        className={`absolute inset-0 transition-opacity duration-500 ease-out ${
                           shouldFade ? 'opacity-100' : 'opacity-0'
                         }`}
                       />
