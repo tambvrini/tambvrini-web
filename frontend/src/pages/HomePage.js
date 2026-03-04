@@ -204,21 +204,16 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
-  const isLimitedBannerFadeInitial = limitedBannerAnimated && !limitedBannerVisible;
-  const limitedBannerClassName = useMemo(
+  const shouldShowInitialFadeState = limitedBannerAnimated && !limitedBannerVisible;
+  const limitedBannerAnimationClasses = useMemo(
     () =>
       [
-        'limited-editions-banner',
-        'block',
-        'w-full',
-        'relative',
-        'z-[1]',
-        isLimitedBannerFadeInitial ? 'limited-editions-banner--fade-init' : '',
+        shouldShowInitialFadeState ? 'limited-editions-banner--fade-init' : '',
         limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
       ]
         .filter(Boolean)
         .join(' '),
-    [isLimitedBannerFadeInitial, limitedBannerVisible]
+    [shouldShowInitialFadeState, limitedBannerVisible]
   );
 
   const handleCollectionClick = () => {
@@ -480,7 +475,7 @@ const DropGridSection = () => {
                   to="/limited-editions"
                   data-testid="limited-editions-banner-link"
                   ref={limitedBannerRef}
-                  className={limitedBannerClassName}
+                  className={`limited-editions-banner block w-full relative z-[1] ${limitedBannerAnimationClasses}`.trim()}
                 >
                   <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                     <div className="w-full flex justify-center">
