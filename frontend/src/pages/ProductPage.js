@@ -4,6 +4,7 @@ import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
+import ModelViewer from '../components/ModelViewer';
 import { toast } from 'sonner';
 import { getProductById } from '@/data/productHelpers';
 
@@ -123,6 +124,8 @@ export default function ProductPage() {
       ]
     : (product.images || []);
 
+  const hasModelViewer = Boolean(product.model_url);
+  const modelPoster = product.model_poster || product.thumbnail_image;
   const inWishlist = isInWishlist(product.product_id);
   const shouldFade = selectedImage !== activeImage && isImageLoaded;
 
@@ -152,59 +155,73 @@ export default function ProductPage() {
           {/* Left: Gallery */}
           <div>
             <div className="flex flex-col md:flex-row gap-4 items-start">
-              <div className="img-zoom product-main-image md:flex-1 bg-white/5">
-                {(galleryImages.length > 0) ? (
-                  <>
-                    <img
-                      data-testid="product-main-image"
-                      src={galleryImages[activeImage]}
-                      alt={product.name}
-                      className={`transition-opacity duration-500 ease-out ${
-                        shouldFade ? 'opacity-0' : 'opacity-100'
-                      }`}
-                    />
-                    {selectedImage !== activeImage && (
-                      <img
-                        src={galleryImages[selectedImage]}
-                        alt={product.name}
-                        onLoad={() => setIsImageLoaded(true)}
-                        onTransitionEnd={() => {
-                          if (isImageLoaded) {
-                            setActiveImage(selectedImage);
-                            setIsImageLoaded(false);
-                          }
-                        }}
-                        className={`absolute inset-0 transition-opacity duration-500 ease-out ${
-                          shouldFade ? 'opacity-100' : 'opacity-0'
-                        }`}
-                      />
+              {hasModelViewer ? (
+                <div className="product-main-image md:flex-1 bg-white">
+                  <ModelViewer
+                    data-testid="product-model-viewer"
+                    src={product.model_url}
+                    alt={`Vista 3D de ${product.name}`}
+                    poster={modelPoster}
+                    className="product-model-viewer"
+                  />
+                </div>
+              ) : (
+                <>
+                  <div className="img-zoom product-main-image md:flex-1 bg-white/5">
+                    {(galleryImages.length > 0) ? (
+                      <>
+                        <img
+                          data-testid="product-main-image"
+                          src={galleryImages[activeImage]}
+                          alt={product.name}
+                          className={`transition-opacity duration-500 ease-out ${
+                            shouldFade ? 'opacity-0' : 'opacity-100'
+                          }`}
+                        />
+                        {selectedImage !== activeImage && (
+                          <img
+                            src={galleryImages[selectedImage]}
+                            alt={product.name}
+                            onLoad={() => setIsImageLoaded(true)}
+                            onTransitionEnd={() => {
+                              if (isImageLoaded) {
+                                setActiveImage(selectedImage);
+                                setIsImageLoaded(false);
+                              }
+                            }}
+                            className={`absolute inset-0 transition-opacity duration-500 ease-out ${
+                              shouldFade ? 'opacity-100' : 'opacity-0'
+                            }`}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+                        <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+                      </div>
                     )}
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
-                    <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
                   </div>
-                )}
-              </div>
-              {galleryImages.length > 0 && (
-              <div className="flex flex-col gap-3">
-                {galleryImages.map((img, i) => (
-                  <button
-                    key={i}
-                    data-testid={`product-thumb-${i}`}
-                    onClick={() => {
-                      if (i === selectedImage) return;
-                      setIsImageLoaded(false);
-                      setSelectedImage(i);
-                    }}
-                    className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
-                      selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
-                  </button>
-                ))}
-              </div>
+                  {galleryImages.length > 0 && (
+                    <div className="flex flex-col gap-3">
+                      {galleryImages.map((img, i) => (
+                        <button
+                          key={i}
+                          data-testid={`product-thumb-${i}`}
+                          onClick={() => {
+                            if (i === selectedImage) return;
+                            setIsImageLoaded(false);
+                            setSelectedImage(i);
+                          }}
+                          className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
+                            selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
+                          }`}
+                        >
+                          <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

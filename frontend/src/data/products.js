@@ -368,6 +368,7 @@ const products = [
     price: 300.0,
     currency: "EUR",
     images: [],
+    model_url: "/models/ignatius.glb",
     thumbnail_image: "/thumbnails/ignatius-sweater-thumb.jpg",
     category: ["knitwear", "apparel"],
     gender: "hombre",
