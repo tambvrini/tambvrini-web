@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -20,6 +20,7 @@ const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96
 const LIMITED_EDITIONS_BANNER_IMAGE = `${process.env.PUBLIC_URL}/images/limited-editions-banner.jpg`;
 const EDITORIAL_POLOS_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/v4zs6ugs_hf_20260222_181550_e58e110a-c888-46f9-818a-7daac73fbd28.jpeg";
 const EDITORIAL_SUETERES_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/lks43ws5_hf_20260222_183135_094a5ad6-f6e8-407f-8fd4-6dceef064698.jpeg";
+const LIMITED_BANNER_FALLBACK_MS = 2000;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 
@@ -203,19 +204,21 @@ const DropGridSection = () => {
   const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
   const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
-  const LIMITED_BANNER_FALLBACK_MS = 2000;
-
-  const limitedBannerClassName = [
-    'limited-editions-banner',
-    'block',
-    'w-full',
-    'relative',
-    'z-[1]',
-    limitedBannerAnimated ? 'limited-editions-banner--fade-init' : '',
-    limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const limitedBannerClassName = useMemo(
+    () =>
+      [
+        'limited-editions-banner',
+        'block',
+        'w-full',
+        'relative',
+        'z-[1]',
+        limitedBannerAnimated ? 'limited-editions-banner--fade-init' : '',
+        limitedBannerVisible ? 'limited-editions-banner--fade-visible' : '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+    [limitedBannerAnimated, limitedBannerVisible]
+  );
 
   const handleCollectionClick = () => {
     if (showCollectionTransition) return;
