@@ -202,16 +202,13 @@ export default function ProductPage() {
       }`}
     >
       {isUmbraProduct && (
-        <>
-          <div
-            className={`umbra-ink ${isUmbraShadow ? 'umbra-ink-active' : ''}`}
-            aria-hidden="true"
-          />
-          <div className="umbra-parallax" aria-hidden="true" />
-          <div className="umbra-atmosphere" aria-hidden="true" />
-          <div className="umbra-particles" aria-hidden="true" />
-          <div className="umbra-vignette" aria-hidden="true" />
-        </>
+        <div className="umbra-background-overlay" aria-hidden="true">
+          <div className={`umbra-ink ${isUmbraShadow ? 'umbra-ink-active' : ''}`} />
+          <div className="umbra-parallax" />
+          <div className="umbra-atmosphere" />
+          <div className="umbra-particles" />
+          <div className="umbra-vignette" />
+        </div>
       )}
       <div className={isUmbraProduct ? 'umbra-content' : undefined}>
       {/* Breadcrumb */}
@@ -229,7 +226,7 @@ export default function ProductPage() {
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {/* Left: Gallery */}
-          <div>
+          <div className={isUmbraProduct ? 'umbra-gallery' : undefined}>
               <div className="flex flex-col md:flex-row gap-4">
               <div
                 ref={productImageRef}
