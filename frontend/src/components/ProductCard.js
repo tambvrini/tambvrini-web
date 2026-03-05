@@ -27,27 +27,31 @@ const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602
 const CAPTAIN_ID = 'sueter-captain';
 const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/pu3df808_0212%20%284%29.mp4';
 
-const LOCAL_THUMBNAILS = {
-  'americana-umbra': 'americana-umbra',
-  'bolso-monograma-tambvrini': 'bolso-monograma-tambvrini',
-  'camiseta-imperium': 'camiseta-imperium',
-  'camiseta-sport-club': 'camiseta-sport-club',
-  'polo-aureus': 'polo-aureus',
-  'polo-domus': 'polo-domus',
-  'polo-golf': 'polo-golf',
-  'polo-patricius': 'polo-patricius',
-  'polo-regius': 'polo-regius',
-  'sueter-captain': 'sueter-captain',
-  'sueter-sylva': 'sueter-sylva',
-  'traje-monograma-tambvrini': 'traje-monograma-tambvrini',
-  'sueter-ignatius': 'ignatius-sweater-thumb',
-};
+const LOCAL_THUMBNAILS = new Set([
+  'americana-umbra',
+  'bolso-monograma-tambvrini',
+  'camiseta-imperium',
+  'camiseta-sport-club',
+  'polo-aureus',
+  'polo-domus',
+  'polo-golf',
+  'polo-patricius',
+  'polo-regius',
+  'sueter-captain',
+  'sueter-sylva',
+  'traje-monograma-tambvrini',
+  'ignatius-sweater-thumb',
+]);
 
 const getLocalThumbnail = (product) => {
   if (!product) return '';
   if (product.thumbnail_image?.startsWith('/thumbnails/')) return product.thumbnail_image;
-  const mappedThumbnail = LOCAL_THUMBNAILS[product.product_id] || LOCAL_THUMBNAILS[product.slug];
-  return mappedThumbnail ? `/thumbnails/${mappedThumbnail}.jpg` : '';
+  const candidate = product.slug || product.product_id;
+  if (candidate && LOCAL_THUMBNAILS.has(candidate)) return `/thumbnails/${candidate}.jpg`;
+  if (product.product_id && LOCAL_THUMBNAILS.has(product.product_id)) {
+    return `/thumbnails/${product.product_id}.jpg`;
+  }
+  return '';
 };
 
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enableWishlistIcon = false }) => {
