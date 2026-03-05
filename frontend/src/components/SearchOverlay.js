@@ -11,6 +11,10 @@ const POPULAR_SEARCHES = [
   { label: 'Bolsos', query: 'Bolso' },
 ];
 
+const PRICE_LOCALE = 'es-ES';
+const PRICE_OPTIONS = { minimumFractionDigits: 0 };
+const CURRENCY_SYMBOL = '€';
+
 const getProductThumbnailUrl = (product) => product.thumbnail_image || product.images?.[0] || '';
 
 const formatProductCategoryPath = (product) => {
@@ -76,11 +80,11 @@ const SearchOverlay = ({ open, onClose }) => {
     return matches;
   }, [normalizedQuery, normalizedProducts]);
 
-  const trendingProducts = (() => {
+  const trendingProducts = useMemo(() => {
     const featured = products.filter((product) => product.is_featured);
     const picks = featured.length > 0 ? featured : products;
     return picks.slice(0, 4);
-  })();
+  }, []);
 
   const showResults = normalizedQuery.length > 0;
 
@@ -222,7 +226,7 @@ const SearchOverlay = ({ open, onClose }) => {
                       {product.name}
                     </p>
                     <p className="font-montserrat text-[11px] text-obsidian/50">
-                      {product.price?.toLocaleString('es-ES', { minimumFractionDigits: 0 })} €
+                      {product.price?.toLocaleString(PRICE_LOCALE, PRICE_OPTIONS)} {CURRENCY_SYMBOL}
                     </p>
                   </div>
                 </Link>
