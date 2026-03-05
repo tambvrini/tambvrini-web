@@ -10,4 +10,18 @@ describe('products data', () => {
     expect(traje.thumbnail_image).toBeDefined();
     expect(traje.thumbnail_image.includes('%20%282%29')).toBe(false);
   });
+
+  it('loads the Polo Aureus gallery images in order', () => {
+    const polo = products.find((product) => product.product_id === 'polo-aureus');
+
+    expect(polo).toBeDefined();
+    expect(polo.images).toEqual([
+      '/products/polo-aureus/polo-aureus-look-01.jpg',
+      '/products/polo-aureus/polo-aureus-look-02.jpg',
+      '/products/polo-aureus/polo-aureus-look-03.jpg',
+      '/products/polo-aureus/polo-aureus-look-04.jpg',
+      '/products/polo-aureus/polo-aureus-look-05.jpg',
+      '/products/polo-aureus/polo-aureus-look-06.jpg',
+    ]);
+  });
 });

@@ -186,7 +186,6 @@ const products = [
 
   // ──────────────────────────────────────────────────
   // 6. Polo Aureus  (recovered from test_result.md verification data)
-  //    Images only existed in MongoDB — URLs pending re-import.
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-aureus",
@@ -196,7 +195,14 @@ const products = [
       "Polo Aureus de algodón premium con acabado de lujo. Una pieza atemporal que combina la elegancia deportiva con el refinamiento mediterráneo.",
     price: 30.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/polo-aureus/polo-aureus-look-01.jpg",
+      "/products/polo-aureus/polo-aureus-look-02.jpg",
+      "/products/polo-aureus/polo-aureus-look-03.jpg",
+      "/products/polo-aureus/polo-aureus-look-04.jpg",
+      "/products/polo-aureus/polo-aureus-look-05.jpg",
+      "/products/polo-aureus/polo-aureus-look-06.jpg",
+    ],
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["XS", "S", "M", "L", "XL"],
