@@ -24,6 +24,7 @@
     --premium-scale-transition: opacity 0.18s ease, transform 0.18s ease;
     --premium-image-transition: transform 0.3s ease-out;
     --premium-scale-factor: 1.02;
+    --premium-image-scale-factor: 1.03;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -41,7 +42,7 @@
     }
 
     .group:hover .premium-image-zoom {
-        transform: scale(var(--premium-scale-factor));
+        transform: scale(var(--premium-image-scale-factor));
     }
 }
 
