@@ -7,5 +7,7 @@ describe('products data', () => {
     expect(traje).toBeDefined();
     expect(traje.images).toHaveLength(6);
     expect(traje.images.find((image) => image.includes('%20%282%29'))).toBeUndefined();
+    expect(traje.thumbnail_image).toBeDefined();
+    expect(traje.thumbnail_image.includes('%20%282%29')).toBe(false);
   });
 });
