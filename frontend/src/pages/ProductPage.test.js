@@ -94,6 +94,33 @@ const poloGolfProduct = {
   related_products: [],
 };
 
+const camisetaImperiumProduct = {
+  product_id: 'camiseta-imperium',
+  name: 'Camiseta Imperium',
+  description: 'Descripción',
+  price: 20,
+  currency: 'EUR',
+  images: [
+    '/products/camiseta-imperium/camiseta-imperium-look-01.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-02.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-03.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-04.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-05.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-06.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-07.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-08.jpg',
+    '/products/camiseta-imperium/camiseta-imperium-look-09.jpg',
+  ],
+  category: ['camisetas', 'apparel'],
+  gender: 'mujer',
+  sizes: ['XS', 'S', 'M', 'L'],
+  colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
 const renderProductPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -243,6 +270,49 @@ describe('ProductPage', () => {
 
     expect(container.querySelector('[data-testid="product-main-image"]').getAttribute('src'))
       .toBe(poloGolfProduct.images[2]);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('shows Camiseta Imperium gallery images in the provided order', async () => {
+    mockProductId = 'camiseta-imperium';
+    getProductById.mockReturnValue(camisetaImperiumProduct);
+
+    const { container, root } = await renderProductPage();
+    const mainImage = container.querySelector('[data-testid="product-main-image"]');
+    const firstThumbnail = container.querySelector('[data-testid="product-thumb-0"] img');
+
+    expect(mainImage).not.toBeNull();
+    expect(mainImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
+    expect(firstThumbnail).not.toBeNull();
+    expect(firstThumbnail.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
+
+    const fifthThumbnailButton = container.querySelector('[data-testid="product-thumb-4"]');
+    act(() => {
+      fifthThumbnailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    const mainImageWrapper = container.querySelector('.product-main-image');
+    const mainImages = mainImageWrapper.querySelectorAll('img');
+    const transitionImage = mainImages[1];
+
+    expect(transitionImage).not.toBeNull();
+    expect(transitionImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
+
+    await act(async () => {
+      transitionImage.dispatchEvent(new Event('load', { bubbles: true }));
+    });
+
+    const updatedTransitionImage = mainImageWrapper.querySelectorAll('img')[1];
+    await act(async () => {
+      updatedTransitionImage.dispatchEvent(new Event('transitionend', { bubbles: true }));
+    });
+
+    expect(container.querySelector('[data-testid="product-main-image"]').getAttribute('src'))
+      .toBe(camisetaImperiumProduct.images[4]);
 
     act(() => {
       root.unmount();
