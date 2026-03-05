@@ -8,6 +8,8 @@ import ModelViewer from '../components/ModelViewer';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
 
+const DEFAULT_MODEL_POSTER = '/logo-letras-final-blanco.svg';
+
 export default function ProductPage() {
   const { productId } = useParams();
   const isUmbraProduct = productId === 'americana-umbra';
@@ -136,7 +138,7 @@ export default function ProductPage() {
     || '';
   const modelPoster = product.model_poster
     || fallbackPoster
-    || '/logo-letras-final-blanco.svg';
+    || DEFAULT_MODEL_POSTER;
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
   const activeMedia = galleryMedia[activeImage];
@@ -242,9 +244,9 @@ export default function ProductPage() {
                               if (i === selectedImage) return;
                               setIsImageLoaded(false);
                               setSelectedImage(i);
-                              const shouldSkipTransition = media.type === 'model'
+                              const shouldUpdateImmediately = media.type === 'model'
                                 || galleryMedia[activeImage]?.type === 'model';
-                              if (shouldSkipTransition) {
+                              if (shouldUpdateImmediately) {
                                 setActiveImage(i);
                               }
                             }}
