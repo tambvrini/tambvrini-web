@@ -263,4 +263,64 @@ describe('ProductPage', () => {
     });
     container.remove();
   });
+
+  it('adds the umbra background only for Americana Umbra', async () => {
+    mockProductId = 'americana-umbra';
+    getProductById.mockReturnValue(umbraProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+    const umbraBackground = container.querySelector('.umbra-background');
+    const ignatiusBackground = container.querySelector('.ignatius-background');
+
+    expect(page.classList.contains('umbra-product-page')).toBe(true);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(umbraBackground).not.toBeNull();
+    expect(ignatiusBackground).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('adds the ignatius background only for Suéter Ignatius', async () => {
+    mockProductId = 'sueter-ignatius';
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+    const umbraBackground = container.querySelector('.umbra-background');
+    const ignatiusBackground = container.querySelector('.ignatius-background');
+
+    expect(page.classList.contains('product-page-ignatius')).toBe(true);
+    expect(page.classList.contains('umbra-product-page')).toBe(false);
+    expect(ignatiusBackground).not.toBeNull();
+    expect(umbraBackground).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('keeps the default background for standard products', async () => {
+    mockProductId = 'polo-golf';
+    getProductById.mockReturnValue(poloGolfProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+    const umbraBackground = container.querySelector('.umbra-background');
+    const ignatiusBackground = container.querySelector('.ignatius-background');
+
+    expect(page.classList.contains('umbra-product-page')).toBe(false);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(umbraBackground).toBeNull();
+    expect(ignatiusBackground).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });
