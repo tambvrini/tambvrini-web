@@ -63,23 +63,24 @@
 
 .product-gallery-media {
     width: 100%;
-    aspect-ratio: 3 / 4;
     position: relative;
     overflow: hidden;
+    background: transparent;
 }
 .product-gallery-image {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    height: auto;
+    object-fit: cover;
     object-position: center;
     display: block;
 }
 .product-model-viewer {
     width: 100%;
-    height: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
     display: block;
-    background-color: #ffffff;
-    --poster-color: #ffffff;
+    background-color: transparent;
+    --poster-color: transparent;
 }
 
 /* Luxury button styles */

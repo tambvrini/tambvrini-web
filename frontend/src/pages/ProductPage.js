@@ -138,21 +138,20 @@ export default function ProductPage() {
   const galleryItems = (() => {
     let imageIndex = 0;
 
-    return galleryMedia.map((media, index) => {
+    return galleryMedia.flatMap((media, index) => {
       const currentImageIndex = media.type === 'image' ? imageIndex : null;
 
       if (media.type === 'image') {
         imageIndex += 1;
       }
 
-      return (
+      const item = (
         <div
           key={`${media.type}-${index}`}
           data-testid={`product-gallery-item-${index}`}
-          className="border-b border-black/5 pb-12 last:border-b-0 last:pb-0"
         >
           {media.type === 'model' ? (
-            <div className="product-gallery-media bg-white">
+            <div className="product-gallery-media">
               <ModelViewer
                 data-testid="product-model-viewer"
                 src={media.src}
@@ -162,7 +161,7 @@ export default function ProductPage() {
               />
             </div>
           ) : (
-            <div className="product-gallery-media bg-white">
+            <div className="product-gallery-media">
               <img
                 data-testid={`product-gallery-image-${currentImageIndex}`}
                 src={media.src}
@@ -173,6 +172,15 @@ export default function ProductPage() {
           )}
         </div>
       );
+
+      if (index === galleryMedia.length - 1) {
+        return [item];
+      }
+
+      return [
+        item,
+        <div key={`divider-${index}`} aria-hidden="true" className="h-px bg-black/[0.08] my-6" />,
+      ];
     });
   })();
 
@@ -202,9 +210,9 @@ export default function ProductPage() {
           {/* Left: Gallery */}
           <div>
             {galleryMedia.length > 0 ? (
-              <div className="flex flex-col gap-12">{galleryItems}</div>
+              <div className="flex flex-col">{galleryItems}</div>
             ) : (
-              <div className="product-gallery-media bg-[#f5f5f5] flex items-center justify-center">
+              <div className="product-gallery-media flex items-center justify-center">
                 <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
               </div>
             )}
