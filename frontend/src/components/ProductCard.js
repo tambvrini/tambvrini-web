@@ -135,7 +135,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
                 loop
                 playsInline
                 preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
-                poster={`/thumbnails/${product.slug}.jpg`}
+                poster={thumbnailSrc}
                 className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${isVideoActive ? 'opacity-100' : 'opacity-0'}`}
                 src={
                   isTraje

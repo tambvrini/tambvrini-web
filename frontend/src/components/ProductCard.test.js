@@ -120,4 +120,32 @@ describe('ProductCard', () => {
     });
     container.remove();
   });
+
+  it('keeps the hover video inactive on non-hover devices', async () => {
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+
+    const { container, root } = await renderProductCard();
+    const card = container.querySelector('[data-testid="product-card-polo-golf"]');
+    const video = container.querySelector('[data-testid="product-card-video"]');
+
+    act(() => {
+      card.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+    });
+
+    expect(video.className).toContain('opacity-0');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });
