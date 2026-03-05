@@ -19,6 +19,21 @@
     opacity: 0.022;
 }
 
+body a,
+body button,
+body [role="button"] {
+    transition: color 0.18s ease, opacity 0.18s ease, transform 0.18s ease, filter 0.18s ease;
+    transform-origin: center;
+}
+
+body a:hover,
+body button:not(:disabled):hover,
+body [role="button"]:hover {
+    opacity: 0.94;
+    transform: scale(1.02);
+    filter: brightness(0.98);
+}
+
 /* Image hover zoom */
 .img-zoom {
     overflow: hidden;
@@ -52,7 +67,7 @@
 }
 
 /* Luxury button styles */
-.btn-luxury {
+body .btn-luxury {
     border: 1px solid rgba(17, 17, 17, 0.18);
     background: transparent;
     color: #111111;
@@ -65,9 +80,9 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: color 0.5s ease, border-color 0.5s ease;
+    transition: color 0.5s ease, border-color 0.5s ease, transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
 }
-.btn-luxury::before {
+body .btn-luxury::before {
     content: '';
     position: absolute;
     top: 0;
@@ -78,22 +93,22 @@
     transition: left 0.5s ease;
     z-index: -1;
 }
-.btn-luxury:hover {
+body .btn-luxury:hover {
     color: #F5F2EA;
     border-color: rgba(17, 17, 17, 0.35);
 }
-.btn-luxury:hover::before {
+body .btn-luxury:hover::before {
     left: 0;
 }
 
-.btn-gold {
+body .btn-gold {
     border-color: #C5A059;
     color: #C5A059;
 }
-.btn-gold::before {
+body .btn-gold::before {
     background: #C5A059;
 }
-.btn-gold:hover {
+body .btn-gold:hover {
     color: #111111;
     border-color: #C5A059;
 }
@@ -114,6 +129,10 @@
 .fade-in-view.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+.page-transition {
+    will-change: opacity;
 }
 
 /* Product card wishlist */
