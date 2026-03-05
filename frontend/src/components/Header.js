@@ -211,7 +211,7 @@ export const Header = () => {
                         <Link
                           to="/cuenta"
                           onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-3 text-obsidian/70 hover:text-obsidian transition-colors duration-300"
+                          className="premium-scale flex items-center gap-3 text-obsidian/70 hover:text-obsidian transition-colors duration-300"
                         >
                           <User size={16} strokeWidth={1.5} />
                           <span className="font-montserrat text-sm tracking-wide">Login</span>

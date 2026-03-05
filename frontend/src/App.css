@@ -19,19 +19,20 @@
     opacity: 0.022;
 }
 
-body a,
-body button,
-body [role="button"] {
+:where(body a, body button, body [role="button"]) {
     transition: color 0.18s ease, opacity 0.18s ease, transform 0.18s ease, filter 0.18s ease;
     transform-origin: center;
 }
 
-body a:hover,
-body button:not(:disabled):hover,
-body [role="button"]:hover {
+:where(body a:hover, body button:not(:disabled):hover, body [role="button"]:hover) {
     opacity: 0.94;
-    transform: scale(1.02);
     filter: brightness(0.98);
+}
+
+body button:not(:disabled):hover,
+body .btn-luxury:hover,
+body .premium-scale:hover {
+    transform: scale(1.02);
 }
 
 /* Image hover zoom */

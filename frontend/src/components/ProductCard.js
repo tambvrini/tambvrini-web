@@ -66,7 +66,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
     <Link
       to={`/producto/${product.product_id}`}
       data-testid={`product-card-${product.product_id}`}
-      className="group block transition-transform duration-200 ease-out hover:scale-[1.02]"
+      className="group block premium-scale"
       style={{ animationDelay: `${index * 0.03}s` }}
       onMouseEnter={() => {
         const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -82,7 +82,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             <img
               src={`/thumbnails/${product.slug}.jpg`}
               alt={product.name}
-              className="w-full h-auto max-h-full object-contain object-center transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+              className={`w-full h-auto max-h-full object-contain object-center ${hasHoverVideo ? '' : 'transition-transform duration-300 ease-out group-hover:scale-[1.03]'}`}
               loading="lazy"
             />
           ) : (
