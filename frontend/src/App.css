@@ -96,7 +96,7 @@
     color: rgba(226, 229, 235, 0.7);
 }
 
-.product-page-shell [class*="text-[#6e6e6e]"] {
+.product-page-shell .text-\[\#6e6e6e\] {
     color: rgba(210, 214, 222, 0.72);
 }
 
