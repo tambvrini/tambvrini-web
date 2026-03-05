@@ -140,6 +140,7 @@ describe('ProductPage', () => {
     window.scrollTo = jest.fn();
     mockProductId = 'sueter-ignatius';
     getProductById.mockReset();
+    document.body.classList.remove('umbra-mode', 'ignatius-mode');
   });
 
   afterEach(() => {
@@ -257,6 +258,46 @@ describe('ProductPage', () => {
     expect(mainImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
     expect(fifthImage).not.toBeNull();
     expect(fifthImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('applies the themed background class for Americana Umbra only', async () => {
+    mockProductId = 'americana-umbra';
+    getProductById.mockReturnValue(umbraProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+
+    expect(page.classList.contains('umbra-product-page')).toBe(true);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(container.querySelector('.umbra-background')).not.toBeNull();
+    expect(container.querySelector('.ignatius-background')).toBeNull();
+    expect(document.body.classList.contains('umbra-mode')).toBe(true);
+    expect(document.body.classList.contains('ignatius-mode')).toBe(false);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('keeps the default background for non-themed products', async () => {
+    mockProductId = 'polo-golf';
+    getProductById.mockReturnValue(poloGolfProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+
+    expect(page.classList.contains('umbra-product-page')).toBe(false);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(container.querySelector('.umbra-background')).toBeNull();
+    expect(container.querySelector('.ignatius-background')).toBeNull();
+    expect(document.body.classList.contains('umbra-mode')).toBe(false);
+    expect(document.body.classList.contains('ignatius-mode')).toBe(false);
 
     act(() => {
       root.unmount();
