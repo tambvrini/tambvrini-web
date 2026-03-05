@@ -82,7 +82,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             <img
               src={`/thumbnails/${product.slug}.jpg`}
               alt={product.name}
-              className={`w-full h-auto max-h-full object-contain object-center ${hasHoverVideo ? '' : 'transition-transform duration-300 ease-out group-hover:scale-[1.02]'}`}
+              className={`w-full h-auto max-h-full object-contain object-center ${hasHoverVideo ? '' : 'premium-image-zoom group-hover:scale-[1.02]'}`}
               loading="lazy"
             />
           ) : (
