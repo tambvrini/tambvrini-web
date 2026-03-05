@@ -23,7 +23,6 @@ const SearchOverlay = ({ open, onClose }) => {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
     setSearchQuery('');
   }, [open]);
 
@@ -56,15 +55,13 @@ const SearchOverlay = ({ open, onClose }) => {
     if (!normalizedQuery) return [];
     const lowered = normalizedQuery.toLowerCase();
     const matches = [];
-    for (const product of products) {
+    for (let index = 0; index < products.length && matches.length < 6; index += 1) {
+      const product = products[index];
       if (
         product.name?.toLowerCase().includes(lowered) ||
         product.description?.toLowerCase().includes(lowered)
       ) {
         matches.push(product);
-        if (matches.length >= 6) {
-          break;
-        }
       }
     }
     return matches;
