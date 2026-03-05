@@ -28,16 +28,16 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-    :where(body a, body button, body [role="button"]) {
+    :where(a, button, [role="button"]) {
         transition: var(--premium-hover-transition);
     }
 
-    :where(body button, body .premium-scale) {
+    :where(button, .premium-scale) {
         transition: var(--premium-scale-transition);
         transform-origin: center;
     }
 
-    :where(body button:not(:disabled):hover, body .btn-luxury:hover, body .premium-scale:hover) {
+    :where(button:not(:disabled):hover, .btn-luxury:hover, .premium-scale:hover) {
         transform: scale(var(--premium-scale-factor));
     }
 
@@ -83,7 +83,7 @@
 }
 
 /* Luxury button styles */
-body .btn-luxury {
+.btn-luxury {
     border: 1px solid rgba(17, 17, 17, 0.18);
     background: transparent;
     color: #111111;
@@ -98,7 +98,7 @@ body .btn-luxury {
     overflow: hidden;
     transition: color 0.5s ease, border-color 0.5s ease, transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
 }
-body .btn-luxury::before {
+.btn-luxury::before {
     content: '';
     position: absolute;
     top: 0;
@@ -109,22 +109,22 @@ body .btn-luxury::before {
     transition: left 0.5s ease;
     z-index: -1;
 }
-body .btn-luxury:hover {
+.btn-luxury:hover {
     color: #F5F2EA;
     border-color: rgba(17, 17, 17, 0.35);
 }
-body .btn-luxury:hover::before {
+.btn-luxury:hover::before {
     left: 0;
 }
 
-body .btn-gold {
+.btn-gold {
     border-color: #C5A059;
     color: #C5A059;
 }
-body .btn-gold::before {
+.btn-gold::before {
     background: #C5A059;
 }
-body .btn-gold:hover {
+.btn-gold:hover {
     color: #111111;
     border-color: #C5A059;
 }
