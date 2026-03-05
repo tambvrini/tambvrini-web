@@ -157,11 +157,11 @@ describe('ProductPage', () => {
 
     const { container, root } = await renderProductPage();
     const viewer = container.querySelector('model-viewer');
-    const galleryImages = container.querySelectorAll('[data-testid^="product-gallery-image-"]');
+    const galleryImageElements = container.querySelectorAll('[data-testid^="product-gallery-image-"]');
 
     expect(viewer).not.toBeNull();
     expect(viewer.getAttribute('src')).toBe('/models/ignatius.glb');
-    expect(galleryImages.length).toBe(0);
+    expect(galleryImageElements.length).toBe(0);
 
     act(() => {
       root.unmount();

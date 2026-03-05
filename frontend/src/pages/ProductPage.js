@@ -126,15 +126,10 @@ export default function ProductPage() {
       ]
     : (product.images || []);
 
-  const galleryMedia = isUmbraProduct
-    ? [
-        { type: 'model', src: product.model_url },
-        ...galleryImages.map((img) => ({ type: 'image', src: img })),
-      ]
-    : [
-        ...(product.model_url ? [{ type: 'model', src: product.model_url }] : []),
-        ...galleryImages.map((img) => ({ type: 'image', src: img })),
-      ];
+  const galleryMedia = [
+    ...(product.model_url ? [{ type: 'model', src: product.model_url }] : []),
+    ...galleryImages.map((img) => ({ type: 'image', src: img })),
+  ];
   const fallbackPoster = resolveFallbackPoster(product.thumbnail_image, galleryMedia);
   const modelPoster = product.model_poster
     || fallbackPoster
