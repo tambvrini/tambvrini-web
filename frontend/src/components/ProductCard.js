@@ -82,7 +82,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             <img
               src={`/thumbnails/${product.slug}.jpg`}
               alt={product.name}
-              className={`w-full h-auto max-h-full object-contain object-center ${hasHoverVideo ? '' : 'transition-transform duration-300 ease-out group-hover:scale-[1.03]'}`}
+              className={`w-full h-auto max-h-full object-contain object-center ${hasHoverVideo ? '' : 'transition-transform duration-300 ease-out group-hover:scale-[1.02]'}`}
               loading="lazy"
             />
           ) : (
@@ -99,7 +99,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
               playsInline
               preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
               poster={`/thumbnails/${product.slug}.jpg`}
-              className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-[opacity,transform] duration-300 ease-out group-hover:scale-[1.03] ${hovered ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
               src={
                 isTraje
                   ? TRAJE_HOVER_VIDEO_URL

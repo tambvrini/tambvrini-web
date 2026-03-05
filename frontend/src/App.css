@@ -20,7 +20,12 @@
 }
 
 :where(body a, body button, body [role="button"]) {
-    transition: color 0.18s ease, opacity 0.18s ease, transform 0.18s ease, filter 0.18s ease;
+    transition: opacity 0.18s ease, filter 0.18s ease;
+}
+
+body button,
+body .premium-scale {
+    transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease;
     transform-origin: center;
 }
 
