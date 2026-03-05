@@ -71,6 +71,29 @@ const umbraProduct = {
   related_products: [],
 };
 
+const poloGolfProduct = {
+  product_id: 'polo-golf',
+  name: 'Polo Golf',
+  description: 'Descripción',
+  price: 30,
+  currency: 'EUR',
+  images: [
+    '/products/polo-golf/polo-golf-look-01.jpg',
+    '/products/polo-golf/polo-golf-look-02.jpg',
+    '/products/polo-golf/polo-golf-look-03.jpg',
+    '/products/polo-golf/polo-golf-look-04.jpg',
+    '/products/polo-golf/polo-golf-look-05.jpg',
+  ],
+  category: ['polos', 'apparel'],
+  gender: 'hombre',
+  sizes: ['S', 'M', 'L', 'XL'],
+  colors: [{ name: 'Blanco', hex: '#FFFFFF' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
 const renderProductPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -177,6 +200,49 @@ describe('ProductPage', () => {
     });
 
     expect(container.querySelector('[data-testid="product-model-viewer"]')).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('shows Polo Golf gallery images in the provided order', async () => {
+    mockProductId = 'polo-golf';
+    getProductById.mockReturnValue(poloGolfProduct);
+
+    const { container, root } = await renderProductPage();
+    const mainImage = container.querySelector('[data-testid="product-main-image"]');
+    const firstThumbnail = container.querySelector('[data-testid="product-thumb-0"] img');
+
+    expect(mainImage).not.toBeNull();
+    expect(mainImage.getAttribute('src')).toBe(poloGolfProduct.images[0]);
+    expect(firstThumbnail).not.toBeNull();
+    expect(firstThumbnail.getAttribute('src')).toBe(poloGolfProduct.images[0]);
+
+    const thirdThumbnailButton = container.querySelector('[data-testid="product-thumb-2"]');
+    act(() => {
+      thirdThumbnailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    const mainImageWrapper = container.querySelector('.product-main-image');
+    const mainImages = mainImageWrapper.querySelectorAll('img');
+    const transitionImage = mainImages[1];
+
+    expect(transitionImage).not.toBeNull();
+    expect(transitionImage.getAttribute('src')).toBe(poloGolfProduct.images[2]);
+
+    await act(async () => {
+      transitionImage.dispatchEvent(new Event('load', { bubbles: true }));
+    });
+
+    const updatedTransitionImage = mainImageWrapper.querySelectorAll('img')[1];
+    await act(async () => {
+      updatedTransitionImage.dispatchEvent(new Event('transitionend', { bubbles: true }));
+    });
+
+    expect(container.querySelector('[data-testid="product-main-image"]').getAttribute('src'))
+      .toBe(poloGolfProduct.images[2]);
 
     act(() => {
       root.unmount();
