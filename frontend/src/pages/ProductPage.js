@@ -8,7 +8,7 @@ import ModelViewer from '../components/ModelViewer';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
 
-const DEFAULT_MODEL_POSTER = '/logo-letras-final-blanco.svg';
+const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;
@@ -142,7 +142,7 @@ export default function ProductPage() {
   const fallbackPoster = resolveFallbackPoster(product.thumbnail_image, galleryMedia);
   const modelPoster = product.model_poster
     || fallbackPoster
-    || DEFAULT_MODEL_POSTER;
+    || LOGO_FALLBACK_POSTER;
   const inWishlist = isInWishlist(product.product_id);
   const selectedMedia = galleryMedia[selectedImage];
   const activeMedia = galleryMedia[activeImage];
@@ -250,7 +250,7 @@ export default function ProductPage() {
                               setSelectedImage(i);
                               const shouldUpdateImmediately = media.type === 'model'
                                 || galleryMedia[activeImage]?.type === 'model';
-                              // Model viewers cannot crossfade, so sync immediately when toggling model media.
+                              // Model viewers cannot cross-fade, so sync immediately when toggling model media.
                               if (shouldUpdateImmediately) {
                                 setActiveImage(i);
                               }
