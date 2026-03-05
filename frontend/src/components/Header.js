@@ -74,17 +74,12 @@ export const Header = () => {
     };
   }, [menuOpen]);
 
-  useEffect(() => {
-    if (menuOpen) {
+  const handleMenuOpenChange = (open) => {
+    setMenuOpen(open);
+    if (open) {
       setSearchOpen(false);
     }
-  }, [menuOpen]);
-
-  useEffect(() => {
-    if (searchOpen) {
-      setMenuOpen(false);
-    }
-  }, [searchOpen]);
+  };
 
   useEffect(() => {
     const handleCinematic = (event) => {
@@ -141,7 +136,7 @@ export const Header = () => {
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
           <div className="flex items-center gap-5 w-[120px]" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
-            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <Sheet open={menuOpen} onOpenChange={handleMenuOpenChange}>
               <SheetTrigger asChild>
                 <button
                   type="button"
@@ -205,7 +200,10 @@ export const Header = () => {
               type="button"
               data-testid="search-toggle-btn"
               aria-label="Abrir búsqueda"
-              onClick={() => setSearchOpen(true)}
+              onClick={() => {
+                setMenuOpen(false);
+                setSearchOpen(true);
+              }}
               className={`${navToneClass} transition-colors duration-300`}
             >
               <Search size={20} strokeWidth={1.5} />

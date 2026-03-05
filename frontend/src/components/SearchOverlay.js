@@ -11,9 +11,9 @@ const POPULAR_SEARCHES = [
   { label: 'Bolsos', query: 'Bolso' },
 ];
 
-const resolveThumbnail = (product) => product.thumbnail_image || product.images?.[0] || '';
+const getProductThumbnailUrl = (product) => product.thumbnail_image || product.images?.[0] || '';
 
-const resolveCategoryLabel = (product) => {
+const formatProductCategoryPath = (product) => {
   if (!product.category?.length) return '';
   return product.category.join(' / ');
 };
@@ -65,10 +65,7 @@ const SearchOverlay = ({ open, onClose }) => {
     if (!normalizedQuery) return [];
     const lowered = normalizedQuery.toLowerCase();
     const matches = [];
-    for (let index = 0; index < normalizedProducts.length; index += 1) {
-      if (matches.length >= 6) {
-        break;
-      }
+    for (let index = 0; index < normalizedProducts.length && matches.length < 6; index += 1) {
       const product = normalizedProducts[index];
       if (product.searchName.includes(lowered) || product.searchDescription.includes(lowered)) {
         matches.push(product);
@@ -144,9 +141,9 @@ const SearchOverlay = ({ open, onClose }) => {
                         className="flex items-center gap-4 group"
                       >
                         <div className="w-16 h-20 border border-black/10 overflow-hidden bg-white">
-                          {resolveThumbnail(product) ? (
+                          {getProductThumbnailUrl(product) ? (
                             <img
-                              src={resolveThumbnail(product)}
+                              src={getProductThumbnailUrl(product)}
                               alt={product.name}
                               className="w-full h-full object-cover"
                             />
@@ -159,7 +156,7 @@ const SearchOverlay = ({ open, onClose }) => {
                             {product.name}
                           </p>
                           <p className="font-montserrat text-[10px] uppercase tracking-[0.25em] text-obsidian/40 mt-1">
-                            {resolveCategoryLabel(product)}
+                            {formatProductCategoryPath(product)}
                           </p>
                         </div>
                       </Link>
@@ -208,9 +205,9 @@ const SearchOverlay = ({ open, onClose }) => {
                   className="flex items-center gap-4 group"
                 >
                   <div className="w-14 h-16 border border-black/10 overflow-hidden bg-white">
-                    {resolveThumbnail(product) ? (
+                    {getProductThumbnailUrl(product) ? (
                       <img
-                        src={resolveThumbnail(product)}
+                        src={getProductThumbnailUrl(product)}
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
