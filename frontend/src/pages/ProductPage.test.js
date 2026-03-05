@@ -140,6 +140,7 @@ describe('ProductPage', () => {
     window.scrollTo = jest.fn();
     mockProductId = 'sueter-ignatius';
     getProductById.mockReset();
+    document.body.classList.remove('umbra-mode', 'ignatius-mode');
   });
 
   afterEach(() => {
@@ -257,6 +258,63 @@ describe('ProductPage', () => {
     expect(mainImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
     expect(fifthImage).not.toBeNull();
     expect(fifthImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('applies the umbra background styles only for Americana Umbra', async () => {
+    mockProductId = 'americana-umbra';
+    getProductById.mockReturnValue(umbraProduct);
+
+    const { container, root } = await renderProductPage();
+    const pageShell = container.querySelector('[data-testid="product-page"]');
+    const background = container.querySelector('.umbra-background');
+
+    expect(document.body.classList.contains('umbra-mode')).toBe(true);
+    expect(pageShell.classList.contains('umbra-product-page')).toBe(true);
+    expect(background).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('applies the ignatius background styles only for Suéter Ignatius', async () => {
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const pageShell = container.querySelector('[data-testid="product-page"]');
+    const background = container.querySelector('.ignatius-background');
+
+    expect(document.body.classList.contains('ignatius-mode')).toBe(true);
+    expect(pageShell.classList.contains('product-page-ignatius')).toBe(true);
+    expect(background).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('keeps the default background for standard products', async () => {
+    mockProductId = 'polo-golf';
+    getProductById.mockReturnValue(poloGolfProduct);
+
+    const { container, root } = await renderProductPage();
+    const pageShell = container.querySelector('[data-testid="product-page"]');
+    const umbraBackground = container.querySelector('.umbra-background');
+    const ignatiusBackground = container.querySelector('.ignatius-background');
+
+    expect(document.body.classList.contains('umbra-mode')).toBe(false);
+    expect(document.body.classList.contains('ignatius-mode')).toBe(false);
+    expect(pageShell.classList.contains('umbra-product-page')).toBe(false);
+    expect(pageShell.classList.contains('product-page-ignatius')).toBe(false);
+    expect(umbraBackground).toBeNull();
+    expect(ignatiusBackground).toBeNull();
 
     act(() => {
       root.unmount();
