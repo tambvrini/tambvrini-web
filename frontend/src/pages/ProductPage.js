@@ -10,6 +10,12 @@ import { getProductById } from '../data/productHelpers';
 
 const DEFAULT_MODEL_POSTER = '/logo-letras-final-blanco.svg';
 
+const resolveFallbackPoster = (thumbnailImage, media) => {
+  if (thumbnailImage) return thumbnailImage;
+  const firstImage = media.find((item) => item.type === 'image')?.src;
+  return firstImage || '';
+};
+
 export default function ProductPage() {
   const { productId } = useParams();
   const isUmbraProduct = productId === 'americana-umbra';
@@ -133,9 +139,7 @@ export default function ProductPage() {
       ]
     : galleryImages.map((img) => ({ type: 'image', src: img }));
   const hasStandaloneModelViewer = Boolean(product.model_url) && !isUmbraProduct;
-  const fallbackPoster = product.thumbnail_image
-    || galleryMedia.find((media) => media.type === 'image')?.src
-    || '';
+  const fallbackPoster = resolveFallbackPoster(product.thumbnail_image, galleryMedia);
   const modelPoster = product.model_poster
     || fallbackPoster
     || DEFAULT_MODEL_POSTER;
@@ -246,6 +250,7 @@ export default function ProductPage() {
                               setSelectedImage(i);
                               const shouldUpdateImmediately = media.type === 'model'
                                 || galleryMedia[activeImage]?.type === 'model';
+                              // Model viewers cannot crossfade, so sync immediately when toggling model media.
                               if (shouldUpdateImmediately) {
                                 setActiveImage(i);
                               }
