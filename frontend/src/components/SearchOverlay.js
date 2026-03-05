@@ -22,6 +22,16 @@ const SearchOverlay = ({ open, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef(null);
 
+  const normalizedProducts = useMemo(
+    () =>
+      products.map((product) => ({
+        ...product,
+        searchName: product.name?.toLowerCase() || '',
+        searchDescription: product.description?.toLowerCase() || '',
+      })),
+    []
+  );
+
   useEffect(() => {
     setSearchQuery('');
   }, [open]);
@@ -55,17 +65,17 @@ const SearchOverlay = ({ open, onClose }) => {
     if (!normalizedQuery) return [];
     const lowered = normalizedQuery.toLowerCase();
     const matches = [];
-    for (let index = 0; index < products.length && matches.length < 6; index += 1) {
-      const product = products[index];
-      if (
-        product.name?.toLowerCase().includes(lowered) ||
-        product.description?.toLowerCase().includes(lowered)
-      ) {
+    for (let index = 0; index < normalizedProducts.length; index += 1) {
+      if (matches.length >= 6) {
+        break;
+      }
+      const product = normalizedProducts[index];
+      if (product.searchName.includes(lowered) || product.searchDescription.includes(lowered)) {
         matches.push(product);
       }
     }
     return matches;
-  }, [normalizedQuery]);
+  }, [normalizedQuery, normalizedProducts]);
 
   const trendingProducts = useMemo(() => {
     const featured = products.filter((product) => product.is_featured);
