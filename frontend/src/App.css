@@ -22,7 +22,7 @@
 :root {
     --premium-color-transition: color 0.18s ease;
     --premium-scale-transition: opacity 0.18s ease, transform 0.18s ease;
-    --premium-image-transition: transform 0.3s ease-out;
+    --premium-image-zoom-transition: transform 0.3s ease-out;
     --premium-scale-factor: 1.02;
     --premium-image-scale-factor: 1.03;
 }
@@ -42,7 +42,7 @@
     }
 
     .premium-image-zoom {
-        transition: var(--premium-image-transition);
+        transition: var(--premium-image-zoom-transition);
     }
 
     .group:hover .premium-image-zoom {
@@ -96,7 +96,7 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: color 0.5s ease, border-color 0.5s ease, transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+    transition: color 0.5s ease, border-color 0.5s ease, var(--premium-scale-transition);
 }
 .btn-luxury::before {
     content: '';
