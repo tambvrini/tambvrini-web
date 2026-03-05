@@ -262,10 +262,6 @@
 }
 
 .product-card-overlay {
-    z-index: var(--product-card-overlay);
-}
-
-.product-card-overlay-content {
     position: absolute;
     inset: 0;
     display: flex;
@@ -273,9 +269,10 @@
     justify-content: center;
     opacity: 0;
     transition: opacity 0.25s ease;
+    z-index: var(--product-card-overlay);
 }
 
-.product-card:hover .product-card-overlay-content {
+.product-card:hover .product-card-overlay {
     opacity: 1;
 }
 

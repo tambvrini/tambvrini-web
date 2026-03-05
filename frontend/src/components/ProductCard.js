@@ -161,19 +161,21 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
               <>
                 <button
                   type="button"
+                  aria-label="Imagen anterior"
                   data-testid="product-card-arrow-left"
                   className="product-card-arrow product-card-arrow-left"
                   onClick={(event) => handleImageNavigation(-1, event)}
                 >
-                  ‹
+                  &lsaquo;
                 </button>
                 <button
                   type="button"
+                  aria-label="Imagen siguiente"
                   data-testid="product-card-arrow-right"
                   className="product-card-arrow product-card-arrow-right"
                   onClick={(event) => handleImageNavigation(1, event)}
                 >
-                  ›
+                  &rsaquo;
                 </button>
               </>
             )}
@@ -181,7 +183,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             {!hasHoverVideo && (
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-obsidian/30" />
             )}
-            <div className="product-card-overlay-content product-card-overlay">
+            <div className="product-card-overlay">
               <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
 
               {enableWishlistIcon && (
