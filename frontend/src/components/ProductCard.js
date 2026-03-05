@@ -97,7 +97,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
       style={{ animationDelay: `${index * 0.03}s` }}
       onMouseEnter={() => {
         const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        if (hasGalleryNavigation) setGalleryReady(true);
+        if (hasGalleryNavigation && canHover) setGalleryReady(true);
         if (hasHoverVideo && canHover && !showGalleryImage) setHovered(true);
       }}
       onMouseLeave={() => {
@@ -179,7 +179,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             {!hasHoverVideo && (
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-obsidian/30" />
             )}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 product-card-overlay">
               <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
 
               {enableWishlistIcon && (

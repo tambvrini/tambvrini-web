@@ -190,6 +190,11 @@
     opacity: 1;
 }
 
+.product-card {
+    --product-card-overlay: 10;
+    --product-card-arrow: 20;
+}
+
 .product-card-shell {
     position: relative;
 }
@@ -237,7 +242,7 @@
     background: transparent;
     cursor: pointer;
     transition: opacity 0.25s ease, color 0.25s ease;
-    z-index: 20;
+    z-index: var(--product-card-arrow);
 }
 
 .product-card-arrow-left {
@@ -254,6 +259,10 @@
 
 .product-card-arrow:hover {
     color: rgba(0, 0, 0, 0.9);
+}
+
+.product-card-overlay {
+    z-index: var(--product-card-overlay);
 }
 
 /* Quick add button */
