@@ -143,12 +143,12 @@ export default function ProductPage() {
   const selectedMedia = galleryMedia[selectedImage];
   const activeMedia = galleryMedia[activeImage];
   const selectedImageSrc = selectedMedia?.type === 'image' ? selectedMedia.src : '';
-  const activeImageSrc = activeMedia?.type === 'image' ? activeMedia.src : selectedImageSrc;
+  const displayImageSrc = activeMedia?.type === 'image' ? activeMedia.src : selectedImageSrc;
   const shouldFade = selectedImage !== activeImage
     && isImageLoaded
     && activeMedia?.type === 'image'
     && selectedMedia?.type === 'image';
-  const shouldShowTransitionImage = selectedImage !== activeImage
+  const shouldRenderTransitionImage = selectedImage !== activeImage
     && activeMedia?.type === 'image'
     && selectedMedia?.type === 'image';
 
@@ -204,13 +204,13 @@ export default function ProductPage() {
                           <>
                             <img
                               data-testid="product-main-image"
-                              src={activeImageSrc}
+                              src={displayImageSrc}
                               alt={product.name}
                               className={`transition-opacity duration-500 ease-out ${
                                 shouldFade ? 'opacity-0' : 'opacity-100'
                               }`}
                             />
-                            {shouldShowTransitionImage && (
+                            {shouldRenderTransitionImage && (
                               <img
                                 src={selectedMedia.src}
                                 alt={product.name}
