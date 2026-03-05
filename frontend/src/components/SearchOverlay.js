@@ -65,8 +65,10 @@ const SearchOverlay = ({ open, onClose }) => {
     if (!normalizedQuery) return [];
     const lowered = normalizedQuery.toLowerCase();
     const matches = [];
-    for (let index = 0; index < normalizedProducts.length && matches.length < 6; index += 1) {
-      const product = normalizedProducts[index];
+    for (const product of normalizedProducts) {
+      if (matches.length >= 6) {
+        break;
+      }
       if (product.searchName.includes(lowered) || product.searchDescription.includes(lowered)) {
         matches.push(product);
       }
@@ -74,11 +76,11 @@ const SearchOverlay = ({ open, onClose }) => {
     return matches;
   }, [normalizedQuery, normalizedProducts]);
 
-  const trendingProducts = useMemo(() => {
+  const trendingProducts = (() => {
     const featured = products.filter((product) => product.is_featured);
     const picks = featured.length > 0 ? featured : products;
     return picks.slice(0, 4);
-  }, []);
+  })();
 
   const showResults = normalizedQuery.length > 0;
 
