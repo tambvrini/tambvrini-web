@@ -109,4 +109,31 @@ describe('Header menu', () => {
     });
     container.remove();
   });
+
+  it('opens and closes the search overlay', async () => {
+    const { container, root } = await renderHeader();
+    const searchButton = container.querySelector('[data-testid="search-toggle-btn"]');
+    const overlay = container.querySelector('[data-testid="search-overlay"]');
+
+    expect(searchButton).not.toBeNull();
+    expect(overlay).not.toBeNull();
+    expect(overlay.getAttribute('data-state')).toBe('closed');
+
+    await act(async () => {
+      searchButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(overlay.getAttribute('data-state')).toBe('open');
+
+    await act(async () => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    });
+
+    expect(overlay.getAttribute('data-state')).toBe('closed');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });

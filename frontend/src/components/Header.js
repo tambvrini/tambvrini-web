@@ -9,11 +9,12 @@ const scrollToDrops = () => {
   });
 };
 
-import { X, User, Heart, ShoppingBag } from 'lucide-react';
+import { X, User, Heart, ShoppingBag, Search } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
+import SearchOverlay from './SearchOverlay';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const LOGO_DARK = "/logo-letras-final-blanco.svg";
@@ -46,6 +47,7 @@ const MENU_SECTIONS = [
 export const Header = () => {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [cinematicProgress, setCinematicProgress] = useState(1);
 
   const location = useLocation();
@@ -73,6 +75,18 @@ export const Header = () => {
   }, [menuOpen]);
 
   useEffect(() => {
+    if (menuOpen) {
+      setSearchOpen(false);
+    }
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (searchOpen) {
+      setMenuOpen(false);
+    }
+  }, [searchOpen]);
+
+  useEffect(() => {
     const handleCinematic = (event) => {
       if (typeof event.detail === 'number') {
         setCinematicProgress(event.detail);
@@ -88,6 +102,10 @@ export const Header = () => {
       scrollToDrops();
     }
   }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    setSearchOpen(false);
+  }, [location.pathname]);
 
 
 
@@ -183,6 +201,15 @@ export const Header = () => {
                 </div>
               </SheetContent>
             </Sheet>
+            <button
+              type="button"
+              data-testid="search-toggle-btn"
+              aria-label="Abrir búsqueda"
+              onClick={() => setSearchOpen(true)}
+              className={`${navToneClass} transition-colors duration-300`}
+            >
+              <Search size={20} strokeWidth={1.5} />
+            </button>
           </div>
 
           {/* Center: Header Logo — fades in after hero logo shrinks (homepage) or always visible (other pages) */}
@@ -237,8 +264,7 @@ export const Header = () => {
 
 
       </header>
-
-
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 };
