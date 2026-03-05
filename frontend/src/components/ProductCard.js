@@ -149,7 +149,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+          <div className="w-full h-full flex items-center justify-center">
             <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
           </div>
         )}

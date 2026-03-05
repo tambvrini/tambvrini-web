@@ -195,14 +195,14 @@
     --product-card-arrow: 20;
 }
 
-.product-card-media {
+.product-card-media img {
     border-radius: 22px;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.product-card:hover .product-card-media {
+.product-card:hover .product-card-media img {
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
 }
