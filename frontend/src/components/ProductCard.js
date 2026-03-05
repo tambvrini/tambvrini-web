@@ -111,117 +111,112 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
         setGalleryReady(false);
       }}
     >
-      <div className="product-card-shell">
-        <div className="product-card-surface" aria-hidden="true" />
-        <div className="product-card-content">
-          <div className="relative aspect-[3/4] product-card-media bg-white flex items-center justify-center">
-            {displayImageSrc ? (
-              <img
-                data-testid="product-card-image"
-                src={displayImageSrc}
-                alt={product.name}
-                className="w-full h-auto max-h-full object-contain object-center"
-                loading="lazy"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
-                <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
-              </div>
-            )}
-
-            {hasHoverVideo && (
-              <video
-                data-testid="product-card-video"
-                ref={videoRef}
-                muted
-                loop
-                playsInline
-                preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
-                poster={thumbnailSrc}
-                className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${isVideoActive ? 'opacity-100' : 'opacity-0'}`}
-                src={
-                  isTraje
-                    ? TRAJE_HOVER_VIDEO_URL
-                    : isAureus
-                      ? AUREUS_HOVER_VIDEO_URL
-                      : isBolso
-                        ? BOLSO_HOVER_VIDEO_URL
-                        : isSportClub
-                          ? SPORT_CLUB_HOVER_VIDEO_URL
-                          : isPoloGolf
-                            ? POLO_GOLF_HOVER_VIDEO_URL
-                            : isImperium
-                              ? IMPERIUM_HOVER_VIDEO_URL
-                              : isUmbra
-                                ? UMBRA_HOVER_VIDEO_URL
-                                : CAPTAIN_HOVER_VIDEO_URL
-                }
-              />
-            )}
-
-            {hasGalleryNavigation && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Imagen anterior"
-                  data-testid="product-card-arrow-left"
-                  className="product-card-arrow product-card-arrow-left"
-                  onClick={(event) => handleImageNavigation(-1, event)}
-                >
-                  &lsaquo;
-                </button>
-                <button
-                  type="button"
-                  aria-label="Imagen siguiente"
-                  data-testid="product-card-arrow-right"
-                  className="product-card-arrow product-card-arrow-right"
-                  onClick={(event) => handleImageNavigation(1, event)}
-                >
-                  &rsaquo;
-                </button>
-              </>
-            )}
-
-            {!hasHoverVideo && (
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-obsidian/30" />
-            )}
-            <div className="product-card-overlay">
-              <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
-
-              {enableWishlistIcon && (
-                <button
-                  type="button"
-                  aria-label={inWishlist ? 'Quitar de favoritos' : 'Añadir a favoritos'}
-                  className={`absolute top-[14px] right-[14px] z-20 w-8 h-8 flex items-center justify-center rounded-full bg-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 active:scale-[0.95] ${
-                    inWishlist ? 'opacity-100' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleItem(product);
-                  }}
-                >
-                  <Heart
-                    size={16}
-                    strokeWidth={1.5}
-                    className={`text-obsidian transition-transform duration-200 ${inWishlist ? 'fill-obsidian scale-[1.0]' : 'scale-100'}`}
-                  />
-                </button>
-              )}
-            </div>
-
-            {product.is_sold_out && (
-              <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
-            )}
+      <div className="relative aspect-[3/4] product-card-media flex items-center justify-center">
+        {displayImageSrc ? (
+          <img
+            data-testid="product-card-image"
+            src={displayImageSrc}
+            alt={product.name}
+            className="w-full h-auto max-h-full object-contain object-center"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+            <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
           </div>
+        )}
 
-          <div className="mt-4">
-            <h3 className="font-playfair text-[13px] text-obsidian/95 leading-snug">{product.name}</h3>
-            <p className="mt-1 font-montserrat text-[11px] tracking-wide text-[#6e6e6e]">
-              {product.price?.toLocaleString('en-US', { minimumFractionDigits: 0 })} €
-            </p>
-          </div>
+        {hasHoverVideo && (
+          <video
+            data-testid="product-card-video"
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
+            poster={thumbnailSrc}
+            className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${isVideoActive ? 'opacity-100' : 'opacity-0'}`}
+            src={
+              isTraje
+                ? TRAJE_HOVER_VIDEO_URL
+                : isAureus
+                  ? AUREUS_HOVER_VIDEO_URL
+                  : isBolso
+                    ? BOLSO_HOVER_VIDEO_URL
+                    : isSportClub
+                      ? SPORT_CLUB_HOVER_VIDEO_URL
+                      : isPoloGolf
+                        ? POLO_GOLF_HOVER_VIDEO_URL
+                        : isImperium
+                          ? IMPERIUM_HOVER_VIDEO_URL
+                          : isUmbra
+                            ? UMBRA_HOVER_VIDEO_URL
+                            : CAPTAIN_HOVER_VIDEO_URL
+            }
+          />
+        )}
+
+        {hasGalleryNavigation && (
+          <>
+            <button
+              type="button"
+              aria-label="Imagen anterior"
+              data-testid="product-card-arrow-left"
+              className="product-card-arrow product-card-arrow-left"
+              onClick={(event) => handleImageNavigation(-1, event)}
+            >
+              &lsaquo;
+            </button>
+            <button
+              type="button"
+              aria-label="Imagen siguiente"
+              data-testid="product-card-arrow-right"
+              className="product-card-arrow product-card-arrow-right"
+              onClick={(event) => handleImageNavigation(1, event)}
+            >
+              &rsaquo;
+            </button>
+          </>
+        )}
+
+        {!hasHoverVideo && (
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-obsidian/30" />
+        )}
+        <div className="product-card-overlay">
+          <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
+
+          {enableWishlistIcon && (
+            <button
+              type="button"
+              aria-label={inWishlist ? 'Quitar de favoritos' : 'Añadir a favoritos'}
+              className={`absolute top-[14px] right-[14px] z-20 w-8 h-8 flex items-center justify-center rounded-full bg-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 active:scale-[0.95] ${
+                inWishlist ? 'opacity-100' : ''
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleItem(product);
+              }}
+            >
+              <Heart
+                size={16}
+                strokeWidth={1.5}
+                className={`text-obsidian transition-transform duration-200 ${inWishlist ? 'fill-obsidian scale-[1.0]' : 'scale-100'}`}
+              />
+            </button>
+          )}
         </div>
+
+        {product.is_sold_out && (
+          <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <h3 className="font-playfair text-[13px] text-obsidian/95 leading-snug">{product.name}</h3>
+        <p className="mt-1 font-montserrat text-[11px] tracking-wide text-[#6e6e6e]">
+          {product.price?.toLocaleString('en-US', { minimumFractionDigits: 0 })} €
+        </p>
       </div>
 
     </Link>
