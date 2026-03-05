@@ -93,12 +93,14 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
     <Link
       to={`/producto/${product.product_id}`}
       data-testid={`product-card-${product.product_id}`}
+      aria-label={`Ver producto ${product.name}`}
       className="group block product-card"
       style={{ animationDelay: `${index * 0.03}s` }}
       onMouseEnter={() => {
         const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        if (hasGalleryNavigation && canHover) setGalleryReady(true);
-        if (hasHoverVideo && canHover && !showGalleryImage) setHovered(true);
+        if (!canHover) return;
+        if (hasGalleryNavigation) setGalleryReady(true);
+        if (hasHoverVideo && !showGalleryImage) setHovered(true);
       }}
       onMouseLeave={() => {
         const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;

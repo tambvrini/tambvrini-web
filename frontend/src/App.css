@@ -276,6 +276,23 @@
     opacity: 1;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .product-card-surface,
+    .product-card-content,
+    .product-card-arrow,
+    .product-card-overlay {
+        transition: none;
+    }
+
+    .product-card:hover .product-card-surface {
+        height: 100%;
+    }
+
+    .product-card:hover .product-card-content {
+        transform: none;
+    }
+}
+
 /* Quick add button */
 .quick-add {
     opacity: 0;
