@@ -9,7 +9,7 @@ const scrollToDrops = () => {
   });
 };
 
-import { Menu, X, User, Heart, ShoppingBag } from 'lucide-react';
+import { X, User, Heart, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -66,6 +66,13 @@ export const Header = () => {
   }, []);
 
   useEffect(() => {
+    document.body.classList.toggle('menu-open', menuOpen);
+    return () => {
+      document.body.classList.remove('menu-open');
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
     const handleCinematic = (event) => {
       if (typeof event.detail === 'number') {
         setCinematicProgress(event.detail);
@@ -119,13 +126,25 @@ export const Header = () => {
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
+                  type="button"
+                  aria-expanded={menuOpen}
+                  aria-controls="site-menu"
+                  aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                   data-testid="menu-toggle-btn"
-                  className={`${navToneClass} transition-colors duration-300`}
+                  className={`menu-toggle ${menuOpen ? 'is-open' : ''} ${navToneClass} transition-colors duration-300`}
                 >
-                  <Menu size={20} strokeWidth={1.5} />
+                  <span aria-hidden="true" />
+                  <span aria-hidden="true" />
+                  <span aria-hidden="true" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-white border-r border-black/5 p-0 overflow-y-auto">
+              <SheetContent
+                id="site-menu"
+                side="left"
+                hideClose
+                overlayClassName="menu-overlay"
+                className="side-menu bg-white border-r border-black/5 p-0 overflow-y-auto"
+              >
                 <div className="p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
                     <img src={logoSrc} alt="TAMBVRINI" className={`h-5 ${(scrolled || !isHomePage) ? 'invert' : ''}`} />
