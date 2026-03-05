@@ -209,7 +209,7 @@ describe('ProductPage', () => {
 
     const { container, root } = await renderProductPage();
     const modelViewer = container.querySelector('[data-testid="product-model-viewer"]');
-    const firstGalleryImage = container.querySelector('[data-testid="product-gallery-image-1"]');
+    const firstGalleryImage = container.querySelector('[data-testid="product-gallery-image-0"]');
     const firstGalleryItem = container.querySelector('[data-testid="product-gallery-item-0"]');
 
     expect(modelViewer).not.toBeNull();

@@ -135,6 +135,44 @@ export default function ProductPage() {
     || fallbackPoster
     || LOGO_FALLBACK_POSTER;
   const inWishlist = isInWishlist(product.product_id);
+  const galleryItems = (() => {
+    let imageIndex = -1;
+
+    return galleryMedia.map((media, index) => {
+      if (media.type === 'image') {
+        imageIndex += 1;
+      }
+
+      return (
+        <div
+          key={`${media.type}-${index}`}
+          data-testid={`product-gallery-item-${index}`}
+          className="border-b border-black/5 pb-12 last:border-b-0 last:pb-0"
+        >
+          {media.type === 'model' ? (
+            <div className="product-gallery-media bg-white">
+              <ModelViewer
+                data-testid="product-model-viewer"
+                src={media.src}
+                alt={`Vista 3D de ${product.name}`}
+                poster={modelPoster}
+                className="product-model-viewer"
+              />
+            </div>
+          ) : (
+            <div className="product-gallery-media bg-white">
+              <img
+                data-testid={`product-gallery-image-${imageIndex}`}
+                src={media.src}
+                alt={product.name}
+                className="product-gallery-image"
+              />
+            </div>
+          )}
+        </div>
+      );
+    });
+  })();
 
   return (
     <div
@@ -162,36 +200,7 @@ export default function ProductPage() {
           {/* Left: Gallery */}
           <div>
             {galleryMedia.length > 0 ? (
-              <div className="flex flex-col gap-12">
-                {galleryMedia.map((media, index) => (
-                  <div
-                    key={`${media.type}-${index}`}
-                    data-testid={`product-gallery-item-${index}`}
-                    className="border-b border-black/5 pb-12 last:border-b-0 last:pb-0"
-                  >
-                    {media.type === 'model' ? (
-                      <div className="product-gallery-media bg-white">
-                        <ModelViewer
-                          data-testid="product-model-viewer"
-                          src={media.src}
-                          alt={`Vista 3D de ${product.name}`}
-                          poster={modelPoster}
-                          className="product-model-viewer"
-                        />
-                      </div>
-                    ) : (
-                      <div className="product-gallery-media bg-white">
-                        <img
-                          data-testid={`product-gallery-image-${index}`}
-                          src={media.src}
-                          alt={product.name}
-                          className="product-gallery-image"
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <div className="flex flex-col gap-12">{galleryItems}</div>
             ) : (
               <div className="product-gallery-media bg-[#f5f5f5] flex items-center justify-center">
                 <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
