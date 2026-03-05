@@ -52,7 +52,7 @@ const baseProduct = {
   related_products: [],
 };
 
-const ignatiusProduct = baseProduct;
+const ignatiusProduct = { ...baseProduct };
 
 const umbraProduct = {
   product_id: 'americana-umbra',
