@@ -211,10 +211,12 @@ describe('ProductPage', () => {
     const modelViewer = container.querySelector('[data-testid="product-model-viewer"]');
     const firstGalleryImage = container.querySelector('[data-testid="product-gallery-image-0"]');
     const firstGalleryItem = container.querySelector('[data-testid="product-gallery-item-0"]');
+    const thumbnailButtons = container.querySelectorAll('[data-testid^="product-thumb-"]');
 
     expect(modelViewer).not.toBeNull();
     expect(firstGalleryItem.querySelector('model-viewer')).not.toBeNull();
     expect(firstGalleryImage).not.toBeNull();
+    expect(thumbnailButtons.length).toBe(0);
     expect(firstGalleryImage.getAttribute('src'))
       .toBe('/products/americana-umbra/americana-umbra-main.jpg');
 

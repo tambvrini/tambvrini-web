@@ -136,9 +136,11 @@ export default function ProductPage() {
     || LOGO_FALLBACK_POSTER;
   const inWishlist = isInWishlist(product.product_id);
   const galleryItems = (() => {
-    let imageIndex = -1;
+    let imageIndex = 0;
 
     return galleryMedia.map((media, index) => {
+      const currentImageIndex = media.type === 'image' ? imageIndex : null;
+
       if (media.type === 'image') {
         imageIndex += 1;
       }
@@ -162,7 +164,7 @@ export default function ProductPage() {
           ) : (
             <div className="product-gallery-media bg-white">
               <img
-                data-testid={`product-gallery-image-${imageIndex}`}
+                data-testid={`product-gallery-image-${currentImageIndex}`}
                 src={media.src}
                 alt={product.name}
                 className="product-gallery-image"
