@@ -62,9 +62,9 @@ const SearchOverlay = ({ open, onClose }) => {
         product.description?.toLowerCase().includes(lowered)
       ) {
         matches.push(product);
-      }
-      if (matches.length >= 6) {
-        break;
+        if (matches.length >= 6) {
+          break;
+        }
       }
     }
     return matches;
@@ -216,7 +216,7 @@ const SearchOverlay = ({ open, onClose }) => {
                       {product.name}
                     </p>
                     <p className="font-montserrat text-[11px] text-obsidian/50">
-                      {product.price?.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
+                      {product.price?.toLocaleString('es-ES', { minimumFractionDigits: 0 })} €
                     </p>
                   </div>
                 </Link>
