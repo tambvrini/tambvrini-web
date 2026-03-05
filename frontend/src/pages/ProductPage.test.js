@@ -203,7 +203,7 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('renders the UMBRA model and images in the gallery', async () => {
+  it('renders the umbra model and images in the gallery', async () => {
     mockProductId = 'americana-umbra';
     getProductById.mockReturnValue(umbraProduct);
 

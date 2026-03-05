@@ -165,7 +165,7 @@ export default function ProductPage() {
               <div className="flex flex-col gap-12">
                 {galleryMedia.map((media, index) => (
                   <div
-                    key={`${media.type}-${media.src}-${index}`}
+                    key={`${media.type}-${index}`}
                     data-testid={`product-gallery-item-${index}`}
                     className="border-b border-black/5 pb-12 last:border-b-0 last:pb-0"
                   >
