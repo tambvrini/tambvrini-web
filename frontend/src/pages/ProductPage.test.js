@@ -52,7 +52,11 @@ const baseProduct = {
   related_products: [],
 };
 
-const ignatiusProduct = { ...baseProduct };
+const ignatiusProduct = {
+  ...baseProduct,
+  product_id: 'sueter-ignatius',
+  name: 'Suéter Ignatius',
+};
 
 const umbraProduct = {
   product_id: 'americana-umbra',
@@ -288,6 +292,7 @@ describe('ProductPage', () => {
   });
 
   it('applies the ignatius background styles only for Suéter Ignatius', async () => {
+    mockProductId = 'sueter-ignatius';
     getProductById.mockReturnValue(ignatiusProduct);
 
     const { container, root } = await renderProductPage();
