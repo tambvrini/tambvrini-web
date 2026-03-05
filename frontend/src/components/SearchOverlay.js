@@ -55,13 +55,19 @@ const SearchOverlay = ({ open, onClose }) => {
   const results = useMemo(() => {
     if (!normalizedQuery) return [];
     const lowered = normalizedQuery.toLowerCase();
-    return products
-      .filter(
-        (product) =>
-          product.name?.toLowerCase().includes(lowered) ||
-          product.description?.toLowerCase().includes(lowered)
-      )
-      .slice(0, 6);
+    const matches = [];
+    for (const product of products) {
+      if (
+        product.name?.toLowerCase().includes(lowered) ||
+        product.description?.toLowerCase().includes(lowered)
+      ) {
+        matches.push(product);
+      }
+      if (matches.length >= 6) {
+        break;
+      }
+    }
+    return matches;
   }, [normalizedQuery]);
 
   const trendingProducts = useMemo(() => {
