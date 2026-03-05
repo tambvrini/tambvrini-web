@@ -88,9 +88,24 @@
     color: #111111;
 }
 
-.umbra-product-page,
+.product-page-shell [class*="text-obsidian"] {
+    color: #111111;
+}
+
+.product-page-shell [class*="text-obsidian/"] {
+    color: rgba(17, 17, 17, 0.7);
+}
+
+.product-page-shell .hover\:text-obsidian:hover {
+    color: #111111;
+}
+
+.umbra-product-page {
+    background-color: #0b0f1a;
+}
+
 .product-page-ignatius {
-    background-color: transparent;
+    background-color: #7a0c0c;
 }
 
 /* Luxury button styles */
@@ -309,6 +324,10 @@ input[type="password"] {
 
 body.umbra-mode {
     background-color: #0b0f1a;
+}
+
+body.umbra-mode .umbra-product-page {
+    color: #f6f7f9;
 }
 
 body.umbra-mode .umbra-product-page .text-obsidian:not(.umbra-keep-dark) {

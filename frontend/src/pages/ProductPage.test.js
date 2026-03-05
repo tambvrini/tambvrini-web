@@ -265,17 +265,19 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('applies the umbra background styles only for Americana Umbra', async () => {
+  it('applies the themed background class for Americana Umbra only', async () => {
     mockProductId = 'americana-umbra';
     getProductById.mockReturnValue(umbraProduct);
 
     const { container, root } = await renderProductPage();
-    const pageShell = container.querySelector('[data-testid="product-page"]');
-    const background = container.querySelector('.umbra-background');
+    const page = container.querySelector('[data-testid="product-page"]');
 
+    expect(page.classList.contains('umbra-product-page')).toBe(true);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(container.querySelector('.umbra-background')).not.toBeNull();
+    expect(container.querySelector('.ignatius-background')).toBeNull();
     expect(document.body.classList.contains('umbra-mode')).toBe(true);
-    expect(pageShell.classList.contains('umbra-product-page')).toBe(true);
-    expect(background).not.toBeNull();
+    expect(document.body.classList.contains('ignatius-mode')).toBe(false);
 
     act(() => {
       root.unmount();
@@ -287,12 +289,14 @@ describe('ProductPage', () => {
     getProductById.mockReturnValue(baseProduct);
 
     const { container, root } = await renderProductPage();
-    const pageShell = container.querySelector('[data-testid="product-page"]');
-    const background = container.querySelector('.ignatius-background');
+    const page = container.querySelector('[data-testid="product-page"]');
 
+    expect(page.classList.contains('product-page-ignatius')).toBe(true);
+    expect(page.classList.contains('umbra-product-page')).toBe(false);
+    expect(container.querySelector('.ignatius-background')).not.toBeNull();
+    expect(container.querySelector('.umbra-background')).toBeNull();
     expect(document.body.classList.contains('ignatius-mode')).toBe(true);
-    expect(pageShell.classList.contains('product-page-ignatius')).toBe(true);
-    expect(background).not.toBeNull();
+    expect(document.body.classList.contains('umbra-mode')).toBe(false);
 
     act(() => {
       root.unmount();
@@ -300,21 +304,19 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('keeps the default background for standard products', async () => {
+  it('keeps the default background for non-themed products', async () => {
     mockProductId = 'polo-golf';
     getProductById.mockReturnValue(poloGolfProduct);
 
     const { container, root } = await renderProductPage();
-    const pageShell = container.querySelector('[data-testid="product-page"]');
-    const umbraBackground = container.querySelector('.umbra-background');
-    const ignatiusBackground = container.querySelector('.ignatius-background');
+    const page = container.querySelector('[data-testid="product-page"]');
 
+    expect(page.classList.contains('umbra-product-page')).toBe(false);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(container.querySelector('.umbra-background')).toBeNull();
+    expect(container.querySelector('.ignatius-background')).toBeNull();
     expect(document.body.classList.contains('umbra-mode')).toBe(false);
     expect(document.body.classList.contains('ignatius-mode')).toBe(false);
-    expect(pageShell.classList.contains('umbra-product-page')).toBe(false);
-    expect(pageShell.classList.contains('product-page-ignatius')).toBe(false);
-    expect(umbraBackground).toBeNull();
-    expect(ignatiusBackground).toBeNull();
 
     act(() => {
       root.unmount();
