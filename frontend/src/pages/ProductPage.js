@@ -96,7 +96,7 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
         {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin" />
@@ -106,7 +106,7 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
         {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
@@ -183,7 +183,7 @@ export default function ProductPage() {
   return (
     <div
       data-testid="product-page"
-      className={`min-h-screen pt-28 md:pt-32 pb-24 ${isUmbraProduct ? 'umbra-product-page' : ''} ${
+      className={`min-h-screen pt-28 md:pt-32 pb-24 product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${
         isIgnatiusProduct ? 'product-page-ignatius' : ''
       }`}
     >

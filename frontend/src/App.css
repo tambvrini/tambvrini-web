@@ -83,6 +83,27 @@
     --poster-color: transparent;
 }
 
+.product-page-shell {
+    background-color: #0b0f1a;
+    color: #f6f7f9;
+}
+
+.product-page-shell [class*="text-obsidian"] {
+    color: #f6f7f9;
+}
+
+.product-page-shell [class*="text-obsidian/"] {
+    color: rgba(226, 229, 235, 0.7);
+}
+
+.product-page-shell [class*="text-[#6e6e6e]"] {
+    color: rgba(210, 214, 222, 0.72);
+}
+
+.product-page-shell .hover\:text-obsidian:hover {
+    color: #ffffff;
+}
+
 /* Luxury button styles */
 .btn-luxury {
     border: 1px solid rgba(17, 17, 17, 0.18);
