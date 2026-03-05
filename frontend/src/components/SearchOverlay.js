@@ -41,7 +41,7 @@ const SearchOverlay = ({ open, onClose }) => {
   useEffect(() => {
     if (!open) {
       document.body.style.overflow = '';
-      return undefined;
+      return;
     }
 
     document.body.style.overflow = 'hidden';
@@ -142,7 +142,7 @@ const SearchOverlay = ({ open, onClose }) => {
                           )}
                         </div>
                         <div>
-                          <p className="font-montserrat text-sm text-obsidian group-hover:text-obsidian transition-colors duration-300">
+                          <p className="font-montserrat text-sm text-obsidian/70 group-hover:text-obsidian transition-colors duration-300">
                             {product.name}
                           </p>
                           <p className="font-montserrat text-[10px] uppercase tracking-[0.25em] text-obsidian/40 mt-1">
@@ -206,7 +206,7 @@ const SearchOverlay = ({ open, onClose }) => {
                     )}
                   </div>
                   <div>
-                    <p className="font-montserrat text-sm text-obsidian group-hover:text-obsidian transition-colors duration-300">
+                    <p className="font-montserrat text-sm text-obsidian/70 group-hover:text-obsidian transition-colors duration-300">
                       {product.name}
                     </p>
                     <p className="font-montserrat text-[11px] text-obsidian/50">
