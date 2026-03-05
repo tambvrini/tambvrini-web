@@ -69,6 +69,9 @@ const SearchOverlay = ({ open, onClose }) => {
       const product = normalizedProducts[index];
       if (product.searchName.includes(lowered) || product.searchDescription.includes(lowered)) {
         matches.push(product);
+        if (matches.length >= 6) {
+          break;
+        }
       }
     }
     return matches;
@@ -78,7 +81,7 @@ const SearchOverlay = ({ open, onClose }) => {
     const featured = products.filter((product) => product.is_featured);
     const picks = featured.length > 0 ? featured : products;
     return picks.slice(0, 4);
-  }, []);
+  }, [products]);
 
   const showResults = normalizedQuery.length > 0;
 
