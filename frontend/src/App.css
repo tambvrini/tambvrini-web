@@ -265,6 +265,20 @@
     z-index: var(--product-card-overlay);
 }
 
+.product-card-overlay-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.product-card:hover .product-card-overlay-content {
+    opacity: 1;
+}
+
 /* Quick add button */
 .quick-add {
     opacity: 0;
