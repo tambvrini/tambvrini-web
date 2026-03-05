@@ -196,8 +196,15 @@
 }
 
 .product-card-media {
-    border-radius: 12px;
+    border-radius: 22px;
     overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.product-card:hover .product-card-media {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
 }
 
 .product-card-arrow {
@@ -248,6 +255,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .product-card-media,
     .product-card-arrow,
     .product-card-overlay {
         transition: none;

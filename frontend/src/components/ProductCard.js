@@ -27,6 +27,29 @@ const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602
 const CAPTAIN_ID = 'sueter-captain';
 const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/pu3df808_0212%20%284%29.mp4';
 
+const LOCAL_THUMBNAILS = {
+  'americana-umbra': 'americana-umbra',
+  'bolso-monograma-tambvrini': 'bolso-monograma-tambvrini',
+  'camiseta-imperium': 'camiseta-imperium',
+  'camiseta-sport-club': 'camiseta-sport-club',
+  'polo-aureus': 'polo-aureus',
+  'polo-domus': 'polo-domus',
+  'polo-golf': 'polo-golf',
+  'polo-patricius': 'polo-patricius',
+  'polo-regius': 'polo-regius',
+  'sueter-captain': 'sueter-captain',
+  'sueter-sylva': 'sueter-sylva',
+  'traje-monograma-tambvrini': 'traje-monograma-tambvrini',
+  'sueter-ignatius': 'ignatius-sweater-thumb',
+};
+
+const getLocalThumbnail = (product) => {
+  if (!product) return '';
+  if (product.thumbnail_image?.startsWith('/thumbnails/')) return product.thumbnail_image;
+  const mappedThumbnail = LOCAL_THUMBNAILS[product.product_id] || LOCAL_THUMBNAILS[product.slug];
+  return mappedThumbnail ? `/thumbnails/${mappedThumbnail}.jpg` : '';
+};
+
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enableWishlistIcon = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
@@ -49,8 +72,9 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
   const inWishlist = enableWishlistIcon && isInWishlist(product.product_id);
   const galleryImages = product.images || [];
   const hasGalleryNavigation = galleryImages.length > 1;
-  const thumbnailSrc = product.thumbnail_image || (product.slug ? `/thumbnails/${product.slug}.jpg` : '');
-  const baseImageSrc = thumbnailSrc || galleryImages[0] || '';
+  const localThumbnailSrc = getLocalThumbnail(product);
+  const fallbackImageSrc = galleryImages[0] || '';
+  const baseImageSrc = localThumbnailSrc || fallbackImageSrc;
   const galleryImageSrc = galleryReady ? galleryImages[activeImageIndex] : '';
   const displayImageSrc = showGalleryImage && galleryImageSrc ? galleryImageSrc : baseImageSrc;
   const isVideoActive = hasHoverVideo && hovered && !showGalleryImage;
@@ -134,7 +158,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
             loop
             playsInline
             preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
-            poster={thumbnailSrc}
+            poster={baseImageSrc}
             className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${isVideoActive ? 'opacity-100' : 'opacity-0'}`}
             src={
               isTraje
