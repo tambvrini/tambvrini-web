@@ -19,6 +19,37 @@
     opacity: 0.022;
 }
 
+:root {
+    --premium-color-transition: color 0.18s ease;
+    --premium-scale-transition: opacity 0.18s ease, transform 0.18s ease;
+    --premium-image-zoom-transition: transform 0.3s ease-out;
+    --premium-scale-factor: 1.02;
+    --premium-image-zoom-factor: 1.03;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    :where(a, button, [role="button"]) {
+        transition: var(--premium-color-transition);
+    }
+
+    :where(button, .premium-scale) {
+        transition: var(--premium-scale-transition);
+        transform-origin: center;
+    }
+
+    :where(button:not(:disabled):hover, .btn-luxury:hover, .premium-scale:hover) {
+        transform: scale(var(--premium-scale-factor));
+    }
+
+    .premium-image-zoom {
+        transition: var(--premium-image-zoom-transition);
+    }
+
+    .group:hover .premium-image-zoom {
+        transform: scale(var(--premium-image-zoom-factor));
+    }
+}
+
 /* Image hover zoom */
 .img-zoom {
     overflow: hidden;
@@ -30,18 +61,43 @@
     transform: scale(1.06);
 }
 
-.product-main-image {
+.product-gallery-media {
     width: 100%;
-    aspect-ratio: 3 / 4;
     position: relative;
     overflow: hidden;
+    background: transparent;
 }
-.product-main-image img {
+.product-gallery-image {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    height: auto;
+    object-fit: cover;
     object-position: center;
     display: block;
+}
+.product-model-viewer {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    display: block;
+    background-color: transparent;
+    --poster-color: transparent;
+}
+
+.product-page-shell {
+    background-color: #0b0f1a;
+    color: #f6f7f9;
+}
+
+.product-page-shell [class*="text-obsidian"] {
+    color: #f6f7f9;
+}
+
+.product-page-shell [class*="text-obsidian/"] {
+    color: rgba(226, 229, 235, 0.7);
+}
+
+.product-page-shell .hover\:text-obsidian:hover {
+    color: #ffffff;
 }
 
 /* Luxury button styles */
@@ -58,7 +114,7 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: color 0.5s ease, border-color 0.5s ease;
+    transition: color 0.5s ease, border-color 0.5s ease, var(--premium-scale-transition);
 }
 .btn-luxury::before {
     content: '';
@@ -109,6 +165,10 @@
     transform: translateY(0);
 }
 
+.page-transition {
+    will-change: opacity;
+}
+
 /* Product card wishlist */
 .wishlist-btn {
     opacity: 0;
@@ -129,10 +189,74 @@
     transform: translateY(0);
 }
 
-/* Menu overlay */
+/* Luxury menu overlay + panel */
 .menu-overlay {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+body.menu-open .menu-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.contact-overlay {
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.side-menu {
+    z-index: 1000;
+    animation-duration: 250ms;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+.menu-toggle {
+    --menu-toggle-offset: 7px;
+    width: 20px;
+    height: 16px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-toggle span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: currentColor;
+    transition: transform 0.25s cubic-bezier(.4, 0, .2, 1), opacity 0.2s ease;
+}
+
+.menu-toggle span:nth-child(1) {
+    top: 0;
+}
+
+.menu-toggle span:nth-child(2) {
+    top: var(--menu-toggle-offset);
+}
+
+.menu-toggle span:nth-child(3) {
+    top: calc(var(--menu-toggle-offset) * 2);
+}
+
+.menu-toggle.is-open span:nth-child(1) {
+    transform: translateY(var(--menu-toggle-offset)) rotate(45deg);
+}
+
+.menu-toggle.is-open span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.is-open span:nth-child(3) {
+    transform: translateY(calc(var(--menu-toggle-offset) * -1)) rotate(-45deg);
 }
 
 /* Stagger animation delays */

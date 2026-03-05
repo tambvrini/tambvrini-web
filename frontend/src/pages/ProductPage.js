@@ -4,8 +4,17 @@ import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
+import ModelViewer from '../components/ModelViewer';
 import { toast } from 'sonner';
-import { getProductById } from '@/data/productHelpers';
+import { getProductById } from '../data/productHelpers';
+
+const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
+
+const resolveFallbackPoster = (thumbnailImage, media) => {
+  if (thumbnailImage) return thumbnailImage;
+  const firstImage = media.find((item) => item.type === 'image')?.src;
+  return firstImage || '';
+};
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -16,9 +25,6 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [activeImage, setActiveImage] = useState(0);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -33,9 +39,6 @@ export default function ProductPage() {
         const data = getProductById(productId);
         setProduct(data);
         setRelated(data?.related_products || []);
-        setSelectedImage(0);
-        setActiveImage(0);
-        setIsImageLoaded(false);
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
@@ -93,7 +96,7 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
         {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin" />
@@ -103,7 +106,7 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+      <div className={`min-h-screen pt-32 flex items-center justify-center product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
         {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
@@ -123,13 +126,64 @@ export default function ProductPage() {
       ]
     : (product.images || []);
 
+  const galleryMedia = [
+    ...(product.model_url ? [{ type: 'model', src: product.model_url }] : []),
+    ...galleryImages.map((img) => ({ type: 'image', src: img })),
+  ];
+  const fallbackPoster = resolveFallbackPoster(product.thumbnail_image, galleryMedia);
+  const modelPoster = product.model_poster
+    || fallbackPoster
+    || LOGO_FALLBACK_POSTER;
   const inWishlist = isInWishlist(product.product_id);
-  const shouldFade = selectedImage !== activeImage && isImageLoaded;
+  const galleryItems = (() => {
+    let imageIndex = 0;
+
+    return galleryMedia.map((media, index) => {
+      const currentImageIndex = media.type === 'image' ? imageIndex : null;
+
+      if (media.type === 'image') {
+        imageIndex += 1;
+      }
+
+      const showDivider = index < galleryMedia.length - 1;
+
+      return (
+        <div
+          key={`${media.type}-${index}`}
+          data-testid={`product-gallery-item-${index}`}
+        >
+          {media.type === 'model' ? (
+            <div className="product-gallery-media">
+              <ModelViewer
+                data-testid="product-model-viewer"
+                src={media.src}
+                alt={`Vista 3D de ${product.name}`}
+                poster={modelPoster}
+                className="product-model-viewer"
+              />
+            </div>
+          ) : (
+            <div className="product-gallery-media">
+              <img
+                data-testid={`product-gallery-image-${currentImageIndex}`}
+                src={media.src}
+                alt={product.name}
+                className="product-gallery-image"
+              />
+            </div>
+          )}
+          {showDivider && (
+            <div aria-hidden="true" className="h-px bg-black/[0.08] my-6" />
+          )}
+        </div>
+      );
+    });
+  })();
 
   return (
     <div
       data-testid="product-page"
-      className={`min-h-screen pt-28 md:pt-32 pb-24 ${isUmbraProduct ? 'umbra-product-page' : ''} ${
+      className={`min-h-screen pt-28 md:pt-32 pb-24 product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${
         isIgnatiusProduct ? 'product-page-ignatius' : ''
       }`}
     >
@@ -148,69 +202,20 @@ export default function ProductPage() {
 
       {/* Product layout */}
       <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-10 lg:gap-16 items-start">
           {/* Left: Gallery */}
           <div>
-            <div className="flex flex-col md:flex-row gap-4 items-start">
-              <div className="img-zoom product-main-image md:flex-1 bg-white/5">
-                {(galleryImages.length > 0) ? (
-                  <>
-                    <img
-                      data-testid="product-main-image"
-                      src={galleryImages[activeImage]}
-                      alt={product.name}
-                      className={`transition-opacity duration-500 ease-out ${
-                        shouldFade ? 'opacity-0' : 'opacity-100'
-                      }`}
-                    />
-                    {selectedImage !== activeImage && (
-                      <img
-                        src={galleryImages[selectedImage]}
-                        alt={product.name}
-                        onLoad={() => setIsImageLoaded(true)}
-                        onTransitionEnd={() => {
-                          if (isImageLoaded) {
-                            setActiveImage(selectedImage);
-                            setIsImageLoaded(false);
-                          }
-                        }}
-                        className={`absolute inset-0 transition-opacity duration-500 ease-out ${
-                          shouldFade ? 'opacity-100' : 'opacity-0'
-                        }`}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
-                    <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
-                  </div>
-                )}
+            {galleryMedia.length > 0 ? (
+              <div className="flex flex-col">{galleryItems}</div>
+            ) : (
+              <div className="product-gallery-media flex items-center justify-center">
+                <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
               </div>
-              {galleryImages.length > 0 && (
-              <div className="flex flex-col gap-3">
-                {galleryImages.map((img, i) => (
-                  <button
-                    key={i}
-                    data-testid={`product-thumb-${i}`}
-                    onClick={() => {
-                      if (i === selectedImage) return;
-                      setIsImageLoaded(false);
-                      setSelectedImage(i);
-                    }}
-                    className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
-                      selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
-                  </button>
-                ))}
-              </div>
-              )}
-            </div>
+            )}
           </div>
 
           {/* Right: Product info */}
-          <div className="lg:pl-8 lg:pt-4">
+          <div className="lg:pl-8 lg:pt-4 lg:sticky lg:top-32 lg:self-start">
             <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-gold/60 mb-4">
               {product.category?.join(' / ')}
             </p>
@@ -227,7 +232,7 @@ export default function ProductPage() {
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4">
+            <p data-testid="product-price" className="font-montserrat text-lg text-obsidian/60 tracking-wide mb-4">
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (

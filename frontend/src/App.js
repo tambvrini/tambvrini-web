@@ -1,5 +1,6 @@
 import "@/App.css";
 import { useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
@@ -32,19 +33,28 @@ function AppRouter() {
     <div>
       <Header />
       <CartDrawer />
-      <main>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/tienda" element={<ShopPage />} />
-          <Route path="/limited-editions" element={<LimitedEditionsPage />} />
-          <Route path="/producto/:productId" element={<ProductPage />} />
-          <Route path="/carrito" element={<CartPage />} />
-          <Route path="/cuenta" element={<AccountPage />} />
-          <Route path="/favoritos" element={<WishlistPage />} />
-          <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
-          <Route path="/marca" element={<BrandPage />} />
-        </Routes>
-      </main>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.main
+          key={location.pathname}
+          className="page-transition"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <Routes location={location}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/tienda" element={<ShopPage />} />
+            <Route path="/limited-editions" element={<LimitedEditionsPage />} />
+            <Route path="/producto/:productId" element={<ProductPage />} />
+            <Route path="/carrito" element={<CartPage />} />
+            <Route path="/cuenta" element={<AccountPage />} />
+            <Route path="/favoritos" element={<WishlistPage />} />
+            <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+            <Route path="/marca" element={<BrandPage />} />
+          </Routes>
+        </motion.main>
+      </AnimatePresence>
       <Footer bgColor={isHome ? '#FFFFFF' : undefined} />
     </div>
   );
