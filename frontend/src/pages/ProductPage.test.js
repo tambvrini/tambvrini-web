@@ -52,6 +52,8 @@ const baseProduct = {
   related_products: [],
 };
 
+const ignatiusProduct = baseProduct;
+
 const umbraProduct = {
   product_id: 'americana-umbra',
   name: 'Americana UMBRA',
@@ -286,7 +288,7 @@ describe('ProductPage', () => {
   });
 
   it('applies the ignatius background styles only for Suéter Ignatius', async () => {
-    getProductById.mockReturnValue(baseProduct);
+    getProductById.mockReturnValue(ignatiusProduct);
 
     const { container, root } = await renderProductPage();
     const page = container.querySelector('[data-testid="product-page"]');
