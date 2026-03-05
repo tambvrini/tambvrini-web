@@ -41,13 +41,13 @@
         transform: scale(var(--premium-scale-factor));
     }
 
+    .premium-image-zoom {
+        transition: var(--premium-image-transition);
+    }
+
     .group:hover .premium-image-zoom {
         transform: scale(var(--premium-image-scale-factor));
     }
-}
-
-.premium-image-zoom {
-    transition: var(--premium-image-transition);
 }
 
 /* Image hover zoom */
