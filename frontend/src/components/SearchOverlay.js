@@ -25,6 +25,7 @@ const formatProductCategoryPath = (product) => {
 const SearchOverlay = ({ open, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef(null);
+  const previousOverflow = useRef('');
 
   const normalizedProducts = useMemo(
     () =>
@@ -53,21 +54,22 @@ const SearchOverlay = ({ open, onClose }) => {
 
   useEffect(() => {
     if (!open) {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow.current || '';
       return;
     }
 
+    previousOverflow.current = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     window.requestAnimationFrame(() => inputRef.current?.focus());
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow.current || '';
     };
   }, [open]);
 
-  const normalizedQuery = searchQuery.trim();
+  const trimmedQuery = searchQuery.trim();
   const results = useMemo(() => {
-    if (!normalizedQuery) return [];
-    const lowered = normalizedQuery.toLowerCase();
+    if (!trimmedQuery) return [];
+    const lowered = trimmedQuery.toLowerCase();
     const matches = [];
     for (const product of normalizedProducts) {
       if (matches.length >= 6) {
@@ -78,7 +80,7 @@ const SearchOverlay = ({ open, onClose }) => {
       }
     }
     return matches;
-  }, [normalizedQuery, normalizedProducts]);
+  }, [trimmedQuery, normalizedProducts]);
 
   const trendingProducts = useMemo(() => {
     const featured = products.filter((product) => product.is_featured);
@@ -86,7 +88,7 @@ const SearchOverlay = ({ open, onClose }) => {
     return picks.slice(0, 4);
   }, []);
 
-  const showResults = normalizedQuery.length > 0;
+  const showResults = trimmedQuery.length > 0;
 
   return (
     <div
