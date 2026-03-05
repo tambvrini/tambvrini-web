@@ -20,7 +20,7 @@
 }
 
 :root {
-    --premium-hover-transition: color 0.18s ease;
+    --premium-color-transition: color 0.18s ease;
     --premium-scale-transition: opacity 0.18s ease, transform 0.18s ease;
     --premium-image-transition: transform 0.3s ease-out;
     --premium-scale-factor: 1.02;
@@ -29,7 +29,7 @@
 
 @media (hover: hover) and (pointer: fine) {
     :where(a, button, [role="button"]) {
-        transition: var(--premium-hover-transition);
+        transition: var(--premium-color-transition);
     }
 
     :where(button, .premium-scale) {
