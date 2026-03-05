@@ -19,24 +19,26 @@
     opacity: 0.022;
 }
 
-:where(body a, body button, body [role="button"]) {
-    transition: opacity 0.18s ease, filter 0.18s ease;
+:root {
+    --premium-hover-transition: opacity 0.18s ease, filter 0.18s ease;
+    --premium-scale-transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease;
 }
 
-body button,
-body .premium-scale {
-    transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+:where(body a, body button, body [role="button"]) {
+    transition: var(--premium-hover-transition);
+}
+
+:where(body button, body .premium-scale) {
+    transition: var(--premium-scale-transition);
     transform-origin: center;
 }
 
 :where(body a:hover, body button:not(:disabled):hover, body [role="button"]:hover) {
-    opacity: 0.94;
-    filter: brightness(0.98);
+    opacity: 0.97;
+    filter: brightness(0.99);
 }
 
-body button:not(:disabled):hover,
-body .btn-luxury:hover,
-body .premium-scale:hover {
+:where(body button:not(:disabled):hover, body .btn-luxury:hover, body .premium-scale:hover) {
     transform: scale(1.02);
 }
 
