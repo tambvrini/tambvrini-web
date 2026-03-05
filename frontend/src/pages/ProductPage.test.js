@@ -157,10 +157,11 @@ describe('ProductPage', () => {
 
     const { container, root } = await renderProductPage();
     const viewer = container.querySelector('model-viewer');
+    const galleryImages = container.querySelectorAll('[data-testid^="product-gallery-image-"]');
 
     expect(viewer).not.toBeNull();
     expect(viewer.getAttribute('src')).toBe('/models/ignatius.glb');
-    expect(container.querySelector('[data-testid="product-main-image"]')).toBeNull();
+    expect(galleryImages.length).toBe(0);
 
     act(() => {
       root.unmount();
@@ -176,7 +177,7 @@ describe('ProductPage', () => {
 
     const { container, root } = await renderProductPage();
     const viewer = container.querySelector('model-viewer');
-    const mainImage = container.querySelector('[data-testid="product-main-image"]');
+    const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
 
     expect(viewer).toBeNull();
     expect(mainImage).not.toBeNull();
@@ -202,31 +203,20 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('toggles between the UMBRA model and images in the gallery', async () => {
+  it('renders the UMBRA model and images in the gallery', async () => {
     mockProductId = 'americana-umbra';
     getProductById.mockReturnValue(umbraProduct);
 
     const { container, root } = await renderProductPage();
     const modelViewer = container.querySelector('[data-testid="product-model-viewer"]');
-    const firstImageThumb = container.querySelector('[data-testid="product-thumb-1"]');
+    const firstGalleryImage = container.querySelector('[data-testid="product-gallery-image-1"]');
+    const firstGalleryItem = container.querySelector('[data-testid="product-gallery-item-0"]');
 
     expect(modelViewer).not.toBeNull();
-    expect(firstImageThumb).not.toBeNull();
-
-    act(() => {
-      firstImageThumb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
-
-    expect(container.querySelector('[data-testid="product-main-image"]')).not.toBeNull();
-    expect(container.querySelector('[data-testid="product-model-viewer"]')).toBeNull();
-
-    const modelThumb = container.querySelector('[data-testid="product-thumb-0"]');
-    expect(modelThumb).not.toBeNull();
-    act(() => {
-      modelThumb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
-
-    expect(container.querySelector('[data-testid="product-model-viewer"]')).not.toBeNull();
+    expect(firstGalleryItem.querySelector('model-viewer')).not.toBeNull();
+    expect(firstGalleryImage).not.toBeNull();
+    expect(firstGalleryImage.getAttribute('src'))
+      .toBe('/products/americana-umbra/americana-umbra-main.jpg');
 
     act(() => {
       root.unmount();
@@ -239,37 +229,13 @@ describe('ProductPage', () => {
     getProductById.mockReturnValue(poloGolfProduct);
 
     const { container, root } = await renderProductPage();
-    const mainImage = container.querySelector('[data-testid="product-main-image"]');
-    const firstThumbnail = container.querySelector('[data-testid="product-thumb-0"] img');
+    const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
+    const thirdImage = container.querySelector('[data-testid="product-gallery-image-2"]');
 
     expect(mainImage).not.toBeNull();
     expect(mainImage.getAttribute('src')).toBe(poloGolfProduct.images[0]);
-    expect(firstThumbnail).not.toBeNull();
-    expect(firstThumbnail.getAttribute('src')).toBe(poloGolfProduct.images[0]);
-
-    const thirdThumbnailButton = container.querySelector('[data-testid="product-thumb-2"]');
-    act(() => {
-      thirdThumbnailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
-
-    const mainImageWrapper = container.querySelector('.product-main-image');
-    const mainImages = mainImageWrapper.querySelectorAll('img');
-    const transitionImage = mainImages[1];
-
-    expect(transitionImage).not.toBeNull();
-    expect(transitionImage.getAttribute('src')).toBe(poloGolfProduct.images[2]);
-
-    await act(async () => {
-      transitionImage.dispatchEvent(new Event('load', { bubbles: true }));
-    });
-
-    const updatedTransitionImage = mainImageWrapper.querySelectorAll('img')[1];
-    await act(async () => {
-      updatedTransitionImage.dispatchEvent(new Event('transitionend', { bubbles: true }));
-    });
-
-    expect(container.querySelector('[data-testid="product-main-image"]').getAttribute('src'))
-      .toBe(poloGolfProduct.images[2]);
+    expect(thirdImage).not.toBeNull();
+    expect(thirdImage.getAttribute('src')).toBe(poloGolfProduct.images[2]);
 
     act(() => {
       root.unmount();
@@ -282,37 +248,13 @@ describe('ProductPage', () => {
     getProductById.mockReturnValue(camisetaImperiumProduct);
 
     const { container, root } = await renderProductPage();
-    const mainImage = container.querySelector('[data-testid="product-main-image"]');
-    const firstThumbnail = container.querySelector('[data-testid="product-thumb-0"] img');
+    const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
+    const fifthImage = container.querySelector('[data-testid="product-gallery-image-4"]');
 
     expect(mainImage).not.toBeNull();
     expect(mainImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
-    expect(firstThumbnail).not.toBeNull();
-    expect(firstThumbnail.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
-
-    const fifthThumbnailButton = container.querySelector('[data-testid="product-thumb-4"]');
-    act(() => {
-      fifthThumbnailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
-
-    const mainImageWrapper = container.querySelector('.product-main-image');
-    const mainImages = mainImageWrapper.querySelectorAll('img');
-    const transitionImage = mainImages[1];
-
-    expect(transitionImage).not.toBeNull();
-    expect(transitionImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
-
-    await act(async () => {
-      transitionImage.dispatchEvent(new Event('load', { bubbles: true }));
-    });
-
-    const updatedTransitionImage = mainImageWrapper.querySelectorAll('img')[1];
-    await act(async () => {
-      updatedTransitionImage.dispatchEvent(new Event('transitionend', { bubbles: true }));
-    });
-
-    expect(container.querySelector('[data-testid="product-main-image"]').getAttribute('src'))
-      .toBe(camisetaImperiumProduct.images[4]);
+    expect(fifthImage).not.toBeNull();
+    expect(fifthImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
 
     act(() => {
       root.unmount();
