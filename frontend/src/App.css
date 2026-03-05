@@ -20,9 +20,10 @@
 }
 
 :root {
-    --premium-hover-transition: opacity 0.18s ease;
+    --premium-hover-transition: color 0.18s ease;
     --premium-scale-transition: opacity 0.18s ease, transform 0.18s ease;
     --premium-image-transition: transform 0.3s ease-out;
+    --premium-scale-factor: 1.02;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -35,12 +36,12 @@
         transform-origin: center;
     }
 
-    :where(body a:hover, body button:not(:disabled):hover, body [role="button"]:hover) {
-        opacity: 0.99;
+    :where(body button:not(:disabled):hover, body .btn-luxury:hover, body .premium-scale:hover) {
+        transform: scale(var(--premium-scale-factor));
     }
 
-    :where(body button:not(:disabled):hover, body .btn-luxury:hover, body .premium-scale:hover) {
-        transform: scale(1.02);
+    .group:hover .premium-image-zoom {
+        transform: scale(var(--premium-scale-factor));
     }
 }
 
