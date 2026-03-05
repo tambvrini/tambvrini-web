@@ -158,6 +158,7 @@ body.menu-open .menu-overlay {
 }
 
 .menu-toggle {
+    --menu-toggle-offset: 7px;
     width: 20px;
     height: 16px;
     position: relative;
@@ -180,15 +181,15 @@ body.menu-open .menu-overlay {
 }
 
 .menu-toggle span:nth-child(2) {
-    top: 7px;
+    top: var(--menu-toggle-offset);
 }
 
 .menu-toggle span:nth-child(3) {
-    top: 14px;
+    top: calc(var(--menu-toggle-offset) * 2);
 }
 
 .menu-toggle.is-open span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transform: translateY(var(--menu-toggle-offset)) rotate(45deg);
 }
 
 .menu-toggle.is-open span:nth-child(2) {
@@ -196,7 +197,7 @@ body.menu-open .menu-overlay {
 }
 
 .menu-toggle.is-open span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+    transform: translateY(calc(var(--menu-toggle-offset) * -1)) rotate(-45deg);
 }
 
 /* Stagger animation delays */
