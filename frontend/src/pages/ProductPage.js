@@ -232,7 +232,7 @@ export default function ProductPage() {
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4">
+            <p data-testid="product-price" className="font-montserrat text-lg text-obsidian/60 tracking-wide mb-4">
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (
