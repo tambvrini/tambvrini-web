@@ -39,16 +39,16 @@ const SearchOverlay = ({ open, onClose }) => {
   }, [open, onClose]);
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-      window.requestAnimationFrame(() => inputRef.current?.focus());
-      return () => {
-        document.body.style.overflow = '';
-      };
+    if (!open) {
+      document.body.style.overflow = '';
+      return undefined;
     }
 
-    document.body.style.overflow = '';
-    return undefined;
+    document.body.style.overflow = 'hidden';
+    window.requestAnimationFrame(() => inputRef.current?.focus());
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [open]);
 
   const normalizedQuery = searchQuery.trim();
@@ -184,7 +184,7 @@ const SearchOverlay = ({ open, onClose }) => {
 
           <div className="space-y-6">
             <p className="font-cinzel text-[11px] tracking-[0.3em] uppercase text-obsidian/50">
-              Trending products
+              Productos en tendencia
             </p>
             <div className="space-y-5">
               {trendingProducts.map((product) => (
