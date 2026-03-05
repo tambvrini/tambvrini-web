@@ -152,8 +152,6 @@ body.menu-open .menu-overlay {
 }
 
 .side-menu {
-    width: 320px;
-    height: 100vh;
     z-index: 1000;
     animation-duration: 250ms;
     animation-timing-function: cubic-bezier(.4, 0, .2, 1);

@@ -143,7 +143,7 @@ export const Header = () => {
                 side="left"
                 hideClose
                 overlayClassName="menu-overlay"
-                className="side-menu bg-white border-r border-black/5 p-0 overflow-y-auto"
+                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-y-auto"
               >
                 <div className="p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
