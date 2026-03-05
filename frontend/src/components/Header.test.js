@@ -136,4 +136,32 @@ describe('Header menu', () => {
     });
     container.remove();
   });
+
+  it('opens and closes the contact panel', async () => {
+    const { container, root } = await renderHeader();
+    const contactButton = container.querySelector('[data-testid="contact-toggle-btn"]');
+    const contactPanel = container.querySelector('[data-testid="contact-panel"]');
+    const contactClose = container.querySelector('[data-testid="contact-close-btn"]');
+
+    expect(contactButton).not.toBeNull();
+    expect(contactPanel).not.toBeNull();
+    expect(contactPanel.getAttribute('data-state')).toBe('closed');
+
+    await act(async () => {
+      contactButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(contactPanel.getAttribute('data-state')).toBe('open');
+
+    await act(async () => {
+      contactClose.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(contactPanel.getAttribute('data-state')).toBe('closed');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });

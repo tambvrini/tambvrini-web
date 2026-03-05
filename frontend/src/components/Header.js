@@ -9,12 +9,13 @@ const scrollToDrops = () => {
   });
 };
 
-import { X, User, Heart, ShoppingBag, Search } from 'lucide-react';
+import { X, User, Heart, ShoppingBag, Search, Phone } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
 import SearchOverlay from './SearchOverlay';
+import ContactPanel from './ContactPanel';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const LOGO_DARK = "/logo-letras-final-blanco.svg";
@@ -48,6 +49,7 @@ export const Header = () => {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [cinematicProgress, setCinematicProgress] = useState(1);
 
   const location = useLocation();
@@ -78,6 +80,15 @@ export const Header = () => {
     setMenuOpen(open);
     if (open) {
       setSearchOpen(false);
+      setContactOpen(false);
+    }
+  };
+
+  const handleContactOpenChange = (open) => {
+    setContactOpen(open);
+    if (open) {
+      setMenuOpen(false);
+      setSearchOpen(false);
     }
   };
 
@@ -100,6 +111,7 @@ export const Header = () => {
 
   useEffect(() => {
     setSearchOpen(false);
+    setContactOpen(false);
   }, [location.pathname]);
 
 
@@ -158,7 +170,7 @@ export const Header = () => {
                 overlayClassName="menu-overlay"
                 className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-y-auto"
               >
-                <div className="p-8 md:p-12">
+                <div className="flex flex-col h-full p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
                     <img src={logoSrc} alt="TAMBVRINI" className={`h-5 ${(scrolled || !isHomePage) ? 'invert' : ''}`} />
                     <SheetClose asChild>
@@ -193,6 +205,32 @@ export const Header = () => {
                       </ul>
                     </div>
                   ))}
+                  <div className="mt-auto pt-10">
+                    <div className="-mx-8 md:-mx-12 px-8 md:px-12 py-6 bg-black/[0.03] border-t border-black/5">
+                      <div className="space-y-4">
+                        <Link
+                          to="/cuenta"
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-3 text-obsidian/70 hover:text-obsidian transition-colors duration-300"
+                        >
+                          <User size={16} strokeWidth={1.5} />
+                          <span className="font-montserrat text-sm tracking-wide">Login</span>
+                        </Link>
+                        <button
+                          type="button"
+                          data-testid="contact-toggle-btn"
+                          onClick={() => {
+                            setMenuOpen(false);
+                            setContactOpen(true);
+                          }}
+                          className="flex items-center gap-3 text-obsidian/70 hover:text-obsidian transition-colors duration-300"
+                        >
+                          <Phone size={16} strokeWidth={1.5} />
+                          <span className="font-montserrat text-sm tracking-wide">Contáctanos</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
@@ -202,6 +240,7 @@ export const Header = () => {
               aria-label="Abrir búsqueda"
               onClick={() => {
                 setMenuOpen(false);
+                setContactOpen(false);
                 setSearchOpen(true);
               }}
               className={`${navToneClass} transition-colors duration-300`}
@@ -263,6 +302,7 @@ export const Header = () => {
 
       </header>
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <ContactPanel open={contactOpen} onOpenChange={handleContactOpenChange} />
     </>
   );
 };
