@@ -138,14 +138,16 @@ export default function ProductPage() {
   const galleryItems = (() => {
     let imageIndex = 0;
 
-    return galleryMedia.flatMap((media, index) => {
+    return galleryMedia.map((media, index) => {
       const currentImageIndex = media.type === 'image' ? imageIndex : null;
 
       if (media.type === 'image') {
         imageIndex += 1;
       }
 
-      const item = (
+      const showDivider = index < galleryMedia.length - 1;
+
+      return (
         <div
           key={`${media.type}-${index}`}
           data-testid={`product-gallery-item-${index}`}
@@ -170,17 +172,11 @@ export default function ProductPage() {
               />
             </div>
           )}
+          {showDivider && (
+            <div aria-hidden="true" className="h-px bg-black/[0.08] my-6" />
+          )}
         </div>
       );
-
-      if (index === galleryMedia.length - 1) {
-        return [item];
-      }
-
-      return [
-        item,
-        <div key={`divider-${index}`} aria-hidden="true" className="h-px bg-black/[0.08] my-6" />,
-      ];
     });
   })();
 
