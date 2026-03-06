@@ -54,7 +54,7 @@ describe('AccountPage Google login', () => {
     mockPathname = '/cuenta';
   });
 
-  it('triggers Google login from login page and navigates to account page', async () => {
+  it('triggers Google login when on login page and navigates to account page', async () => {
     mockLoginWithGoogle.mockResolvedValue({});
     mockPathname = '/login';
     const { container, root } = await renderAccountPage();

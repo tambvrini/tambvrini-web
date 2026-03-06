@@ -74,12 +74,12 @@ export const AuthProvider = ({ children }) => {
   const handleMissingGoogleCallbacks = () => {
     const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
     const callbacks = googleAuthCallbacksRef.current;
-    finalizeGoogleAuth();
     if (callbacks && typeof callbacks.reject === 'function') {
       callbacks.reject(error);
     } else {
       console.error(error);
     }
+    finalizeGoogleAuth();
   };
 
   const googleLogin = useGoogleLogin({
