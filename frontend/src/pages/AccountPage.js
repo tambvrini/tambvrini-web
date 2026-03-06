@@ -12,6 +12,7 @@ export default function AccountPage() {
   const [name, setName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +41,9 @@ export default function AccountPage() {
     try {
       await loginWithGoogle();
       toast.success('Bienvenido de vuelta');
-      navigate('/cuenta');
+      if (location.pathname !== '/cuenta') {
+        navigate('/cuenta');
+      }
     } catch (err) {
       toast.error('No se pudo iniciar sesión con Google. Inténtalo de nuevo.');
     }

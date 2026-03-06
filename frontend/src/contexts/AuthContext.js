@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
   const googleAuthPromiseRef = useRef(null);
-  const googleAuthCallbacksRef = useRef({ resolve: () => {}, reject: () => {} });
+  const googleAuthCallbacksRef = useRef(null);
 
   const getHeaders = useCallback(() => {
     if (token) return { Authorization: `Bearer ${token}` };
@@ -68,7 +68,14 @@ export const AuthProvider = ({ children }) => {
 
   const finalizeGoogleAuth = () => {
     googleAuthPromiseRef.current = null;
-    googleAuthCallbacksRef.current = { resolve: () => {}, reject: () => {} };
+    googleAuthCallbacksRef.current = null;
+  };
+
+  const getGoogleAuthCallbacks = () => {
+    if (!googleAuthCallbacksRef.current) {
+      throw new Error('Google auth callbacks not initialized.');
+    }
+    return googleAuthCallbacksRef.current;
   };
 
   const googleLogin = useGoogleLogin({
@@ -76,11 +83,11 @@ export const AuthProvider = ({ children }) => {
     prompt: 'select_account',
     flow: 'implicit',
     onSuccess: async (tokenResponse) => {
-      const { resolve, reject } = googleAuthCallbacksRef.current;
+      const { resolve, reject } = getGoogleAuthCallbacks();
       if (!tokenResponse?.access_token) {
         const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
         finalizeGoogleAuth();
-        reject?.(error);
+        reject(error);
         return;
       }
       try {
@@ -93,17 +100,17 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('auth_token', res.data.token);
         setUser(res.data.user);
         finalizeGoogleAuth();
-        resolve?.(res.data);
+        resolve(res.data);
       } catch (err) {
         finalizeGoogleAuth();
-        reject?.(err);
+        reject(err);
       }
     },
     onError: () => {
-      const { reject } = googleAuthCallbacksRef.current;
+      const { reject } = getGoogleAuthCallbacks();
       const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
       finalizeGoogleAuth();
-      reject?.(error);
+      reject(error);
     },
   });
 

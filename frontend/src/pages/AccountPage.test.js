@@ -6,6 +6,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const mockLoginWithGoogle = jest.fn();
 const mockNavigate = jest.fn();
+let mockPathname = '/cuenta';
 
 jest.mock('../contexts/AuthContext', () => ({
   useAuth: () => ({
@@ -22,7 +23,7 @@ jest.mock(
   'react-router-dom',
   () => ({
     useNavigate: () => mockNavigate,
-    useLocation: () => ({ pathname: '/cuenta', search: '', hash: '' }),
+    useLocation: () => ({ pathname: mockPathname, search: '', hash: '' }),
   }),
   { virtual: true }
 );
@@ -50,10 +51,12 @@ describe('AccountPage Google login', () => {
   beforeEach(() => {
     mockLoginWithGoogle.mockReset();
     mockNavigate.mockReset();
+    mockPathname = '/cuenta';
   });
 
   it('triggers Google login and navigates to account', async () => {
     mockLoginWithGoogle.mockResolvedValue({});
+    mockPathname = '/login';
     const { container, root } = await renderAccountPage();
 
     const googleButton = container.querySelector('[data-testid="google-login-btn"]');
