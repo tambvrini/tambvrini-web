@@ -30,7 +30,6 @@
 .hero-image-cinematic {
     transform: scale(1.02);
     animation: heroZoom 20s ease-in-out infinite alternate;
-    will-change: transform;
 }
 
 @keyframes heroZoom {
