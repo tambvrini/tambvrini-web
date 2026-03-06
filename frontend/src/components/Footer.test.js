@@ -29,11 +29,11 @@ describe('Footer styling', () => {
     expect(footer).not.toBeNull();
     expect(footer.style.backgroundColor).toBe('rgb(111, 143, 166)');
 
-    const link = container.querySelector('button');
-    expect(link).not.toBeNull();
-    expect(link.className).toContain('text-[#F7F3EA]');
-    expect(link.className).toContain('hover:text-white');
-    expect(link.style.transition).toBe('color 0.25s ease');
+    const button = container.querySelector('button');
+    expect(button).not.toBeNull();
+    expect(button.className).toContain('text-[#F7F3EA]');
+    expect(button.className).toContain('hover:text-white');
+    expect(button.style.transition).toBe('color 0.25s ease');
 
     const divider = Array.from(container.querySelectorAll('div.border-t')).find((element) =>
       element.className.includes('border-white/25')
