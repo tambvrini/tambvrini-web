@@ -1,0 +1,128 @@
+import React, { act } from 'react';
+import { createRoot } from 'react-dom/client';
+import HomePage from './HomePage';
+
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+jest.mock(
+  '@/data/productHelpers',
+  () => ({
+    queryProducts: () => ({
+      products: [
+        { product_id: 'sueter-captain', category: [] },
+        { product_id: 'polo-domus', category: [] },
+        { product_id: 'sueter-ignatius', category: [] },
+        { product_id: 'sueter-sylva', category: [] },
+        { product_id: 'polo-patricius', category: [] },
+        { product_id: 'polo-regius', category: [] },
+        { product_id: 'camiseta-sport-club', category: [] },
+        { product_id: 'polo-golf', category: [] },
+        { product_id: 'camiseta-imperium', category: [] },
+        { product_id: 'americana-umbra', category: [] },
+        { product_id: 'polo-aureus', category: [] },
+        { product_id: 'traje-monograma-tambvrini', category: [] },
+        { product_id: 'bolso-monograma-tambvrini', category: [] },
+      ],
+    }),
+  }),
+  { virtual: true }
+);
+
+jest.mock('../components/ProductCard', () => (props) => (
+  <div data-testid={`product-card-${props.product.product_id}`} />
+));
+
+jest.mock('../components/IntroVideoSection.tsx', () => () => (
+  <div data-testid="intro-video" />
+));
+
+jest.mock('lucide-react', () => ({
+  ArrowRight: () => <span data-testid="arrow-right" />,
+}));
+
+jest.mock(
+  'react-router-dom',
+  () => ({
+    Link: ({ children, ...props }) => <a {...props}>{children}</a>,
+    useNavigate: () => jest.fn(),
+  }),
+  { virtual: true }
+);
+
+jest.mock('framer-motion', () => {
+  const React = require('react');
+  const createMotionComponent = (tag) =>
+    React.forwardRef(({ children, ...props }, ref) =>
+      React.createElement(tag, { ...props, ref }, children)
+    );
+  const motion = new Proxy(
+    {},
+    {
+      get: (_, prop) => createMotionComponent(prop),
+    }
+  );
+
+  return {
+    motion,
+    useScroll: () => ({ scrollY: 0 }),
+    useSpring: (value) => value,
+    useTransform: () => 0,
+  };
+});
+
+const renderHomePage = async () => {
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+  const root = createRoot(container);
+
+  await act(async () => {
+    root.render(<HomePage />);
+  });
+
+  await act(async () => {});
+
+  return { container, root };
+};
+
+describe('HomePage featured grid', () => {
+  beforeAll(() => {
+    Object.defineProperty(HTMLMediaElement.prototype, 'play', {
+      configurable: true,
+      value: jest.fn(() => Promise.resolve()),
+    });
+    Object.defineProperty(HTMLMediaElement.prototype, 'pause', {
+      configurable: true,
+      value: jest.fn(),
+    });
+  });
+
+  beforeEach(() => {
+    window.scrollTo = jest.fn();
+    global.IntersectionObserver = class {
+      constructor(callback) {
+        this.callback = callback;
+      }
+      observe() {
+        this.callback([{ isIntersecting: false }]);
+      }
+      unobserve() {}
+      disconnect() {}
+    };
+  });
+
+  it('shows Suéter Ignatius instead of Polo Domus', async () => {
+    const { container, root } = await renderHomePage();
+
+    expect(
+      container.querySelector('[data-testid="product-card-sueter-ignatius"]')
+    ).not.toBeNull();
+    expect(
+      container.querySelector('[data-testid="product-card-polo-domus"]')
+    ).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+});
