@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
     googleAuthCallbacksRef.current = null;
   };
 
-  const handleMissingGoogleCallbacks = () => {
+  const handleUnexpectedGoogleAuthState = () => {
     const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
     const callbacks = googleAuthCallbacksRef.current;
     if (callbacks && typeof callbacks.reject === 'function') {
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
     onSuccess: async (tokenResponse) => {
       const callbacks = googleAuthCallbacksRef.current;
       if (!callbacks) {
-        handleMissingGoogleCallbacks();
+        handleUnexpectedGoogleAuthState();
         return;
       }
       const { resolve, reject } = callbacks;
@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }) => {
     onError: () => {
       const callbacks = googleAuthCallbacksRef.current;
       if (!callbacks) {
-        handleMissingGoogleCallbacks();
+        handleUnexpectedGoogleAuthState();
         return;
       }
       const { reject } = callbacks;
