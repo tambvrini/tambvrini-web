@@ -137,7 +137,8 @@ describe('HomePage featured grid', () => {
       'img[alt="TAMBVRINI Campaign"]'
     );
 
-    expect(heroImage?.getAttribute('src')).toBe('/images/header-principal.jpg');
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-final.jpg');
+    expect(heroImage?.className).toContain('hero-image-cinematic');
     expect(heroImage?.className).toContain('object-cover');
     expect(heroImage?.className).toContain('object-center');
     expect(heroImage?.className).not.toContain('brightness-105');

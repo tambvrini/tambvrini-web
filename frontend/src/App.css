@@ -27,6 +27,21 @@
     --premium-image-zoom-factor: 1.03;
 }
 
+.hero-image-cinematic {
+    transform: scale(1.02);
+    animation: heroZoom 20s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes heroZoom {
+    from {
+        transform: scale(1.02);
+    }
+    to {
+        transform: scale(1.06);
+    }
+}
+
 @media (hover: hover) and (pointer: fine) {
     :where(a, button, [role="button"]) {
         transition: var(--premium-color-transition);
