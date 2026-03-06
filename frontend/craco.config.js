@@ -48,15 +48,15 @@ const webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
-      const nextPublicEnv = Object.keys(process.env)
+      const publicEnvVars = Object.keys(process.env)
         .filter((key) => key.startsWith("NEXT_PUBLIC_"))
         .reduce((acc, key) => {
           acc[`process.env.${key}`] = JSON.stringify(process.env[key]);
           return acc;
         }, {});
 
-      if (Object.keys(nextPublicEnv).length > 0) {
-        webpackConfig.plugins.push(new webpack.DefinePlugin(nextPublicEnv));
+      if (Object.keys(publicEnvVars).length > 0) {
+        webpackConfig.plugins.push(new webpack.DefinePlugin(publicEnvVars));
       }
 
       // Add ignored patterns to reduce watched directories
