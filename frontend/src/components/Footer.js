@@ -63,10 +63,10 @@ export const Footer = ({ bgColor = '#CFE3F1' }) => {
                   onChange={(e) => setLang(e.target.value)}
                   className="bg-transparent border border-black/10 px-4 py-2 font-montserrat text-xs text-[#F7F3EA] tracking-wide outline-none"
                 >
-                  <option value="es">Español</option>
-                  <option value="en">English</option>
-                  <option value="fr">Français</option>
-                  <option value="it">Italiano</option>
+                  <option value="es" className="bg-[#CFE3F1] text-obsidian">Español</option>
+                  <option value="en" className="bg-[#CFE3F1] text-obsidian">English</option>
+                  <option value="fr" className="bg-[#CFE3F1] text-obsidian">Français</option>
+                  <option value="it" className="bg-[#CFE3F1] text-obsidian">Italiano</option>
                 </select>
               </div>
             </div>
