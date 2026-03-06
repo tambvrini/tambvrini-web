@@ -57,9 +57,6 @@ const HeroSection = () => {
   // so we avoid the unwanted "medium logo" handoff step.
   const heroLogoOpacity = useTransform(progress, [0.9, 1], [1, 0]);
 
-  // Hero overlay darkens as you scroll
-  const overlayOpacity = useTransform(progress, [0, 1], [0.08, 0.22]);
-
   // CTA buttons fade out quickly
   const buttonsOpacity = useTransform(scrollY, [0, 250], [1, 0]);
   const buttonsY = useTransform(scrollY, [0, 250], [0, 40]);
@@ -68,8 +65,7 @@ const HeroSection = () => {
       <section data-testid="hero-section" className="relative w-full">
         {/* Background image */}
         <div className={`relative w-full ${HERO_ASPECT_RATIO_CLASS}`}>
-          <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="block w-full h-full object-fill brightness-105" />
-          <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
+          <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="block w-full h-full object-cover object-center" />
           <div className="absolute inset-0 z-10">
             <div className="relative w-full h-full">
               {/* CTA Buttons at bottom of hero */}

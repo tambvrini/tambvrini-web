@@ -130,7 +130,7 @@ describe('HomePage featured grid', () => {
     container.remove();
   });
 
-  it('renders the hero header image with fill fit', async () => {
+  it('renders the hero header image with cover fit', async () => {
     const { container, root } = await renderHomePage();
 
     const heroImage = container.querySelector(
@@ -138,8 +138,9 @@ describe('HomePage featured grid', () => {
     );
 
     expect(heroImage?.getAttribute('src')).toBe('/images/header-principal.jpg');
-    expect(heroImage?.className).toContain('object-fill');
-    expect(heroImage?.className).not.toContain('object-cover');
+    expect(heroImage?.className).toContain('object-cover');
+    expect(heroImage?.className).toContain('object-center');
+    expect(heroImage?.className).not.toContain('brightness-105');
 
     act(() => {
       root.unmount();
