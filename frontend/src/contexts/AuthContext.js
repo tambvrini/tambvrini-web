@@ -115,11 +115,14 @@ export const AuthProvider = ({ children }) => {
         reject(err);
       }
     },
-    onError: () => {
+    onError: (errorResponse) => {
       const callbacks = googleAuthCallbacksRef.current;
       if (!callbacks) {
         handleUnexpectedGoogleAuthState();
         return;
+      }
+      if (errorResponse) {
+        console.error(errorResponse);
       }
       const { reject } = callbacks;
       const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
