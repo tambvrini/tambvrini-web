@@ -8,7 +8,7 @@ import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
-const HERO_IMAGE = "/hero-main.jpg";
+const HERO_IMAGE = "/images/header-principal.jpg";
 const HERO_ASPECT_RATIO_CLASS = "h-screen";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
@@ -68,7 +68,7 @@ const HeroSection = () => {
       <section data-testid="hero-section" className="relative w-full">
         {/* Background image */}
         <div className={`relative w-full ${HERO_ASPECT_RATIO_CLASS}`}>
-          <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="block w-full h-full object-cover object-center brightness-105" />
+          <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="block w-full h-full object-fill brightness-105" />
           <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
           <div className="absolute inset-0 z-10">
             <div className="relative w-full h-full">

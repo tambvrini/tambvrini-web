@@ -113,12 +113,19 @@ describe('HomePage featured grid', () => {
   it('shows Suéter Ignatius instead of Polo Domus', async () => {
     const { container, root } = await renderHomePage();
 
+    const heroImage = container.querySelector(
+      'img[alt="TAMBVRINI Campaign"]'
+    );
+
     expect(
       container.querySelector('[data-testid="product-card-sueter-ignatius"]')
     ).not.toBeNull();
     expect(
       container.querySelector('[data-testid="product-card-polo-domus"]')
     ).toBeNull();
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-principal.jpg');
+    expect(heroImage?.className).toContain('object-fill');
+    expect(heroImage?.className).not.toContain('object-cover');
     expect(
       container.querySelector('[data-testid="limited-editions-banner-image"]')
         ?.getAttribute('src')
