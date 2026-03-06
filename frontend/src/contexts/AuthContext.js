@@ -71,11 +71,9 @@ export const AuthProvider = ({ children }) => {
     googleAuthCallbacksRef.current = null;
   };
 
-  const getGoogleAuthCallbacks = () => {
-    if (!googleAuthCallbacksRef.current) {
-      throw new Error('Google auth callbacks not initialized.');
-    }
-    return googleAuthCallbacksRef.current;
+  const handleMissingGoogleCallbacks = () => {
+    console.error(new Error(GOOGLE_AUTH_ERROR_MESSAGE));
+    finalizeGoogleAuth();
   };
 
   const googleLogin = useGoogleLogin({
@@ -83,7 +81,12 @@ export const AuthProvider = ({ children }) => {
     prompt: 'select_account',
     flow: 'implicit',
     onSuccess: async (tokenResponse) => {
-      const { resolve, reject } = getGoogleAuthCallbacks();
+      const callbacks = googleAuthCallbacksRef.current;
+      if (!callbacks) {
+        handleMissingGoogleCallbacks();
+        return;
+      }
+      const { resolve, reject } = callbacks;
       if (!tokenResponse?.access_token) {
         const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
         finalizeGoogleAuth();
@@ -107,7 +110,12 @@ export const AuthProvider = ({ children }) => {
       }
     },
     onError: () => {
-      const { reject } = getGoogleAuthCallbacks();
+      const callbacks = googleAuthCallbacksRef.current;
+      if (!callbacks) {
+        handleMissingGoogleCallbacks();
+        return;
+      }
+      const { reject } = callbacks;
       const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
       finalizeGoogleAuth();
       reject(error);
