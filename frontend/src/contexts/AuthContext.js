@@ -1,10 +1,10 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useGoogleLogin } from '@react-oauth/google';
+import { GOOGLE_CLIENT_ID } from '../config/google';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const AuthContext = createContext(null);
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const GOOGLE_AUTH_ERROR_MESSAGE = 'No se pudo iniciar sesión con Google. Inténtalo de nuevo.';
 
 export const useAuth = () => useContext(AuthContext);
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
   const googleAuthPromiseRef = useRef(null);
-  const googleAuthCallbacksRef = useRef({ resolve: null, reject: null });
+  const googleAuthCallbacksRef = useRef({ resolve: () => {}, reject: () => {} });
 
   const getHeaders = useCallback(() => {
     if (token) return { Authorization: `Bearer ${token}` };
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 
   const finalizeGoogleAuth = () => {
     googleAuthPromiseRef.current = null;
-    googleAuthCallbacksRef.current = { resolve: null, reject: null };
+    googleAuthCallbacksRef.current = { resolve: () => {}, reject: () => {} };
   };
 
   const googleLogin = useGoogleLogin({
