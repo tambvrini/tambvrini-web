@@ -1,5 +1,6 @@
 // craco.config.js
 const path = require("path");
+const webpack = require("webpack");
 require("dotenv").config();
 
 // Check if we're in development/preview mode (not production build)
@@ -47,6 +48,16 @@ const webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
+      const nextPublicEnv = Object.keys(process.env)
+        .filter((key) => key.startsWith("NEXT_PUBLIC_"))
+        .reduce((acc, key) => {
+          acc[`process.env.${key}`] = JSON.stringify(process.env[key]);
+          return acc;
+        }, {});
+
+      if (Object.keys(nextPublicEnv).length > 0) {
+        webpackConfig.plugins.push(new webpack.DefinePlugin(nextPublicEnv));
+      }
 
       // Add ignored patterns to reduce watched directories
         webpackConfig.watchOptions = {
