@@ -40,6 +40,29 @@
     }
 }
 
+.primavera-editorial-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+    font-size: clamp(20px, 3vw, 44px);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #f6f3ef;
+    text-align: center;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-kerning: normal;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: primaveraFade 1.2s ease forwards;
+}
+
+@keyframes primaveraFade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (hover: hover) and (pointer: fine) {
     :where(a, button, [role="button"]) {
         transition: var(--premium-color-transition);
