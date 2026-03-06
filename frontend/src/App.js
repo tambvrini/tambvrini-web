@@ -55,7 +55,7 @@ function AppRouter() {
           </Routes>
         </motion.main>
       </AnimatePresence>
-      <Footer bgColor={isHome ? '#FFFFFF' : undefined} />
+      <Footer />
     </div>
   );
 }
