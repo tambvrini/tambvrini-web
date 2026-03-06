@@ -48,6 +48,7 @@ const webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
+      // Expose NEXT_PUBLIC_ vars for deployments that use Next-style envs.
       const publicEnvVars = Object.keys(process.env)
         .filter((key) => key.startsWith("NEXT_PUBLIC_"))
         .reduce((acc, key) => {
