@@ -119,6 +119,10 @@ describe('HomePage featured grid', () => {
     expect(
       container.querySelector('[data-testid="product-card-polo-domus"]')
     ).toBeNull();
+    expect(
+      container.querySelector('[data-testid="limited-editions-banner-image"]')
+        ?.getAttribute('src')
+    ).toBe('/images/limited-editions-banner.jpeg');
 
     act(() => {
       root.unmount();
