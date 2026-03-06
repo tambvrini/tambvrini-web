@@ -2,7 +2,7 @@ import { useI18n } from "../contexts/I18nContext";
 
 const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
 const ICON_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/krjmn5r6_LOGO%20ICONO%20blanco%20svg%20web.svg";
-const PASTEL_BLUE = '#6F8FA6';
+export const FOOTER_BACKGROUND = '#6F8FA6';
 const IVORY_TEXT_CLASS = 'text-[#F7F3EA]';
 const LINK_STYLE = { transition: 'color 0.25s ease' };
 const LOGO_STYLE = { filter: 'sepia(0.2) saturate(1.1) brightness(0.98)' };
@@ -14,7 +14,7 @@ export const Footer = () => {
     <footer
       data-testid="main-footer"
       className="border-t border-black/5"
-      style={{ backgroundColor: PASTEL_BLUE }}
+      style={{ backgroundColor: FOOTER_BACKGROUND }}
     >
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
         <div className="flex justify-center">

@@ -1,9 +1,18 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { I18nProvider } from '../contexts/I18nContext';
-import Footer from './Footer';
+import Footer, { FOOTER_BACKGROUND } from './Footer';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+const hexToRgb = (hex) => {
+  const normalized = hex.replace('#', '');
+  const numeric = Number.parseInt(normalized, 16);
+  const red = (numeric >> 16) & 255;
+  const green = (numeric >> 8) & 255;
+  const blue = numeric & 255;
+  return `rgb(${red}, ${green}, ${blue})`;
+};
 
 const renderFooter = async () => {
   const container = document.createElement('div');
@@ -27,7 +36,7 @@ describe('Footer styling', () => {
     const footer = container.querySelector('[data-testid="main-footer"]');
 
     expect(footer).not.toBeNull();
-    expect(footer.style.backgroundColor).toBe('rgb(111, 143, 166)');
+    expect(footer.style.backgroundColor).toBe(hexToRgb(FOOTER_BACKGROUND));
 
     const button = container.querySelector('button');
     expect(button).not.toBeNull();
