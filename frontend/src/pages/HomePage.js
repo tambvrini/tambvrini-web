@@ -9,7 +9,7 @@ import { queryProducts } from '@/data/productHelpers';
 
 const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/images/header-final.jpg";
-const HERO_ASPECT_RATIO_CLASS = "h-screen overflow-hidden";
+const HERO_CONTAINER_CLASS = "h-screen overflow-hidden";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
 const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
@@ -64,7 +64,7 @@ const HeroSection = () => {
   return (
       <section data-testid="hero-section" className="relative w-full">
         {/* Background image */}
-        <div className={`relative w-full ${HERO_ASPECT_RATIO_CLASS}`}>
+        <div className={`relative w-full ${HERO_CONTAINER_CLASS}`}>
           <img
             src={HERO_IMAGE}
             alt="TAMBVRINI Campaign"
