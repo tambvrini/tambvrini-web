@@ -6,6 +6,7 @@ const PASTEL_BLUE = '#6F8FA6';
 const IVORY_TEXT_CLASS = 'text-[#F7F3EA]';
 const LINK_STYLE = { transition: 'color 0.25s ease' };
 const LOGO_STYLE = { filter: 'sepia(0.2) saturate(1.1) brightness(0.98)' };
+const OPTION_BACKGROUND = '#5E7B92';
 
 export const Footer = () => {
   const { lang, setLang, t } = useI18n();
@@ -69,10 +70,10 @@ export const Footer = () => {
                   onChange={(e) => setLang(e.target.value)}
                   className={`bg-transparent border border-black/10 px-4 py-2 font-montserrat text-xs ${IVORY_TEXT_CLASS} tracking-wide outline-none`}
                 >
-                  <option value="es" className={IVORY_TEXT_CLASS} style={{ backgroundColor: PASTEL_BLUE }}>Español</option>
-                  <option value="en" className={IVORY_TEXT_CLASS} style={{ backgroundColor: PASTEL_BLUE }}>English</option>
-                  <option value="fr" className={IVORY_TEXT_CLASS} style={{ backgroundColor: PASTEL_BLUE }}>Français</option>
-                  <option value="it" className={IVORY_TEXT_CLASS} style={{ backgroundColor: PASTEL_BLUE }}>Italiano</option>
+                  <option value="es" className={IVORY_TEXT_CLASS} style={{ backgroundColor: OPTION_BACKGROUND }}>Español</option>
+                  <option value="en" className={IVORY_TEXT_CLASS} style={{ backgroundColor: OPTION_BACKGROUND }}>English</option>
+                  <option value="fr" className={IVORY_TEXT_CLASS} style={{ backgroundColor: OPTION_BACKGROUND }}>Français</option>
+                  <option value="it" className={IVORY_TEXT_CLASS} style={{ backgroundColor: OPTION_BACKGROUND }}>Italiano</option>
                 </select>
               </div>
             </div>
