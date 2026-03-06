@@ -40,8 +40,9 @@ export default function AccountPage() {
     try {
       await loginWithGoogle();
       toast.success('Bienvenido de vuelta');
+      navigate('/cuenta');
     } catch (err) {
-      toast.error(err.response?.data?.detail || err.message || 'Error de autenticación');
+      toast.error('No se pudo iniciar sesión con Google. Inténtalo de nuevo.');
     }
   };
 

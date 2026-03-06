@@ -2,6 +2,7 @@ import "@/App.css";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
@@ -19,6 +20,11 @@ import WishlistPage from "./pages/WishlistPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import BrandPage from "./pages/BrandPage";
 import LimitedEditionsPage from "./pages/LimitedEditionsPage";
+
+const GOOGLE_CLIENT_ID =
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+  process.env.REACT_APP_GOOGLE_CLIENT_ID ||
+  "missing-google-client-id";
 
 function AppRouter() {
   const location = useLocation();
@@ -63,16 +69,18 @@ function AppRouter() {
 function App() {
   return (
     <I18nProvider>
-      <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <BrowserRouter>
-              <AppRouter />
-              <Toaster position="bottom-right" theme="light" />
-            </BrowserRouter>
-          </WishlistProvider>
-        </CartProvider>
-      </AuthProvider>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <AuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <BrowserRouter>
+                <AppRouter />
+                <Toaster position="bottom-right" theme="light" />
+              </BrowserRouter>
+            </WishlistProvider>
+          </CartProvider>
+        </AuthProvider>
+      </GoogleOAuthProvider>
     </I18nProvider>
   );
 }
