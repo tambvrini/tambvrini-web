@@ -124,10 +124,17 @@ describe('HomePage featured grid', () => {
         ?.getAttribute('src')
     ).toBe('/images/limited-editions-banner.jpeg');
     const mysticDivider = container.querySelector('[data-testid="mystic-divider-image"]');
+    const mysticWrapper = mysticDivider?.querySelector('div');
     const mysticImage = mysticDivider?.querySelector('img');
 
     expect(mysticDivider?.className).toContain('my-6');
     expect(mysticDivider?.className).toContain('md:my-8');
+    expect(mysticWrapper?.className).toContain('w-screen');
+    expect(mysticWrapper?.className).toContain('max-w-none');
+    expect(mysticWrapper?.className).toContain('left-1/2');
+    expect(mysticWrapper?.className).toContain('right-1/2');
+    expect(mysticWrapper?.className).toContain('-ml-[50vw]');
+    expect(mysticWrapper?.className).toContain('-mr-[50vw]');
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
     expect(mysticImage?.getAttribute('alt')).toBe('Editorial mystic divider');
     expect(mysticImage?.className).toContain('w-full');
