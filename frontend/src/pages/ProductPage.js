@@ -30,6 +30,11 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeDetail, setActiveDetail] = useState('description');
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const detailLabels = {
+    description: 'Descripción',
+    composition: 'Composición',
+    shipping: 'Envío',
+  };
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
 
@@ -126,7 +131,9 @@ export default function ProductPage() {
     );
   }
 
-  const selectorLayoutClass = product.colors?.length ? 'grid grid-cols-2 gap-4 mb-5' : 'flex flex-col gap-4 mb-5';
+  const selectorLayoutClass = product.colors?.length
+    ? 'product-selectors product-selectors--dual'
+    : 'product-selectors';
 
   const galleryImages = product.product_id === 'americana-umbra'
     ? [
@@ -386,7 +393,7 @@ export default function ProductPage() {
                   className="w-full py-3 border-b border-white/5 flex justify-between items-center text-left"
                 >
                   <span className="font-montserrat text-xs tracking-[0.15em] uppercase text-obsidian/60">
-                    {tab === 'description' ? 'Descripción' : tab === 'composition' ? 'Composición' : 'Envío'}
+                    {detailLabels[tab]}
                   </span>
                   <Plus size={14} className="text-obsidian/30 transition-transform duration-300" />
                 </button>
@@ -424,11 +431,7 @@ export default function ProductPage() {
                       Detalles
                     </p>
                     <h3 className="font-playfair text-2xl text-obsidian">
-                      {activeDetail === 'description'
-                        ? 'Descripción'
-                        : activeDetail === 'composition'
-                          ? 'Composición'
-                          : 'Envío'}
+                      {detailLabels[activeDetail]}
                     </h3>
                   </div>
                   {activeDetail === 'description' && (
