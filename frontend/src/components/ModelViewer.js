@@ -43,8 +43,8 @@ const parseOrbitValue = (orbit) => {
     }
 
     return {
-      theta: Number.parseFloat(parts[0]),
-      phi: Number.parseFloat(parts[1]),
+      theta: parseFloat(parts[0]),
+      phi: parseFloat(parts[1]),
       radius: parts[2],
     };
   }
@@ -288,12 +288,7 @@ const ModelViewer = ({
 
   useEffect(() => () => clearAutoRotateTimer(), [clearAutoRotateTimer]);
   useEffect(() => () => {
-    const frameId = orbitFrameRef.current;
-    if (frameId === null || frameId === undefined) {
-      return;
-    }
-
-    cancelAnimationFrameSafe(frameId);
+    cancelAnimationFrameSafe(orbitFrameRef.current);
     orbitFrameRef.current = null;
   }, []);
 
