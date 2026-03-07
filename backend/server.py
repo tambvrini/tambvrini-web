@@ -208,10 +208,18 @@ async def login_with_google(data: GoogleAuthRequest):
             GOOGLE_CLIENT_ID
         )
     except ValueError as exc:
-        logger.warning("Invalid Google ID token: %s", exc)
+        logger.warning(
+            "Google OAuth token verification failed (client_id=%s): %s",
+            GOOGLE_CLIENT_ID,
+            exc
+        )
         raise HTTPException(401, "Token de Google inválido") from exc
     email = token_info.get("email")
     if not email:
+        logger.warning(
+            "Google OAuth token missing email claim. Claims=%s",
+            sorted(token_info.keys())
+        )
         raise HTTPException(400, "Email no disponible")
     email_verified = token_info.get("email_verified")
     # email_verified may arrive as a boolean or string depending on token payload formatting.
@@ -219,6 +227,7 @@ async def login_with_google(data: GoogleAuthRequest):
         isinstance(email_verified, str) and email_verified.lower() == "true"
     )
     if not is_email_verified:
+        logger.warning("Google OAuth login blocked: email not verified.")
         raise HTTPException(401, "Email no verificado")
     google_sub = token_info.get("sub")
     name = token_info.get("name") or email
