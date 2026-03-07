@@ -305,14 +305,16 @@ export default function ProductPage() {
 
             {/* Quantity + wishlist */}
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between mb-6">
-              <div className={product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}>
+              <div className={product.is_sold_out ? 'opacity-60' : ''}>
                 <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-2">Cantidad</p>
                 <div className="flex items-center border border-black/10">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     aria-label="Disminuir cantidad"
                     disabled={product.is_sold_out}
-                    className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-r border-black/10"
+                    className={`w-12 h-12 flex items-center justify-center text-obsidian/50 border-r border-black/10 ${
+                      product.is_sold_out ? '' : 'hover:text-obsidian'
+                    }`}
                   >
                     <Minus size={14} />
                   </button>
@@ -321,7 +323,9 @@ export default function ProductPage() {
                     onClick={() => setQuantity(quantity + 1)}
                     aria-label="Aumentar cantidad"
                     disabled={product.is_sold_out}
-                    className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-l border-black/10"
+                    className={`w-12 h-12 flex items-center justify-center text-obsidian/50 border-l border-black/10 ${
+                      product.is_sold_out ? '' : 'hover:text-obsidian'
+                    }`}
                   >
                     <Plus size={14} />
                   </button>
