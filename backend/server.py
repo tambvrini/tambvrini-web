@@ -64,7 +64,7 @@ class GoogleAuthRequest(BaseModel):
     id_token: Optional[str] = None
 
     @model_validator(mode="after")
-    def _ensure_token_present(self):
+    def ensure_token_present(self):
         credential = (self.credential or "").strip()
         id_token_value = (self.id_token or "").strip()
         if not credential and not id_token_value:
