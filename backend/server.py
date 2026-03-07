@@ -64,7 +64,7 @@ class GoogleAuthRequest(BaseModel):
     id_token: Optional[str] = None
 
     @model_validator(mode="after")
-    def ensure_token_present(self):
+    def _ensure_token_present(self):
         credential = (self.credential or "").strip()
         id_token_value = (self.id_token or "").strip()
         if not credential and not id_token_value:
@@ -199,8 +199,6 @@ async def login_with_google(data: GoogleAuthRequest):
     credential = (data.credential or "").strip()
     id_token_value = (data.id_token or "").strip()
     raw_id_token = credential or id_token_value
-    if not raw_id_token:
-        raise HTTPException(400, "Token inválido")
     try:
         # Run verification in a thread to avoid blocking the async event loop.
         token_info = await asyncio.to_thread(
