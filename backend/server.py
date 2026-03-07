@@ -190,14 +190,14 @@ async def logout(request: Request, response: Response):
 async def login_with_google(data: GoogleAuthRequest):
     credential = (data.credential or "").strip()
     id_token_value = (data.id_token or "").strip()
-    raw_id_token = credential or id_token_value
-    if not raw_id_token:
+    token_value = credential or id_token_value
+    if not token_value:
         raise HTTPException(400, "Token inválido")
     try:
         # Run verification in a thread to avoid blocking the async event loop.
         token_info = await asyncio.to_thread(
             id_token.verify_oauth2_token,
-            raw_id_token,
+            token_value,
             requests.Request(),
             GOOGLE_CLIENT_ID
         )
