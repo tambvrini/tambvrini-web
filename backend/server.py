@@ -67,10 +67,10 @@ class GoogleAuthRequest(BaseModel):
     def ensure_token_present(self):
         credential = (self.credential or "").strip()
         id_token_value = (self.id_token or "").strip()
-        if not credential and not id_token_value:
-            raise ValueError("Se requiere credential o id_token")
         self.credential = credential or None
         self.id_token = id_token_value or None
+        if not self.credential and not self.id_token:
+            raise ValueError("Se requiere credential o id_token")
         return self
 
 class CheckoutRequest(BaseModel):
