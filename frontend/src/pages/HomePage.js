@@ -431,7 +431,8 @@ const DropGridSection = () => {
                       loop
                       muted
                       playsInline
-                      aria-label="Video águila ultra wide"
+                      aria-hidden="true"
+                      role="presentation"
                       className="w-full h-auto block object-contain"
                     />
                   </div>
