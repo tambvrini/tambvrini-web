@@ -80,9 +80,9 @@ export default function ProductPage() {
   }, [detailsOpen]);
 
   useEffect(() => {
-    if (!product) return undefined;
+    if (!product) return;
     const mediaEl = mediaRef.current;
-    if (!mediaEl) return undefined;
+    if (!mediaEl) return;
 
     const updateMediaLock = () => {
       const atEnd = mediaEl.scrollTop + mediaEl.clientHeight >= mediaEl.scrollHeight - SCROLL_TOLERANCE;
