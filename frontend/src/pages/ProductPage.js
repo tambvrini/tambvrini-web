@@ -285,7 +285,7 @@ export default function ProductPage() {
                         data-testid={`size-btn-${s}`}
                         onClick={() => setSelectedSize(s)}
                         disabled={disabled}
-                        className={`min-w-[44px] py-2 px-3 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
+                        className={`min-w-[48px] py-2 px-3 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
                           selectedSize === s
                             ? 'border-obsidian text-obsidian bg-black/5'
                             : 'border-black/10 text-obsidian/50'
@@ -312,7 +312,7 @@ export default function ProductPage() {
                   >
                     <Minus size={14} />
                   </button>
-                  <span className="w-12 h-10 flex items-center justify-center font-montserrat text-sm text-obsidian">{quantity}</span>
+                  <span className="w-16 h-10 flex items-center justify-center font-montserrat text-sm text-obsidian">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-10 h-10 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-l border-black/10"
