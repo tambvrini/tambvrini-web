@@ -26,13 +26,7 @@ const parseOrbitValue = (orbit) => {
     };
   }
 
-  if (
-    typeof orbit === 'object' &&
-    orbit.theta !== undefined &&
-    orbit.theta !== null &&
-    orbit.phi !== undefined &&
-    orbit.phi !== null
-  ) {
+  if (typeof orbit === 'object' && orbit.theta != null && orbit.phi != null) {
     const rawRadius = orbit.radius ?? orbit.distance ?? DEFAULT_ORBIT.radius;
     return {
       theta: orbit.theta,
@@ -153,16 +147,9 @@ const ModelViewer = ({
     [isInsideInteractionZone, isWindowInteraction, pauseAutoRotate, setControlsState]
   );
 
-  const handlePointerUp = useCallback((event) => {
-    if (
-      isWindowInteraction &&
-      event.currentTarget?.releasePointerCapture &&
-      event.pointerId != null
-    ) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
+  const handlePointerUp = useCallback(() => {
     scheduleAutoRotateResume();
-  }, [isWindowInteraction, scheduleAutoRotateResume]);
+  }, [scheduleAutoRotateResume]);
 
   const handlePointerLeave = useCallback(() => {
     if (!isWindowInteraction) {
@@ -184,11 +171,7 @@ const ModelViewer = ({
       ? window.requestAnimationFrame.bind(window)
       : (callback) => window.setTimeout(callback, 16);
 
-    const cancelFrame = window.cancelAnimationFrame
-      ? window.cancelAnimationFrame.bind(window)
-      : window.clearTimeout.bind(window);
-
-    const frameId = requestFrame(() => {
+    orbitFrameRef.current = requestFrame(() => {
       orbitFrameRef.current = null;
       if (!modelViewerRef.current) {
         return;
@@ -211,7 +194,6 @@ const ModelViewer = ({
         modelViewerRef.current.cameraOrbit = nextOrbit;
       }
     });
-    orbitFrameRef.current = { id: frameId, cancel: cancelFrame };
   }, []);
 
   useEffect(() => {
@@ -268,7 +250,10 @@ const ModelViewer = ({
   useEffect(() => () => clearAutoRotateTimer(), [clearAutoRotateTimer]);
   useEffect(() => () => {
     if (orbitFrameRef.current) {
-      orbitFrameRef.current.cancel(orbitFrameRef.current.id);
+      const cancelFrame = window.cancelAnimationFrame
+        ? window.cancelAnimationFrame.bind(window)
+        : window.clearTimeout.bind(window);
+      cancelFrame(orbitFrameRef.current);
     }
   }, []);
 
