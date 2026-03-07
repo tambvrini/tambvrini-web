@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
+const MAX_RECOMMENDED_PRODUCTS = 4;
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;
@@ -477,7 +478,7 @@ export default function ProductPage() {
               También te puede gustar
             </h2>
             <div className="product-recommendations" data-testid="product-recommendations">
-              {relatedProducts.slice(0, 4).map((item, index) => (
+              {relatedProducts.slice(0, MAX_RECOMMENDED_PRODUCTS).map((item, index) => (
                 <ProductCard key={item.product_id} product={item} index={index} />
               ))}
             </div>
