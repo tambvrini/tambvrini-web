@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Response, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
 import os
 import logging
 import uuid
@@ -190,8 +191,9 @@ async def login_with_google(data: GoogleAuthRequest):
     if not raw_id_token:
         raise HTTPException(400, "Token inválido")
     try:
-        # Create a fresh transport request to avoid sharing sessions across async requests.
-        token_info = id_token.verify_oauth2_token(
+        # Run verification in a thread to avoid blocking the async event loop.
+        token_info = await asyncio.to_thread(
+            id_token.verify_oauth2_token,
             raw_id_token,
             requests.Request(),
             GOOGLE_CLIENT_ID
