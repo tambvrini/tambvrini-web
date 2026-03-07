@@ -35,6 +35,7 @@ describe('ModelViewer', () => {
     expect(viewer.getAttribute('loading')).toBe('eager');
     expect(viewer.getAttribute('reveal')).toBe('auto');
     expect(viewer.getAttribute('touch-action')).toBe('pan-y');
+    expect(viewer.getAttribute('auto-rotate-speed')).toBe('0.5');
     expect(viewer.classList.contains('model-viewer')).toBe(true);
     expect(viewer.hasAttribute('disable-zoom')).toBe(true);
     expect(viewer.hasAttribute('camera-controls')).toBe(false);
@@ -44,5 +45,44 @@ describe('ModelViewer', () => {
       root.unmount();
     });
     container.remove();
+  });
+
+  it('pauses auto-rotation on interaction and resumes after idle', () => {
+    jest.useFakeTimers();
+    const { container, root } = renderWithRoot(
+      <ModelViewer
+        src="/models/ignatius.glb"
+        alt="Ignatius 3D"
+        poster="/thumbnails/ignatius.jpg"
+      />
+    );
+
+    const viewer = container.querySelector('model-viewer');
+    viewer.getBoundingClientRect = () => ({
+      width: 100,
+      height: 100,
+      top: 0,
+      left: 0,
+      right: 100,
+      bottom: 100,
+    });
+
+    act(() => {
+      viewer.dispatchEvent(new MouseEvent('pointerdown', { clientX: 50, clientY: 50, bubbles: true }));
+    });
+
+    expect(viewer.hasAttribute('auto-rotate')).toBe(false);
+
+    act(() => {
+      jest.advanceTimersByTime(5500);
+    });
+
+    expect(viewer.hasAttribute('auto-rotate')).toBe(true);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+    jest.useRealTimers();
   });
 });

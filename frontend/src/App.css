@@ -795,11 +795,11 @@ body.ignatius-mode .product-page-ignatius [data-testid="add-to-cart-btn"][disabl
 }
 
 body.ignatius-mode [data-testid="main-header"].bg-white\/95 {
-    background-color: rgba(10, 0, 0, 0.92);
+    background-color: transparent;
 }
 
 body.ignatius-mode [data-testid="main-header"].border-black\/5 {
-    border-color: rgba(120, 0, 0, 0.35);
+    border-color: transparent;
 }
 
 body.ignatius-mode [data-testid="main-header"] [class*="text-obsidian"] {
