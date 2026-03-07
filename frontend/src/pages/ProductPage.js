@@ -160,6 +160,9 @@ export default function ProductPage() {
     || fallbackPoster
     || LOGO_FALLBACK_POSTER;
   const inWishlist = isInWishlist(product.product_id);
+  const sizeLabel = Array.isArray(product.sizes) && product.sizes.length > 0
+    ? product.sizes.join(', ')
+    : 'Consulta disponibilidad en tienda';
   const galleryItems = (() => {
     let imageIndex = 0;
 
@@ -447,7 +450,7 @@ export default function ProductPage() {
                   {activeDetail === 'size' && (
                     <div className="space-y-3">
                       <p className="font-montserrat text-sm text-obsidian/60">
-                        Tallas disponibles: {product.sizes.join(', ')}
+                        Tallas disponibles: {sizeLabel}
                       </p>
                       <p className="font-montserrat text-xs text-obsidian/40">
                         Ajuste estándar. Si estás entre dos tallas, elige la superior.

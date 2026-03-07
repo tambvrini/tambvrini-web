@@ -163,6 +163,7 @@ body.product-page-lock #root {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    --details-drawer-width: 480px;
 }
 
 .product-content {
@@ -181,6 +182,8 @@ body.product-page-lock #root {
 }
 
 .product-media {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     overflow-y: auto;
     scroll-behavior: smooth;
@@ -217,7 +220,7 @@ body.product-page-lock #root {
     position: fixed;
     right: 0;
     top: 0;
-    width: 480px;
+    width: var(--details-drawer-width, 480px);
     max-width: 100%;
     height: 100vh;
     background: #ffffff;
