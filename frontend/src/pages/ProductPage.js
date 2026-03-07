@@ -50,7 +50,7 @@ export default function ProductPage() {
           return;
         }
         setProduct(data);
-        setRelatedProducts(data.related_products || []);
+        setRelatedProducts(Array.isArray(data.related_products) ? data.related_products : []);
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
