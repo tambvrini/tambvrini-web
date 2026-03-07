@@ -57,7 +57,7 @@ const ModelViewer = ({ src, alt, poster, className = '', ...rest }) => {
       touch-action="pan-y"
       shadow-intensity="0.6"
       disable-zoom
-      camera-controls={controlsEnabled ? true : undefined}
+      camera-controls={controlsEnabled || undefined}
       className={className}
       onPointerEnter={handlePointerMove}
       onPointerMove={handlePointerMove}
