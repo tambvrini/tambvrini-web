@@ -19,8 +19,8 @@ const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed53
 const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const LIMITED_EDITIONS_BANNER_IMAGE = "/images/limited-editions-banner.jpeg";
-const EDITORIAL_POLOS_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/v4zs6ugs_hf_20260222_181550_e58e110a-c888-46f9-818a-7daac73fbd28.jpeg";
-const EDITORIAL_SUETERES_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/lks43ws5_hf_20260222_183135_094a5ad6-f6e8-407f-8fd4-6dceef064698.jpeg";
+const EDITORIAL_POLOS_IMAGE = "/images/header-polos.png";
+const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
 const LIMITED_BANNER_FALLBACK_MS = 2000;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
