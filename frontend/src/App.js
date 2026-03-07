@@ -12,6 +12,7 @@ import { GOOGLE_CLIENT_ID } from "./config/google";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CartDrawer from "./components/CartDrawer";
+import ScrollToTop from "./components/ScrollToTop";
 import HomePage from "./pages/HomePage";
 import ShopPage from "./pages/ShopPage";
 import ProductPage from "./pages/ProductPage";
@@ -33,6 +34,7 @@ function AppRouter() {
 
   return (
     <div>
+      <ScrollToTop />
       <Header />
       <CartDrawer />
       <AnimatePresence mode="wait" initial={false}>
