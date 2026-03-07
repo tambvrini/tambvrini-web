@@ -11,25 +11,24 @@ const WINDOW_ORBIT_MAX_PHI = 85;
 const DEFAULT_ORBIT = { theta: 0, phi: 75, radius: '2.5m' };
 
 const requestAnimationFrameSafe = (callback) => {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' || !window.requestAnimationFrame) {
     return null;
   }
 
-  return window.requestAnimationFrame
-    ? window.requestAnimationFrame(callback)
-    : window.setTimeout(callback, 16);
+  return window.requestAnimationFrame(callback);
 };
 
 const cancelAnimationFrameSafe = (frameId) => {
-  if (typeof window === 'undefined' || frameId === null || frameId === undefined) {
+  if (
+    typeof window === 'undefined' ||
+    frameId === null ||
+    frameId === undefined ||
+    !window.cancelAnimationFrame
+  ) {
     return;
   }
 
-  if (window.cancelAnimationFrame) {
-    window.cancelAnimationFrame(frameId);
-  } else {
-    window.clearTimeout(frameId);
-  }
+  window.cancelAnimationFrame(frameId);
 };
 
 const parseOrbitValue = (orbit) => {
@@ -57,7 +56,7 @@ const parseOrbitValue = (orbit) => {
     orbit.phi !== undefined &&
     orbit.phi !== null
   ) {
-    const orbitRadius = orbit.radius ?? orbit.distance ?? DEFAULT_ORBIT.radius;
+    const orbitRadius = orbit.radius ?? DEFAULT_ORBIT.radius;
     return {
       theta: orbit.theta,
       phi: orbit.phi,
@@ -232,7 +231,7 @@ const ModelViewer = ({
       }
     });
     if (frameId !== null && frameId !== undefined) {
-      orbitFrameRef.current = { id: frameId };
+      orbitFrameRef.current = frameId;
     }
   }, []);
 
@@ -289,12 +288,12 @@ const ModelViewer = ({
 
   useEffect(() => () => clearAutoRotateTimer(), [clearAutoRotateTimer]);
   useEffect(() => () => {
-    const frame = orbitFrameRef.current;
-    if (!frame) {
+    const frameId = orbitFrameRef.current;
+    if (frameId === null || frameId === undefined) {
       return;
     }
 
-    cancelAnimationFrameSafe(frame.id);
+    cancelAnimationFrameSafe(frameId);
     orbitFrameRef.current = null;
   }, []);
 
