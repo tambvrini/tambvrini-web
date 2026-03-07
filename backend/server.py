@@ -194,7 +194,7 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    raw_id_token = (data.credential or data.id_token or "").strip()
+    raw_id_token = (data.credential or data.id_token).strip()
     if not raw_id_token:
         raise HTTPException(400, "Token inválido")
     try:
