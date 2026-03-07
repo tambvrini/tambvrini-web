@@ -12,8 +12,8 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from pydantic import BaseModel
 from typing import List, Optional, Dict
-from google.oauth2 import id_token as google_id_token
-from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -35,7 +35,6 @@ CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
-GOOGLE_REQUEST = google_requests.Request()
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -191,9 +190,10 @@ async def login_with_google(data: GoogleAuthRequest):
     if not raw_id_token:
         raise HTTPException(400, "Token inválido")
     try:
-        token_info = google_id_token.verify_oauth2_token(
+        # Create a fresh transport request to avoid sharing sessions across async requests.
+        token_info = id_token.verify_oauth2_token(
             raw_id_token,
-            GOOGLE_REQUEST,
+            requests.Request(),
             GOOGLE_CLIENT_ID
         )
     except ValueError as exc:
