@@ -291,7 +291,7 @@ const DropGridSection = () => {
   }, []);
 
   return (
-    <section id="drops" data-testid="drop-grid" className="pt-12 pb-24 md:pt-16 md:pb-32">
+    <section id="drops" data-testid="drop-grid" className="pt-6 pb-24 md:pt-8 md:pb-32">
       {showCollectionTransition && (
         <motion.div
           data-testid="collection-transition"
@@ -372,7 +372,7 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-4 md:mb-6">
+              <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-6 md:mb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div className="text-center">
                     <Link
@@ -421,7 +421,7 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div data-testid="editorial-eagle-divider" className="my-8 md:my-10">
+              <div data-testid="editorial-eagle-divider" className="my-6 md:my-8">
                 <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                   <div className="w-full overflow-hidden flex justify-center">
                     <video
@@ -451,7 +451,7 @@ const DropGridSection = () => {
               </div>
 
               {spotlight.length > 0 && (
-                <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
+                <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
                   {spotlight.map((item, i) => (
                     <ProductCard
                       key={item.product_id}
@@ -464,7 +464,7 @@ const DropGridSection = () => {
                 </div>
               )}
 
-              <div className="mt-8 md:mt-10 mb-6 md:mb-8">
+              <div className="mt-6 md:mt-8 mb-6 md:mb-8">
                 <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                   <div className="relative w-full">
                     <img
@@ -497,7 +497,7 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div className="mb-8 md:mb-10">
+              <div className="mb-6 md:mb-8">
                 <Link
                   to="/limited-editions"
                   data-testid="limited-editions-banner-link"
@@ -526,7 +526,7 @@ const DropGridSection = () => {
                 </Link>
               </div>
 
-              <div className="mb-8 md:mb-10">
+              <div className="mb-6 md:mb-8">
                 <div className="w-[94%] max-w-[1760px] mx-auto">
                   <div className="relative w-full aspect-video rounded-[28px] overflow-hidden">
                     <img
@@ -557,7 +557,7 @@ const DropGridSection = () => {
         })()}
 
         {/* Aesthetic-only promo tiles (scroll to drops) */}
-        <div id="novedades" data-testid="novedades-section" className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div id="novedades" data-testid="novedades-section" className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 md:gap-y-8">
           <NovedadesTile
             title="Novedades para Hombre"
             bg={NOVEDADES_HOMBRE_BG}

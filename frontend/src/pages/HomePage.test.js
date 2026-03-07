@@ -123,10 +123,21 @@ describe('HomePage featured grid', () => {
       container.querySelector('[data-testid="limited-editions-banner-image"]')
         ?.getAttribute('src')
     ).toBe('/images/limited-editions-banner.jpeg');
+    const dropGrid = container.querySelector('[data-testid="drop-grid"]');
+    const novedadesSection = container.querySelector('[data-testid="novedades-section"]');
+    const editorialEagleDivider = container.querySelector('[data-testid="editorial-eagle-divider"]');
     const mysticDivider = container.querySelector('[data-testid="mystic-divider-image"]');
     const mysticWrapper = container.querySelector('[data-testid="mystic-divider-wrapper"]');
     const mysticImage = mysticDivider?.querySelector('img');
 
+    expect(dropGrid?.className).toContain('pt-6');
+    expect(dropGrid?.className).toContain('md:pt-8');
+    expect(novedadesSection?.className).toContain('mt-6');
+    expect(novedadesSection?.className).toContain('md:mt-8');
+    expect(novedadesSection?.className).toContain('gap-y-6');
+    expect(novedadesSection?.className).toContain('md:gap-y-8');
+    expect(editorialEagleDivider?.className).toContain('my-6');
+    expect(editorialEagleDivider?.className).toContain('md:my-8');
     expect(mysticDivider?.className).toContain('mt-6');
     expect(mysticDivider?.className).toContain('md:mt-8');
     expect(mysticDivider?.className).toContain('-mb-[4.5rem]');
