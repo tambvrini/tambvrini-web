@@ -18,7 +18,12 @@ jest.mock('../contexts/WishlistContext', () => ({
   }),
 }));
 
-jest.mock('../components/ProductCard', () => () => <div data-testid="related-product" />);
+const mockProductCard = jest.fn();
+
+jest.mock('../components/ProductCard', () => (props) => {
+  mockProductCard(props);
+  return <div data-testid="related-product" />;
+});
 
 jest.mock('../data/productHelpers', () => ({
   getProductById: jest.fn(),
@@ -138,6 +143,23 @@ const relatedProduct = {
   related_products: [],
 };
 
+const extraRelatedProduct = {
+  product_id: 'extra-related-product',
+  name: 'Producto Extra',
+  description: 'Descripción',
+  price: 80,
+  currency: 'EUR',
+  images: ['/products/related/extra.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'mujer',
+  sizes: ['L'],
+  colors: [{ name: 'Blanco', hex: '#FFFFFF' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
 const renderProductPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -156,6 +178,7 @@ describe('ProductPage', () => {
     jest.useFakeTimers();
     window.scrollTo = jest.fn();
     mockProductId = 'sueter-ignatius';
+    mockProductCard.mockClear();
     getProductById.mockReset();
   });
 
@@ -267,10 +290,18 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('renders recommended products when related products exist', async () => {
+  it('renders up to four recommended products and passes product data', async () => {
+    const relatedProducts = [
+      poloGolfProduct,
+      camisetaImperiumProduct,
+      umbraProduct,
+      relatedProduct,
+      extraRelatedProduct,
+    ];
+
     getProductById.mockReturnValue({
       ...baseProduct,
-      related_products: [poloGolfProduct, camisetaImperiumProduct, umbraProduct, relatedProduct],
+      related_products: relatedProducts,
     });
 
     const { container, root } = await renderProductPage();
@@ -279,6 +310,12 @@ describe('ProductPage', () => {
 
     expect(recommendations).not.toBeNull();
     expect(recommendationCards.length).toBe(4);
+    expect(mockProductCard.mock.calls.length).toBeGreaterThanOrEqual(4);
+    const recentCalls = mockProductCard.mock.calls.slice(-4);
+    expect(recentCalls[0][0].product.product_id).toBe(relatedProducts[0].product_id);
+    expect(recentCalls[0][0].index).toBe(0);
+    expect(recentCalls[3][0].product.product_id).toBe(relatedProducts[3].product_id);
+    expect(recentCalls[3][0].index).toBe(3);
 
     act(() => {
       root.unmount();
