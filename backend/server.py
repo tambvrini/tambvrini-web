@@ -35,6 +35,7 @@ CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
+GOOGLE_REQUEST = google_requests.Request()
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -192,7 +193,7 @@ async def login_with_google(data: GoogleAuthRequest):
     try:
         token_info = google_id_token.verify_oauth2_token(
             raw_id_token,
-            google_requests.Request(),
+            GOOGLE_REQUEST,
             GOOGLE_CLIENT_ID
         )
     except ValueError as exc:
