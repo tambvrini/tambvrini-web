@@ -204,7 +204,7 @@ describe('ProductPage', () => {
     expect(viewer.getAttribute('src')).toBe('/models/ignatius.glb');
     expect(galleryImageElements.length).toBe(0);
     expect(productPage).not.toBeNull();
-    expect(productPage?.className).toContain('mb-10');
+    expect(productPage.className).toContain('mb-10');
 
     act(() => {
       root.unmount();
