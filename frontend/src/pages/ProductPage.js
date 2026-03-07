@@ -255,6 +255,7 @@ export default function ProductPage() {
                         key={i}
                         data-testid={`color-btn-${i}`}
                         onClick={() => setSelectedColor(c.name)}
+                        aria-label={`Seleccionar color ${c.name}`}
                         disabled={product.is_sold_out}
                         className={`flex items-center gap-2 px-3 py-2 border transition-colors duration-300 ${
                           selectedColor === c.name ? 'border-gold text-gold' : 'border-black/10 text-obsidian/60'
@@ -284,6 +285,7 @@ export default function ProductPage() {
                         key={i}
                         data-testid={`size-btn-${s}`}
                         onClick={() => setSelectedSize(s)}
+                        aria-label={`Seleccionar talla ${s}`}
                         disabled={disabled}
                         className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
                           selectedSize === s
