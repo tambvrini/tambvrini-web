@@ -6,7 +6,7 @@ export const FOOTER_BACKGROUND = '#0e2a2c';
 const FOOTER_TEXT_CLASS = 'text-white';
 const LINK_STYLE = { transition: 'color 0.25s ease' };
 const LOGO_STYLE = { filter: 'sepia(0.2) saturate(1.1) brightness(0.98)' };
-const OPTION_BACKGROUND = 'var(--footer-bg, #0e2a2c)';
+const OPTION_BACKGROUND = `var(--footer-bg, ${FOOTER_BACKGROUND})`;
 
 export const Footer = () => {
   const { lang, setLang, t } = useI18n();
