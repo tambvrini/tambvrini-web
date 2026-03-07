@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -9,8 +9,6 @@ import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
-// Tolerate minor rounding differences when detecting the end of the media scroll.
-const SCROLL_TOLERANCE = 1;
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;
@@ -27,14 +25,11 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [bodyScrollLocked, setBodyScrollLocked] = useState(true);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [activeDetail, setActiveDetail] = useState('details');
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const mediaRef = useRef(null);
-  const mediaAtEndRef = useRef(false);
   const detailLabels = {
     details: 'Detalles del producto',
     size: 'Guía de tallas',
@@ -53,11 +48,6 @@ export default function ProductPage() {
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
-        setBodyScrollLocked(true);
-        mediaAtEndRef.current = false;
-        if (mediaRef.current) {
-          mediaRef.current.scrollTop = 0;
-        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -65,7 +55,6 @@ export default function ProductPage() {
       }
     };
     fetchProduct();
-    window.scrollTo(0, 0);
   }, [productId]);
 
   useEffect(() => {
@@ -78,53 +67,6 @@ export default function ProductPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [detailsOpen]);
-
-  useEffect(() => {
-    if (!product) return;
-    const mediaEl = mediaRef.current;
-    if (!mediaEl) return;
-    const scrollOptions = { passive: true };
-
-    const lockWhenAtTop = () => {
-      if (typeof window === 'undefined') return;
-      if (window.scrollY === 0 && !mediaAtEndRef.current) {
-        setBodyScrollLocked(true);
-      }
-    };
-
-    const updateMediaLock = () => {
-      const hasScroll = mediaEl.scrollHeight > mediaEl.clientHeight;
-      const atEnd = !hasScroll
-        || (mediaEl.scrollTop + mediaEl.clientHeight >= mediaEl.scrollHeight - SCROLL_TOLERANCE);
-      mediaAtEndRef.current = atEnd;
-      if (atEnd) {
-        setBodyScrollLocked(false);
-      } else {
-        lockWhenAtTop();
-      }
-    };
-
-    const handleWindowScroll = () => {
-      lockWhenAtTop();
-    };
-
-    if (mediaEl.scrollHeight <= mediaEl.clientHeight) {
-      updateMediaLock();
-    }
-    mediaEl.addEventListener('scroll', updateMediaLock, scrollOptions);
-    window.addEventListener('scroll', handleWindowScroll, scrollOptions);
-    return () => {
-      mediaEl.removeEventListener('scroll', updateMediaLock, scrollOptions);
-      window.removeEventListener('scroll', handleWindowScroll, scrollOptions);
-    };
-  }, [productId, product]);
-
-  useEffect(() => {
-    document.body.classList.toggle('product-page-lock', bodyScrollLocked);
-    return () => {
-      document.body.classList.remove('product-page-lock');
-    };
-  }, [bodyScrollLocked]);
 
   useEffect(() => {
     if (!isUmbraProduct) {
@@ -273,9 +215,9 @@ export default function ProductPage() {
 
       {/* Product layout */}
       <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
-        <div className="product-page product-layout">
+        <div className="product-page product-layout product-gallery-layout">
           {/* Left: Gallery */}
-          <div className="product-media" data-testid="product-media" ref={mediaRef}>
+          <div className="product-media" data-testid="product-media">
             {galleryMedia.length > 0 ? (
               galleryItems
             ) : (

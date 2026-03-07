@@ -148,14 +148,6 @@
     --poster-color: transparent;
 }
 
-body.product-page-lock {
-    overflow: hidden;
-}
-
-body.product-page-lock #root {
-    height: 100%;
-}
-
 .product-page-shell {
     background-color: #ffffff;
     min-height: 100vh;
@@ -164,11 +156,6 @@ body.product-page-lock #root {
     display: flex;
     flex-direction: column;
     --details-drawer-width: 480px;
-}
-
-body.product-page-lock .product-page-shell {
-    height: 100vh;
-    overflow: hidden;
 }
 
 .product-content {
@@ -184,6 +171,11 @@ body.product-page-lock .product-page-shell {
     align-items: start;
     height: 100%;
     min-height: 0;
+}
+
+.product-gallery-layout {
+    height: calc(100vh - var(--product-header-offset, 120px));
+    min-height: calc(100vh - var(--product-header-offset, 120px));
 }
 
 .product-media {
