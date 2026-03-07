@@ -421,12 +421,12 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div data-testid="editorial-eagle-divider" className="my-[60px]">
+              <div data-testid="editorial-eagle-divider" className="my-8 md:my-10">
                 <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
                   <div className="w-full overflow-hidden flex justify-center">
                     <video
                       data-testid="editorial-eagle-divider-video"
-                      src="/videos/video-aguila-header-wide.mp4"
+                      src="/videos/aguila-header-ultrawide.mp4"
                       autoPlay
                       loop
                       muted
