@@ -121,6 +121,23 @@ const camisetaImperiumProduct = {
   related_products: [],
 };
 
+const relatedProduct = {
+  product_id: 'related-product',
+  name: 'Producto Relacionado',
+  description: 'Descripción',
+  price: 60,
+  currency: 'EUR',
+  images: ['/products/related/related.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'mujer',
+  sizes: ['M'],
+  colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
 const renderProductPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -243,6 +260,25 @@ describe('ProductPage', () => {
     });
 
     expect(document.body.textContent).toContain('Detalles');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('renders recommended products when related products exist', async () => {
+    getProductById.mockReturnValue({
+      ...baseProduct,
+      related_products: [poloGolfProduct, camisetaImperiumProduct, umbraProduct, relatedProduct],
+    });
+
+    const { container, root } = await renderProductPage();
+    const recommendations = container.querySelector('[data-testid="product-recommendations"]');
+    const recommendationCards = container.querySelectorAll('[data-testid="related-product"]');
+
+    expect(recommendations).not.toBeNull();
+    expect(recommendationCards.length).toBe(4);
 
     act(() => {
       root.unmount();

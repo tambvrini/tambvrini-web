@@ -56,6 +56,7 @@ export const Header = () => {
   const { items: wishlistItems } = useWishlist();
 
   const isHomePage = location.pathname === '/';
+  const isProductPage = location.pathname.startsWith('/producto');
   const isWomenCategory =
     location.pathname === '/tienda' && new URLSearchParams(location.search).get('gender') === 'mujer';
   const isMenCategory =
@@ -116,7 +117,7 @@ export const Header = () => {
 
   // On homepage, header logo hidden until scroll passes threshold
   // On other pages, header logo always visible
-  const scrolled = isHomePage ? scrollY > SCROLL_THRESHOLD : scrollY > 80;
+  const scrolled = isHomePage ? scrollY > SCROLL_THRESHOLD : (isProductPage ? true : scrollY > 80);
   // Delay header logo reveal so we don't see a duplicated "medium" logo during the hero shrink.
   // We fade the header logo in right at the end of the hero animation.
   const headerFadeStart = SCROLL_THRESHOLD - 40; // ~460

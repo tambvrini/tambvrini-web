@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
+import ProductCard from '../components/ProductCard';
 import ModelViewer from '../components/ModelViewer';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
@@ -22,12 +23,16 @@ export default function ProductPage() {
   const umbraTransitionDelay = 800;
   const ignatiusTransitionDelay = 300;
   const [product, setProduct] = useState(null);
+  const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bodyScrollLocked, setBodyScrollLocked] = useState(true);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [activeDetail, setActiveDetail] = useState('details');
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const mediaRef = useRef(null);
+  const mediaAtEndRef = useRef(false);
   const detailLabels = {
     details: 'Detalles del producto',
     size: 'Guía de tallas',
@@ -42,9 +47,15 @@ export default function ProductPage() {
       try {
         const data = getProductById(productId);
         setProduct(data);
+        setRelated(data?.related_products || []);
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
+        setBodyScrollLocked(true);
+        mediaAtEndRef.current = false;
+        if (mediaRef.current) {
+          mediaRef.current.scrollTop = 0;
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -67,11 +78,41 @@ export default function ProductPage() {
   }, [detailsOpen]);
 
   useEffect(() => {
-    document.body.classList.add('product-page-lock');
+    if (!product) return undefined;
+    const mediaEl = mediaRef.current;
+    if (!mediaEl) return undefined;
+
+    const updateMediaLock = () => {
+      const atEnd = mediaEl.scrollTop + mediaEl.clientHeight >= mediaEl.scrollHeight - 1;
+      mediaAtEndRef.current = atEnd;
+      if (atEnd) {
+        setBodyScrollLocked(false);
+      } else if (window.scrollY === 0) {
+        setBodyScrollLocked(true);
+      }
+    };
+
+    const handleWindowScroll = () => {
+      if (window.scrollY === 0 && !mediaAtEndRef.current) {
+        setBodyScrollLocked(true);
+      }
+    };
+
+    updateMediaLock();
+    mediaEl.addEventListener('scroll', updateMediaLock, { passive: true });
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    return () => {
+      mediaEl.removeEventListener('scroll', updateMediaLock);
+      window.removeEventListener('scroll', handleWindowScroll);
+    };
+  }, [productId, product]);
+
+  useEffect(() => {
+    document.body.classList.toggle('product-page-lock', bodyScrollLocked);
     return () => {
       document.body.classList.remove('product-page-lock');
     };
-  }, []);
+  }, [bodyScrollLocked]);
 
   useEffect(() => {
     if (!isUmbraProduct) {
@@ -222,7 +263,7 @@ export default function ProductPage() {
       <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
         <div className="product-page product-layout">
           {/* Left: Gallery */}
-          <div className="product-media" data-testid="product-media">
+          <div className="product-media" data-testid="product-media" ref={mediaRef}>
             {galleryMedia.length > 0 ? (
               galleryItems
             ) : (
@@ -470,6 +511,19 @@ export default function ProductPage() {
             </div>
           </div>
         </div>
+
+        {related.length > 0 && (
+          <section className="mt-16 md:mt-20">
+            <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50 mb-6">
+              También te puede gustar
+            </h2>
+            <div className="product-recommendations" data-testid="product-recommendations">
+              {related.slice(0, 4).map((item, index) => (
+                <ProductCard key={item.product_id} product={item} index={index} />
+              ))}
+            </div>
+          </section>
+        )}
 
       </div>
     </div>
