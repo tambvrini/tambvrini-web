@@ -123,9 +123,14 @@ describe('HomePage featured grid', () => {
       container.querySelector('[data-testid="limited-editions-banner-image"]')
         ?.getAttribute('src')
     ).toBe('/images/limited-editions-banner.jpeg');
-    expect(
-      container.querySelector('[data-testid="mystic-divider-image"] img')?.getAttribute('src')
-    ).toBe('/images/header-mistico-ultrawide.png');
+    const mysticDivider = container.querySelector('[data-testid="mystic-divider-image"]');
+    const mysticImage = mysticDivider?.querySelector('img');
+
+    expect(mysticDivider?.className).toContain('my-6');
+    expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
+    expect(mysticImage?.getAttribute('alt')).toBe('Editorial mystic divider');
+    expect(mysticImage?.className).toContain('w-full');
+    expect(mysticImage?.className).toContain('object-contain');
 
     act(() => {
       root.unmount();
