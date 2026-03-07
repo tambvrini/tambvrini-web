@@ -10,7 +10,7 @@ import jwt
 import stripe
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List, Optional, Dict
 import httpx
 
@@ -36,7 +36,6 @@ LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
 MIN_GOOGLE_TOKEN_TTL_SECONDS = 60
 GOOGLE_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo"
-GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -61,7 +60,7 @@ class UserLogin(BaseModel):
     password: str
 
 class GoogleAuthRequest(BaseModel):
-    access_token: str = Field(..., alias="access_token")
+    id_token: str
 
 class CheckoutRequest(BaseModel):
     items: List[Dict]
@@ -188,13 +187,13 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    access_token = data.access_token.strip()
-    if not access_token:
+    id_token = data.id_token.strip()
+    if not id_token:
         raise HTTPException(400, "Token inválido")
     async with httpx.AsyncClient(timeout=10.0) as client:
-        token_info_response = await client.post(
+        token_info_response = await client.get(
             GOOGLE_TOKENINFO_URL,
-            data={"access_token": access_token}
+            params={"id_token": id_token}
         )
         if token_info_response.status_code != 200:
             raise HTTPException(401, "Token de Google inválido")
@@ -203,27 +202,25 @@ async def login_with_google(data: GoogleAuthRequest):
         if audience != GOOGLE_CLIENT_ID:
             raise HTTPException(401, "Token de Google no corresponde al cliente")
         try:
-            expires_in = int(token_info.get("expires_in", 0))
+            exp_timestamp = int(token_info.get("exp", 0))
         except (TypeError, ValueError) as exc:
-            logger.warning("Invalid expires_in from Google token info: %s", exc)
+            logger.warning("Invalid exp from Google token info: %s", exc)
+            exp_timestamp = 0
+        if exp_timestamp:
+            expires_in = exp_timestamp - int(datetime.now(timezone.utc).timestamp())
+        else:
             expires_in = 0
         if expires_in < MIN_GOOGLE_TOKEN_TTL_SECONDS:
             raise HTTPException(401, "Token de Google inválido o expirado")
-        profile_response = await client.get(
-            GOOGLE_USERINFO_URL,
-            headers={"Authorization": f"Bearer {access_token}"}
-        )
-        if profile_response.status_code != 200:
-            raise HTTPException(401, "No se pudo obtener el perfil de Google")
-        profile = profile_response.json()
-    email = profile.get("email")
+    email = token_info.get("email")
     if not email:
         raise HTTPException(400, "Email no disponible")
-    if profile.get("email_verified") is not True:
+    email_verified = token_info.get("email_verified")
+    if email_verified not in (True, "true", "True"):
         raise HTTPException(401, "Email no verificado")
-    google_sub = profile.get("sub")
-    name = profile.get("name") or email
-    picture = profile.get("picture")
+    google_sub = token_info.get("sub")
+    name = token_info.get("name") or email
+    picture = token_info.get("picture")
 
     user = await db.users.find_one({"email": email}, {"_id": 0})
     if not user:

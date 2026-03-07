@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
-import { useGoogleLogin } from '@react-oauth/google';
 import { GOOGLE_CLIENT_ID } from '../config/google';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -14,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
   const googleAuthPromiseRef = useRef(null);
-  const googleAuthCallbacksRef = useRef(null);
+  const googleScriptPromiseRef = useRef(null);
 
   const getHeaders = useCallback(() => {
     if (token) return { Authorization: `Bearer ${token}` };
@@ -66,70 +65,69 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth_token');
   };
 
-  const finalizeGoogleAuth = () => {
-    googleAuthPromiseRef.current = null;
-    googleAuthCallbacksRef.current = null;
-  };
-
-  const handleUnexpectedGoogleAuthState = () => {
-    const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
-    const callbacks = googleAuthCallbacksRef.current;
-    if (callbacks && typeof callbacks.reject === 'function') {
-      callbacks.reject(error);
-    } else {
-      console.error(error);
+  const loadGoogleIdentityScript = () => {
+    if (window.google?.accounts?.id) {
+      return Promise.resolve();
     }
-    finalizeGoogleAuth();
+    if (googleScriptPromiseRef.current) {
+      return googleScriptPromiseRef.current;
+    }
+    googleScriptPromiseRef.current = new Promise((resolve, reject) => {
+      let settled = false;
+      const resolveOnce = () => {
+        if (settled) return;
+        settled = true;
+        googleScriptPromiseRef.current = null;
+        resolve();
+      };
+      const rejectOnce = () => {
+        if (settled) return;
+        settled = true;
+        googleScriptPromiseRef.current = null;
+        reject(new Error(GOOGLE_AUTH_ERROR_MESSAGE));
+      };
+      const existingScript = document.getElementById('google-identity-service');
+      if (existingScript) {
+        if (existingScript.dataset.loaded === 'true' && window.google?.accounts?.id) {
+          resolveOnce();
+          return;
+        }
+        if (existingScript.dataset.error === 'true') {
+          rejectOnce();
+          return;
+        }
+        const handleLoad = () => {
+          existingScript.dataset.loaded = 'true';
+          resolveOnce();
+        };
+        const handleError = () => {
+          existingScript.dataset.error = 'true';
+          rejectOnce();
+        };
+        existingScript.addEventListener('load', handleLoad, { once: true });
+        existingScript.addEventListener('error', handleError, { once: true });
+        if (window.google?.accounts?.id) {
+          handleLoad();
+        }
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.id = 'google-identity-service';
+      script.onload = () => {
+        script.dataset.loaded = 'true';
+        resolveOnce();
+      };
+      script.onerror = () => {
+        script.dataset.error = 'true';
+        rejectOnce();
+      };
+      document.head.appendChild(script);
+    });
+    return googleScriptPromiseRef.current;
   };
-
-  const googleLogin = useGoogleLogin({
-    scope: 'openid email profile',
-    prompt: 'select_account',
-    flow: 'implicit',
-    onSuccess: async (tokenResponse) => {
-      const callbacks = googleAuthCallbacksRef.current;
-      if (!callbacks) {
-        handleUnexpectedGoogleAuthState();
-        return;
-      }
-      const { resolve, reject } = callbacks;
-      if (!tokenResponse?.access_token) {
-        const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
-        finalizeGoogleAuth();
-        reject(error);
-        return;
-      }
-      try {
-        const res = await axios.post(
-          `${API}/auth/google`,
-          { access_token: tokenResponse.access_token },
-          { withCredentials: true }
-        );
-        setToken(res.data.token);
-        localStorage.setItem('auth_token', res.data.token);
-        setUser(res.data.user);
-        finalizeGoogleAuth();
-        resolve(res.data);
-      } catch (err) {
-        finalizeGoogleAuth();
-        reject(err);
-      }
-    },
-    onError: (errorResponse) => {
-      const callbacks = googleAuthCallbacksRef.current;
-      if (!callbacks) {
-        handleUnexpectedGoogleAuthState();
-        return;
-      }
-      if (errorResponse) {
-        console.error(errorResponse);
-      }
-      const { reject } = callbacks;
-      const error = new Error(GOOGLE_AUTH_ERROR_MESSAGE);
-      finalizeGoogleAuth();
-      reject(error);
-    },
-  });
 
   const loginWithGoogle = async () => {
     if (googleAuthPromiseRef.current) {
@@ -138,13 +136,56 @@ export const AuthProvider = ({ children }) => {
     if (!GOOGLE_CLIENT_ID) {
       throw new Error('Google Client ID no configurado en variables de entorno');
     }
+    await loadGoogleIdentityScript();
     googleAuthPromiseRef.current = new Promise((resolve, reject) => {
+      let settled = false;
+      const finalize = () => {
+        if (settled) return;
+        settled = true;
+        googleAuthPromiseRef.current = null;
+      };
+      const rejectWithError = (error) => {
+        finalize();
+        reject(error);
+      };
+      const handleCredential = async (credentialResponse) => {
+        if (!credentialResponse?.credential) {
+          rejectWithError(new Error(GOOGLE_AUTH_ERROR_MESSAGE));
+          return;
+        }
+        try {
+          const res = await axios.post(
+            `${API}/auth/google`,
+            { id_token: credentialResponse.credential },
+            { withCredentials: true }
+          );
+          setToken(res.data.token);
+          localStorage.setItem('auth_token', res.data.token);
+          setUser(res.data.user);
+          finalize();
+          resolve(res.data);
+        } catch (err) {
+          rejectWithError(err);
+        }
+      };
       try {
-        googleAuthCallbacksRef.current = { resolve, reject };
-        googleLogin();
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleCredential,
+          ux_mode: 'popup',
+          context: 'signin',
+        });
+        window.google.accounts.id.prompt((notification) => {
+          if (
+            notification?.isNotDisplayed?.() ||
+            notification?.isSkippedMoment?.() ||
+            notification?.isDismissedMoment?.()
+          ) {
+            rejectWithError(new Error(GOOGLE_AUTH_ERROR_MESSAGE));
+          }
+        });
       } catch (err) {
-        finalizeGoogleAuth();
-        reject(err);
+        rejectWithError(err);
       }
     });
     return googleAuthPromiseRef.current;
