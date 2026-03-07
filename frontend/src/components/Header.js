@@ -167,7 +167,7 @@ export const Header = () => {
               >
                 <div className="flex flex-col h-full p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
-                    <Logo className="logo h-5 w-auto" role="img" aria-label="TAMBVRINI" />
+                    <Logo className="logo h-5 w-auto" />
                     <SheetClose asChild>
                       <button data-testid="menu-close-btn">
                         <X size={24} className="text-obsidian/60 hover:text-obsidian" />
@@ -252,8 +252,6 @@ export const Header = () => {
             style={{ opacity: headerLogoOpacity, pointerEvents: headerLogoVisible ? 'auto' : 'none' }}
           >
             <Logo
-              role="img"
-              aria-label="TAMBVRINI"
               className={`logo transition-all duration-500 w-auto ${isHomePage ? 'h-10 md:h-12' : (scrolled ? 'h-10 md:h-12' : 'h-16 md:h-28')}`}
             />
           </Link>

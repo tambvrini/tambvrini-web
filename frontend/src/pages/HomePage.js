@@ -128,8 +128,6 @@ const HeroSection = () => {
           }}
         >
           <Logo
-            role="img"
-            aria-label="TAMBVRINI"
             className="logo hero-logo w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px]"
           />
         </motion.div>
