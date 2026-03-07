@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
   const googleAuthPromiseRef = useRef(null);
+  const googleButtonContainerRef = useRef(null);
   const googleScriptPromiseRef = useRef(null);
 
   const getHeaders = useCallback(() => {
@@ -129,6 +130,21 @@ export const AuthProvider = ({ children }) => {
     return googleScriptPromiseRef.current;
   };
 
+  const getGoogleButtonContainer = () => {
+    if (googleButtonContainerRef.current) {
+      return googleButtonContainerRef.current;
+    }
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.width = '0';
+    container.style.height = '0';
+    container.style.overflow = 'hidden';
+    container.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(container);
+    googleButtonContainerRef.current = container;
+    return container;
+  };
+
   const loginWithGoogle = async () => {
     if (googleAuthPromiseRef.current) {
       return googleAuthPromiseRef.current;
@@ -175,15 +191,20 @@ export const AuthProvider = ({ children }) => {
           ux_mode: 'popup',
           context: 'signin',
         });
-        window.google.accounts.id.prompt((notification) => {
-          if (
-            notification?.isNotDisplayed?.() ||
-            notification?.isSkippedMoment?.() ||
-            notification?.isDismissedMoment?.()
-          ) {
-            rejectWithError(new Error(GOOGLE_AUTH_ERROR_MESSAGE));
-          }
+        const container = getGoogleButtonContainer();
+        container.innerHTML = '';
+        window.google.accounts.id.renderButton(container, {
+          theme: 'outline',
+          size: 'large',
+          text: 'continue_with',
+          width: 320,
         });
+        const button = container.querySelector('div[role="button"]');
+        if (!button) {
+          rejectWithError(new Error(GOOGLE_AUTH_ERROR_MESSAGE));
+          return;
+        }
+        button.click();
       } catch (err) {
         rejectWithError(err);
       }
