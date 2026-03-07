@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
+const SCROLL_TOLERANCE = 1;
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;
@@ -23,7 +24,7 @@ export default function ProductPage() {
   const umbraTransitionDelay = 800;
   const ignatiusTransitionDelay = 300;
   const [product, setProduct] = useState(null);
-  const [related, setRelated] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bodyScrollLocked, setBodyScrollLocked] = useState(true);
   const [selectedSize, setSelectedSize] = useState('');
@@ -47,7 +48,7 @@ export default function ProductPage() {
       try {
         const data = getProductById(productId);
         setProduct(data);
-        setRelated(data?.related_products || []);
+        setRelatedProducts(data?.related_products || []);
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
@@ -83,7 +84,7 @@ export default function ProductPage() {
     if (!mediaEl) return undefined;
 
     const updateMediaLock = () => {
-      const atEnd = mediaEl.scrollTop + mediaEl.clientHeight >= mediaEl.scrollHeight - 1;
+      const atEnd = mediaEl.scrollTop + mediaEl.clientHeight >= mediaEl.scrollHeight - SCROLL_TOLERANCE;
       mediaAtEndRef.current = atEnd;
       if (atEnd) {
         setBodyScrollLocked(false);
@@ -512,13 +513,13 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {related.length > 0 && (
+        {relatedProducts.length > 0 && (
           <section className="mt-16 md:mt-20">
             <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50 mb-6">
               También te puede gustar
             </h2>
             <div className="product-recommendations" data-testid="product-recommendations">
-              {related.slice(0, 4).map((item, index) => (
+              {relatedProducts.slice(0, 4).map((item, index) => (
                 <ProductCard key={item.product_id} product={item} index={index} />
               ))}
             </div>

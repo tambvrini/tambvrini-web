@@ -117,7 +117,12 @@ export const Header = () => {
 
   // On homepage, header logo hidden until scroll passes threshold
   // On other pages, header logo always visible
-  const scrolled = isHomePage ? scrollY > SCROLL_THRESHOLD : (isProductPage ? true : scrollY > 80);
+  let scrolled = scrollY > 80;
+  if (isHomePage) {
+    scrolled = scrollY > SCROLL_THRESHOLD;
+  } else if (isProductPage) {
+    scrolled = true;
+  }
   // Delay header logo reveal so we don't see a duplicated "medium" logo during the hero shrink.
   // We fade the header logo in right at the end of the hero animation.
   const headerFadeStart = SCROLL_THRESHOLD - 40; // ~460
