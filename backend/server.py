@@ -210,10 +210,7 @@ async def login_with_google(data: GoogleAuthRequest):
                 exc
             )
             exp_timestamp = 0
-        if exp_timestamp:
-            seconds_until_expiry = exp_timestamp - datetime.now(timezone.utc).timestamp()
-        else:
-            seconds_until_expiry = 0
+        seconds_until_expiry = exp_timestamp - datetime.now(timezone.utc).timestamp()
         if seconds_until_expiry < MIN_GOOGLE_TOKEN_TTL_SECONDS:
             raise HTTPException(401, "Token de Google inválido o expirado")
     email = token_info.get("email")
@@ -221,6 +218,7 @@ async def login_with_google(data: GoogleAuthRequest):
         raise HTTPException(400, "Email no disponible")
     # tokeninfo may return email_verified as a string.
     email_verified = token_info.get("email_verified")
+    # tokeninfo returns email_verified as boolean or "true" string.
     is_email_verified = email_verified is True or (
         isinstance(email_verified, str) and email_verified.lower() == "true"
     )
