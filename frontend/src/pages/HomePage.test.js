@@ -138,7 +138,9 @@ describe('HomePage featured grid', () => {
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
     expect(mysticImage?.getAttribute('alt')).toBe('editorial mystic divider');
     expect(mysticImage?.className).toContain('w-full');
+    expect(mysticImage?.className).toContain('h-auto');
     expect(mysticImage?.className).toContain('object-contain');
+    expect(mysticImage?.className).toContain('object-center');
 
     act(() => {
       root.unmount();
