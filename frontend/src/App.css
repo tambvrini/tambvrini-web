@@ -137,6 +137,29 @@
     background-color: #ffffff;
 }
 
+.product-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.product-info {
+    position: static;
+}
+
+@media (min-width: 1024px) {
+    .product-page {
+        grid-template-columns: 60% 40%;
+    }
+
+    .product-info {
+        position: sticky;
+        top: 120px;
+        height: fit-content;
+    }
+}
+
 .umbra-product-page {
     background-color: #0b0f1a;
     color: #f6f7f9;

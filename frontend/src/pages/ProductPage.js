@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
+import { Heart, Minus, Plus, ChevronRight, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
@@ -28,7 +28,8 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [infoTab, setInfoTab] = useState('description');
+  const [activeDetail, setActiveDetail] = useState('description');
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
 
@@ -202,9 +203,9 @@ export default function ProductPage() {
 
       {/* Product layout */}
       <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-10 lg:gap-12 items-start">
+        <div className="product-page">
           {/* Left: Gallery */}
-          <div>
+          <div className="product-gallery">
             {galleryMedia.length > 0 ? (
               <div className="flex flex-col">{galleryItems}</div>
             ) : (
@@ -215,11 +216,11 @@ export default function ProductPage() {
           </div>
 
           {/* Right: Product info */}
-          <div className="lg:pl-8 lg:pt-4 lg:sticky lg:top-[120px] lg:self-start">
+          <div className="product-info lg:pl-8 lg:pt-4">
             <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-gold/60 mb-2">
               {product.category?.join(' / ')}
             </p>
-            <div className="flex items-start justify-between gap-4 mb-3">
+            <div className="flex items-start justify-between gap-4 mb-2">
               <h1
                 data-testid="product-name"
                 className={`font-playfair text-3xl md:text-4xl text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
@@ -232,19 +233,19 @@ export default function ProductPage() {
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-obsidian/60 tracking-wide mb-3">
+            <p data-testid="product-price" className="font-montserrat text-lg text-obsidian/60 tracking-wide mb-2">
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (
-              <p className="font-montserrat text-xs text-obsidian/50 tracking-wide mb-4">
+              <p className="font-montserrat text-xs text-obsidian/50 tracking-wide mb-3">
                 Solo queda talla M disponible
               </p>
             )}
             {product.product_id !== 'polo-aureus' && (
-              <div className="mb-4" />
+              <div className="mb-3" />
             )}
 
-            <div className="flex flex-col gap-6 lg:flex-row lg:gap-8 mb-6">
+            <div className="grid grid-cols-2 gap-4 mb-5">
               {/* Color selector */}
               {product.colors?.length > 0 && (
                 <div className="flex-1">
@@ -304,7 +305,7 @@ export default function ProductPage() {
             </div>
 
             {/* Quantity + wishlist */}
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between mb-6">
+            <div className="flex items-end justify-between gap-4 mb-5">
               <div className={product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}>
                 <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-2">Cantidad</p>
                 <div className="flex items-center border border-black/10">
@@ -344,7 +345,7 @@ export default function ProductPage() {
             </div>
 
             {/* Actions */}
-            <div className="mb-8">
+            <div className="mb-6">
               <button
                 data-testid="add-to-cart-btn"
                 onClick={handleAddToCart}
@@ -365,34 +366,79 @@ export default function ProductPage() {
                 <button
                   key={tab}
                   data-testid={`tab-${tab}`}
-                  onClick={() => setInfoTab(infoTab === tab ? '' : tab)}
-                  className="w-full py-4 border-b border-white/5 flex justify-between items-center text-left"
+                  onClick={() => {
+                    setActiveDetail(tab);
+                    setDetailsOpen(true);
+                  }}
+                  className="w-full py-3 border-b border-white/5 flex justify-between items-center text-left"
                 >
                   <span className="font-montserrat text-xs tracking-[0.15em] uppercase text-obsidian/60">
                     {tab === 'description' ? 'Descripción' : tab === 'composition' ? 'Composición' : 'Envío'}
                   </span>
-                  <Plus size={14} className={`text-obsidian/30 transition-transform duration-300 ${infoTab === tab ? 'rotate-45' : ''}`} />
+                  <Plus size={14} className="text-obsidian/30 transition-transform duration-300" />
                 </button>
               ))}
-              {infoTab === 'description' && (
-                <div className="py-4 border-b border-white/5">
-                  <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">{product.description}</p>
+            </div>
+            <div
+              className={`fixed inset-0 z-[80] transition-opacity duration-500 ${
+                detailsOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
+              aria-hidden={!detailsOpen}
+            >
+              <div
+                className="absolute inset-0 bg-black/30"
+                onClick={() => setDetailsOpen(false)}
+                aria-hidden="true"
+              />
+              <div
+                className={`absolute right-0 top-0 h-full w-[420px] max-w-[420px] bg-white p-8 shadow-[0_24px_64px_rgba(15,23,42,0.18)] transition-transform duration-500 ${
+                  detailsOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}
+                role="dialog"
+                aria-label="Detalles del producto"
+              >
+                <button
+                  type="button"
+                  onClick={() => setDetailsOpen(false)}
+                  aria-label="Cerrar detalles"
+                  className="absolute right-6 top-6 flex h-8 w-8 items-center justify-center text-obsidian/50 hover:text-obsidian transition-colors"
+                >
+                  <X size={18} />
+                </button>
+                <div className="space-y-6">
+                  <div>
+                    <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-obsidian/40 mb-2">
+                      Detalles
+                    </p>
+                    <h3 className="font-playfair text-2xl text-obsidian">
+                      {activeDetail === 'description'
+                        ? 'Descripción'
+                        : activeDetail === 'composition'
+                          ? 'Composición'
+                          : 'Envío'}
+                    </h3>
+                  </div>
+                  {activeDetail === 'description' && (
+                    <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">
+                      {product.description}
+                    </p>
+                  )}
+                  {activeDetail === 'composition' && (
+                    <div className="space-y-3">
+                      <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">{product.composition}</p>
+                      <p className="font-montserrat text-xs text-obsidian/40">{product.care}</p>
+                    </div>
+                  )}
+                  {activeDetail === 'shipping' && (
+                    <div className="space-y-3">
+                      <p className="font-montserrat text-sm text-obsidian/60">Envío estándar: 5-7 días laborables</p>
+                      <p className="font-montserrat text-sm text-obsidian/60">Envío express: 2-3 días laborables</p>
+                      <p className="font-montserrat text-sm text-obsidian/60">Envío gratuito en pedidos superiores a 500&euro;</p>
+                      <p className="font-montserrat text-xs text-obsidian/40">Devoluciones gratuitas en 30 días</p>
+                    </div>
+                  )}
                 </div>
-              )}
-              {infoTab === 'composition' && (
-                <div className="py-4 border-b border-white/5">
-                  <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed mb-2">{product.composition}</p>
-                  <p className="font-montserrat text-xs text-obsidian/40">{product.care}</p>
-                </div>
-              )}
-              {infoTab === 'shipping' && (
-                <div className="py-4 border-b border-white/5 space-y-2">
-                  <p className="font-montserrat text-sm text-obsidian/60">Envío estándar: 5-7 días laborables</p>
-                  <p className="font-montserrat text-sm text-obsidian/60">Envío express: 2-3 días laborables</p>
-                  <p className="font-montserrat text-sm text-obsidian/60">Envío gratuito en pedidos superiores a 500&euro;</p>
-                  <p className="font-montserrat text-xs text-obsidian/40 mt-3">Devoluciones gratuitas en 30 días</p>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

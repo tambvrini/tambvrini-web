@@ -226,6 +226,30 @@ describe('ProductPage', () => {
     container.remove();
   });
 
+  it('uses the product layout grid and opens the details panel', async () => {
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const pageGrid = container.querySelector('.product-page');
+    const infoPanel = container.querySelector('.product-info');
+    const detailButton = container.querySelector('[data-testid="tab-description"]');
+
+    expect(pageGrid).not.toBeNull();
+    expect(infoPanel).not.toBeNull();
+    expect(detailButton).not.toBeNull();
+
+    act(() => {
+      detailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(document.body.textContent).toContain('Detalles');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
   it('shows Polo Golf gallery images in the provided order', async () => {
     mockProductId = 'polo-golf';
     getProductById.mockReturnValue(poloGolfProduct);
