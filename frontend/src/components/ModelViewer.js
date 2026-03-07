@@ -6,8 +6,6 @@ const AUTO_ROTATE_SPEED = 0.5;
 const AUTO_ROTATE_IDLE_MS = 5500;
 const WINDOW_ORBIT_THETA_RANGE = 12;
 const WINDOW_ORBIT_PHI_RANGE = 6;
-const WINDOW_ORBIT_MIN_PHI = 10;
-const WINDOW_ORBIT_MAX_PHI = 85;
 const DEFAULT_ORBIT = { theta: 0, phi: 75, radius: '2.5m' };
 
 const parseOrbitValue = (orbit) => {
@@ -159,8 +157,7 @@ const ModelViewer = ({
     if (
       isWindowInteraction &&
       event.currentTarget?.releasePointerCapture &&
-      event.pointerId !== undefined &&
-      event.pointerId !== null
+      event.pointerId != null
     ) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -207,10 +204,7 @@ const ModelViewer = ({
       const normalizedY = (y / innerHeight) * 2 - 1;
       const baseOrbit = baseOrbitRef.current;
       const theta = baseOrbit.theta + normalizedX * WINDOW_ORBIT_THETA_RANGE;
-      const phi = Math.min(
-        WINDOW_ORBIT_MAX_PHI,
-        Math.max(WINDOW_ORBIT_MIN_PHI, baseOrbit.phi - normalizedY * WINDOW_ORBIT_PHI_RANGE)
-      );
+      const phi = Math.min(85, Math.max(10, baseOrbit.phi - normalizedY * WINDOW_ORBIT_PHI_RANGE));
       const nextOrbit = `${theta}deg ${phi}deg ${baseOrbit.radius}`;
 
       if (modelViewerRef.current.cameraOrbit !== nextOrbit) {
