@@ -11,7 +11,7 @@ import jwt
 import stripe
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 from typing import List, Optional, Dict
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -62,6 +62,12 @@ class UserLogin(BaseModel):
 class GoogleAuthRequest(BaseModel):
     credential: Optional[str] = None
     id_token: Optional[str] = None
+
+    @model_validator(mode="after")
+    def ensure_token_present(self):
+        if not (self.credential or self.id_token):
+            raise ValueError("credential or id_token required")
+        return self
 
 class CheckoutRequest(BaseModel):
     items: List[Dict]
