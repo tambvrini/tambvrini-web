@@ -285,7 +285,7 @@ export default function ProductPage() {
                         data-testid={`size-btn-${s}`}
                         onClick={() => setSelectedSize(s)}
                         disabled={disabled}
-                        className={`min-w-[48px] py-2 px-3 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
+                        className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
                           selectedSize === s
                             ? 'border-obsidian text-obsidian bg-black/5'
                             : 'border-black/10 text-obsidian/50'
@@ -327,7 +327,7 @@ export default function ProductPage() {
                 data-testid="product-wishlist-btn"
                 onClick={() => toggleItem(product)}
                 aria-label={inWishlist ? 'Eliminar de la lista de deseos' : 'Añadir a la lista de deseos'}
-                className={`w-12 h-12 border flex items-center justify-center transition-colors duration-300 ${
+                className={`w-14 h-14 border flex items-center justify-center transition-colors duration-300 ${
                   inWishlist ? 'border-gold' : 'border-black/10 hover:border-black/30'
                 }`}
               >
