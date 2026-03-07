@@ -198,10 +198,12 @@ describe('ProductPage', () => {
     const { container, root } = await renderProductPage();
     const viewer = container.querySelector('model-viewer');
     const galleryImageElements = container.querySelectorAll('[data-testid^="product-gallery-image-"]');
+    const productPage = container.querySelector('[data-testid="product-page"]');
 
     expect(viewer).not.toBeNull();
     expect(viewer.getAttribute('src')).toBe('/models/ignatius.glb');
     expect(galleryImageElements.length).toBe(0);
+    expect(productPage?.className).toContain('mb-10');
 
     act(() => {
       root.unmount();
