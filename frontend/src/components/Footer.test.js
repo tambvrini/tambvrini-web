@@ -31,10 +31,7 @@ describe('Footer styling', () => {
     expect(footer.className).toContain('footer');
     document.documentElement.style.setProperty('--footer-bg', FOOTER_BACKGROUND);
     expect(document.documentElement.style.getPropertyValue('--footer-bg')).toBe(FOOTER_BACKGROUND);
-    const computedBackground = window.getComputedStyle(footer).backgroundColor;
-    if (computedBackground) {
-      expect(['rgb(14, 42, 44)', 'rgba(14, 42, 44, 1)']).toContain(computedBackground);
-    }
+    expect(footer.style.getPropertyValue('--footer-bg')).toBe(FOOTER_BACKGROUND);
 
     const button = container.querySelector('button');
     expect(button).not.toBeNull();
