@@ -54,6 +54,17 @@ export default function ProductPage() {
   }, [productId]);
 
   useEffect(() => {
+    if (!detailsOpen) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setDetailsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [detailsOpen]);
+
+  useEffect(() => {
     if (!isUmbraProduct) {
       document.body.classList.remove('umbra-mode');
       return;
@@ -114,6 +125,8 @@ export default function ProductPage() {
       </div>
     );
   }
+
+  const selectorLayoutClass = product.colors?.length ? 'grid grid-cols-2 gap-4 mb-5' : 'flex flex-col gap-4 mb-5';
 
   const galleryImages = product.product_id === 'americana-umbra'
     ? [
@@ -245,7 +258,7 @@ export default function ProductPage() {
               <div className="mb-3" />
             )}
 
-            <div className="grid grid-cols-2 gap-4 mb-5">
+            <div className={selectorLayoutClass}>
               {/* Color selector */}
               {product.colors?.length > 0 && (
                 <div className="flex-1">
@@ -391,7 +404,7 @@ export default function ProductPage() {
                 aria-hidden="true"
               />
               <div
-                className={`absolute right-0 top-0 h-full w-[420px] max-w-[420px] bg-white p-8 shadow-[0_24px_64px_rgba(15,23,42,0.18)] transition-transform duration-500 ${
+                className={`absolute right-0 top-0 h-full w-full max-w-[420px] bg-white p-8 shadow-[0_24px_64px_rgba(15,23,42,0.18)] transition-transform duration-500 ${
                   detailsOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
                 role="dialog"
