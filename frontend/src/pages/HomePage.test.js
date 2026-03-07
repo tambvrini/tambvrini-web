@@ -124,7 +124,7 @@ describe('HomePage featured grid', () => {
         ?.getAttribute('src')
     ).toBe('/images/limited-editions-banner.jpeg');
     const mysticDivider = container.querySelector('[data-testid="mystic-divider-image"]');
-    const mysticWrapper = mysticDivider?.querySelector('div');
+    const mysticWrapper = container.querySelector('[data-testid="mystic-divider-wrapper"]');
     const mysticImage = mysticDivider?.querySelector('img');
 
     expect(mysticDivider?.className).toContain('my-6');
@@ -136,7 +136,7 @@ describe('HomePage featured grid', () => {
     expect(mysticWrapper?.className).toContain('-ml-[50vw]');
     expect(mysticWrapper?.className).toContain('-mr-[50vw]');
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
-    expect(mysticImage?.getAttribute('alt')).toBe('Editorial mystic divider');
+    expect(mysticImage?.getAttribute('alt')).toBe('editorial mystic divider');
     expect(mysticImage?.className).toContain('w-full');
     expect(mysticImage?.className).toContain('object-contain');
 
