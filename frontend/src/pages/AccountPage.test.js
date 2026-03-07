@@ -35,6 +35,16 @@ jest.mock('sonner', () => ({
   },
 }));
 
+jest.mock('@react-oauth/google', () => ({
+  GoogleLogin: ({ onSuccess }) => (
+    <button
+      type="button"
+      data-testid="google-login-provider"
+      onClick={() => onSuccess({ credential: 'mock-id-token' })}
+    />
+  ),
+}));
+
 const renderAccountPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -59,13 +69,13 @@ describe('AccountPage Google login', () => {
     mockPathname = '/login';
     const { container, root } = await renderAccountPage();
 
-    const googleButton = container.querySelector('[data-testid="google-login-btn"]');
+    const googleButton = container.querySelector('[data-testid="google-login-provider"]');
 
     await act(async () => {
       googleButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
 
-    expect(mockLoginWithGoogle).toHaveBeenCalledTimes(1);
+    expect(mockLoginWithGoogle).toHaveBeenCalledWith('mock-id-token');
     expect(mockNavigate).toHaveBeenCalledWith('/cuenta');
 
     act(() => {
