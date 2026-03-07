@@ -47,27 +47,6 @@ describe('ModelViewer', () => {
     container.remove();
   });
 
-  it('keeps camera controls enabled for window interaction', () => {
-    const { container, root } = renderWithRoot(
-      <ModelViewer
-        src="/models/ignatius.glb"
-        alt="Ignatius 3D"
-        poster="/thumbnails/ignatius.jpg"
-        interactionScope="window"
-      />
-    );
-
-    const viewer = container.querySelector('model-viewer');
-    expect(viewer).not.toBeNull();
-    expect(viewer.hasAttribute('camera-controls')).toBe(true);
-    expect(viewer.hasAttribute('auto-rotate')).toBe(true);
-
-    act(() => {
-      root.unmount();
-    });
-    container.remove();
-  });
-
   it('pauses auto-rotation on interaction and resumes after idle', () => {
     jest.useFakeTimers();
     const { container, root } = renderWithRoot(

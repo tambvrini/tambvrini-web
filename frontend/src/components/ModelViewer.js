@@ -4,68 +4,22 @@ import '@google/model-viewer';
 const INTERACTION_ZONE_RATIO = 0.6;
 const AUTO_ROTATE_SPEED = 0.5;
 const AUTO_ROTATE_IDLE_MS = 5500;
-const WINDOW_ORBIT_THETA_RANGE = 12;
-const WINDOW_ORBIT_PHI_RANGE = 6;
-const DEFAULT_ORBIT = { theta: 0, phi: 75, radius: '2.5m' };
 
-const parseOrbitValue = (orbit) => {
-  if (!orbit) {
-    return null;
-  }
-
-  if (typeof orbit === 'string') {
-    const parts = orbit.trim().split(/\s+/);
-    if (parts.length < 3) {
-      return null;
-    }
-
-    return {
-      theta: Number.parseFloat(parts[0]),
-      phi: Number.parseFloat(parts[1]),
-      radius: parts[2],
-    };
-  }
-
-  if (typeof orbit === 'object' && orbit.theta != null && orbit.phi != null) {
-    const rawRadius = orbit.radius ?? orbit.distance ?? DEFAULT_ORBIT.radius;
-    return {
-      theta: orbit.theta,
-      phi: orbit.phi,
-      radius: typeof rawRadius === 'number' ? `${rawRadius}m` : rawRadius,
-    };
-  }
-
-  return null;
-};
-
-const ModelViewer = ({
-  src,
-  alt,
-  poster,
-  className = '',
-  interactionScope = 'local',
-  ...rest
-}) => {
-  const isWindowInteraction = interactionScope === 'window';
-  const [controlsEnabled, setControlsEnabled] = useState(isWindowInteraction);
-  const controlsEnabledRef = useRef(isWindowInteraction);
+const ModelViewer = ({ src, alt, poster, className = '', ...rest }) => {
+  const [controlsEnabled, setControlsEnabled] = useState(false);
+  const controlsEnabledRef = useRef(false);
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
   const autoRotateEnabledRef = useRef(true);
   const autoRotateTimerRef = useRef(null);
-  const modelViewerRef = useRef(null);
-  const baseOrbitRef = useRef(DEFAULT_ORBIT);
-  const orbitFrameRef = useRef(null);
-  const pointerPositionRef = useRef({ x: 0, y: 0 });
 
   const setControlsState = useCallback((enabled) => {
-    const nextState = isWindowInteraction ? true : enabled;
-    if (controlsEnabledRef.current === nextState) {
+    if (controlsEnabledRef.current === enabled) {
       return;
     }
 
-    controlsEnabledRef.current = nextState;
-    setControlsEnabled(nextState);
-  }, [isWindowInteraction]);
+    controlsEnabledRef.current = enabled;
+    setControlsEnabled(enabled);
+  }, []);
 
   const setAutoRotateState = useCallback((enabled) => {
     if (autoRotateEnabledRef.current === enabled) {
@@ -91,12 +45,9 @@ const ModelViewer = ({
   }, [clearAutoRotateTimer, setAutoRotateState]);
 
   const pauseAutoRotate = useCallback(() => {
-    if (isWindowInteraction) {
-      return;
-    }
     setAutoRotateState(false);
     scheduleAutoRotateResume();
-  }, [isWindowInteraction, scheduleAutoRotateResume, setAutoRotateState]);
+  }, [scheduleAutoRotateResume, setAutoRotateState]);
 
   const isInsideInteractionZone = useCallback((event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -116,35 +67,27 @@ const ModelViewer = ({
 
   const handlePointerMove = useCallback(
     (event) => {
-      if (!isWindowInteraction) {
-        setControlsState(isInsideInteractionZone(event));
-      }
+      setControlsState(isInsideInteractionZone(event));
       if (event.buttons) {
         pauseAutoRotate();
       }
     },
-    [isInsideInteractionZone, isWindowInteraction, pauseAutoRotate, setControlsState]
+    [isInsideInteractionZone, pauseAutoRotate, setControlsState]
   );
 
   const handlePointerEnter = useCallback(
     (event) => {
-      if (!isWindowInteraction) {
-        setControlsState(isInsideInteractionZone(event));
-      }
+      setControlsState(isInsideInteractionZone(event));
     },
-    [isInsideInteractionZone, isWindowInteraction, setControlsState]
+    [isInsideInteractionZone, setControlsState]
   );
 
   const handlePointerDown = useCallback(
     (event) => {
-      if (!isWindowInteraction) {
-        setControlsState(isInsideInteractionZone(event));
-      } else if (event.currentTarget?.setPointerCapture) {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      }
+      setControlsState(isInsideInteractionZone(event));
       pauseAutoRotate();
     },
-    [isInsideInteractionZone, isWindowInteraction, pauseAutoRotate, setControlsState]
+    [isInsideInteractionZone, pauseAutoRotate, setControlsState]
   );
 
   const handlePointerUp = useCallback(() => {
@@ -152,114 +95,18 @@ const ModelViewer = ({
   }, [scheduleAutoRotateResume]);
 
   const handlePointerLeave = useCallback(() => {
-    if (!isWindowInteraction) {
-      setControlsState(false);
-      scheduleAutoRotateResume();
-    }
-  }, [isWindowInteraction, scheduleAutoRotateResume, setControlsState]);
+    setControlsState(false);
+    scheduleAutoRotateResume();
+  }, [scheduleAutoRotateResume, setControlsState]);
 
   const handleWheel = useCallback((event) => {
     event.stopPropagation();
   }, []);
 
-  const scheduleOrbitUpdate = useCallback(() => {
-    if (!modelViewerRef.current || orbitFrameRef.current) {
-      return;
-    }
-
-    const requestFrame = window.requestAnimationFrame
-      ? window.requestAnimationFrame.bind(window)
-      : (callback) => window.setTimeout(callback, 16);
-
-    orbitFrameRef.current = requestFrame(() => {
-      orbitFrameRef.current = null;
-      if (!modelViewerRef.current) {
-        return;
-      }
-
-      const { innerWidth, innerHeight } = window;
-      if (!innerWidth || !innerHeight) {
-        return;
-      }
-
-      const { x, y } = pointerPositionRef.current;
-      const normalizedX = (x / innerWidth) * 2 - 1;
-      const normalizedY = (y / innerHeight) * 2 - 1;
-      const baseOrbit = baseOrbitRef.current;
-      const theta = baseOrbit.theta + normalizedX * WINDOW_ORBIT_THETA_RANGE;
-      const phi = Math.min(85, Math.max(10, baseOrbit.phi - normalizedY * WINDOW_ORBIT_PHI_RANGE));
-      const nextOrbit = `${theta}deg ${phi}deg ${baseOrbit.radius}`;
-
-      if (modelViewerRef.current.cameraOrbit !== nextOrbit) {
-        modelViewerRef.current.cameraOrbit = nextOrbit;
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!isWindowInteraction) {
-      return undefined;
-    }
-
-    const modelViewer = modelViewerRef.current;
-    if (!modelViewer) {
-      return undefined;
-    }
-
-    setControlsState(true);
-    setAutoRotateState(true);
-    clearAutoRotateTimer();
-
-    const updateBaseOrbit = () => {
-      const orbitValue = modelViewer.cameraOrbit || modelViewer.getAttribute('camera-orbit');
-      const parsedOrbit = parseOrbitValue(orbitValue) ?? DEFAULT_ORBIT;
-      baseOrbitRef.current = parsedOrbit;
-    };
-
-    updateBaseOrbit();
-    modelViewer.addEventListener('load', updateBaseOrbit);
-
-    const handleWindowPointerMove = (event) => {
-      pointerPositionRef.current = { x: event.clientX, y: event.clientY };
-      scheduleOrbitUpdate();
-    };
-
-    const handleScroll = () => {
-      scheduleOrbitUpdate();
-    };
-
-    window.addEventListener('pointermove', handleWindowPointerMove, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      modelViewer.removeEventListener('load', updateBaseOrbit);
-      window.removeEventListener('pointermove', handleWindowPointerMove);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [clearAutoRotateTimer, isWindowInteraction, scheduleOrbitUpdate, setAutoRotateState, setControlsState]);
-
-  useEffect(() => {
-    if (isWindowInteraction || !modelViewerRef.current) {
-      return undefined;
-    }
-
-    setControlsState(false);
-    return undefined;
-  }, [isWindowInteraction, setControlsState]);
-
   useEffect(() => () => clearAutoRotateTimer(), [clearAutoRotateTimer]);
-  useEffect(() => () => {
-    if (orbitFrameRef.current) {
-      const cancelFrame = window.cancelAnimationFrame
-        ? window.cancelAnimationFrame.bind(window)
-        : window.clearTimeout.bind(window);
-      cancelFrame(orbitFrameRef.current);
-    }
-  }, []);
 
   return (
     <model-viewer
-      ref={modelViewerRef}
       src={src}
       alt={alt}
       poster={poster}
