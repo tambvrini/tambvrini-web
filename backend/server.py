@@ -60,7 +60,8 @@ class UserLogin(BaseModel):
     password: str
 
 class GoogleAuthRequest(BaseModel):
-    id_token: str
+    credential: Optional[str] = None
+    id_token: Optional[str] = None
 
 class CheckoutRequest(BaseModel):
     items: List[Dict]
@@ -187,7 +188,7 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    raw_id_token = data.id_token.strip()
+    raw_id_token = (data.credential or data.id_token or "").strip()
     if not raw_id_token:
         raise HTTPException(400, "Token inválido")
     try:

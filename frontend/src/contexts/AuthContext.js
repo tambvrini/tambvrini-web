@@ -63,16 +63,16 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth_token');
   };
 
-  const loginWithGoogle = async (idToken) => {
+  const loginWithGoogle = async (credential) => {
     if (!GOOGLE_CLIENT_ID) {
       throw new Error('Google Client ID no configurado en variables de entorno');
     }
-    if (!idToken) {
+    if (!credential) {
       throw new Error(GOOGLE_AUTH_ERROR_MESSAGE);
     }
     const res = await axios.post(
       `${API}/auth/google`,
-      { id_token: idToken },
+      { credential },
       { withCredentials: true }
     );
     setToken(res.data.token);
