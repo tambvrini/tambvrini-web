@@ -11,7 +11,7 @@ import jwt
 import stripe
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 from typing import List, Optional, Dict
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -62,6 +62,16 @@ class UserLogin(BaseModel):
 class GoogleAuthRequest(BaseModel):
     credential: Optional[str] = None
     id_token: Optional[str] = None
+
+    @model_validator(mode="after")
+    def ensure_token_present(self):
+        credential = (self.credential or "").strip()
+        id_token_value = (self.id_token or "").strip()
+        if not credential and not id_token_value:
+            raise ValueError("Se requiere credential o id_token")
+        self.credential = credential or None
+        self.id_token = id_token_value or None
+        return self
 
 class CheckoutRequest(BaseModel):
     items: List[Dict]
@@ -188,9 +198,7 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    token_value = (data.credential or data.id_token or "").strip()
-    if not token_value:
-        raise HTTPException(400, "Token inválido")
+    token_value = data.credential or data.id_token
     try:
         # Run verification in a thread to avoid blocking the async event loop.
         token_info = await asyncio.to_thread(
