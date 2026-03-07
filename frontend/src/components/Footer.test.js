@@ -29,8 +29,6 @@ describe('Footer styling', () => {
     expect(footer).not.toBeNull();
     expect(FOOTER_BACKGROUND).toBe('#0e2a2c');
     expect(footer.className).toContain('footer');
-    document.documentElement.style.setProperty('--footer-bg', FOOTER_BACKGROUND);
-    expect(document.documentElement.style.getPropertyValue('--footer-bg')).toBe(FOOTER_BACKGROUND);
     expect(footer.style.cssText).toContain('--footer-bg');
     expect(footer.style.getPropertyValue('--footer-bg')).toBe(FOOTER_BACKGROUND);
 
