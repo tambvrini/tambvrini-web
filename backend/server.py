@@ -65,8 +65,10 @@ class GoogleAuthRequest(BaseModel):
 
     @model_validator(mode="after")
     def ensure_token_present(self):
-        if not (self.credential or self.id_token):
-            raise ValueError("credential or id_token required")
+        credential = (self.credential or "").strip()
+        id_token_value = (self.id_token or "").strip()
+        if not credential and not id_token_value:
+            raise ValueError("At least one of credential or id_token must be provided")
         return self
 
 class CheckoutRequest(BaseModel):
@@ -194,7 +196,9 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    raw_id_token = (data.credential or data.id_token).strip()
+    credential = (data.credential or "").strip()
+    id_token_value = (data.id_token or "").strip()
+    raw_id_token = credential or id_token_value
     if not raw_id_token:
         raise HTTPException(400, "Token inválido")
     try:
