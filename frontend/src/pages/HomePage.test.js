@@ -127,8 +127,10 @@ describe('HomePage featured grid', () => {
     const mysticWrapper = container.querySelector('[data-testid="mystic-divider-wrapper"]');
     const mysticImage = mysticDivider?.querySelector('img');
 
-    expect(mysticDivider?.className).toContain('my-6');
-    expect(mysticDivider?.className).toContain('md:my-8');
+    expect(mysticDivider?.className).toContain('mt-6');
+    expect(mysticDivider?.className).toContain('md:mt-8');
+    expect(mysticDivider?.className).toContain('-mb-[4.5rem]');
+    expect(mysticDivider?.className).toContain('md:-mb-24');
     expect(mysticWrapper?.className).toContain('w-screen');
     expect(mysticWrapper?.className).toContain('max-w-none');
     expect(mysticWrapper?.className).toContain('left-1/2');
