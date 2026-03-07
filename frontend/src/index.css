@@ -46,6 +46,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: 0.02em;
+    /* Prevent horizontal scroll caused by full-bleed media scaling past the viewport. */
     overflow-x: hidden;
 }
 
