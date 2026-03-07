@@ -432,7 +432,6 @@ const DropGridSection = () => {
                       muted
                       playsInline
                       aria-hidden="true"
-                      role="presentation"
                       className="w-full h-auto block object-contain"
                     />
                   </div>
