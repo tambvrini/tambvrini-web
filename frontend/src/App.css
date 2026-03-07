@@ -41,6 +41,21 @@
     stroke: #ffffff;
 }
 
+.logo {
+    color: var(--ink-primary);
+    fill: var(--ink-primary);
+}
+
+.hero .logo {
+    color: #ffffff;
+    fill: #ffffff;
+}
+
+.header-icon svg {
+    stroke: currentColor;
+    fill: none;
+}
+
 .hero-image-cinematic {
     animation: heroZoom 20s ease-in-out infinite alternate;
 }
@@ -752,9 +767,9 @@ body.limited-editions-mode [data-testid="main-header"] svg {
     color: #f5f2ea;
 }
 
-body.limited-editions-mode [data-testid="main-header"] [data-testid="header-logo-link"] img {
-    filter: brightness(0) saturate(100%) invert(77%) sepia(24%) saturate(480%) hue-rotate(4deg) brightness(92%) contrast(90%);
-    transition: filter 900ms cubic-bezier(.4, 0, .2, 1);
+body.limited-editions-mode [data-testid="main-header"] .logo {
+    color: #f5f2ea;
+    fill: #f5f2ea;
 }
 
 .limited-editions-page {

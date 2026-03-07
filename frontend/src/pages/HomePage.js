@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import clsx from 'clsx';
 import { ArrowRight } from 'lucide-react';
+import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
 import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
 
-const LOGO_WHITE = "/logo-letras-final-blanco.svg";
 const HERO_IMAGE = "/images/header-final.jpg";
 const HERO_WRAPPER_CLASSES = "h-screen overflow-hidden";
 
@@ -62,7 +62,7 @@ const HeroSection = () => {
   const buttonsY = useTransform(scrollY, [0, 250], [0, 40]);
 
   return (
-      <section data-testid="hero-section" className="relative w-full">
+      <section data-testid="hero-section" className="hero relative w-full">
         {/* Background image */}
         <div className={`relative w-full ${HERO_WRAPPER_CLASSES}`}>
           <img
@@ -119,16 +119,20 @@ const HeroSection = () => {
         className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[52] pointer-events-none"
         style={{ opacity: heroLogoOpacity }}
       >
-        <motion.img
-          src={LOGO_WHITE}
-          alt="TAMBVRINI"
-          className="w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px] origin-center"
+        <motion.div
+          className="origin-center"
           style={{
             scale: logoScale,
             y: logoY,
             willChange: 'transform',
           }}
-        />
+        >
+          <Logo
+            role="img"
+            aria-label="TAMBVRINI"
+            className="logo hero-logo w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px]"
+          />
+        </motion.div>
       </motion.div>
 
     </section>
