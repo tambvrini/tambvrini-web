@@ -10,6 +10,28 @@ const WINDOW_ORBIT_MIN_PHI = 10;
 const WINDOW_ORBIT_MAX_PHI = 85;
 const DEFAULT_ORBIT = { theta: 0, phi: 75, radius: '2.5m' };
 
+const requestAnimationFrameSafe = (callback) => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return window.requestAnimationFrame
+    ? window.requestAnimationFrame(callback)
+    : window.setTimeout(callback, 16);
+};
+
+const cancelAnimationFrameSafe = (frameId) => {
+  if (typeof window === 'undefined' || frameId === null || frameId === undefined) {
+    return;
+  }
+
+  if (window.cancelAnimationFrame) {
+    window.cancelAnimationFrame(frameId);
+  } else {
+    window.clearTimeout(frameId);
+  }
+};
+
 const parseOrbitValue = (orbit) => {
   if (!orbit) {
     return null;
@@ -35,11 +57,11 @@ const parseOrbitValue = (orbit) => {
     orbit.phi !== undefined &&
     orbit.phi !== null
   ) {
-    const rawRadius = orbit.radius ?? orbit.distance ?? DEFAULT_ORBIT.radius;
+    const orbitRadius = orbit.radius ?? orbit.distance ?? DEFAULT_ORBIT.radius;
     return {
       theta: orbit.theta,
       phi: orbit.phi,
-      radius: typeof rawRadius === 'number' ? `${rawRadius}m` : rawRadius,
+      radius: typeof orbitRadius === 'number' ? `${orbitRadius}m` : orbitRadius,
     };
   }
 
@@ -183,15 +205,7 @@ const ModelViewer = ({
       return;
     }
 
-    const requestFrame = window.requestAnimationFrame
-      ? window.requestAnimationFrame.bind(window)
-      : (callback) => window.setTimeout(callback, 16);
-
-    const cancelFrame = window.cancelAnimationFrame
-      ? window.cancelAnimationFrame.bind(window)
-      : window.clearTimeout.bind(window);
-
-    const frameId = requestFrame(() => {
+    const frameId = requestAnimationFrameSafe(() => {
       orbitFrameRef.current = null;
       if (!modelViewerRef.current) {
         return;
@@ -217,7 +231,9 @@ const ModelViewer = ({
         modelViewerRef.current.cameraOrbit = nextOrbit;
       }
     });
-    orbitFrameRef.current = { id: frameId, cancel: cancelFrame };
+    if (frameId !== null && frameId !== undefined) {
+      orbitFrameRef.current = { id: frameId };
+    }
   }, []);
 
   useEffect(() => {
@@ -273,9 +289,13 @@ const ModelViewer = ({
 
   useEffect(() => () => clearAutoRotateTimer(), [clearAutoRotateTimer]);
   useEffect(() => () => {
-    if (orbitFrameRef.current) {
-      orbitFrameRef.current.cancel(orbitFrameRef.current.id);
+    const frame = orbitFrameRef.current;
+    if (!frame) {
+      return;
     }
+
+    cancelAnimationFrameSafe(frame.id);
+    orbitFrameRef.current = null;
   }, []);
 
   return (
