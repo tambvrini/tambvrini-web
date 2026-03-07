@@ -83,9 +83,12 @@ export default function ProductPage() {
     if (!product) return;
     const mediaEl = mediaRef.current;
     if (!mediaEl) return;
+    const scrollOptions = { passive: true };
 
     const updateMediaLock = () => {
-      const atEnd = mediaEl.scrollTop + mediaEl.clientHeight >= mediaEl.scrollHeight - SCROLL_TOLERANCE;
+      const hasScroll = mediaEl.scrollHeight > mediaEl.clientHeight;
+      const atEnd = !hasScroll
+        || (mediaEl.scrollTop + mediaEl.clientHeight >= mediaEl.scrollHeight - SCROLL_TOLERANCE);
       mediaAtEndRef.current = atEnd;
       if (atEnd) {
         setBodyScrollLocked(false);
@@ -101,11 +104,11 @@ export default function ProductPage() {
     };
 
     updateMediaLock();
-    mediaEl.addEventListener('scroll', updateMediaLock, { passive: true });
-    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    mediaEl.addEventListener('scroll', updateMediaLock, scrollOptions);
+    window.addEventListener('scroll', handleWindowScroll, scrollOptions);
     return () => {
-      mediaEl.removeEventListener('scroll', updateMediaLock);
-      window.removeEventListener('scroll', handleWindowScroll);
+      mediaEl.removeEventListener('scroll', updateMediaLock, scrollOptions);
+      window.removeEventListener('scroll', handleWindowScroll, scrollOptions);
     };
   }, [productId, product]);
 
