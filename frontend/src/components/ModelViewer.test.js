@@ -36,7 +36,8 @@ describe('ModelViewer', () => {
     expect(viewer.getAttribute('reveal')).toBe('auto');
     expect(viewer.getAttribute('touch-action')).toBe('pan-y');
     expect(viewer.classList.contains('model-viewer')).toBe(true);
-    expect(viewer.hasAttribute('camera-controls')).toBe(true);
+    expect(viewer.hasAttribute('disable-zoom')).toBe(true);
+    expect(viewer.hasAttribute('camera-controls')).toBe(false);
     expect(viewer.hasAttribute('auto-rotate')).toBe(true);
 
     act(() => {
