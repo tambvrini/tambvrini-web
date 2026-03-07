@@ -215,7 +215,7 @@ export default function ProductPage() {
           </div>
 
           {/* Right: Product info */}
-          <div className="lg:pl-8 lg:pt-4 lg:sticky lg:top-32 lg:self-start">
+          <div className="lg:pl-8 lg:pt-4 lg:sticky lg:top-[120px] lg:self-start">
             <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-gold/60 mb-4">
               {product.category?.join(' / ')}
             </p>
