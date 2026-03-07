@@ -5,6 +5,11 @@
 @layer base {
     :root {
         /* Luxury ivory theme */
+        --ink-primary: #0e2a2c;
+        --ink-secondary: #2f3f42;
+        --ink-muted: #6b7c80;
+        --footer-bg: #0e2a2c;
+        --ink-primary-rgb: 14 42 44;
         --background: 0 0% 100%;
         --foreground: 0 0% 7%;
         --card: 0 0% 100%;
@@ -42,7 +47,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
     background-color: #FFFFFF;
-    color: #111111;
+    color: var(--ink-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: 0.02em;
@@ -57,7 +62,7 @@ body {
 
 ::selection {
     background-color: #C5A059;
-    color: #0A0A0A;
+    color: var(--ink-primary);
 }
 
 ::-webkit-scrollbar {
@@ -67,10 +72,10 @@ body {
     background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(17, 17, 17, 0.18);
+    background: rgb(var(--ink-primary-rgb) / 0.18);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(17, 17, 17, 0.32);
+    background: rgb(var(--ink-primary-rgb) / 0.32);
 }
 
 @layer base {

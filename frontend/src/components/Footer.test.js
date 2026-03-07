@@ -5,15 +5,6 @@ import Footer, { FOOTER_BACKGROUND } from './Footer';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const hexToRgb = (hex) => {
-  const normalized = hex.replace('#', '');
-  const numeric = Number.parseInt(normalized, 16);
-  const red = (numeric >> 16) & 255;
-  const green = (numeric >> 8) & 255;
-  const blue = numeric & 255;
-  return `rgb(${red}, ${green}, ${blue})`;
-};
-
 const renderFooter = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -36,11 +27,12 @@ describe('Footer styling', () => {
     const footer = container.querySelector('[data-testid="main-footer"]');
 
     expect(footer).not.toBeNull();
-    expect(footer.style.backgroundColor).toBe(hexToRgb(FOOTER_BACKGROUND));
+    expect(FOOTER_BACKGROUND).toBe('var(--footer-bg)');
+    expect(footer.className).toContain('footer');
 
     const button = container.querySelector('button');
     expect(button).not.toBeNull();
-    expect(button.className).toContain('text-[#F7F3EA]');
+    expect(button.className).toContain('text-white');
     expect(button.className).toContain('hover:text-white');
     expect(button.style.transition).toBe('color 0.25s ease');
 

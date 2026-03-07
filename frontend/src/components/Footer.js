@@ -2,18 +2,18 @@ import { useI18n } from "../contexts/I18nContext";
 
 const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
 const ICON_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/krjmn5r6_LOGO%20ICONO%20blanco%20svg%20web.svg";
-export const FOOTER_BACKGROUND = '#6F8FA6';
-const IVORY_TEXT_CLASS = 'text-[#F7F3EA]';
+export const FOOTER_BACKGROUND = 'var(--footer-bg)';
+const IVORY_TEXT_CLASS = 'text-white';
 const LINK_STYLE = { transition: 'color 0.25s ease' };
 const LOGO_STYLE = { filter: 'sepia(0.2) saturate(1.1) brightness(0.98)' };
-const OPTION_BACKGROUND = '#5E7B92';
+const OPTION_BACKGROUND = 'var(--footer-bg)';
 
 export const Footer = () => {
   const { lang, setLang, t } = useI18n();
   return (
     <footer
       data-testid="main-footer"
-      className="border-t border-black/5"
+      className="footer border-t border-white/15"
       style={{ backgroundColor: FOOTER_BACKGROUND }}
     >
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 py-20 md:py-28">
@@ -68,7 +68,7 @@ export const Footer = () => {
                   aria-label="Idioma"
                   value={lang}
                   onChange={(e) => setLang(e.target.value)}
-                  className={`bg-transparent border border-black/10 px-4 py-2 font-montserrat text-xs ${IVORY_TEXT_CLASS} tracking-wide outline-none`}
+                  className={`bg-transparent border border-white/30 px-4 py-2 font-montserrat text-xs ${IVORY_TEXT_CLASS} tracking-wide outline-none`}
                 >
                   <option value="es" className={IVORY_TEXT_CLASS} style={{ backgroundColor: OPTION_BACKGROUND }}>Español</option>
                   <option value="en" className={IVORY_TEXT_CLASS} style={{ backgroundColor: OPTION_BACKGROUND }}>English</option>
