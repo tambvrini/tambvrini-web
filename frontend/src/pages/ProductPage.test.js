@@ -232,7 +232,7 @@ describe('ProductPage', () => {
     const { container, root } = await renderProductPage();
     const pageGrid = container.querySelector('.product-page');
     const infoPanel = container.querySelector('.product-info');
-    const detailButton = container.querySelector('[data-testid="tab-description"]');
+    const detailButton = container.querySelector('[data-testid="tab-details"]');
 
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();

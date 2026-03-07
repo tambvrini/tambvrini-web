@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
-import ProductCard from '../components/ProductCard';
 import ModelViewer from '../components/ModelViewer';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
@@ -23,17 +22,16 @@ export default function ProductPage() {
   const umbraTransitionDelay = 800;
   const ignatiusTransitionDelay = 300;
   const [product, setProduct] = useState(null);
-  const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [activeDetail, setActiveDetail] = useState('description');
+  const [activeDetail, setActiveDetail] = useState('details');
   const [detailsOpen, setDetailsOpen] = useState(false);
   const detailLabels = {
-    description: 'Descripción',
-    composition: 'Composición',
-    shipping: 'Envío',
+    details: 'Detalles del producto',
+    size: 'Guía de tallas',
+    shipping: 'Envío y devoluciones',
   };
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
@@ -44,7 +42,6 @@ export default function ProductPage() {
       try {
         const data = getProductById(productId);
         setProduct(data);
-        setRelated(data?.related_products || []);
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
@@ -68,6 +65,13 @@ export default function ProductPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [detailsOpen]);
+
+  useEffect(() => {
+    document.body.classList.add('product-page-lock');
+    return () => {
+      document.body.classList.remove('product-page-lock');
+    };
+  }, []);
 
   useEffect(() => {
     if (!isUmbraProduct) {
@@ -113,7 +117,7 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+      <div className={`product-page-shell flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
         {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin" />
@@ -123,7 +127,7 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className={`min-h-screen pt-32 flex items-center justify-center product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+      <div className={`product-page-shell flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
         {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
         {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
@@ -132,8 +136,8 @@ export default function ProductPage() {
   }
 
   const selectorLayoutClass = product.colors?.length
-    ? 'product-selectors product-selectors--dual'
-    : 'product-selectors';
+    ? 'product-options'
+    : 'product-options product-options--single';
 
   const galleryImages = product.product_id === 'americana-umbra'
     ? [
@@ -204,30 +208,20 @@ export default function ProductPage() {
   return (
     <div
       data-testid="product-page"
-      className={`min-h-screen pt-28 md:pt-32 pb-24 product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${
+      className={`product-page-shell ${isUmbraProduct ? 'umbra-product-page' : ''} ${
         isIgnatiusProduct ? 'product-page-ignatius' : ''
       }`}
     >
       {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
       {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
-      {/* Breadcrumb */}
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
-        <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
-          <Link to="/" className="hover:text-obsidian transition-colors">Inicio</Link>
-          <ChevronRight size={10} />
-          <Link to="/tienda" className="hover:text-obsidian transition-colors">Tienda</Link>
-          <ChevronRight size={10} />
-          <span className="text-obsidian/60">{product.name}</span>
-        </nav>
-      </div>
 
       {/* Product layout */}
       <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
-        <div className="product-page">
+        <div className="product-page product-layout">
           {/* Left: Gallery */}
-          <div className="product-gallery">
+          <div className="product-media" data-testid="product-media">
             {galleryMedia.length > 0 ? (
-              <div className="flex flex-col">{galleryItems}</div>
+              galleryItems
             ) : (
               <div className="product-gallery-media flex items-center justify-center">
                 <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
@@ -236,7 +230,14 @@ export default function ProductPage() {
           </div>
 
           {/* Right: Product info */}
-          <div className="product-info lg:pl-8 lg:pt-4">
+          <div className="product-info">
+            <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 mb-4">
+              <Link to="/" className="hover:text-obsidian transition-colors">Inicio</Link>
+              <ChevronRight size={10} />
+              <Link to="/tienda" className="hover:text-obsidian transition-colors">Tienda</Link>
+              <ChevronRight size={10} />
+              <span className="text-obsidian/60">{product.name}</span>
+            </nav>
             <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-gold/60 mb-2">
               {product.category?.join(' / ')}
             </p>
@@ -325,7 +326,7 @@ export default function ProductPage() {
             </div>
 
             {/* Quantity + wishlist */}
-            <div className="flex items-end justify-between gap-4 mb-5">
+            <div className="product-options product-options--compact">
               <div className={product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}>
                 <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-2">Cantidad</p>
                 <div className="flex items-center border border-black/10">
@@ -356,7 +357,7 @@ export default function ProductPage() {
                 data-testid="product-wishlist-btn"
                 onClick={() => toggleItem(product)}
                 aria-label={inWishlist ? 'Eliminar de la lista de deseos' : 'Añadir a la lista de deseos'}
-                className={`w-14 h-14 border flex items-center justify-center transition-colors duration-300 ${
+                className={`product-wishlist w-14 h-14 border flex items-center justify-center transition-colors duration-300 ${
                   inWishlist ? 'border-gold' : 'border-black/10 hover:border-black/30'
                 }`}
               >
@@ -365,7 +366,7 @@ export default function ProductPage() {
             </div>
 
             {/* Actions */}
-            <div className="mb-6">
+            <div className="mb-4">
               <button
                 data-testid="add-to-cart-btn"
                 onClick={handleAddToCart}
@@ -382,7 +383,7 @@ export default function ProductPage() {
 
             {/* Info tabs */}
             <div className="border-t border-white/5">
-              {['description', 'composition', 'shipping'].map((tab) => (
+              {['details', 'size', 'shipping'].map((tab) => (
                 <button
                   key={tab}
                   data-testid={`tab-${tab}`}
@@ -411,8 +412,8 @@ export default function ProductPage() {
                 aria-hidden="true"
               />
               <div
-                className={`absolute right-0 top-0 h-full w-full max-w-[420px] bg-white p-8 shadow-[0_24px_64px_rgba(15,23,42,0.18)] transition-transform duration-500 ${
-                  detailsOpen ? 'translate-x-0' : 'translate-x-full'
+                className={`details-drawer p-8 shadow-[0_24px_64px_rgba(15,23,42,0.18)] ${
+                  detailsOpen ? 'open' : ''
                 }`}
                 role="dialog"
                 aria-label="Detalles del producto"
@@ -434,15 +435,23 @@ export default function ProductPage() {
                       {detailLabels[activeDetail]}
                     </h3>
                   </div>
-                  {activeDetail === 'description' && (
-                    <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">
-                      {product.description}
-                    </p>
-                  )}
-                  {activeDetail === 'composition' && (
+                  {activeDetail === 'details' && (
                     <div className="space-y-3">
+                      <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">
+                        {product.description}
+                      </p>
                       <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">{product.composition}</p>
                       <p className="font-montserrat text-xs text-obsidian/40">{product.care}</p>
+                    </div>
+                  )}
+                  {activeDetail === 'size' && (
+                    <div className="space-y-3">
+                      <p className="font-montserrat text-sm text-obsidian/60">
+                        Tallas disponibles: {product.sizes.join(', ')}
+                      </p>
+                      <p className="font-montserrat text-xs text-obsidian/40">
+                        Ajuste estándar. Si estás entre dos tallas, elige la superior.
+                      </p>
                     </div>
                   )}
                   {activeDetail === 'shipping' && (
@@ -459,18 +468,6 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* Related products */}
-        {related.length > 0 && (
-          <div className="mt-24 md:mt-32">
-            <div className="section-divider mb-8" />
-            <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50 mb-3">También te puede gustar</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 mt-10">
-              {related.map((p, i) => (
-                <ProductCard key={p.product_id} product={p} index={i} />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
