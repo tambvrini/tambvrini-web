@@ -43,8 +43,13 @@ export default function ProductPage() {
       setLoading(true);
       try {
         const data = getProductById(productId);
+        if (!data) {
+          setProduct(null);
+          setRelatedProducts([]);
+          return;
+        }
         setProduct(data);
-        setRelatedProducts(data?.related_products || []);
+        setRelatedProducts(data.related_products || []);
         setSelectedSize('');
         setSelectedColor('');
         setQuantity(1);
