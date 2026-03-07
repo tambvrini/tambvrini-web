@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
+// Tolerate minor rounding differences when detecting the end of the media scroll.
 const SCROLL_TOLERANCE = 1;
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
