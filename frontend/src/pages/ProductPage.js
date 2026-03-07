@@ -221,7 +221,7 @@ export default function ProductPage() {
 
       {/* Product layout */}
       <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
-        <div className="product-page product-layout product-gallery-layout">
+        <div className="product-page product-layout">
           {/* Left: Gallery */}
           <div className="product-media" data-testid="product-media">
             {galleryMedia.length > 0 ? (

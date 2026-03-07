@@ -173,10 +173,6 @@
     min-height: calc(100vh - var(--product-header-offset, 120px));
 }
 
-.product-gallery-layout {
-    min-height: calc(100vh - var(--product-header-offset, 120px));
-}
-
 .product-media {
     display: flex;
     flex-direction: column;
