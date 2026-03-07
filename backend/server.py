@@ -205,7 +205,7 @@ async def login_with_google(data: GoogleAuthRequest):
             exp_timestamp = float(token_info.get("exp", 0))
         except (TypeError, ValueError) as exc:
             logger.warning(
-                "Invalid exp from Google token info (%s): %s. Authentication will be rejected.",
+                "Invalid exp from Google token info (%s): %s.",
                 token_info.get("exp"),
                 exc
             )
@@ -216,7 +216,6 @@ async def login_with_google(data: GoogleAuthRequest):
     email = token_info.get("email")
     if not email:
         raise HTTPException(400, "Email no disponible")
-    # tokeninfo may return email_verified as a string.
     email_verified = token_info.get("email_verified")
     # tokeninfo returns email_verified as boolean or "true" string.
     is_email_verified = email_verified is True or (
