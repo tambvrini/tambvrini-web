@@ -154,7 +154,7 @@ export default function AccountPage() {
             onError={handleGoogleError}
             ux_mode="popup"
             text="continue_with"
-            width={googleButtonWidth ?? undefined}
+            width={googleButtonWidth || undefined}
             containerProps={{
               className: 'absolute inset-0 opacity-0',
               style: { width: '100%', height: '100%' },

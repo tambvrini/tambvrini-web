@@ -217,7 +217,7 @@ async def login_with_google(data: GoogleAuthRequest):
     if not email:
         raise HTTPException(400, "Email no disponible")
     email_verified = token_info.get("email_verified")
-    # tokeninfo returns email_verified as boolean or "true" string depending on the endpoint.
+    # Token info returns email_verified as boolean or "true" string depending on the endpoint.
     is_email_verified = email_verified is True or (
         isinstance(email_verified, str) and email_verified.lower() == "true"
     )
