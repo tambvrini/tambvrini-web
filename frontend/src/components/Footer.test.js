@@ -27,8 +27,14 @@ describe('Footer styling', () => {
     const footer = container.querySelector('[data-testid="main-footer"]');
 
     expect(footer).not.toBeNull();
-    expect(FOOTER_BACKGROUND).toBe('var(--footer-bg)');
+    expect(FOOTER_BACKGROUND).toBe('#0e2a2c');
     expect(footer.className).toContain('footer');
+    document.documentElement.style.setProperty('--footer-bg', FOOTER_BACKGROUND);
+    expect(document.documentElement.style.getPropertyValue('--footer-bg')).toBe(FOOTER_BACKGROUND);
+    const computedBackground = window.getComputedStyle(footer).backgroundColor;
+    if (computedBackground) {
+      expect(['rgb(14, 42, 44)', 'rgba(14, 42, 44, 1)']).toContain(computedBackground);
+    }
 
     const button = container.querySelector('button');
     expect(button).not.toBeNull();

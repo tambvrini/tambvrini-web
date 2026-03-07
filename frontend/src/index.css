@@ -5,9 +5,11 @@
 @layer base {
     :root {
         /* Luxury ivory theme */
+        /* Ink system: primary for body text, secondary for subheads, muted for captions. */
         --ink-primary: #0e2a2c;
         --ink-secondary: #2f3f42;
         --ink-muted: #6b7c80;
+        /* Footer background ink tone. */
         --footer-bg: #0e2a2c;
         --ink-primary-rgb: 14 42 44;
         --background: 0 0% 100%;
