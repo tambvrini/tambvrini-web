@@ -127,6 +127,7 @@ describe('HomePage featured grid', () => {
     const mysticImage = mysticDivider?.querySelector('img');
 
     expect(mysticDivider?.className).toContain('my-6');
+    expect(mysticDivider?.className).toContain('md:my-8');
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
     expect(mysticImage?.getAttribute('alt')).toBe('Editorial mystic divider');
     expect(mysticImage?.className).toContain('w-full');
