@@ -85,6 +85,12 @@ export default function ProductPage() {
     if (!mediaEl) return;
     const scrollOptions = { passive: true };
 
+    const lockWhenAtTop = () => {
+      if (window.scrollY === 0 && !mediaAtEndRef.current) {
+        setBodyScrollLocked(true);
+      }
+    };
+
     const updateMediaLock = () => {
       const hasScroll = mediaEl.scrollHeight > mediaEl.clientHeight;
       const atEnd = !hasScroll
@@ -92,15 +98,13 @@ export default function ProductPage() {
       mediaAtEndRef.current = atEnd;
       if (atEnd) {
         setBodyScrollLocked(false);
-      } else if (window.scrollY === 0) {
-        setBodyScrollLocked(true);
+      } else {
+        lockWhenAtTop();
       }
     };
 
     const handleWindowScroll = () => {
-      if (window.scrollY === 0 && !mediaAtEndRef.current) {
-        setBodyScrollLocked(true);
-      }
+      lockWhenAtTop();
     };
 
     updateMediaLock();
