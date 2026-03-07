@@ -204,7 +204,7 @@ async def login_with_google(data: GoogleAuthRequest):
         try:
             exp_timestamp = int(token_info.get("exp", 0))
         except (TypeError, ValueError) as exc:
-            logger.warning("Invalid exp from Google token info: %s", exc)
+            logger.warning("Invalid exp from Google token info (%s): %s", token_info.get("exp"), exc)
             exp_timestamp = 0
         if exp_timestamp:
             expires_in = exp_timestamp - int(datetime.now(timezone.utc).timestamp())
@@ -215,6 +215,7 @@ async def login_with_google(data: GoogleAuthRequest):
     email = token_info.get("email")
     if not email:
         raise HTTPException(400, "Email no disponible")
+    # tokeninfo may return email_verified as a string.
     email_verified = token_info.get("email_verified")
     if email_verified not in (True, "true", "True"):
         raise HTTPException(401, "Email no verificado")
