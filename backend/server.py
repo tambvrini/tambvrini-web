@@ -12,7 +12,8 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from pydantic import BaseModel
 from typing import List, Optional, Dict
-import httpx
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport import requests as google_requests
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -34,8 +35,6 @@ CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
-MIN_GOOGLE_TOKEN_TTL_SECONDS = 60
-GOOGLE_TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo"
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -187,41 +186,23 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    id_token = data.id_token.strip()
-    if not id_token:
+    raw_id_token = data.id_token.strip()
+    if not raw_id_token:
         raise HTTPException(400, "Token inválido")
-    async with httpx.AsyncClient(timeout=10.0) as client:
-        token_info_response = await client.get(
-            GOOGLE_TOKENINFO_URL,
-            params={"id_token": id_token}
+    try:
+        token_info = google_id_token.verify_oauth2_token(
+            raw_id_token,
+            google_requests.Request(),
+            GOOGLE_CLIENT_ID
         )
-        if token_info_response.status_code != 200:
-            raise HTTPException(401, "Token de Google inválido")
-        token_info = token_info_response.json()
-        audience = token_info.get("aud") or token_info.get("audience")
-        if audience != GOOGLE_CLIENT_ID:
-            raise HTTPException(401, "Token de Google no corresponde al cliente")
-        try:
-            exp_timestamp = float(token_info.get("exp", 0))
-        except (TypeError, ValueError) as exc:
-            logger.warning(
-                "Invalid exp from Google token info (%s): %s.",
-                token_info.get("exp"),
-                exc
-            )
-            exp_timestamp = 0
-        seconds_until_expiration = exp_timestamp - datetime.now(timezone.utc).timestamp()
-        if seconds_until_expiration < MIN_GOOGLE_TOKEN_TTL_SECONDS:
-            raise HTTPException(401, "Token de Google inválido o expirado")
+    except ValueError as exc:
+        logger.warning("Invalid Google ID token: %s", exc)
+        raise HTTPException(401, "Token de Google inválido") from exc
     email = token_info.get("email")
     if not email:
         raise HTTPException(400, "Email no disponible")
     email_verified = token_info.get("email_verified")
-    # Token info may return email_verified as boolean or "true" string; handle both defensively.
-    is_email_verified = email_verified is True or (
-        isinstance(email_verified, str) and email_verified.lower() == "true"
-    )
-    if not is_email_verified:
+    if email_verified is not True:
         raise HTTPException(401, "Email no verificado")
     google_sub = token_info.get("sub")
     name = token_info.get("name") or email
