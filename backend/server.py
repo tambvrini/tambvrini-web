@@ -217,7 +217,7 @@ async def login_with_google(data: GoogleAuthRequest):
         raise HTTPException(400, "Email no disponible")
     # tokeninfo may return email_verified as a string.
     email_verified = token_info.get("email_verified")
-    if email_verified not in (True, "true"):
+    if str(email_verified).lower() != "true":
         raise HTTPException(401, "Email no verificado")
     google_sub = token_info.get("sub")
     name = token_info.get("name") or email
