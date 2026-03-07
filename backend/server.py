@@ -68,7 +68,9 @@ class GoogleAuthRequest(BaseModel):
         credential = (self.credential or "").strip()
         id_token_value = (self.id_token or "").strip()
         if not credential and not id_token_value:
-            raise ValueError("At least one of credential or id_token must be provided")
+            raise ValueError("Al menos uno de credential o id_token debe ser proporcionado")
+        self.credential = credential or None
+        self.id_token = id_token_value or None
         return self
 
 class CheckoutRequest(BaseModel):
@@ -196,9 +198,7 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    credential = (data.credential or "").strip()
-    id_token_value = (data.id_token or "").strip()
-    raw_id_token = credential or id_token_value
+    raw_id_token = data.credential or data.id_token
     try:
         # Run verification in a thread to avoid blocking the async event loop.
         token_info = await asyncio.to_thread(
