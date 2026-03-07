@@ -310,7 +310,10 @@ describe('ProductPage', () => {
 
     expect(recommendations).not.toBeNull();
     expect(recommendationCards.length).toBe(4);
-    const recentCalls = mockProductCard.mock.calls.slice(-4);
+    const relevantCalls = mockProductCard.mock.calls.filter(([props]) =>
+      relatedProducts.some((item) => item.product_id === props.product.product_id)
+    );
+    const recentCalls = relevantCalls.slice(-4);
     expect(recentCalls[0][0].product.product_id).toBe(relatedProducts[0].product_id);
     expect(recentCalls[0][0].index).toBe(0);
     expect(recentCalls[3][0].product.product_id).toBe(relatedProducts[3].product_id);

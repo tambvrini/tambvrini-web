@@ -86,6 +86,7 @@ export default function ProductPage() {
     const scrollOptions = { passive: true };
 
     const lockWhenAtTop = () => {
+      if (typeof window === 'undefined') return;
       if (window.scrollY === 0 && !mediaAtEndRef.current) {
         setBodyScrollLocked(true);
       }
@@ -107,7 +108,9 @@ export default function ProductPage() {
       lockWhenAtTop();
     };
 
-    updateMediaLock();
+    if (mediaEl.scrollHeight <= mediaEl.clientHeight) {
+      updateMediaLock();
+    }
     mediaEl.addEventListener('scroll', updateMediaLock, scrollOptions);
     window.addEventListener('scroll', handleWindowScroll, scrollOptions);
     return () => {
