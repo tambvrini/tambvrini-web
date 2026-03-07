@@ -36,6 +36,7 @@ CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
+REDACTED_EMAIL_PREFIX_CHARS = 2
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -100,6 +101,28 @@ def create_token(user_id: str, email: str) -> str:
         "exp": datetime.now(timezone.utc) + timedelta(days=7)
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
+def redact_email(value: str) -> str:
+    """Return a redacted email string for safe logging.
+
+    Preserves a small prefix of the local part and replaces the rest with
+    "***". If the local part is missing, returns "unknown" (or "unknown@domain"
+    when a domain exists).
+    """
+    redacted_unknown = "unknown"
+    if not isinstance(value, str):
+        return redacted_unknown
+    normalized_email = value.strip()
+    local_part, separator, domain = normalized_email.partition("@")
+    if not local_part:
+        return f"{redacted_unknown}@{domain}" if domain else redacted_unknown
+    prefix_len = min(len(local_part), REDACTED_EMAIL_PREFIX_CHARS)
+    if prefix_len == 0:
+        return f"{redacted_unknown}@{domain}" if domain else redacted_unknown
+    redacted_email = f"{local_part[:prefix_len]}***"
+    if separator:
+        redacted_email = f"{redacted_email}@{domain}"
+    return redacted_email
 
 async def get_current_user(request: Request) -> Optional[dict]:
     session_token = request.cookies.get("session_token")
@@ -217,8 +240,10 @@ async def login_with_google(data: GoogleAuthRequest):
     email = token_info.get("email")
     if not email:
         logger.warning(
-            "Google OAuth token missing email claim. Claims=%s",
-            sorted(token_info.keys())
+            "Google OAuth token missing email claim. total_claims=%s contains_sub=%s contains_email_verified=%s",
+            len(token_info),
+            "sub" in token_info,
+            "email_verified" in token_info
         )
         raise HTTPException(400, "Email no disponible")
     email_verified = token_info.get("email_verified")
@@ -227,7 +252,11 @@ async def login_with_google(data: GoogleAuthRequest):
         isinstance(email_verified, str) and email_verified.lower() == "true"
     )
     if not is_email_verified:
-        logger.warning("Google OAuth login blocked: email not verified.")
+        redacted_email = redact_email(email)
+        logger.warning(
+            "Google OAuth login blocked: email not verified (%s).",
+            redacted_email
+        )
         raise HTTPException(401, "Email no verificado")
     google_sub = token_info.get("sub")
     name = token_info.get("name") or email
