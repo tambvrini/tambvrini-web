@@ -51,6 +51,7 @@ body {
 }
 
 #root {
+    /* Ensure nested full-bleed sections do not reintroduce horizontal scrolling. */
     overflow-x: hidden;
 }
 
