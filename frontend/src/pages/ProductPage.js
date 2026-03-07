@@ -311,6 +311,7 @@ export default function ProductPage() {
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     aria-label="Disminuir cantidad"
+                    disabled={product.is_sold_out}
                     className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-r border-black/10"
                   >
                     <Minus size={14} />
@@ -319,6 +320,7 @@ export default function ProductPage() {
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     aria-label="Aumentar cantidad"
+                    disabled={product.is_sold_out}
                     className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-l border-black/10"
                   >
                     <Plus size={14} />
