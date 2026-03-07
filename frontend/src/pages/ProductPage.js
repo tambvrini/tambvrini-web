@@ -305,9 +305,10 @@ export default function ProductPage() {
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between mb-6">
               <div className={product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}>
                 <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-2">Cantidad</p>
-                <div className="flex items-center gap-0 border border-black/10 inline-flex">
+                <div className="flex items-center border border-black/10 inline-flex">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    aria-label="Decrease quantity"
                     className="w-10 h-10 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-r border-black/10"
                   >
                     <Minus size={14} />
@@ -315,6 +316,7 @@ export default function ProductPage() {
                   <span className="w-16 h-10 flex items-center justify-center font-montserrat text-sm text-obsidian">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
+                    aria-label="Increase quantity"
                     className="w-10 h-10 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-l border-black/10"
                   >
                     <Plus size={14} />
@@ -324,6 +326,7 @@ export default function ProductPage() {
               <button
                 data-testid="product-wishlist-btn"
                 onClick={() => toggleItem(product)}
+                aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
                 className={`w-12 h-12 border flex items-center justify-center transition-colors duration-300 ${
                   inWishlist ? 'border-gold' : 'border-black/10 hover:border-black/30'
                 }`}
