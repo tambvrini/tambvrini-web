@@ -202,12 +202,12 @@ async def login_with_google(data: GoogleAuthRequest):
         if audience != GOOGLE_CLIENT_ID:
             raise HTTPException(401, "Token de Google no corresponde al cliente")
         try:
-            exp_timestamp = int(token_info.get("exp", 0))
+            exp_timestamp = float(token_info.get("exp", 0))
         except (TypeError, ValueError) as exc:
             logger.warning("Invalid exp from Google token info (%s): %s", token_info.get("exp"), exc)
             exp_timestamp = 0
         if exp_timestamp:
-            expires_in = exp_timestamp - int(datetime.now(timezone.utc).timestamp())
+            expires_in = exp_timestamp - datetime.now(timezone.utc).timestamp()
         else:
             expires_in = 0
         if expires_in < MIN_GOOGLE_TOKEN_TTL_SECONDS:
@@ -217,7 +217,7 @@ async def login_with_google(data: GoogleAuthRequest):
         raise HTTPException(400, "Email no disponible")
     # tokeninfo may return email_verified as a string.
     email_verified = token_info.get("email_verified")
-    if email_verified is not True and str(email_verified).lower() != "true":
+    if str(email_verified).lower() != "true":
         raise HTTPException(401, "Email no verificado")
     google_sub = token_info.get("sub")
     name = token_info.get("name") or email
