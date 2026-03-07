@@ -421,6 +421,22 @@ const DropGridSection = () => {
                 </div>
               </div>
 
+              <div data-testid="editorial-eagle-divider" className="my-[60px]">
+                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                  <div className="w-full overflow-hidden flex justify-center">
+                    <video
+                      data-testid="editorial-eagle-divider-video"
+                      src="/videos/video-aguila-header-wide.mp4"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-auto block object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
                 {secondRow.map((p, i) => (
                   <ProductCard
