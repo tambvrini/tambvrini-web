@@ -722,6 +722,11 @@ body.ignatius-mode .product-page-ignatius {
     --ignatius-text-secondary: #e6e6e6;
 }
 
+body.ignatius-mode .footer {
+    position: relative;
+    z-index: 2;
+}
+
 body.ignatius-mode .product-page-ignatius::before {
     content: '';
     position: absolute;
