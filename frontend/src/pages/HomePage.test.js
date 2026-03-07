@@ -123,6 +123,9 @@ describe('HomePage featured grid', () => {
       container.querySelector('[data-testid="limited-editions-banner-image"]')
         ?.getAttribute('src')
     ).toBe('/images/limited-editions-banner.jpeg');
+    expect(
+      container.querySelector('[data-testid="mystic-divider-image"] img')?.getAttribute('src')
+    ).toBe('/images/header-mistico-ultrawide.png');
 
     act(() => {
       root.unmount();
