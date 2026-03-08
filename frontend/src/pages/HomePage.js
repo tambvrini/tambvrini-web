@@ -277,7 +277,7 @@ const DropGridSection = () => {
     return () => {
       cancelled = true;
       handlers.forEach((handler, video) => {
-        video.removeEventListener('loadeddata', handler);
+        video.removeEventListener('canplay', handler);
       });
     };
   }, []);
