@@ -106,7 +106,7 @@ const Simple3DViewer = ({
 
         const loader = new GLTFLoader();
         // Progress callback is intentionally a no-op to keep the viewer minimal.
-        const handleProgress = () => {};
+        const noOpProgressCallback = () => {};
         loader.load(
           src,
           (gltf) => {
@@ -116,7 +116,7 @@ const Simple3DViewer = ({
             scene.add(gltf.scene);
             render();
           },
-          handleProgress,
+          noOpProgressCallback,
           (error) => {
             if (isMounted) {
               console.warn(
