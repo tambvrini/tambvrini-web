@@ -196,9 +196,6 @@ describe('HomePage featured grid', () => {
     const leftPlaySpy = jest.spyOn(leftVideo, 'play');
     const rightPlaySpy = jest.spyOn(rightVideo, 'play');
 
-    leftVideo.currentTime = 5;
-    rightVideo.currentTime = 3;
-
     await act(async () => {
       leftVideo.dispatchEvent(new Event('canplay'));
       rightVideo.dispatchEvent(new Event('canplay'));
@@ -207,6 +204,8 @@ describe('HomePage featured grid', () => {
 
     expect(leftPlaySpy).toHaveBeenCalled();
     expect(rightPlaySpy).toHaveBeenCalled();
+    expect(leftVideo.currentTime).toBe(0);
+    expect(rightVideo.currentTime).toBe(0);
 
     act(() => {
       root.unmount();
