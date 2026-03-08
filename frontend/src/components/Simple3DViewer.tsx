@@ -27,6 +27,7 @@ const Simple3DViewer = ({
 }: Simple3DViewerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Recreate the scene only when the model source changes to keep the viewer stable.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) {
@@ -70,6 +71,10 @@ const Simple3DViewer = ({
         }
 
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        if (!isMounted) {
+          renderer.dispose();
+          return;
+        }
         renderer.setPixelRatio(window.devicePixelRatio || 1);
         renderer.setSize(width, height);
         renderer.domElement.style.width = '100%';
@@ -78,6 +83,11 @@ const Simple3DViewer = ({
         container.appendChild(renderer.domElement);
 
         controls = new OrbitControls(camera, renderer.domElement);
+        if (!isMounted) {
+          controls.dispose();
+          renderer.dispose();
+          return;
+        }
         // Keep damping disabled to avoid continuous requestAnimationFrame loops.
         // This means camera movement stops immediately without smooth deceleration.
         controls.enableDamping = false;
@@ -94,6 +104,7 @@ const Simple3DViewer = ({
         scene.add(ambientLight, directionalLight);
 
         const loader = new GLTFLoader();
+        // Progress callback omitted to keep the viewer minimal.
         loader.load(
           src,
           (gltf) => {
