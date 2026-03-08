@@ -121,8 +121,7 @@ const ModelViewer = ({
 
     const pointerId = pointerCaptureIdRef.current;
     const target = pointerCaptureTargetRef.current;
-    const isPointerIdDefined = pointerId !== null;
-    if (!isPointerIdDefined || !target?.releasePointerCapture) {
+    if (pointerId === null || !target?.releasePointerCapture) {
       pointerCaptureIdRef.current = null;
       pointerCaptureTargetRef.current = null;
       return;
