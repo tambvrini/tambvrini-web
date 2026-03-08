@@ -178,7 +178,7 @@ describe('HomePage featured grid', () => {
   });
 
   it('syncs limited editions videos once both can play', async () => {
-    const playSpy = HTMLMediaElement.prototype.play;
+    const playSpy = jest.spyOn(HTMLMediaElement.prototype, 'play');
     playSpy.mockClear();
     const { container, root } = await renderHomePage();
     await act(async () => {
@@ -210,6 +210,7 @@ describe('HomePage featured grid', () => {
     act(() => {
       root.unmount();
     });
+    playSpy.mockRestore();
     container.remove();
   });
 
