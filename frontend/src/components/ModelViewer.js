@@ -5,9 +5,18 @@ const INTERACTION_ZONE_RATIO = 0.6;
 const AUTO_ROTATE_SPEED = 0.5;
 const AUTO_ROTATE_IDLE_MS = 5500;
 
-const ModelViewer = ({ src, alt, poster, className = '', ...rest }) => {
-  const [controlsEnabled, setControlsEnabled] = useState(false);
-  const controlsEnabledRef = useRef(false);
+const ModelViewer = ({
+  src,
+  alt,
+  poster,
+  className = '',
+  persistentInteraction = false,
+  ...rest
+}) => {
+  const viewerRef = useRef(null);
+  const pointerCaptureIdRef = useRef(null);
+  const [controlsEnabled, setControlsEnabled] = useState(persistentInteraction);
+  const controlsEnabledRef = useRef(persistentInteraction);
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
   const autoRotateEnabledRef = useRef(true);
   const autoRotateTimerRef = useRef(null);
@@ -65,48 +74,91 @@ const ModelViewer = ({ src, alt, poster, className = '', ...rest }) => {
     return x >= zoneLeft && x <= zoneLeft + zoneWidth && y >= zoneTop && y <= zoneTop + zoneHeight;
   }, []);
 
-  const handlePointerMove = useCallback(
+  const updateControlsFromEvent = useCallback(
     (event) => {
+      if (persistentInteraction) {
+        setControlsState(true);
+        return;
+      }
+
       setControlsState(isInsideInteractionZone(event));
       if (event.buttons) {
         pauseAutoRotate();
       }
     },
-    [isInsideInteractionZone, pauseAutoRotate, setControlsState]
+    [isInsideInteractionZone, pauseAutoRotate, persistentInteraction, setControlsState]
   );
 
   const handlePointerEnter = useCallback(
     (event) => {
-      setControlsState(isInsideInteractionZone(event));
+      updateControlsFromEvent(event);
     },
-    [isInsideInteractionZone, setControlsState]
+    [updateControlsFromEvent]
   );
 
   const handlePointerDown = useCallback(
     (event) => {
-      setControlsState(isInsideInteractionZone(event));
+      updateControlsFromEvent(event);
       pauseAutoRotate();
+      if (persistentInteraction && event.pointerId != null) {
+        const target = event.currentTarget;
+        if (target?.setPointerCapture) {
+          target.setPointerCapture(event.pointerId);
+          pointerCaptureIdRef.current = event.pointerId;
+        }
+      }
     },
-    [isInsideInteractionZone, pauseAutoRotate, setControlsState]
+    [pauseAutoRotate, persistentInteraction, updateControlsFromEvent]
   );
 
-  const handlePointerUp = useCallback(() => {
-    scheduleAutoRotateResume();
-  }, [scheduleAutoRotateResume]);
+  const releasePointerCapture = useCallback((event) => {
+    if (!persistentInteraction) {
+      return;
+    }
 
-  const handlePointerLeave = useCallback(() => {
-    setControlsState(false);
+    const pointerId = pointerCaptureIdRef.current ?? event?.pointerId;
+    if (pointerId == null) {
+      return;
+    }
+
+    const target = event?.currentTarget ?? viewerRef.current;
+    if (target?.releasePointerCapture) {
+      if (!target.hasPointerCapture || target.hasPointerCapture(pointerId)) {
+        target.releasePointerCapture(pointerId);
+      }
+    }
+
+    pointerCaptureIdRef.current = null;
+  }, [persistentInteraction]);
+
+  const handlePointerUp = useCallback((event) => {
+    releasePointerCapture(event);
     scheduleAutoRotateResume();
-  }, [scheduleAutoRotateResume, setControlsState]);
+  }, [releasePointerCapture, scheduleAutoRotateResume]);
+
+  const handlePointerLeave = useCallback((event) => {
+    releasePointerCapture(event);
+    if (!persistentInteraction) {
+      setControlsState(false);
+    }
+    scheduleAutoRotateResume();
+  }, [persistentInteraction, releasePointerCapture, scheduleAutoRotateResume, setControlsState]);
 
   const handleWheel = useCallback((event) => {
-    event.stopPropagation();
-  }, []);
+    if (!persistentInteraction) {
+      event.stopPropagation();
+    }
+  }, [persistentInteraction]);
+
+  useEffect(() => {
+    setControlsState(persistentInteraction);
+  }, [persistentInteraction, setControlsState]);
 
   useEffect(() => () => clearAutoRotateTimer(), [clearAutoRotateTimer]);
 
   return (
     <model-viewer
+      ref={viewerRef}
       src={src}
       alt={alt}
       poster={poster}
@@ -119,8 +171,9 @@ const ModelViewer = ({ src, alt, poster, className = '', ...rest }) => {
       disable-zoom
       camera-controls={controlsEnabled || undefined}
       className={className}
+      style={{ pointerEvents: 'auto' }}
       onPointerEnter={handlePointerEnter}
-      onPointerMove={handlePointerMove}
+      onPointerMove={updateControlsFromEvent}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}

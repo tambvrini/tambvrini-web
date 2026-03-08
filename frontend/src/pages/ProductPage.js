@@ -160,6 +160,7 @@ export default function ProductPage() {
   const modelPoster = product.model_poster
     || fallbackPoster
     || LOGO_FALLBACK_POSTER;
+  const persistentModelInteraction = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
   const sizeLabel = Array.isArray(product.sizes) && product.sizes.length > 0
     ? product.sizes.join(', ')
@@ -188,6 +189,7 @@ export default function ProductPage() {
                 src={media.src}
                 alt={`Vista 3D de ${product.name}`}
                 poster={modelPoster}
+                persistentInteraction={persistentModelInteraction}
                 className="product-model-viewer"
               />
             </div>

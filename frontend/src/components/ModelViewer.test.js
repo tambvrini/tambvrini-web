@@ -85,4 +85,26 @@ describe('ModelViewer', () => {
     container.remove();
     jest.useRealTimers();
   });
+
+  it('keeps camera controls active when persistent interaction is enabled', () => {
+    const { container, root } = renderWithRoot(
+      <ModelViewer
+        src="/models/umbra.glb"
+        alt="Umbra 3D"
+        poster="/thumbnails/umbra.jpg"
+        persistentInteraction
+      />
+    );
+
+    const viewer = container.querySelector('model-viewer');
+
+    expect(viewer).not.toBeNull();
+    expect(viewer.hasAttribute('camera-controls')).toBe(true);
+    expect(viewer.style.pointerEvents).toBe('auto');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });
