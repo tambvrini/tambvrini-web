@@ -244,8 +244,13 @@ const DropGridSection = () => {
     let cancelled = false;
     const handlers = new Map();
 
+    const readyStateTarget = typeof HTMLMediaElement !== 'undefined'
+      && typeof HTMLMediaElement.HAVE_FUTURE_DATA === 'number'
+      ? HTMLMediaElement.HAVE_FUTURE_DATA
+      : 3;
+
     const waitForVideo = (video) => new Promise((resolve) => {
-      if (video.readyState >= 3) {
+      if (video.readyState >= readyStateTarget) {
         resolve();
         return;
       }
@@ -263,7 +268,7 @@ const DropGridSection = () => {
         try {
           video.currentTime = 0;
           const playPromise = video.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
+          if (playPromise) {
             playPromise.catch(() => {
               // Ignore autoplay rejections; user interaction can resume playback.
             });
