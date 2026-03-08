@@ -38,10 +38,11 @@ const Simple3DViewer = ({
       return undefined;
     }
 
-    const height = container.clientHeight || container.getBoundingClientRect().height || VIEWER_HEIGHT_PX;
-    const width = container.clientWidth
-      || container.getBoundingClientRect().width
-      || height * VIEWER_FALLBACK_ASPECT;
+    const cachedWidth = container.clientWidth;
+    const cachedHeight = container.clientHeight;
+    const rect = (!cachedWidth || !cachedHeight) ? container.getBoundingClientRect() : null;
+    const height = cachedHeight || rect?.height || VIEWER_HEIGHT_PX;
+    const width = cachedWidth || rect?.width || height * VIEWER_FALLBACK_ASPECT;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(CAMERA_FOV, width / height, CAMERA_NEAR, CAMERA_FAR);
@@ -75,7 +76,7 @@ const Simple3DViewer = ({
           renderer.dispose();
           return;
         }
-        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(width, height);
         renderer.domElement.style.width = '100%';
         renderer.domElement.style.height = '100%';
@@ -104,7 +105,8 @@ const Simple3DViewer = ({
         scene.add(ambientLight, directionalLight);
 
         const loader = new GLTFLoader();
-        // Progress callback omitted to keep the viewer minimal.
+        // Progress callback is intentionally a no-op to keep the viewer minimal.
+        const handleProgress = () => {};
         loader.load(
           src,
           (gltf) => {
@@ -114,7 +116,7 @@ const Simple3DViewer = ({
             scene.add(gltf.scene);
             render();
           },
-          undefined,
+          handleProgress,
           (error) => {
             if (isMounted) {
               console.warn(
