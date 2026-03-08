@@ -265,6 +265,16 @@ const DropGridSection = () => {
       video.addEventListener('canplay', handleLoaded);
     });
 
+    const handleAutoplayBlocked = (videoLabel, source, error) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(
+          `Limited Editions video (${videoLabel}) autoplay blocked.`,
+          source,
+          error,
+        );
+      }
+    };
+
     Promise.all(videos.map(waitForVideo)).then(() => {
       if (cancelled) return;
       videos.forEach((video, index) => {
@@ -273,14 +283,8 @@ const DropGridSection = () => {
           const playPromise = video.play();
           playPromise.catch((error) => {
             // Ignore autoplay rejections; user interaction can resume playback.
-            if (process.env.NODE_ENV === 'development') {
-              const videoLabel = index === 0 ? 'left' : 'right';
-              console.debug(
-                `Limited Editions video (${videoLabel}) autoplay blocked.`,
-                video.currentSrc || video.src,
-                error,
-              );
-            }
+            const videoLabel = index === 0 ? 'left' : 'right';
+            handleAutoplayBlocked(videoLabel, video.currentSrc || video.src, error);
           });
         } catch (error) {
           // Autoplay can be blocked; ignore and let the browser handle it.
