@@ -459,6 +459,7 @@ const DropGridSection = () => {
                       muted
                       loop
                       playsInline
+                      aria-label="Limited Editions Pasarela video"
                       className="limited-editions-video"
                     />
                     <span
@@ -479,6 +480,7 @@ const DropGridSection = () => {
                       muted
                       loop
                       playsInline
+                      aria-label="Limited Editions Eden video"
                       className="limited-editions-video"
                     />
                   </div>
