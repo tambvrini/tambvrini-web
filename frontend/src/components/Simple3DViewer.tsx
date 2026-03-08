@@ -36,8 +36,8 @@ const Simple3DViewer = ({
       return undefined;
     }
 
-    const width = container.clientWidth || 1;
-    const height = container.clientHeight || 1;
+    const width = container.clientWidth || container.getBoundingClientRect().width || VIEWER_HEIGHT_PX;
+    const height = container.clientHeight || container.getBoundingClientRect().height || VIEWER_HEIGHT_PX;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(CAMERA_FOV, width / height, CAMERA_NEAR, CAMERA_FAR);
