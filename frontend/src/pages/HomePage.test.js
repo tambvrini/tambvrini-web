@@ -177,41 +177,22 @@ describe('HomePage featured grid', () => {
     container.remove();
   });
 
-  it('syncs limited editions videos once both load', async () => {
+  it('links both limited editions videos to the collection page', async () => {
     const { container, root } = await renderHomePage();
-    await act(async () => {
-      await Promise.resolve();
-    });
 
-    const leftVideo = container.querySelector(
-      '[data-testid="limited-editions-left-video"]'
+    const leftLink = container.querySelector(
+      '[data-testid="limited-editions-left-link"]'
     );
-    const rightVideo = container.querySelector(
-      '[data-testid="limited-editions-right-video"]'
+    const rightLink = container.querySelector(
+      '[data-testid="limited-editions-right-link"]'
     );
 
-    expect(leftVideo).not.toBeNull();
-    expect(rightVideo).not.toBeNull();
-
-    const leftPlaySpy = jest.spyOn(leftVideo, 'play');
-    const rightPlaySpy = jest.spyOn(rightVideo, 'play');
-
-    await act(async () => {
-      leftVideo.dispatchEvent(new Event('loadeddata'));
-      rightVideo.dispatchEvent(new Event('loadeddata'));
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    });
-
-    expect(leftPlaySpy).toHaveBeenCalled();
-    expect(rightPlaySpy).toHaveBeenCalled();
-    expect(leftVideo.currentTime).toBe(0);
-    expect(rightVideo.currentTime).toBe(0);
+    expect(leftLink?.getAttribute('to')).toBe('/collections/limited-editions');
+    expect(rightLink?.getAttribute('to')).toBe('/collections/limited-editions');
 
     act(() => {
       root.unmount();
     });
-    leftPlaySpy.mockRestore();
-    rightPlaySpy.mockRestore();
     container.remove();
   });
 
