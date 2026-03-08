@@ -240,7 +240,7 @@ const DropGridSection = () => {
 
   useEffect(() => {
     const videos = limitedVideoRefs.current.filter(Boolean);
-    if (videos.length === 0) return undefined;
+    if (videos.length === 0) return;
     let cancelled = false;
     const handlers = new Map();
 
@@ -266,7 +266,9 @@ const DropGridSection = () => {
           if (playPromise && typeof playPromise.catch === 'function') {
             playPromise.catch(() => {});
           }
-        } catch {}
+        } catch {
+          // Autoplay can be blocked; ignore and let the browser handle it.
+        }
       });
     });
 
