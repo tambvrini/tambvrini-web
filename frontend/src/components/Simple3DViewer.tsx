@@ -105,7 +105,7 @@ const Simple3DViewer = ({
         scene.add(ambientLight, directionalLight);
 
         const loader = new GLTFLoader();
-        // Progress callback is intentionally a no-op to keep the viewer minimal.
+        // Progress callback is optional, but we pass a no-op to keep onError in the 4th position.
         const noOpProgressCallback = () => {};
         loader.load(
           src,
@@ -121,7 +121,7 @@ const Simple3DViewer = ({
             if (isMounted) {
               console.warn(
                 `Simple3DViewer failed to load model from ${src}. ` +
-                  'Check the URL, network access, and GLB format.',
+                  'Check the URL, network access, and GLTF/GLB format.',
                 error
               );
               render();
