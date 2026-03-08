@@ -177,6 +177,42 @@ describe('HomePage featured grid', () => {
     container.remove();
   });
 
+  it('syncs limited editions videos once both can play', async () => {
+    const playSpy = HTMLMediaElement.prototype.play;
+    playSpy.mockClear();
+    const { container, root } = await renderHomePage();
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const leftVideo = container.querySelector(
+      '[data-testid="limited-editions-left-video"]'
+    );
+    const rightVideo = container.querySelector(
+      '[data-testid="limited-editions-right-video"]'
+    );
+
+    if (leftVideo && rightVideo) {
+      leftVideo.currentTime = 5;
+      rightVideo.currentTime = 3;
+
+      await act(async () => {
+        leftVideo.dispatchEvent(new Event('canplay'));
+        rightVideo.dispatchEvent(new Event('canplay'));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+
+      expect(playSpy).toHaveBeenCalledTimes(2);
+      expect(leftVideo.currentTime).toBe(0);
+      expect(rightVideo.currentTime).toBe(0);
+    }
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
   it('renders the hero header image with cover fit', async () => {
     const { container, root } = await renderHomePage();
 

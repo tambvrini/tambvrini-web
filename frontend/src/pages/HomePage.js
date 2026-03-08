@@ -241,6 +241,7 @@ const DropGridSection = () => {
 
   // Sync Limited Editions videos so both begin at the same moment once ready.
   useEffect(() => {
+    if (loading) return;
     const videos = limitedVideoRefs.current.filter(Boolean);
     if (videos.length === 0) return;
     let cancelled = false;
@@ -275,7 +276,7 @@ const DropGridSection = () => {
             // Ignore autoplay rejections; user interaction can resume playback.
             if (process.env.NODE_ENV === 'development') {
               console.debug(
-                `Limited Editions ${videoLabel} video autoplay blocked.`,
+                `Limited Editions video (${videoLabel}) autoplay blocked.`,
                 video.currentSrc || video.src,
               );
             }
@@ -295,7 +296,7 @@ const DropGridSection = () => {
         video.removeEventListener('canplay', handler);
       });
     };
-  }, []);
+  }, [loading]);
 
   return (
     <section id="drops" data-testid="drop-grid" className="pt-6 pb-24 md:pt-8 md:pb-32">
