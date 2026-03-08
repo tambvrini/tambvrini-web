@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '@google/model-viewer';
 
 const INTERACTION_ZONE_RATIO = 0.6;
@@ -152,6 +152,11 @@ const ModelViewer = ({
     }
   }, [persistentInteraction]);
 
+  const pointerEventsStyle = useMemo(
+    () => (persistentInteraction ? { pointerEvents: 'auto' } : undefined),
+    [persistentInteraction]
+  );
+
   useEffect(() => {
     setControlsState(persistentInteraction);
   }, [persistentInteraction, setControlsState]);
@@ -173,7 +178,7 @@ const ModelViewer = ({
       disable-zoom
       camera-controls={controlsEnabled || undefined}
       className={className}
-      style={persistentInteraction ? { pointerEvents: 'auto' } : undefined}
+      style={pointerEventsStyle}
       onPointerEnter={handlePointerEnter}
       onPointerMove={updateControlsFromEvent}
       onPointerDown={handlePointerDown}
