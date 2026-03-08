@@ -77,6 +77,7 @@ const ModelViewer = ({
 
   const updateControlsFromEvent = useCallback(
     (event) => {
+      // Pause auto-rotate on drag so manual interaction stays responsive.
       if (event.buttons) {
         pauseAutoRotate();
       }
@@ -120,7 +121,7 @@ const ModelViewer = ({
 
     const pointerId = pointerCaptureIdRef.current;
     const target = pointerCaptureTargetRef.current;
-    if (pointerId === null || pointerId === undefined || !target?.releasePointerCapture) {
+    if (pointerId == null || !target?.releasePointerCapture) {
       pointerCaptureIdRef.current = null;
       pointerCaptureTargetRef.current = null;
       return;
