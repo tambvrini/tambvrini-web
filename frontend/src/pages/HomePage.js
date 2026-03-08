@@ -202,6 +202,7 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
+  const limitedVideoRefs = useRef([]);
   const navigate = useNavigate();
 
   const handleCollectionClick = () => {
@@ -235,6 +236,46 @@ const DropGridSection = () => {
       }
     };
     fetchDrop();
+  }, []);
+
+  useEffect(() => {
+    const videos = limitedVideoRefs.current.filter(Boolean);
+    if (videos.length === 0) return undefined;
+    let cancelled = false;
+    const handlers = new Map();
+
+    const waitForVideo = (video) => new Promise((resolve) => {
+      if (video.readyState >= 2) {
+        resolve();
+        return;
+      }
+      const handleLoaded = () => {
+        video.removeEventListener('loadeddata', handleLoaded);
+        resolve();
+      };
+      handlers.set(video, handleLoaded);
+      video.addEventListener('loadeddata', handleLoaded);
+    });
+
+    Promise.all(videos.map(waitForVideo)).then(() => {
+      if (cancelled) return;
+      videos.forEach((video) => {
+        try {
+          video.currentTime = 0;
+          const playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+          }
+        } catch {}
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      handlers.forEach((handler, video) => {
+        video.removeEventListener('loadeddata', handler);
+      });
+    };
   }, []);
 
   return (
@@ -453,6 +494,9 @@ const DropGridSection = () => {
                     aria-label="Limited Editions"
                   >
                     <video
+                      ref={(element) => {
+                        limitedVideoRefs.current[0] = element;
+                      }}
                       data-testid="limited-editions-left-video"
                       src="/videos/pasarela-video-web.mp4"
                       autoPlay
@@ -471,11 +515,16 @@ const DropGridSection = () => {
                       Limited Editions
                     </span>
                   </Link>
-                  <div
-                    data-testid="limited-editions-right-wrapper"
+                  <Link
+                    to="/collections/limited-editions"
+                    data-testid="limited-editions-right-link"
                     className="limited-editions-video-card"
+                    aria-label="Limited Editions"
                   >
                     <video
+                      ref={(element) => {
+                        limitedVideoRefs.current[1] = element;
+                      }}
                       data-testid="limited-editions-right-video"
                       src="/videos/eden-video-web.mp4"
                       autoPlay
@@ -487,7 +536,7 @@ const DropGridSection = () => {
                       title="Limited Editions Eden video"
                       className="limited-editions-video"
                     />
-                  </div>
+                  </Link>
                 </div>
               </div>
 

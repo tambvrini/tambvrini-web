@@ -122,6 +122,9 @@ describe('HomePage featured grid', () => {
     const limitedEditionsLink = container.querySelector(
       '[data-testid="limited-editions-left-link"]'
     );
+    const limitedEditionsRightLink = container.querySelector(
+      '[data-testid="limited-editions-right-link"]'
+    );
     const limitedEditionsLabel = container.querySelector(
       '[data-testid="limited-editions-label"]'
     );
@@ -132,6 +135,7 @@ describe('HomePage featured grid', () => {
       '[data-testid="limited-editions-right-video"]'
     );
     expect(limitedEditionsLink?.getAttribute('to')).toBe('/collections/limited-editions');
+    expect(limitedEditionsRightLink?.getAttribute('to')).toBe('/collections/limited-editions');
     expect(limitedEditionsLabel?.textContent).toContain('Limited Editions');
     expect(leftVideo?.getAttribute('src')).toBe('/videos/pasarela-video-web.mp4');
     expect(rightVideo?.getAttribute('src')).toBe('/videos/eden-video-web.mp4');
