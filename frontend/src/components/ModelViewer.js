@@ -102,7 +102,7 @@ const ModelViewer = ({
     (event) => {
       updateControlsFromEvent(event);
       pauseAutoRotate();
-      if (persistentInteraction && typeof event.pointerId === 'number') {
+      if (persistentInteraction) {
         const target = event.currentTarget;
         if (target?.setPointerCapture) {
           target.setPointerCapture(event.pointerId);
@@ -121,8 +121,8 @@ const ModelViewer = ({
 
     const pointerId = pointerCaptureIdRef.current;
     const target = pointerCaptureTargetRef.current;
-    const hasPointerId = pointerId !== null && pointerId !== undefined;
-    if (!hasPointerId || !target?.releasePointerCapture) {
+    const isPointerIdDefined = pointerId !== null && pointerId !== undefined;
+    if (!isPointerIdDefined || !target?.releasePointerCapture) {
       pointerCaptureIdRef.current = null;
       pointerCaptureTargetRef.current = null;
       return;
