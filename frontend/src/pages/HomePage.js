@@ -536,7 +536,7 @@ const DropGridSection = () => {
                       data-testid="limited-editions-label"
                       className="limited-editions-video-label"
                     >
-                      LIMITED EDITIONS
+                      Limited Editions
                     </Link>
                   </div>
                   <div

@@ -144,7 +144,7 @@ describe('HomePage featured grid', () => {
     expect(limitedEditionsRightLink.tagName).toBe('DIV');
     expect(limitedEditionsLabel?.tagName).toBe('A');
     expect(limitedEditionsLabel?.getAttribute('href')).toBe('/limited-editions');
-    expect(limitedEditionsLabel?.textContent).toContain('LIMITED EDITIONS');
+    expect(limitedEditionsLabel?.textContent).toContain('Limited Editions');
     expect(leftVideo?.getAttribute('src')).toBe('/videos/pasarela-video-web.mp4');
     expect(rightVideo?.getAttribute('src')).toBe('/videos/eden-video-web.mp4');
     const dropGrid = container.querySelector('[data-testid="drop-grid"]');
