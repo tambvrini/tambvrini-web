@@ -1105,7 +1105,7 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(6px);
 }
 
