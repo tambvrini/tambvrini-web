@@ -268,14 +268,15 @@ const DropGridSection = () => {
       if (cancelled) return;
       videos.forEach((video, index) => {
         try {
+          const videoLabel = index === 0 ? 'left' : 'right';
           video.currentTime = 0;
           const playPromise = video.play();
           playPromise.catch(() => {
             // Ignore autoplay rejections; user interaction can resume playback.
             if (process.env.NODE_ENV === 'development') {
               console.debug(
-                'Limited Editions video autoplay blocked.',
-                video.currentSrc || video.src || `index-${index}`,
+                `Limited Editions ${videoLabel} video autoplay blocked.`,
+                video.currentSrc || video.src,
               );
             }
           });
