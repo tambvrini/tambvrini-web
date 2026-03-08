@@ -266,18 +266,24 @@ const DropGridSection = () => {
 
     Promise.all(videos.map(waitForVideo)).then(() => {
       if (cancelled) return;
-      videos.forEach((video) => {
+      videos.forEach((video, index) => {
         try {
           video.currentTime = 0;
           const playPromise = video.play();
           playPromise.catch(() => {
             // Ignore autoplay rejections; user interaction can resume playback.
             if (process.env.NODE_ENV === 'development') {
-              console.debug('Limited Editions video autoplay blocked.');
+              console.debug(
+                'Limited Editions video autoplay blocked.',
+                video.currentSrc || video.src || `index-${index}`,
+              );
             }
           });
-        } catch {
+        } catch (error) {
           // Autoplay can be blocked; ignore and let the browser handle it.
+          if (process.env.NODE_ENV === 'development') {
+            console.debug('Limited Editions video sync error.', error);
+          }
         }
       });
     });
