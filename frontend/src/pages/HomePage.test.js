@@ -1,6 +1,6 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import HomePage from './HomePage';
+import HomePage, { LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS } from './HomePage';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -120,10 +120,10 @@ describe('HomePage featured grid', () => {
       container.querySelector('[data-testid="product-card-polo-domus"]')
     ).toBeNull();
     const limitedEditionsLink = container.querySelector(
-      '[data-testid="limited-editions-left-link"]'
+      '[data-testid="limited-editions-left-wrapper"]'
     );
     const limitedEditionsRightLink = container.querySelector(
-      '[data-testid="limited-editions-right-link"]'
+      '[data-testid="limited-editions-right-wrapper"]'
     );
     const limitedEditionsLabel = container.querySelector(
       '[data-testid="limited-editions-label"]'
@@ -136,6 +136,8 @@ describe('HomePage featured grid', () => {
     );
     expect(limitedEditionsLink).not.toBeNull();
     expect(limitedEditionsRightLink).not.toBeNull();
+    expect(limitedEditionsLink.tagName).toBe('DIV');
+    expect(limitedEditionsRightLink.tagName).toBe('DIV');
     expect(limitedEditionsLabel?.textContent).toContain('Limited Editions');
     expect(leftVideo?.getAttribute('src')).toBe('/videos/pasarela-video-web.mp4');
     expect(rightVideo?.getAttribute('src')).toBe('/videos/eden-video-web.mp4');
@@ -181,10 +183,10 @@ describe('HomePage featured grid', () => {
     const { container, root } = await renderHomePage();
 
     const leftWrapper = container.querySelector(
-      '[data-testid="limited-editions-left-link"]'
+      '[data-testid="limited-editions-left-wrapper"]'
     );
     const rightWrapper = container.querySelector(
-      '[data-testid="limited-editions-right-link"]'
+      '[data-testid="limited-editions-right-wrapper"]'
     );
     const leftVideo = container.querySelector(
       '[data-testid="limited-editions-left-video"]'
@@ -209,6 +211,7 @@ describe('HomePage featured grid', () => {
   });
 
   it('syncs limited editions videos once both load', async () => {
+    jest.useFakeTimers();
     const { container, root } = await renderHomePage();
 
     const leftVideo = container.querySelector(
@@ -223,24 +226,62 @@ describe('HomePage featured grid', () => {
 
     const leftPlaySpy = jest.spyOn(leftVideo, 'play');
     const rightPlaySpy = jest.spyOn(rightVideo, 'play');
+    const leftPausedDescriptor = Object.getOwnPropertyDescriptor(leftVideo, 'paused');
+    const rightPausedDescriptor = Object.getOwnPropertyDescriptor(rightVideo, 'paused');
+    const pausedDriftThresholdSeconds = 0.9;
+    // When paused, drift should remain ~1s; 0.9s confirms no correction occurred.
 
-    await act(async () => {
-      leftVideo.dispatchEvent(new Event('loadeddata'));
-      rightVideo.dispatchEvent(new Event('loadeddata'));
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    });
+    try {
+      await act(async () => {
+        leftVideo.dispatchEvent(new Event('loadeddata'));
+        rightVideo.dispatchEvent(new Event('loadeddata'));
+        await Promise.resolve();
+      });
 
-    expect(leftPlaySpy).toHaveBeenCalled();
-    expect(rightPlaySpy).toHaveBeenCalled();
-    expect(leftVideo.currentTime).toBe(0);
-    expect(rightVideo.currentTime).toBe(0);
+      expect(leftPlaySpy).toHaveBeenCalled();
+      expect(rightPlaySpy).toHaveBeenCalled();
+      expect(leftVideo.currentTime).toBe(0);
+      expect(rightVideo.currentTime).toBe(0);
 
-    act(() => {
-      root.unmount();
-    });
-    leftPlaySpy.mockRestore();
-    rightPlaySpy.mockRestore();
-    container.remove();
+      Object.defineProperty(leftVideo, 'paused', { configurable: true, value: false });
+      Object.defineProperty(rightVideo, 'paused', { configurable: true, value: false });
+      rightVideo.currentTime = leftVideo.currentTime + 1;
+
+      act(() => {
+        jest.advanceTimersByTime(300);
+      });
+
+      expect(Math.abs(rightVideo.currentTime - leftVideo.currentTime))
+        .toBeLessThan(LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS);
+
+      Object.defineProperty(rightVideo, 'paused', { configurable: true, value: true });
+      rightVideo.currentTime = leftVideo.currentTime + 1;
+
+      act(() => {
+        jest.advanceTimersByTime(300);
+      });
+
+      expect(Math.abs(rightVideo.currentTime - leftVideo.currentTime))
+        .toBeGreaterThan(pausedDriftThresholdSeconds);
+    } finally {
+      act(() => {
+        root.unmount();
+      });
+      leftPlaySpy.mockRestore();
+      rightPlaySpy.mockRestore();
+      if (leftPausedDescriptor) {
+        Object.defineProperty(leftVideo, 'paused', leftPausedDescriptor);
+      } else {
+        delete leftVideo.paused;
+      }
+      if (rightPausedDescriptor) {
+        Object.defineProperty(rightVideo, 'paused', rightPausedDescriptor);
+      } else {
+        delete rightVideo.paused;
+      }
+      container.remove();
+      jest.useRealTimers();
+    }
   });
 
   it('renders the hero header image with cover fit', async () => {

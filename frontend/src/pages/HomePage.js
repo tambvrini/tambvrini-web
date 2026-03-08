@@ -19,7 +19,12 @@ const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
 const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
-const READY_STATE_HAVE_CURRENT_DATA_FALLBACK = 2;
+const HTML_MEDIA_READY_STATE_FALLBACK = 2; // Fallback for HTMLMediaElement.HAVE_CURRENT_DATA (2) in non-browser envs.
+const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
+  ? HTMLMediaElement.HAVE_CURRENT_DATA
+  : HTML_MEDIA_READY_STATE_FALLBACK;
+export const LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS = 0.08;
+export const LIMITED_EDITIONS_SYNC_INTERVAL_MS = 250;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 /* ============ HERO with GUCCI-style animated logo ============ */
 const SCROLL_THRESHOLD = 500;
@@ -201,7 +206,7 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
-  const limitedVideosRef = useRef(null);
+  const limitedEditionsVideosContainerRef = useRef(null);
   const navigate = useNavigate();
 
   const handleCollectionClick = () => {
@@ -239,21 +244,19 @@ const DropGridSection = () => {
 
   useEffect(() => {
     if (loading) return;
-    const container = limitedVideosRef.current;
+    const container = limitedEditionsVideosContainerRef.current;
     if (!container) return;
-    const videos = Array.from(container.querySelectorAll('.limited-editions-video'));
+    const videos = [
+      container.querySelector('[data-testid="limited-editions-left-video"]'),
+      container.querySelector('[data-testid="limited-editions-right-video"]'),
+    ].filter(Boolean);
     if (videos.length < 2) return;
     let cancelled = false;
     let syncInterval = null;
     const handlers = new Map();
 
-    const readyStateTarget = typeof HTMLMediaElement !== 'undefined'
-      && typeof HTMLMediaElement.HAVE_CURRENT_DATA === 'number'
-      ? HTMLMediaElement.HAVE_CURRENT_DATA
-      : READY_STATE_HAVE_CURRENT_DATA_FALLBACK;
-
     const waitForVideo = (video) => new Promise((resolve) => {
-      if (video.readyState >= readyStateTarget) {
+      if (video.readyState >= HTML_MEDIA_READY_STATE_TARGET) {
         resolve();
         return;
       }
@@ -276,15 +279,18 @@ const DropGridSection = () => {
         }
       });
 
+      if (cancelled) return;
       syncInterval = window.setInterval(() => {
         if (cancelled) return;
+        if (masterVideo.paused || masterVideo.ended) return;
         const masterTime = masterVideo.currentTime;
         videos.slice(1).forEach((video) => {
-          if (Math.abs(video.currentTime - masterTime) > 0.08) {
+          if (video.paused || video.ended) return;
+          if (Math.abs(video.currentTime - masterTime) > LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS) {
             video.currentTime = masterTime;
           }
         });
-      }, 250);
+      }, LIMITED_EDITIONS_SYNC_INTERVAL_MS);
     });
 
     return () => {
@@ -505,11 +511,12 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div className="mb-6 md:mb-8">
-                <div ref={limitedVideosRef} className="limited-editions-video-wrapper">
+              <div ref={limitedEditionsVideosContainerRef} className="mb-6 md:mb-8">
+                <div className="limited-editions-video-wrapper">
                   <div
-                    data-testid="limited-editions-left-link"
+                    data-testid="limited-editions-left-wrapper"
                     className="limited-editions-video-card"
+                    aria-hidden="true"
                   >
                     <video
                       data-testid="limited-editions-left-video"
@@ -532,8 +539,9 @@ const DropGridSection = () => {
                     </span>
                   </div>
                   <div
-                    data-testid="limited-editions-right-link"
+                    data-testid="limited-editions-right-wrapper"
                     className="limited-editions-video-card"
+                    aria-hidden="true"
                   >
                     <video
                       data-testid="limited-editions-right-video"
