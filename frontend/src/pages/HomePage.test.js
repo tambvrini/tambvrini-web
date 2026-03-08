@@ -119,10 +119,22 @@ describe('HomePage featured grid', () => {
     expect(
       container.querySelector('[data-testid="product-card-polo-domus"]')
     ).toBeNull();
-    expect(
-      container.querySelector('[data-testid="limited-editions-banner-image"]')
-        ?.getAttribute('src')
-    ).toBe('/images/limited-editions-banner.jpeg');
+    const limitedEditionsLink = container.querySelector(
+      '[data-testid="limited-editions-left-link"]'
+    );
+    const limitedEditionsLabel = container.querySelector(
+      '[data-testid="limited-editions-label"]'
+    );
+    const leftVideo = container.querySelector(
+      '[data-testid="limited-editions-left-video"]'
+    );
+    const rightVideo = container.querySelector(
+      '[data-testid="limited-editions-right-video"]'
+    );
+    expect(limitedEditionsLink?.getAttribute('to')).toBe('/collections/limited-editions');
+    expect(limitedEditionsLabel?.textContent).toContain('Limited Editions');
+    expect(leftVideo?.getAttribute('src')).toBe('/videos/pasarela-video-web.mp4');
+    expect(rightVideo?.getAttribute('src')).toBe('/videos/eden-video-web.mp4');
     const dropGrid = container.querySelector('[data-testid="drop-grid"]');
     const novedadesSection = container.querySelector('[data-testid="novedades-section"]');
     const editorialEagleDivider = container.querySelector('[data-testid="editorial-eagle-divider"]');

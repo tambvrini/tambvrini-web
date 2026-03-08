@@ -1070,3 +1070,49 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
 .limited-editions-banner:hover .limited-editions-banner-image {
     transform: scale(1.02);
 }
+
+.limited-editions-video-wrapper {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.limited-editions-video-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 520px;
+}
+
+.limited-editions-video {
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: 32px;
+    display: block;
+}
+
+.limited-editions-video-label {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+}
+
+@media (max-width: 768px) {
+    .limited-editions-video-wrapper {
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+    }
+}

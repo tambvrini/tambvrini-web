@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
-import clsx from 'clsx';
 import { ArrowRight } from 'lucide-react';
 import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
@@ -18,10 +17,8 @@ const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
 const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
-const LIMITED_EDITIONS_BANNER_IMAGE = "/images/limited-editions-banner.jpeg";
 const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
 const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
-const LIMITED_BANNER_FALLBACK_MS = 2000;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 
@@ -205,19 +202,7 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
-  const [limitedBannerVisible, setLimitedBannerVisible] = useState(false);
-  const [limitedBannerAnimated, setLimitedBannerAnimated] = useState(false);
-  const limitedBannerRef = useRef(null);
   const navigate = useNavigate();
-  const limitedBannerClassName = clsx(
-    'limited-editions-banner',
-    'block',
-    'w-full',
-    'relative',
-    'z-[1]',
-    limitedBannerAnimated && !limitedBannerVisible && 'limited-editions-banner--fade-init',
-    limitedBannerVisible && 'limited-editions-banner--fade-visible'
-  );
 
   const handleCollectionClick = () => {
     if (showCollectionTransition) return;
@@ -226,44 +211,6 @@ const DropGridSection = () => {
       navigate('/tienda?category=2026');
     }, 450);
   };
-
-  useEffect(() => {
-    const element = limitedBannerRef.current;
-    if (!element || typeof IntersectionObserver === 'undefined') {
-      setLimitedBannerVisible(true);
-      return;
-    }
-
-    setLimitedBannerAnimated(true);
-    let isMounted = true;
-
-    const fallbackTimer = setTimeout(() => {
-      if (isMounted) {
-        setLimitedBannerVisible(true);
-      }
-    }, LIMITED_BANNER_FALLBACK_MS);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          clearTimeout(fallbackTimer);
-          if (isMounted) {
-            setLimitedBannerVisible(true);
-          }
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(element);
-
-    return () => {
-      isMounted = false;
-      clearTimeout(fallbackTimer);
-      observer.disconnect();
-    };
-  }, []);
 
 
   useEffect(() => {
@@ -498,32 +445,44 @@ const DropGridSection = () => {
               </div>
 
               <div className="mb-6 md:mb-8">
-                <Link
-                  to="/limited-editions"
-                  data-testid="limited-editions-banner-link"
-                  ref={limitedBannerRef}
-                  className={limitedBannerClassName}
-                >
-                  <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-                    <div className="w-full flex justify-center">
-                      <div className="relative w-full">
-                        <img
-                          data-testid="limited-editions-banner-image"
-                          src={LIMITED_EDITIONS_BANNER_IMAGE}
-                          alt="Limited Editions collection banner - explore exclusive pieces"
-                          className="block w-full h-auto limited-editions-banner-image"
-                          loading="lazy"
-                        />
-                        <span
-                          aria-hidden="true"
-                          className="pointer-events-none absolute bottom-6 left-6 md:bottom-10 md:left-10 rounded-full bg-white/15 px-4 py-2 font-montserrat text-[12px] tracking-[0.28em] uppercase text-white/85"
-                        >
-                          LIMITED EDITIONS
-                        </span>
-                      </div>
-                    </div>
+                <div className="limited-editions-video-wrapper">
+                  <Link
+                    to="/collections/limited-editions"
+                    data-testid="limited-editions-left-link"
+                    className="limited-editions-video-card"
+                    aria-label="Limited Editions"
+                  >
+                    <video
+                      data-testid="limited-editions-left-video"
+                      src="/videos/pasarela-video-web.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="limited-editions-video"
+                    />
+                    <span
+                      data-testid="limited-editions-label"
+                      className="limited-editions-video-label"
+                    >
+                      Limited Editions
+                    </span>
+                  </Link>
+                  <div
+                    data-testid="limited-editions-right-wrapper"
+                    className="limited-editions-video-card"
+                  >
+                    <video
+                      data-testid="limited-editions-right-video"
+                      src="/videos/eden-video-web.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="limited-editions-video"
+                    />
                   </div>
-                </Link>
+                </div>
               </div>
 
               <div className="mb-6 md:mb-8">
