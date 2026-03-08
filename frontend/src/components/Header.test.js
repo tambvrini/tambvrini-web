@@ -164,4 +164,32 @@ describe('Header menu', () => {
     });
     container.remove();
   });
+
+  it('renders updated tienda menu links in order', async () => {
+    const { container, root } = await renderHeader();
+
+    const novedadesLink = container.querySelector('[data-testid="menu-link-novedades"]');
+    const hombreLink = container.querySelector('[data-testid="menu-link-hombre"]');
+    const mujerLink = container.querySelector('[data-testid="menu-link-mujer"]');
+    const limitedLink = container.querySelector('[data-testid="menu-link-limited-editions"]');
+
+    expect(novedadesLink).not.toBeNull();
+    expect(hombreLink).not.toBeNull();
+    expect(mujerLink).not.toBeNull();
+    expect(limitedLink).not.toBeNull();
+    expect(novedadesLink.getAttribute('to')).toBe('/tienda?category=novedades');
+    expect(limitedLink.getAttribute('to')).toBe('/limited-editions');
+
+    const tiendaList = novedadesLink.closest('ul');
+    const tiendaLabels = Array.from(tiendaList?.querySelectorAll('a') ?? []).map(
+      (link) => link.textContent?.trim()
+    );
+
+    expect(tiendaLabels).toEqual(['Novedades', 'Hombre', 'Mujer', 'Limited Editions']);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });
