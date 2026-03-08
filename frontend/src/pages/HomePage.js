@@ -245,16 +245,16 @@ const DropGridSection = () => {
     const handlers = new Map();
 
     const waitForVideo = (video) => new Promise((resolve) => {
-      if (video.readyState >= 2) {
+      if (video.readyState >= 3) {
         resolve();
         return;
       }
       const handleLoaded = () => {
-        video.removeEventListener('loadeddata', handleLoaded);
+        video.removeEventListener('canplay', handleLoaded);
         resolve();
       };
       handlers.set(video, handleLoaded);
-      video.addEventListener('loadeddata', handleLoaded);
+      video.addEventListener('canplay', handleLoaded);
     });
 
     Promise.all(videos.map(waitForVideo)).then(() => {
@@ -264,7 +264,9 @@ const DropGridSection = () => {
           video.currentTime = 0;
           const playPromise = video.play();
           if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {});
+            playPromise.catch(() => {
+              // Ignore autoplay rejections; user interaction can resume playback.
+            });
           }
         } catch {
           // Autoplay can be blocked; ignore and let the browser handle it.
