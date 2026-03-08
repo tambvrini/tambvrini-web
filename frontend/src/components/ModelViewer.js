@@ -148,7 +148,8 @@ const ModelViewer = ({
   }, [persistentInteraction, releasePointerCapture, scheduleAutoRotateResume, setControlsState]);
 
   const handleWheel = useCallback((event) => {
-    if (!persistentInteraction) {
+    const allowScrollPropagation = persistentInteraction;
+    if (!allowScrollPropagation) {
       event.stopPropagation();
     }
   }, [persistentInteraction]);
@@ -174,7 +175,7 @@ const ModelViewer = ({
       disable-zoom
       camera-controls={controlsEnabled || undefined}
       className={className}
-      style={{ pointerEvents: 'auto' }}
+      style={persistentInteraction ? { pointerEvents: 'auto' } : undefined}
       onPointerEnter={handlePointerEnter}
       onPointerMove={updateControlsFromEvent}
       onPointerDown={handlePointerDown}
