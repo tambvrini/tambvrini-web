@@ -9,6 +9,15 @@ interface Simple3DViewerProps extends HTMLAttributes<HTMLDivElement> {
   style?: CSSProperties;
 }
 
+const VIEWER_HEIGHT_PX = 600;
+const CAMERA_FOV = 45;
+const CAMERA_NEAR = 0.1;
+const CAMERA_FAR = 100;
+const CAMERA_POSITION = { x: 0, y: 1, z: 3 };
+const AMBIENT_LIGHT_INTENSITY = 0.7;
+const DIRECTIONAL_LIGHT_INTENSITY = 0.8;
+const DIRECTIONAL_LIGHT_POSITION = { x: 2, y: 4, z: 3 };
+
 const Simple3DViewer = ({
   src,
   className = '',
@@ -31,8 +40,8 @@ const Simple3DViewer = ({
     const height = container.clientHeight || 1;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 1, 3);
+    const camera = new THREE.PerspectiveCamera(CAMERA_FOV, width / height, CAMERA_NEAR, CAMERA_FAR);
+    camera.position.set(CAMERA_POSITION.x, CAMERA_POSITION.y, CAMERA_POSITION.z);
 
     let renderer: THREE.WebGLRenderer | undefined;
     let controls: OrbitControls | undefined;
@@ -68,9 +77,13 @@ const Simple3DViewer = ({
         controls.enableDamping = false;
         controls.enablePan = false;
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(2, 4, 3);
+        const ambientLight = new THREE.AmbientLight(0xffffff, AMBIENT_LIGHT_INTENSITY);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, DIRECTIONAL_LIGHT_INTENSITY);
+        directionalLight.position.set(
+          DIRECTIONAL_LIGHT_POSITION.x,
+          DIRECTIONAL_LIGHT_POSITION.y,
+          DIRECTIONAL_LIGHT_POSITION.z
+        );
         scene.add(ambientLight, directionalLight);
 
         const loader = new GLTFLoader();
@@ -126,7 +139,7 @@ const Simple3DViewer = ({
       data-model-src={src}
       style={{
         width: '100%',
-        height: '600px',
+        height: `${VIEWER_HEIGHT_PX}px`,
         overflow: 'hidden',
         position: 'relative',
         ...style,
