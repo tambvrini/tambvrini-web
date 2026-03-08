@@ -187,8 +187,10 @@ describe('HomePage featured grid', () => {
       '[data-testid="limited-editions-right-link"]'
     );
 
-    expect(leftLink?.getAttribute('to')).toBe('/collections/limited-editions');
-    expect(rightLink?.getAttribute('to')).toBe('/collections/limited-editions');
+    expect(leftLink).not.toBeNull();
+    expect(rightLink).not.toBeNull();
+    expect(leftLink.getAttribute('to')).toBe('/collections/limited-editions');
+    expect(rightLink.getAttribute('to')).toBe('/collections/limited-editions');
 
     act(() => {
       root.unmount();
