@@ -192,20 +192,25 @@ describe('HomePage featured grid', () => {
       '[data-testid="limited-editions-right-video"]'
     );
 
-    if (leftVideo && rightVideo) {
-      leftVideo.currentTime = 5;
-      rightVideo.currentTime = 3;
+    expect(leftVideo).not.toBeNull();
+    expect(rightVideo).not.toBeNull();
 
-      await act(async () => {
-        leftVideo.dispatchEvent(new Event('canplay'));
-        rightVideo.dispatchEvent(new Event('canplay'));
-        await new Promise((resolve) => setTimeout(resolve, 0));
-      });
-
-      expect(playSpy).toHaveBeenCalledTimes(2);
-      expect(leftVideo.currentTime).toBe(0);
-      expect(rightVideo.currentTime).toBe(0);
+    if (!leftVideo || !rightVideo) {
+      throw new Error('Limited editions videos not found');
     }
+
+    leftVideo.currentTime = 5;
+    rightVideo.currentTime = 3;
+
+    await act(async () => {
+      leftVideo.dispatchEvent(new Event('canplay'));
+      rightVideo.dispatchEvent(new Event('canplay'));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+
+    expect(playSpy).toHaveBeenCalledTimes(2);
+    expect(leftVideo.currentTime).toBe(0);
+    expect(rightVideo.currentTime).toBe(0);
 
     act(() => {
       root.unmount();

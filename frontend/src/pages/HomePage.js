@@ -271,13 +271,14 @@ const DropGridSection = () => {
         try {
           video.currentTime = 0;
           const playPromise = video.play();
-          playPromise.catch(() => {
+          playPromise.catch((error) => {
             // Ignore autoplay rejections; user interaction can resume playback.
             if (process.env.NODE_ENV === 'development') {
               const videoLabel = index === 0 ? 'left' : 'right';
               console.debug(
                 `Limited Editions video (${videoLabel}) autoplay blocked.`,
                 video.currentSrc || video.src,
+                error,
               );
             }
           });
