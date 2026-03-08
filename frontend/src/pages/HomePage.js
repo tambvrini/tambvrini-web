@@ -19,7 +19,7 @@ const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
 const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
-const READY_STATE_HAVE_FUTURE_DATA_FALLBACK = 3;
+const READY_STATE_HAVE_CURRENT_DATA_FALLBACK = 2;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 const logLimitedEditionsAutoplayBlocked = (videoLabel, source, readyState, error) => {
@@ -216,6 +216,7 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
+  const limitedVideosRef = useRef(null);
   const navigate = useNavigate();
 
   const handleCollectionClick = () => {
@@ -254,15 +255,17 @@ const DropGridSection = () => {
   // Sync Limited Editions videos so both begin at the same moment once ready.
   useEffect(() => {
     if (loading) return;
-    const videos = Array.from(document.querySelectorAll('[data-video-label]'));
+    const container = limitedVideosRef.current;
+    if (!container) return;
+    const videos = Array.from(container.querySelectorAll('.homepage-video'));
     if (videos.length === 0) return;
     let cancelled = false;
     const handlers = new Map();
 
     const readyStateTarget = typeof HTMLMediaElement !== 'undefined'
-      && typeof HTMLMediaElement.HAVE_FUTURE_DATA === 'number'
-      ? HTMLMediaElement.HAVE_FUTURE_DATA
-      : READY_STATE_HAVE_FUTURE_DATA_FALLBACK;
+      && typeof HTMLMediaElement.HAVE_CURRENT_DATA === 'number'
+      ? HTMLMediaElement.HAVE_CURRENT_DATA
+      : READY_STATE_HAVE_CURRENT_DATA_FALLBACK;
 
     const waitForVideo = (video) => new Promise((resolve) => {
       if (video.readyState >= readyStateTarget) {
@@ -270,11 +273,11 @@ const DropGridSection = () => {
         return;
       }
       const handleLoaded = () => {
-        video.removeEventListener('canplay', handleLoaded);
+        video.removeEventListener('loadeddata', handleLoaded);
         resolve();
       };
       handlers.set(video, handleLoaded);
-      video.addEventListener('canplay', handleLoaded);
+      video.addEventListener('loadeddata', handleLoaded);
     });
 
     Promise.all(videos.map(waitForVideo))
@@ -304,7 +307,7 @@ const DropGridSection = () => {
     return () => {
       cancelled = true;
       handlers.forEach((handler, video) => {
-        video.removeEventListener('canplay', handler);
+        video.removeEventListener('loadeddata', handler);
       });
     };
   }, [loading]);
@@ -517,10 +520,10 @@ const DropGridSection = () => {
               </div>
 
               <div className="mb-6 md:mb-8">
-                <div className="limited-editions-video-wrapper">
-                  <Link
-                    to="/collections/limited-editions"
-                    data-testid="limited-editions-left-link"
+              <div className="limited-editions-video-wrapper" ref={limitedVideosRef}>
+                <Link
+                  to="/collections/limited-editions"
+                  data-testid="limited-editions-left-link"
                     className="limited-editions-video-card"
                     aria-label="Limited Editions"
                   >
@@ -535,7 +538,7 @@ const DropGridSection = () => {
                       preload="metadata"
                       aria-label="Limited Editions Pasarela video"
                       title="Limited Editions Pasarela video"
-                      className="limited-editions-video"
+                      className="limited-editions-video homepage-video"
                     />
                     <span
                       data-testid="limited-editions-label"
@@ -561,7 +564,7 @@ const DropGridSection = () => {
                       preload="metadata"
                       aria-label="Limited Editions Eden video"
                       title="Limited Editions Eden video"
-                      className="limited-editions-video"
+                      className="limited-editions-video homepage-video"
                     />
                   </Link>
                 </div>

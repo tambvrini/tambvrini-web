@@ -177,7 +177,7 @@ describe('HomePage featured grid', () => {
     container.remove();
   });
 
-  it('syncs limited editions videos once both can play', async () => {
+  it('syncs limited editions videos once both load', async () => {
     const { container, root } = await renderHomePage();
     await act(async () => {
       await Promise.resolve();
@@ -197,8 +197,8 @@ describe('HomePage featured grid', () => {
     const rightPlaySpy = jest.spyOn(rightVideo, 'play');
 
     await act(async () => {
-      leftVideo.dispatchEvent(new Event('canplay'));
-      rightVideo.dispatchEvent(new Event('canplay'));
+      leftVideo.dispatchEvent(new Event('loadeddata'));
+      rightVideo.dispatchEvent(new Event('loadeddata'));
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
