@@ -13,7 +13,6 @@ const ModelViewer = ({
   persistentInteraction = false,
   ...rest
 }) => {
-  const viewerRef = useRef(null);
   const pointerCaptureIdRef = useRef(null);
   const pointerCaptureTargetRef = useRef(null);
   const [controlsEnabled, setControlsEnabled] = useState(persistentInteraction);
@@ -83,7 +82,9 @@ const ModelViewer = ({
       }
 
       if (persistentInteraction) {
-        setControlsState(true);
+        if (!controlsEnabledRef.current) {
+          setControlsState(true);
+        }
       } else {
         setControlsState(isInsideInteractionZone(event));
       }
@@ -169,7 +170,6 @@ const ModelViewer = ({
 
   return (
     <model-viewer
-      ref={viewerRef}
       src={src}
       alt={alt}
       poster={poster}
