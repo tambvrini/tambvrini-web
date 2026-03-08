@@ -75,7 +75,7 @@ const Simple3DViewer = ({
         container.appendChild(renderer.domElement);
 
         controls = new OrbitControls(camera, renderer.domElement);
-        // Keep damping disabled to avoid additional animation loops.
+        // Keep damping disabled since it requires requestAnimationFrame loops.
         controls.enableDamping = false;
         controls.enablePan = false;
 
@@ -112,7 +112,9 @@ const Simple3DViewer = ({
           }
         );
 
-        controls.addEventListener('change', render);
+        if (controls) {
+          controls.addEventListener('change', render);
+        }
         render();
       } catch (error) {
         if (!isMounted) {
