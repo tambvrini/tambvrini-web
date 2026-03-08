@@ -1093,6 +1093,7 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
     object-fit: cover;
     border-radius: 32px;
     display: block;
+    pointer-events: none;
 }
 
 .limited-editions-video-label {
@@ -1108,6 +1109,15 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
     color: #ffffff;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(6px);
+    opacity: 0.85;
+    text-decoration: none;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+}
+
+.limited-editions-video-label:hover {
+    opacity: 1;
+    filter: brightness(1.08);
 }
 
 @media (max-width: 768px) {

@@ -138,7 +138,9 @@ describe('HomePage featured grid', () => {
     expect(limitedEditionsRightLink).not.toBeNull();
     expect(limitedEditionsLink.tagName).toBe('DIV');
     expect(limitedEditionsRightLink.tagName).toBe('DIV');
-    expect(limitedEditionsLabel?.textContent).toContain('Limited Editions');
+    expect(limitedEditionsLabel?.tagName).toBe('A');
+    expect(limitedEditionsLabel?.getAttribute('to')).toBe('/limited-editions');
+    expect(limitedEditionsLabel?.textContent).toContain('LIMITED EDITIONS');
     expect(leftVideo?.getAttribute('src')).toBe('/videos/pasarela-video-web.mp4');
     expect(rightVideo?.getAttribute('src')).toBe('/videos/eden-video-web.mp4');
     const dropGrid = container.querySelector('[data-testid="drop-grid"]');
@@ -194,6 +196,9 @@ describe('HomePage featured grid', () => {
     const rightVideo = container.querySelector(
       '[data-testid="limited-editions-right-video"]'
     );
+    const limitedEditionsLabel = container.querySelector(
+      '[data-testid="limited-editions-label"]'
+    );
 
     expect(leftWrapper).not.toBeNull();
     expect(rightWrapper).not.toBeNull();
@@ -201,6 +206,7 @@ describe('HomePage featured grid', () => {
     expect(rightVideo).not.toBeNull();
     expect(leftWrapper.tagName).toBe('DIV');
     expect(rightWrapper.tagName).toBe('DIV');
+    expect(limitedEditionsLabel?.tagName).toBe('A');
     expect(leftVideo.closest('a')).toBeNull();
     expect(rightVideo.closest('a')).toBeNull();
 

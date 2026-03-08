@@ -531,12 +531,13 @@ const DropGridSection = () => {
                       title="Limited Editions Pasarela video"
                       className="limited-editions-video"
                     />
-                    <span
+                    <Link
+                      to="/limited-editions"
                       data-testid="limited-editions-label"
                       className="limited-editions-video-label"
                     >
-                      Limited Editions
-                    </span>
+                      LIMITED EDITIONS
+                    </Link>
                   </div>
                   <div
                     data-testid="limited-editions-right-wrapper"
