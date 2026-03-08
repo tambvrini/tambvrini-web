@@ -15,6 +15,7 @@ const ModelViewer = ({
 }) => {
   const viewerRef = useRef(null);
   const pointerCaptureIdRef = useRef(null);
+  const pointerCaptureTargetRef = useRef(null);
   const [controlsEnabled, setControlsEnabled] = useState(persistentInteraction);
   const controlsEnabledRef = useRef(persistentInteraction);
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(true);
@@ -105,40 +106,42 @@ const ModelViewer = ({
         if (target?.setPointerCapture) {
           target.setPointerCapture(event.pointerId);
           pointerCaptureIdRef.current = event.pointerId;
+          pointerCaptureTargetRef.current = target;
         }
       }
     },
     [pauseAutoRotate, persistentInteraction, updateControlsFromEvent]
   );
 
-  const releasePointerCapture = useCallback((event) => {
+  const releasePointerCapture = useCallback(() => {
     if (!persistentInteraction) {
       return;
     }
 
-    const pointerId = pointerCaptureIdRef.current ?? event?.pointerId;
-    if (pointerId === null || pointerId === undefined) {
+    const pointerId = pointerCaptureIdRef.current;
+    const target = pointerCaptureTargetRef.current;
+    if (pointerId === null || pointerId === undefined || !target?.releasePointerCapture) {
+      pointerCaptureIdRef.current = null;
+      pointerCaptureTargetRef.current = null;
       return;
     }
 
-    const target = event?.currentTarget ?? viewerRef.current;
-    if (target?.releasePointerCapture) {
-      const hasPointerCapture = target.hasPointerCapture?.(pointerId) ?? false;
-      if (hasPointerCapture) {
-        target.releasePointerCapture(pointerId);
-      }
+    const hasPointerCapture = target.hasPointerCapture?.(pointerId) ?? false;
+    if (hasPointerCapture) {
+      target.releasePointerCapture(pointerId);
     }
 
     pointerCaptureIdRef.current = null;
+    pointerCaptureTargetRef.current = null;
   }, [persistentInteraction]);
 
-  const handlePointerUp = useCallback((event) => {
-    releasePointerCapture(event);
+  const handlePointerUp = useCallback(() => {
+    releasePointerCapture();
     scheduleAutoRotateResume();
   }, [releasePointerCapture, scheduleAutoRotateResume]);
 
-  const handlePointerLeave = useCallback((event) => {
-    releasePointerCapture(event);
+  const handlePointerLeave = useCallback(() => {
+    releasePointerCapture();
     if (!persistentInteraction) {
       setControlsState(false);
     }
