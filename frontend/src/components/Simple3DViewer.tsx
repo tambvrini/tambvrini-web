@@ -64,6 +64,7 @@ const Simple3DViewer = ({
         container.appendChild(renderer.domElement);
 
         controls = new OrbitControls(camera, renderer.domElement);
+        // Keep damping disabled to avoid additional animation loops.
         controls.enableDamping = false;
         controls.enablePan = false;
 
@@ -85,7 +86,7 @@ const Simple3DViewer = ({
           undefined,
           (error) => {
             if (isMounted) {
-              console.warn('Simple3DViewer failed to load model.', error);
+              console.warn('Simple3DViewer failed to load model from', src, error);
               render();
             }
           }
@@ -97,7 +98,7 @@ const Simple3DViewer = ({
         if (!isMounted) {
           return;
         }
-        console.warn('Simple3DViewer failed to initialize.', error);
+        console.warn('Simple3DViewer failed to initialize for', src, error);
       }
     };
 
@@ -122,6 +123,7 @@ const Simple3DViewer = ({
     <div
       ref={containerRef}
       className={className}
+      data-model-src={src}
       style={{
         width: '100%',
         height: '600px',
