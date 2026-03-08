@@ -83,10 +83,9 @@ const ModelViewer = ({
 
       if (persistentInteraction) {
         setControlsState(true);
-        return;
+      } else {
+        setControlsState(isInsideInteractionZone(event));
       }
-
-      setControlsState(isInsideInteractionZone(event));
     },
     [isInsideInteractionZone, pauseAutoRotate, persistentInteraction, setControlsState]
   );
