@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { CSSProperties, HTMLAttributes } from 'react';
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 
 interface Simple3DViewerProps extends HTMLAttributes<HTMLDivElement> {
@@ -14,7 +15,7 @@ const Simple3DViewer = ({
   style,
   ...rest
 }: Simple3DViewerProps) => {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -33,8 +34,8 @@ const Simple3DViewer = ({
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 1, 3);
 
-    let renderer;
-    let controls;
+    let renderer: THREE.WebGLRenderer | undefined;
+    let controls: OrbitControls | undefined;
     let isMounted = true;
 
     const render = () => {
@@ -82,8 +83,9 @@ const Simple3DViewer = ({
             render();
           },
           undefined,
-          () => {
+          (error) => {
             if (isMounted) {
+              console.warn('Simple3DViewer failed to load model.', error);
               render();
             }
           }
