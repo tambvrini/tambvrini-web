@@ -78,6 +78,7 @@ const Simple3DViewer = ({
         // Keep damping disabled since it requires requestAnimationFrame loops.
         controls.enableDamping = false;
         controls.enablePan = false;
+        controls.addEventListener('change', render);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, AMBIENT_LIGHT_INTENSITY);
         const directionalLight = new THREE.DirectionalLight(0xffffff, DIRECTIONAL_LIGHT_INTENSITY);
@@ -102,9 +103,8 @@ const Simple3DViewer = ({
           (error) => {
             if (isMounted) {
               console.warn(
-                'Simple3DViewer failed to load model from',
-                src,
-                'Check the URL, network access, and GLB format.',
+                `Simple3DViewer failed to load model from ${src}. ` +
+                  'Check the URL, network access, and GLB format.',
                 error
               );
               render();
@@ -112,18 +112,14 @@ const Simple3DViewer = ({
           }
         );
 
-        if (controls) {
-          controls.addEventListener('change', render);
-        }
         render();
       } catch (error) {
         if (!isMounted) {
           return;
         }
         console.warn(
-          'Simple3DViewer failed to initialize for',
-          src,
-          'Check WebGL support and module loading.',
+          `Simple3DViewer failed to initialize for ${src}. ` +
+            'Check WebGL support and module loading.',
           error
         );
       }
