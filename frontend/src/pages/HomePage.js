@@ -265,35 +265,49 @@ const DropGridSection = () => {
       video.addEventListener('canplay', handleLoaded);
     });
 
-    const handleAutoplayBlocked = (videoLabel, source, error) => {
+    const handleAutoplayBlocked = (videoLabel, source, readyState, error) => {
       if (process.env.NODE_ENV === 'development') {
         console.debug(
           `Limited Editions video (${videoLabel}) autoplay blocked.`,
-          source,
-          error,
+          {
+            source,
+            readyState,
+            error,
+          },
         );
       }
     };
 
-    Promise.all(videos.map(waitForVideo)).then(() => {
-      if (cancelled) return;
-      videos.forEach((video) => {
-        try {
-          const videoLabel = video.dataset?.videoLabel || 'unknown';
-          video.currentTime = 0;
-          const playPromise = video.play();
-          playPromise.catch((error) => {
-            // Ignore autoplay rejections; user interaction can resume playback.
-            handleAutoplayBlocked(videoLabel, video.currentSrc || video.src, error);
-          });
-        } catch (error) {
-          // Autoplay can be blocked; ignore and let the browser handle it.
-          if (process.env.NODE_ENV === 'development') {
-            console.debug('Limited Editions video sync error.', error);
+    Promise.all(videos.map(waitForVideo))
+      .then(() => {
+        if (cancelled) return;
+        videos.forEach((video) => {
+          try {
+            const videoLabel = video.dataset?.videoLabel || 'unknown';
+            video.currentTime = 0;
+            const playPromise = video.play();
+            playPromise.catch((error) => {
+              // Ignore autoplay rejections; user interaction can resume playback.
+              handleAutoplayBlocked(
+                videoLabel,
+                video.currentSrc || video.src,
+                video.readyState,
+                error,
+              );
+            });
+          } catch (error) {
+            // Autoplay can be blocked; ignore and let the browser handle it.
+            if (process.env.NODE_ENV === 'development') {
+              console.debug('Limited Editions video sync error.', error);
+            }
           }
+        });
+      })
+      .catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.debug('Limited Editions video sync failed.', error);
         }
       });
-    });
 
     return () => {
       cancelled = true;
