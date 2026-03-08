@@ -19,7 +19,7 @@ const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
 const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
-const HAVE_FUTURE_DATA_FALLBACK = 3;
+const READY_STATE_HAVE_FUTURE_DATA_FALLBACK = 3;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
 
@@ -249,7 +249,7 @@ const DropGridSection = () => {
     const readyStateTarget = typeof HTMLMediaElement !== 'undefined'
       && typeof HTMLMediaElement.HAVE_FUTURE_DATA === 'number'
       ? HTMLMediaElement.HAVE_FUTURE_DATA
-      : HAVE_FUTURE_DATA_FALLBACK;
+      : READY_STATE_HAVE_FUTURE_DATA_FALLBACK;
 
     const waitForVideo = (video) => new Promise((resolve) => {
       if (video.readyState >= readyStateTarget) {
@@ -270,11 +270,9 @@ const DropGridSection = () => {
         try {
           video.currentTime = 0;
           const playPromise = video.play();
-          if (playPromise) {
-            playPromise.catch(() => {
-              // Ignore autoplay rejections; user interaction can resume playback.
-            });
-          }
+          playPromise.catch(() => {
+            // Ignore autoplay rejections; user interaction can resume playback.
+          });
         } catch {
           // Autoplay can be blocked; ignore and let the browser handle it.
         }
