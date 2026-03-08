@@ -117,15 +117,13 @@ const ModelViewer = ({
     }
 
     const pointerId = pointerCaptureIdRef.current ?? event?.pointerId;
-    if (pointerId === null || pointerId === undefined) {
+    if (pointerId == null) {
       return;
     }
 
     const target = event?.currentTarget ?? viewerRef.current;
     if (target?.releasePointerCapture) {
-      const hasPointerCapture = target.hasPointerCapture
-        ? target.hasPointerCapture(pointerId)
-        : false;
+      const hasPointerCapture = target.hasPointerCapture?.(pointerId) ?? false;
       if (hasPointerCapture) {
         target.releasePointerCapture(pointerId);
       }
