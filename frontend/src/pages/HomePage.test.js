@@ -43,7 +43,11 @@ jest.mock('lucide-react', () => ({
 jest.mock(
   'react-router-dom',
   () => ({
-    Link: ({ children, ...props }) => <a {...props}>{children}</a>,
+    Link: ({ children, to, ...props }) => (
+      <a href={to} {...props}>
+        {children}
+      </a>
+    ),
     useNavigate: () => jest.fn(),
   }),
   { virtual: true }
@@ -139,7 +143,7 @@ describe('HomePage featured grid', () => {
     expect(limitedEditionsLink.tagName).toBe('DIV');
     expect(limitedEditionsRightLink.tagName).toBe('DIV');
     expect(limitedEditionsLabel?.tagName).toBe('A');
-    expect(limitedEditionsLabel?.getAttribute('to')).toBe('/limited-editions');
+    expect(limitedEditionsLabel?.getAttribute('href')).toBe('/limited-editions');
     expect(limitedEditionsLabel?.textContent).toContain('LIMITED EDITIONS');
     expect(leftVideo?.getAttribute('src')).toBe('/videos/pasarela-video-web.mp4');
     expect(rightVideo?.getAttribute('src')).toBe('/videos/eden-video-web.mp4');
