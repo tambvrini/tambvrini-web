@@ -55,10 +55,12 @@ const Simple3DViewer = ({
 
     const init = async () => {
       try {
-        const [{ GLTFLoader }, { OrbitControls }] = await Promise.all([
+        const [loaderModule, controlsModule] = await Promise.all([
           import('three/examples/jsm/loaders/GLTFLoader'),
           import('three/examples/jsm/controls/OrbitControls'),
         ]);
+        const { GLTFLoader } = loaderModule;
+        const { OrbitControls } = controlsModule;
 
         if (!isMounted) {
           return;
@@ -99,7 +101,12 @@ const Simple3DViewer = ({
           undefined,
           (error) => {
             if (isMounted) {
-              console.warn('Simple3DViewer failed to load model from', src, error);
+              console.warn(
+                'Simple3DViewer failed to load model from',
+                src,
+                'Check the URL, network access, and GLB format.',
+                error
+              );
               render();
             }
           }
@@ -111,7 +118,12 @@ const Simple3DViewer = ({
         if (!isMounted) {
           return;
         }
-        console.warn('Simple3DViewer failed to initialize for', src, error);
+        console.warn(
+          'Simple3DViewer failed to initialize for',
+          src,
+          'Check WebGL support and module loading.',
+          error
+        );
       }
     };
 
