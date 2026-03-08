@@ -161,7 +161,7 @@ export default function ProductPage() {
   const modelPoster = product.model_poster
     || fallbackPoster
     || LOGO_FALLBACK_POSTER;
-  const useSimpleViewer = isUmbraProduct || isIgnatiusProduct;
+  const shouldUseSimpleViewer = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
   const sizeLabel = Array.isArray(product.sizes) && product.sizes.length > 0
     ? product.sizes.join(', ')
@@ -185,7 +185,7 @@ export default function ProductPage() {
         >
           {media.type === 'model' ? (
             <div className="product-gallery-media">
-              {useSimpleViewer ? (
+              {shouldUseSimpleViewer ? (
                 <Simple3DViewer
                   data-testid="product-model-viewer"
                   src={media.src}

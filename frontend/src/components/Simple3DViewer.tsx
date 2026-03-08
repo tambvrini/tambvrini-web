@@ -10,6 +10,7 @@ interface Simple3DViewerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const VIEWER_HEIGHT_PX = 600;
+const VIEWER_FALLBACK_ASPECT = 4 / 5;
 const CAMERA_FOV = 45;
 const CAMERA_NEAR = 0.1;
 const CAMERA_FAR = 100;
@@ -36,8 +37,10 @@ const Simple3DViewer = ({
       return undefined;
     }
 
-    const width = container.clientWidth || container.getBoundingClientRect().width || VIEWER_HEIGHT_PX;
     const height = container.clientHeight || container.getBoundingClientRect().height || VIEWER_HEIGHT_PX;
+    const width = container.clientWidth
+      || container.getBoundingClientRect().width
+      || height * VIEWER_FALLBACK_ASPECT;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(CAMERA_FOV, width / height, CAMERA_NEAR, CAMERA_FAR);
@@ -75,7 +78,8 @@ const Simple3DViewer = ({
         container.appendChild(renderer.domElement);
 
         controls = new OrbitControls(camera, renderer.domElement);
-        // Keep damping disabled since it requires requestAnimationFrame loops.
+        // Keep damping disabled to avoid continuous requestAnimationFrame loops.
+        // This means camera movement stops immediately without smooth deceleration.
         controls.enableDamping = false;
         controls.enablePan = false;
         controls.addEventListener('change', render);
