@@ -19,6 +19,7 @@ const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
 const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
+const READY_STATE_HAVE_CURRENT_DATA_FALLBACK = 2;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 /* ============ HERO with GUCCI-style animated logo ============ */
 const SCROLL_THRESHOLD = 500;
@@ -200,6 +201,7 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
+  const limitedVideosRef = useRef(null);
   const navigate = useNavigate();
 
   const handleCollectionClick = () => {
@@ -234,6 +236,67 @@ const DropGridSection = () => {
     };
     fetchDrop();
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    const container = limitedVideosRef.current;
+    if (!container) return;
+    const videos = Array.from(container.querySelectorAll('.limited-editions-video'));
+    if (videos.length < 2) return;
+    let cancelled = false;
+    let syncInterval = null;
+    const handlers = new Map();
+
+    const readyStateTarget = typeof HTMLMediaElement !== 'undefined'
+      && typeof HTMLMediaElement.HAVE_CURRENT_DATA === 'number'
+      ? HTMLMediaElement.HAVE_CURRENT_DATA
+      : READY_STATE_HAVE_CURRENT_DATA_FALLBACK;
+
+    const waitForVideo = (video) => new Promise((resolve) => {
+      if (video.readyState >= readyStateTarget) {
+        resolve();
+        return;
+      }
+      const handleLoaded = () => {
+        video.removeEventListener('loadeddata', handleLoaded);
+        resolve();
+      };
+      handlers.set(video, handleLoaded);
+      video.addEventListener('loadeddata', handleLoaded);
+    });
+
+    Promise.all(videos.map(waitForVideo)).then(() => {
+      if (cancelled) return;
+      const [masterVideo] = videos;
+      videos.forEach((video) => {
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {});
+        }
+      });
+
+      syncInterval = window.setInterval(() => {
+        if (cancelled) return;
+        const masterTime = masterVideo.currentTime;
+        videos.slice(1).forEach((video) => {
+          if (Math.abs(video.currentTime - masterTime) > 0.08) {
+            video.currentTime = masterTime;
+          }
+        });
+      }, 250);
+    });
+
+    return () => {
+      cancelled = true;
+      if (syncInterval) {
+        window.clearInterval(syncInterval);
+      }
+      handlers.forEach((handler, video) => {
+        video.removeEventListener('loadeddata', handler);
+      });
+    };
+  }, [loading]);
 
   return (
     <section id="drops" data-testid="drop-grid" className="pt-6 pb-24 md:pt-8 md:pb-32">
@@ -443,12 +506,10 @@ const DropGridSection = () => {
               </div>
 
               <div className="mb-6 md:mb-8">
-              <div className="limited-editions-video-wrapper">
-                <Link
-                  to="/collections/limited-editions"
-                  data-testid="limited-editions-left-link"
+                <div ref={limitedVideosRef} className="limited-editions-video-wrapper">
+                  <div
+                    data-testid="limited-editions-left-link"
                     className="limited-editions-video-card"
-                    aria-label="Limited Editions"
                   >
                     <video
                       data-testid="limited-editions-left-video"
@@ -469,12 +530,10 @@ const DropGridSection = () => {
                     >
                       Limited Editions
                     </span>
-                  </Link>
-                  <Link
-                    to="/collections/limited-editions"
+                  </div>
+                  <div
                     data-testid="limited-editions-right-link"
                     className="limited-editions-video-card"
-                    aria-label="Limited Editions"
                   >
                     <video
                       data-testid="limited-editions-right-video"
@@ -489,7 +548,7 @@ const DropGridSection = () => {
                       title="Limited Editions Eden video"
                       className="limited-editions-video"
                     />
-                  </Link>
+                  </div>
                 </div>
               </div>
 

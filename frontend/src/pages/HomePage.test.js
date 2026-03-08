@@ -134,8 +134,8 @@ describe('HomePage featured grid', () => {
     const rightVideo = container.querySelector(
       '[data-testid="limited-editions-right-video"]'
     );
-    expect(limitedEditionsLink?.getAttribute('to')).toBe('/collections/limited-editions');
-    expect(limitedEditionsRightLink?.getAttribute('to')).toBe('/collections/limited-editions');
+    expect(limitedEditionsLink).not.toBeNull();
+    expect(limitedEditionsRightLink).not.toBeNull();
     expect(limitedEditionsLabel?.textContent).toContain('Limited Editions');
     expect(leftVideo?.getAttribute('src')).toBe('/videos/pasarela-video-web.mp4');
     expect(rightVideo?.getAttribute('src')).toBe('/videos/eden-video-web.mp4');
@@ -177,24 +177,69 @@ describe('HomePage featured grid', () => {
     container.remove();
   });
 
-  it('links both limited editions videos to the collection page', async () => {
+  it('renders limited editions videos without links', async () => {
     const { container, root } = await renderHomePage();
 
-    const leftLink = container.querySelector(
+    const leftWrapper = container.querySelector(
       '[data-testid="limited-editions-left-link"]'
     );
-    const rightLink = container.querySelector(
+    const rightWrapper = container.querySelector(
       '[data-testid="limited-editions-right-link"]'
     );
+    const leftVideo = container.querySelector(
+      '[data-testid="limited-editions-left-video"]'
+    );
+    const rightVideo = container.querySelector(
+      '[data-testid="limited-editions-right-video"]'
+    );
 
-    expect(leftLink).not.toBeNull();
-    expect(rightLink).not.toBeNull();
-    expect(leftLink.getAttribute('to')).toBe('/collections/limited-editions');
-    expect(rightLink.getAttribute('to')).toBe('/collections/limited-editions');
+    expect(leftWrapper).not.toBeNull();
+    expect(rightWrapper).not.toBeNull();
+    expect(leftVideo).not.toBeNull();
+    expect(rightVideo).not.toBeNull();
+    expect(leftWrapper.tagName).toBe('DIV');
+    expect(rightWrapper.tagName).toBe('DIV');
+    expect(leftVideo.closest('a')).toBeNull();
+    expect(rightVideo.closest('a')).toBeNull();
 
     act(() => {
       root.unmount();
     });
+    container.remove();
+  });
+
+  it('syncs limited editions videos once both load', async () => {
+    const { container, root } = await renderHomePage();
+
+    const leftVideo = container.querySelector(
+      '[data-testid="limited-editions-left-video"]'
+    );
+    const rightVideo = container.querySelector(
+      '[data-testid="limited-editions-right-video"]'
+    );
+
+    expect(leftVideo).not.toBeNull();
+    expect(rightVideo).not.toBeNull();
+
+    const leftPlaySpy = jest.spyOn(leftVideo, 'play');
+    const rightPlaySpy = jest.spyOn(rightVideo, 'play');
+
+    await act(async () => {
+      leftVideo.dispatchEvent(new Event('loadeddata'));
+      rightVideo.dispatchEvent(new Event('loadeddata'));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+
+    expect(leftPlaySpy).toHaveBeenCalled();
+    expect(rightPlaySpy).toHaveBeenCalled();
+    expect(leftVideo.currentTime).toBe(0);
+    expect(rightVideo.currentTime).toBe(0);
+
+    act(() => {
+      root.unmount();
+    });
+    leftPlaySpy.mockRestore();
+    rightPlaySpy.mockRestore();
     container.remove();
   });
 
