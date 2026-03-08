@@ -117,7 +117,7 @@ const ModelViewer = ({
     }
 
     const pointerId = pointerCaptureIdRef.current ?? event?.pointerId;
-    if (pointerId == null) {
+    if (pointerId === null || pointerId === undefined) {
       return;
     }
 
@@ -146,6 +146,7 @@ const ModelViewer = ({
   }, [persistentInteraction, releasePointerCapture, scheduleAutoRotateResume, setControlsState]);
 
   const handleWheel = useCallback((event) => {
+    // Allow scroll propagation in persistent mode to keep page scrolling responsive.
     if (!persistentInteraction) {
       event.stopPropagation();
     }
