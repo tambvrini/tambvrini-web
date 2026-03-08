@@ -1,11 +1,19 @@
 import { useEffect, useRef } from 'react';
+import type { CSSProperties, HTMLAttributes } from 'react';
 import * as THREE from 'three';
+
+interface Simple3DViewerProps extends HTMLAttributes<HTMLDivElement> {
+  src: string;
+  className?: string;
+  style?: CSSProperties;
+}
+
 const Simple3DViewer = ({
   src,
   className = '',
   style,
   ...rest
-}) => {
+}: Simple3DViewerProps) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -87,6 +95,7 @@ const Simple3DViewer = ({
         if (!isMounted) {
           return;
         }
+        console.warn('Simple3DViewer failed to initialize.', error);
       }
     };
 

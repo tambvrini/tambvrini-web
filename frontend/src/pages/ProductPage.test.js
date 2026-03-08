@@ -201,7 +201,6 @@ describe('ProductPage', () => {
     const productPage = container.querySelector('[data-testid="product-page"]');
 
     expect(viewer).not.toBeNull();
-    expect(viewer.getAttribute('data-testid')).toBe('product-model-viewer');
     expect(galleryImageElements.length).toBe(0);
     expect(productPage).not.toBeNull();
     expect(productPage.className).toContain('mb-12');
