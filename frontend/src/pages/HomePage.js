@@ -272,6 +272,9 @@ const DropGridSection = () => {
           const playPromise = video.play();
           playPromise.catch(() => {
             // Ignore autoplay rejections; user interaction can resume playback.
+            if (process.env.NODE_ENV === 'development') {
+              console.debug('Limited Editions video autoplay blocked.');
+            }
           });
         } catch {
           // Autoplay can be blocked; ignore and let the browser handle it.
