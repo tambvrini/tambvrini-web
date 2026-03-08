@@ -5,6 +5,7 @@ import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import ModelViewer from '../components/ModelViewer';
+import Simple3DViewer from '../components/Simple3DViewer.tsx';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
 
@@ -160,7 +161,7 @@ export default function ProductPage() {
   const modelPoster = product.model_poster
     || fallbackPoster
     || LOGO_FALLBACK_POSTER;
-  const persistentModelInteraction = isUmbraProduct || isIgnatiusProduct;
+  const useSimpleViewer = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
   const sizeLabel = Array.isArray(product.sizes) && product.sizes.length > 0
     ? product.sizes.join(', ')
@@ -184,14 +185,22 @@ export default function ProductPage() {
         >
           {media.type === 'model' ? (
             <div className="product-gallery-media">
-              <ModelViewer
-                data-testid="product-model-viewer"
-                src={media.src}
-                alt={`Vista 3D de ${product.name}`}
-                poster={modelPoster}
-                persistentInteraction={persistentModelInteraction}
-                className="product-model-viewer"
-              />
+              {useSimpleViewer ? (
+                <Simple3DViewer
+                  data-testid="product-model-viewer"
+                  src={media.src}
+                  className="product-model-viewer"
+                  aria-label={`Vista 3D de ${product.name}`}
+                />
+              ) : (
+                <ModelViewer
+                  data-testid="product-model-viewer"
+                  src={media.src}
+                  alt={`Vista 3D de ${product.name}`}
+                  poster={modelPoster}
+                  className="product-model-viewer"
+                />
+              )}
             </div>
           ) : (
             <div className="product-gallery-media">

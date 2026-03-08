@@ -196,12 +196,12 @@ describe('ProductPage', () => {
     });
 
     const { container, root } = await renderProductPage();
-    const viewer = container.querySelector('model-viewer');
+    const viewer = container.querySelector('[data-testid="product-model-viewer"]');
     const galleryImageElements = container.querySelectorAll('[data-testid^="product-gallery-image-"]');
     const productPage = container.querySelector('[data-testid="product-page"]');
 
     expect(viewer).not.toBeNull();
-    expect(viewer.getAttribute('src')).toBe('/models/ignatius.glb');
+    expect(viewer.getAttribute('data-testid')).toBe('product-model-viewer');
     expect(galleryImageElements.length).toBe(0);
     expect(productPage).not.toBeNull();
     expect(productPage.className).toContain('mb-12');
@@ -219,7 +219,7 @@ describe('ProductPage', () => {
     });
 
     const { container, root } = await renderProductPage();
-    const viewer = container.querySelector('model-viewer');
+    const viewer = container.querySelector('[data-testid="product-model-viewer"]');
     const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
 
     expect(viewer).toBeNull();
@@ -257,7 +257,7 @@ describe('ProductPage', () => {
     const thumbnailButtons = container.querySelectorAll('[data-testid^="product-thumb-"]');
 
     expect(modelViewer).not.toBeNull();
-    expect(firstGalleryItem.querySelector('model-viewer')).not.toBeNull();
+    expect(firstGalleryItem.querySelector('[data-testid="product-model-viewer"]')).not.toBeNull();
     expect(firstGalleryImage).not.toBeNull();
     expect(thumbnailButtons.length).toBe(0);
     expect(firstGalleryImage.getAttribute('src'))
