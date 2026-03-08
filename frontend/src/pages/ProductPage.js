@@ -212,7 +212,7 @@ export default function ProductPage() {
   return (
     <div
       data-testid="product-page"
-      className={`product-page-shell mb-10 ${isUmbraProduct ? 'umbra-product-page' : ''} ${
+      className={`product-page-shell mb-12 ${isUmbraProduct ? 'umbra-product-page' : ''} ${
         isIgnatiusProduct ? 'product-page-ignatius' : ''
       }`}
     >
