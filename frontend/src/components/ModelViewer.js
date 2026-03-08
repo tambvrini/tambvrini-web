@@ -100,7 +100,7 @@ const ModelViewer = ({
     (event) => {
       updateControlsFromEvent(event);
       pauseAutoRotate();
-      if (persistentInteraction && event.pointerId !== null && event.pointerId !== undefined) {
+      if (persistentInteraction && typeof event.pointerId === 'number') {
         const target = event.currentTarget;
         if (target?.setPointerCapture) {
           target.setPointerCapture(event.pointerId);
@@ -125,7 +125,7 @@ const ModelViewer = ({
     if (target?.releasePointerCapture) {
       const hasPointerCapture = target.hasPointerCapture
         ? target.hasPointerCapture(pointerId)
-        : true;
+        : false;
       if (hasPointerCapture) {
         target.releasePointerCapture(pointerId);
       }
@@ -148,8 +148,7 @@ const ModelViewer = ({
   }, [persistentInteraction, releasePointerCapture, scheduleAutoRotateResume, setControlsState]);
 
   const handleWheel = useCallback((event) => {
-    const allowScrollPropagation = persistentInteraction;
-    if (!allowScrollPropagation) {
+    if (!persistentInteraction) {
       event.stopPropagation();
     }
   }, [persistentInteraction]);
