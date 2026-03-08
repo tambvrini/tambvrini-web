@@ -277,13 +277,13 @@ const DropGridSection = () => {
 
     Promise.all(videos.map(waitForVideo)).then(() => {
       if (cancelled) return;
-      videos.forEach((video, index) => {
+      videos.forEach((video) => {
         try {
+          const videoLabel = video.dataset?.videoLabel || 'unknown';
           video.currentTime = 0;
           const playPromise = video.play();
           playPromise.catch((error) => {
             // Ignore autoplay rejections; user interaction can resume playback.
-            const videoLabel = index === 0 ? 'left' : 'right';
             handleAutoplayBlocked(videoLabel, video.currentSrc || video.src, error);
           });
         } catch (error) {
@@ -523,6 +523,7 @@ const DropGridSection = () => {
                         limitedVideoRefs.current[0] = element;
                       }}
                       data-testid="limited-editions-left-video"
+                      data-video-label="left"
                       src="/videos/pasarela-video-web.mp4"
                       autoPlay
                       muted
@@ -551,6 +552,7 @@ const DropGridSection = () => {
                         limitedVideoRefs.current[1] = element;
                       }}
                       data-testid="limited-editions-right-video"
+                      data-video-label="right"
                       src="/videos/eden-video-web.mp4"
                       autoPlay
                       muted

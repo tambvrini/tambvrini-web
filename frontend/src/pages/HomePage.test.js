@@ -195,10 +195,6 @@ describe('HomePage featured grid', () => {
     expect(leftVideo).not.toBeNull();
     expect(rightVideo).not.toBeNull();
 
-    if (!leftVideo || !rightVideo) {
-      throw new Error('Limited editions videos not found');
-    }
-
     leftVideo.currentTime = 5;
     rightVideo.currentTime = 3;
 
