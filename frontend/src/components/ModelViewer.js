@@ -77,15 +77,16 @@ const ModelViewer = ({
 
   const updateControlsFromEvent = useCallback(
     (event) => {
+      if (event.buttons) {
+        pauseAutoRotate();
+      }
+
       if (persistentInteraction) {
         setControlsState(true);
         return;
       }
 
       setControlsState(isInsideInteractionZone(event));
-      if (event.buttons) {
-        pauseAutoRotate();
-      }
     },
     [isInsideInteractionZone, pauseAutoRotate, persistentInteraction, setControlsState]
   );
