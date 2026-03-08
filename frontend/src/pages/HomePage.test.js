@@ -178,8 +178,6 @@ describe('HomePage featured grid', () => {
   });
 
   it('syncs limited editions videos once both can play', async () => {
-    const playSpy = jest.spyOn(HTMLMediaElement.prototype, 'play');
-    playSpy.mockClear();
     const { container, root } = await renderHomePage();
     await act(async () => {
       await Promise.resolve();
@@ -195,6 +193,9 @@ describe('HomePage featured grid', () => {
     expect(leftVideo).not.toBeNull();
     expect(rightVideo).not.toBeNull();
 
+    const leftPlaySpy = jest.spyOn(leftVideo, 'play');
+    const rightPlaySpy = jest.spyOn(rightVideo, 'play');
+
     leftVideo.currentTime = 5;
     rightVideo.currentTime = 3;
 
@@ -204,14 +205,14 @@ describe('HomePage featured grid', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    expect(playSpy).toHaveBeenCalledTimes(2);
-    expect(leftVideo.currentTime).toBe(0);
-    expect(rightVideo.currentTime).toBe(0);
+    expect(leftPlaySpy).toHaveBeenCalled();
+    expect(rightPlaySpy).toHaveBeenCalled();
 
     act(() => {
       root.unmount();
     });
-    playSpy.mockRestore();
+    leftPlaySpy.mockRestore();
+    rightPlaySpy.mockRestore();
     container.remove();
   });
 

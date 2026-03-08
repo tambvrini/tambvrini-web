@@ -22,6 +22,19 @@ const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
 const READY_STATE_HAVE_FUTURE_DATA_FALLBACK = 3;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 
+const logLimitedEditionsAutoplayBlocked = (videoLabel, source, readyState, error) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.debug(
+      `Limited Editions video (${videoLabel}) autoplay blocked.`,
+      {
+        source,
+        readyState,
+        error,
+      },
+    );
+  }
+};
+
 
 /* ============ HERO with GUCCI-style animated logo ============ */
 const SCROLL_THRESHOLD = 500;
@@ -203,7 +216,6 @@ const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCollectionTransition, setShowCollectionTransition] = useState(false);
-  const limitedVideoRefs = useRef([]);
   const navigate = useNavigate();
 
   const handleCollectionClick = () => {
@@ -242,7 +254,7 @@ const DropGridSection = () => {
   // Sync Limited Editions videos so both begin at the same moment once ready.
   useEffect(() => {
     if (loading) return;
-    const videos = limitedVideoRefs.current.filter(Boolean);
+    const videos = Array.from(document.querySelectorAll('[data-video-label]'));
     if (videos.length === 0) return;
     let cancelled = false;
     const handlers = new Map();
@@ -265,42 +277,22 @@ const DropGridSection = () => {
       video.addEventListener('canplay', handleLoaded);
     });
 
-    const handleAutoplayBlocked = (videoLabel, source, readyState, error) => {
-      if (process.env.NODE_ENV === 'development') {
-        console.debug(
-          `Limited Editions video (${videoLabel}) autoplay blocked.`,
-          {
-            source,
-            readyState,
-            error,
-          },
-        );
-      }
-    };
-
     Promise.all(videos.map(waitForVideo))
       .then(() => {
         if (cancelled) return;
         videos.forEach((video) => {
-          try {
-            const videoLabel = video.dataset?.videoLabel || 'unknown';
-            video.currentTime = 0;
-            const playPromise = video.play();
-            playPromise.catch((error) => {
-              // Ignore autoplay rejections; user interaction can resume playback.
-              handleAutoplayBlocked(
-                videoLabel,
-                video.currentSrc || video.src,
-                video.readyState,
-                error,
-              );
-            });
-          } catch (error) {
-            // Autoplay can be blocked; ignore and let the browser handle it.
-            if (process.env.NODE_ENV === 'development') {
-              console.debug('Limited Editions video sync error.', error);
-            }
-          }
+          const videoLabel = video.dataset?.videoLabel || 'unknown';
+          video.currentTime = 0;
+          const playPromise = video.play();
+          playPromise.catch((error) => {
+            // Ignore autoplay rejections; user interaction can resume playback.
+            logLimitedEditionsAutoplayBlocked(
+              videoLabel,
+              video.currentSrc || video.src,
+              video.readyState,
+              error,
+            );
+          });
         });
       })
       .catch((error) => {
@@ -533,9 +525,6 @@ const DropGridSection = () => {
                     aria-label="Limited Editions"
                   >
                     <video
-                      ref={(element) => {
-                        limitedVideoRefs.current[0] = element;
-                      }}
                       data-testid="limited-editions-left-video"
                       data-video-label="left"
                       src="/videos/pasarela-video-web.mp4"
@@ -562,9 +551,6 @@ const DropGridSection = () => {
                     aria-label="Limited Editions"
                   >
                     <video
-                      ref={(element) => {
-                        limitedVideoRefs.current[1] = element;
-                      }}
                       data-testid="limited-editions-right-video"
                       data-video-label="right"
                       src="/videos/eden-video-web.mp4"
