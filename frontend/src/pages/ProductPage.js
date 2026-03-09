@@ -189,6 +189,7 @@ export default function ProductPage() {
                 <Simple3DViewer
                   data-testid="product-model-viewer"
                   src={media.src}
+                  productId={product.product_id}
                   className="product-model-viewer"
                   aria-label={`Vista 3D de ${product.name}`}
                 />

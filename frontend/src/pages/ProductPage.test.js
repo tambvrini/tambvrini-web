@@ -202,6 +202,7 @@ describe('ProductPage', () => {
 
     expect(viewer).not.toBeNull();
     expect(viewer.getAttribute('data-model-src')).toBe('/models/ignatius.glb');
+    expect(viewer.getAttribute('data-viewer-preset')).toBe('ignatius');
     expect(galleryImageElements.length).toBe(0);
     expect(productPage).not.toBeNull();
     expect(productPage.className).toContain('mb-12');
@@ -258,6 +259,7 @@ describe('ProductPage', () => {
 
     expect(modelViewer).not.toBeNull();
     expect(firstGalleryItem.querySelector('[data-testid="product-model-viewer"]')).not.toBeNull();
+    expect(modelViewer.getAttribute('data-viewer-preset')).toBe('default');
     expect(firstGalleryImage).not.toBeNull();
     expect(thumbnailButtons.length).toBe(0);
     expect(firstGalleryImage.getAttribute('src'))
