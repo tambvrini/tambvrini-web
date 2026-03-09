@@ -19,6 +19,7 @@ const IDLE_ROTATION_SPEED = 0.13;
 const HOVER_SCALE_MULTIPLIER = 1.02;
 const HOVER_TILT_STRENGTH = 0.06;
 const DAMPING_FACTOR = 7;
+const ENVIRONMENT_BLUR = 0.04;
 
 const PRODUCT_VIEWER_PRESETS = {
   default: {
@@ -80,7 +81,7 @@ const Simple3DViewer = ({
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(CAMERA_FOV, width / height, CAMERA_NEAR, CAMERA_FAR);
-    camera.position.set(CAMERA_POSITION.x, CAMERA_POSITION.y, CAMERA_POSITION.z);
+    camera.position.set(0, 1, 3);
 
     let renderer: THREE.WebGLRenderer | undefined;
     let controls: OrbitControls | undefined;
@@ -153,7 +154,7 @@ const Simple3DViewer = ({
         controls.minPolarAngle = Math.PI * 0.33;
 
         const pmremGenerator = new THREE.PMREMGenerator(renderer);
-        environmentMap = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+        environmentMap = pmremGenerator.fromScene(new RoomEnvironment(), ENVIRONMENT_BLUR).texture;
         scene.environment = environmentMap;
         pmremGenerator.dispose();
 
@@ -244,7 +245,7 @@ const Simple3DViewer = ({
           }
 
           const delta = Math.min(clock.getDelta(), 0.05);
-          const damping = 1 - Math.exp(-DAMPING_FACTOR * delta);
+          const damping = Math.min(DAMPING_FACTOR * delta, 1);
           const targetScale = viewerPreset.baseScale * (isHoveringRef.current ? HOVER_SCALE_MULTIPLIER : 1);
           currentTiltRef.current.x += (targetTiltRef.current.x - currentTiltRef.current.x) * damping;
           currentTiltRef.current.z += (targetTiltRef.current.z - currentTiltRef.current.z) * damping;

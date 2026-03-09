@@ -15,7 +15,7 @@ const renderWithRoot = (ui: React.ReactNode) => {
 };
 
 describe('Simple3DViewer', () => {
-  it('uses the ignatius preset only for Suéter Ignatius', () => {
+  it('uses the ignatius preset only for sueter-ignatius', () => {
     const { container, root } = renderWithRoot(
       <Simple3DViewer src="/models/ignatius.glb" productId="sueter-ignatius" />
     );
