@@ -14,7 +14,7 @@ const axios = require('axios');
 const TriggerGoogleLogin = () => {
   const { startGoogleLogin } = useAuth();
   return (
-    <button type="button" data-testid="start-google-login" onClick={startGoogleLogin}>
+    <button type="button" data-testid="start-google-login" onClick={() => startGoogleLogin('/account')}>
       Start Google Login
     </button>
   );
@@ -27,7 +27,7 @@ describe('AuthContext startGoogleLogin', () => {
     axios.get.mockRejectedValue(new Error('No active session'));
   });
 
-  it('always starts OAuth on the production domain and redirects back to /cuenta', async () => {
+  it('starts OAuth through backend login endpoint with /account callback path', async () => {
     delete window.location;
     window.location = { ...originalLocation, assign: jest.fn() };
     const container = document.createElement('div');
@@ -49,7 +49,7 @@ describe('AuthContext startGoogleLogin', () => {
     });
 
     expect(window.location.assign).toHaveBeenCalledWith(
-      'https://www.tambvrini.com/api/login/google?next=https%3A%2F%2Fwww.tambvrini.com%2Fcuenta'
+      '/api/login/google?next=/account'
     );
 
     act(() => {

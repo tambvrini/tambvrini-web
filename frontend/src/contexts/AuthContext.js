@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-const GOOGLE_OAUTH_BASE_URL = 'https://www.tambvrini.com';
 const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
@@ -56,10 +55,14 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const startGoogleLogin = (callbackPath = '/cuenta') => {
-    const safePath = typeof callbackPath === 'string' ? callbackPath : '/cuenta';
-    const callbackTarget = `${GOOGLE_OAUTH_BASE_URL}${safePath}`;
-    const loginUrl = `${GOOGLE_OAUTH_BASE_URL}/api/login/google?next=${encodeURIComponent(callbackTarget)}`;
+  const startGoogleLogin = (callbackPath = '/account') => {
+    const rawPath = typeof callbackPath === 'string' ? callbackPath.trim() : '/account';
+    const pathWithoutQuery = rawPath.split('?', 1)[0];
+    const pathnameOnly = pathWithoutQuery.split('#', 1)[0];
+    const safePath = pathnameOnly.startsWith('/') && !pathnameOnly.startsWith('//')
+      ? pathnameOnly
+      : '/account';
+    const loginUrl = `/api/login/google?next=${safePath}`;
     window.location.assign(loginUrl);
   };
 

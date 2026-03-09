@@ -48,7 +48,7 @@ LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "").strip()
 DEFAULT_FRONTEND_URL = "https://www.tambvrini.com"
-DEFAULT_GOOGLE_REDIRECT_URI = f"{DEFAULT_FRONTEND_URL}/api/login/google/callback"
+DEFAULT_GOOGLE_REDIRECT_URI = f"{DEFAULT_FRONTEND_URL}/api/auth/callback/google"
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -233,10 +233,15 @@ def validate_csrf_origin(request: Request) -> None:
         raise HTTPException(403, "Origen no permitido")
 
 def normalize_post_auth_redirect_target(target: Optional[str]) -> str:
-    fallback_target = f"{FRONTEND_URL}/cuenta"
+    fallback_target = f"{FRONTEND_URL}/account"
     candidate = (target or "").strip()
     if not candidate:
         return fallback_target
+    if candidate.startswith("//"):
+        logger.warning("Blocked protocol-relative post-auth redirect target.")
+        return fallback_target
+    if candidate.startswith("/"):
+        return f"{FRONTEND_URL}{candidate}"
     parsed = urllib_parse.urlparse(candidate)
     if not parsed.scheme or not parsed.netloc:
         logger.warning("Ignoring non-absolute post-auth redirect target.")
@@ -599,12 +604,13 @@ async def redirect_to_google_oauth(request: Request, next: Optional[str] = None)
     logger.info("Starting Google OAuth flow. redirect_uri=%s post_auth_redirect=%s", GOOGLE_REDIRECT_URI, post_auth_redirect)
     return response
 
+@api_router.get("/auth/callback/google")
 @api_router.get("/login/google/callback")
 async def google_oauth_callback(request: Request, code: Optional[str] = None, state: Optional[str] = None):
     ensure_google_oauth_configured(require_secret=True)
     if not code:
         logger.warning("Google OAuth callback missing authorization code. query=%s", dict(request.query_params))
-        return RedirectResponse(url=f"{FRONTEND_URL}/cuenta", status_code=302)
+        return RedirectResponse(url=f"{FRONTEND_URL}/account", status_code=302)
 
     expected_state = request.cookies.get(GOOGLE_OAUTH_STATE_COOKIE)
     post_auth_redirect = normalize_post_auth_redirect_target(request.cookies.get(GOOGLE_OAUTH_NEXT_COOKIE))
@@ -656,42 +662,43 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
 
     id_token_value = token_data.get("id_token")
     access_token = token_data.get("access_token")
+    if not access_token:
+        logger.error("Google OAuth token exchange succeeded but access_token is missing. keys=%s", list(token_data.keys()))
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
     if not id_token_value:
         logger.error("Google OAuth token exchange succeeded but id_token is missing. keys=%s", list(token_data.keys()))
         return RedirectResponse(url=post_auth_redirect, status_code=302)
-
     try:
-        token_info = await asyncio.to_thread(
+        await asyncio.to_thread(
             id_token.verify_oauth2_token,
             id_token_value,
             requests.Request(),
             GOOGLE_CLIENT_ID
         )
     except ValueError:
-        # google.oauth2.id_token.verify_oauth2_token raises ValueError when the token is invalid.
         logger.exception("Google OAuth callback id_token verification failed")
-        if not access_token:
-            return RedirectResponse(url=post_auth_redirect, status_code=302)
-        try:
-            userinfo_request = urllib_request.Request(
-                GOOGLE_USERINFO_URL,
-                headers={"Authorization": f"Bearer {access_token}"},
-                method="GET"
-            )
-            userinfo_response = await asyncio.to_thread(urllib_request.urlopen, userinfo_request, timeout=15)
-            token_info = json.loads(userinfo_response.read().decode("utf-8"))
-        except urllib_error.HTTPError as exc:
-            logger.exception("Google OAuth callback userinfo HTTP error status=%s", exc.code)
-            return RedirectResponse(url=post_auth_redirect, status_code=302)
-        except urllib_error.URLError as exc:
-            logger.exception("Google OAuth callback userinfo network error: %s", exc.reason)
-            return RedirectResponse(url=post_auth_redirect, status_code=302)
-        except socket.timeout:
-            logger.exception("Google OAuth callback userinfo request timed out")
-            return RedirectResponse(url=post_auth_redirect, status_code=302)
-        except json.JSONDecodeError:
-            logger.exception("Google OAuth callback userinfo response was not valid JSON")
-            return RedirectResponse(url=post_auth_redirect, status_code=302)
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
+
+    try:
+        userinfo_request = urllib_request.Request(
+            GOOGLE_USERINFO_URL,
+            headers={"Authorization": f"Bearer {access_token}"},
+            method="GET"
+        )
+        userinfo_response = await asyncio.to_thread(urllib_request.urlopen, userinfo_request, timeout=15)
+        token_info = json.loads(userinfo_response.read().decode("utf-8"))
+    except urllib_error.HTTPError as exc:
+        logger.exception("Google OAuth callback userinfo HTTP error status=%s", exc.code)
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
+    except urllib_error.URLError as exc:
+        logger.exception("Google OAuth callback userinfo network error: %s", exc.reason)
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
+    except socket.timeout:
+        logger.exception("Google OAuth callback userinfo request timed out")
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
+    except json.JSONDecodeError:
+        logger.exception("Google OAuth callback userinfo response was not valid JSON")
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
 
     user = await upsert_google_user(token_info)
     session_token, expires_at = await create_user_session(user["user_id"])
