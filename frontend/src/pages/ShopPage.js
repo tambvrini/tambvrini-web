@@ -75,14 +75,12 @@ export default function ShopPage() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const isNew = category === 'novedades' || searchParams.get('filter') === 'novedades';
         const result = queryProducts({
           category: category || undefined,
           gender: gender || undefined,
           collection: collection || undefined,
           search: search || undefined,
           sort: sort || undefined,
-          is_new: isNew || undefined,
           page,
           limit: 20,
         });

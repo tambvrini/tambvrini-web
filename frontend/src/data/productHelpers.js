@@ -2,7 +2,7 @@
  * Client-side product helpers that replicate the backend query logic
  * so the shop pages can read ONLY from the local data file.
  */
-import products from "@/data/products";
+import products from "./products";
 
 /**
  * Return a single product by its product_id, plus up to 4 related products
@@ -40,10 +40,20 @@ export function queryProducts({
   limit = 20,
 } = {}) {
   let filtered = [...products];
+  const isNovedadesCategory = category === "novedades";
 
   // Category filters (mirrors backend logic)
   if (category) {
-    if (category === "2026") {
+    if (isNovedadesCategory) {
+      const hasCreationDates = filtered.every(
+        (p) => p.created_at && !Number.isNaN(new Date(p.created_at).getTime())
+      );
+      if (hasCreationDates) {
+        filtered.sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      }
+    } else if (category === "2026") {
       filtered = filtered.filter((p) =>
         ["camiseta-sport-club", "polo-golf", "sueter-captain"].includes(
           p.product_id
@@ -77,7 +87,7 @@ export function queryProducts({
     );
   }
 
-  if (is_new) {
+  if (is_new && !isNovedadesCategory) {
     filtered = filtered.filter((p) => p.is_new);
   }
 
