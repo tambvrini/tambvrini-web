@@ -286,7 +286,7 @@ describe('ProductPage', () => {
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();
     expect(title).not.toBeNull();
-    expect(title.className).toContain('text-[clamp(28px,4vw,48px)]');
+    expect(title.className).toContain('break-words');
     expect(detailButton).not.toBeNull();
 
     act(() => {
