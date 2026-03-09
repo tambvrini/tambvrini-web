@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Response, Request
+from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,6 +7,11 @@ import asyncio
 import os
 import logging
 import uuid
+import secrets
+import json
+from urllib import parse as urllib_parse
+from urllib import request as urllib_request
+from urllib import error as urllib_error
 import bcrypt
 import jwt
 import stripe
@@ -32,10 +38,19 @@ db = client[require_env('DB_NAME')]
 JWT_SECRET = require_env('JWT_SECRET')
 STRIPE_API_KEY = require_env('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
-CORS_ORIGINS = require_env('CORS_ORIGINS')
+CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'https://tambvrini.com,https://www.tambvrini.com')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
-GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "").strip()
+DEFAULT_FRONTEND_URL = "https://tambvrini.com"
+DEFAULT_GOOGLE_REDIRECT_URI = f"{DEFAULT_FRONTEND_URL}/api/auth/callback/google"
+GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
+GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
+GOOGLE_OAUTH_STATE_COOKIE = "google_oauth_state"
+GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS = 600
+SESSION_DURATION_DAYS = 7
 REDACTED_EMAIL_PREFIX_CHARS = 2
 
 def resolve_asset_url(url: str) -> str:
@@ -102,6 +117,28 @@ def create_token(user_id: str, email: str) -> str:
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
+def normalize_https_url(url: str, fallback_url: str, strip_trailing_slash: bool = True) -> str:
+    candidate = (url or "").strip()
+    if not candidate:
+        normalized = fallback_url
+    elif candidate.startswith("https://"):
+        normalized = candidate
+    else:
+        logger.warning(
+            "Ignoring non-HTTPS URL for OAuth redirect target: %s. Using fallback %s",
+            candidate,
+            fallback_url
+        )
+        normalized = fallback_url
+    return normalized.rstrip("/") if strip_trailing_slash else normalized
+
+FRONTEND_URL = normalize_https_url(os.environ.get("FRONTEND_URL", ""), DEFAULT_FRONTEND_URL)
+GOOGLE_REDIRECT_URI = normalize_https_url(
+    os.environ.get("GOOGLE_REDIRECT_URI", ""),
+    DEFAULT_GOOGLE_REDIRECT_URI,
+    strip_trailing_slash=False
+)
+
 def redact_email(value: str) -> str:
     """Return a redacted email string for safe logging.
 
@@ -159,6 +196,93 @@ async def get_current_user(request: Request) -> Optional[dict]:
                     user = await db.users.find_one({"user_id": session["user_id"]}, {"_id": 0})
                     return user
     return None
+
+def ensure_google_oauth_configured(*, require_secret: bool = False) -> None:
+    if not GOOGLE_CLIENT_ID:
+        logger.error("Google OAuth is not configured: GOOGLE_CLIENT_ID is missing.")
+        raise HTTPException(500, "Google OAuth no configurado")
+    if require_secret and not GOOGLE_CLIENT_SECRET:
+        logger.error("Google OAuth is not configured: GOOGLE_CLIENT_SECRET is missing.")
+        raise HTTPException(500, "Google OAuth no configurado")
+
+async def upsert_google_user(token_info: dict) -> dict:
+    email = token_info.get("email")
+    if not email:
+        logger.warning(
+            "Google OAuth token missing email claim. total_claims=%s contains_sub=%s contains_email_verified=%s",
+            len(token_info),
+            "sub" in token_info,
+            "email_verified" in token_info
+        )
+        raise HTTPException(400, "Email no disponible")
+
+    email_verified = token_info.get("email_verified")
+    is_email_verified = email_verified is True or (
+        isinstance(email_verified, str) and email_verified.lower() == "true"
+    )
+    if not is_email_verified:
+        redacted_email = redact_email(email)
+        logger.warning(
+            "Google OAuth login blocked: email not verified (%s).",
+            redacted_email
+        )
+        raise HTTPException(401, "Email no verificado")
+
+    google_sub = token_info.get("sub")
+    name = token_info.get("name") or email
+    picture = token_info.get("picture")
+
+    user = await db.users.find_one({"email": email}, {"_id": 0})
+    if not user:
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        user_doc = {
+            "user_id": user_id,
+            "email": email,
+            "name": name,
+            "password_hash": None,
+            "picture": picture,
+            "google_sub": google_sub,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.users.insert_one(user_doc)
+        return user_doc
+
+    updates = {}
+    if google_sub is not None and user.get("google_sub") != google_sub:
+        updates["google_sub"] = google_sub
+    if picture is not None and user.get("picture") != picture:
+        updates["picture"] = picture
+    if not user.get("name") and name is not None and user.get("name") != name:
+        updates["name"] = name
+    if updates:
+        await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})
+        user.update(updates)
+
+    return user
+
+async def create_user_session(user_id: str) -> tuple[str, datetime]:
+    session_token = uuid.uuid4().hex
+    expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_DURATION_DAYS)
+    await db.user_sessions.insert_one({
+        "session_token": session_token,
+        "user_id": user_id,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "expires_at": expires_at.isoformat()
+    })
+    return session_token, expires_at
+
+def set_session_cookie(response: Response, session_token: str, expires_at: datetime) -> None:
+    max_age = int((expires_at - datetime.now(timezone.utc)).total_seconds())
+    response.set_cookie(
+        "session_token",
+        session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=max_age,
+        expires=expires_at,
+        path="/"
+    )
 
 # ==================== AUTH ROUTES ====================
 
@@ -220,7 +344,8 @@ async def logout(request: Request, response: Response):
     return {"message": "Sesión cerrada"}
 
 @api_router.post("/auth/google")
-async def login_with_google(data: GoogleAuthRequest):
+async def login_with_google(data: GoogleAuthRequest, response: Response):
+    ensure_google_oauth_configured()
     token_value = data.credential or data.id_token
     try:
         # Run verification in a thread to avoid blocking the async event loop.
@@ -237,57 +362,9 @@ async def login_with_google(data: GoogleAuthRequest):
             exc
         )
         raise HTTPException(401, "Token de Google inválido") from exc
-    email = token_info.get("email")
-    if not email:
-        logger.warning(
-            "Google OAuth token missing email claim. total_claims=%s contains_sub=%s contains_email_verified=%s",
-            len(token_info),
-            "sub" in token_info,
-            "email_verified" in token_info
-        )
-        raise HTTPException(400, "Email no disponible")
-    email_verified = token_info.get("email_verified")
-    # email_verified may arrive as a boolean or string depending on token payload formatting.
-    is_email_verified = email_verified is True or (
-        isinstance(email_verified, str) and email_verified.lower() == "true"
-    )
-    if not is_email_verified:
-        redacted_email = redact_email(email)
-        logger.warning(
-            "Google OAuth login blocked: email not verified (%s).",
-            redacted_email
-        )
-        raise HTTPException(401, "Email no verificado")
-    google_sub = token_info.get("sub")
-    name = token_info.get("name") or email
-    picture = token_info.get("picture")
-
-    user = await db.users.find_one({"email": email}, {"_id": 0})
-    if not user:
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
-        user_doc = {
-            "user_id": user_id,
-            "email": email,
-            "name": name,
-            "password_hash": None,
-            "picture": picture,
-            "google_sub": google_sub,
-            "created_at": datetime.now(timezone.utc).isoformat()
-        }
-        await db.users.insert_one(user_doc)
-        user = user_doc
-    else:
-        updates = {}
-        if google_sub is not None and user.get("google_sub") != google_sub:
-            updates["google_sub"] = google_sub
-        if picture is not None and user.get("picture") != picture:
-            updates["picture"] = picture
-        if not user.get("name") and name is not None and user.get("name") != name:
-            updates["name"] = name
-        if updates:
-            await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})
-            user.update(updates)
-
+    user = await upsert_google_user(token_info)
+    session_token, expires_at = await create_user_session(user["user_id"])
+    set_session_cookie(response, session_token, expires_at)
     token = create_token(user["user_id"], user["email"])
     return {
         "token": token,
@@ -298,6 +375,117 @@ async def login_with_google(data: GoogleAuthRequest):
             "picture": user.get("picture")
         }
     }
+
+@api_router.get("/login/google")
+async def redirect_to_google_oauth():
+    ensure_google_oauth_configured(require_secret=True)
+    state = secrets.token_urlsafe(32)
+    params = {
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "state": state,
+        "access_type": "online",
+        "include_granted_scopes": "true",
+        "prompt": "select_account",
+    }
+    url = f"{GOOGLE_AUTH_URL}?{urllib_parse.urlencode(params)}"
+    response = RedirectResponse(url=url, status_code=302)
+    response.set_cookie(
+        GOOGLE_OAUTH_STATE_COOKIE,
+        state,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS,
+        path="/"
+    )
+    return response
+
+@api_router.get("/auth/callback/google")
+async def google_oauth_callback(request: Request, code: Optional[str] = None, state: Optional[str] = None):
+    ensure_google_oauth_configured(require_secret=True)
+    if not code:
+        logger.warning("Google OAuth callback missing authorization code. query=%s", dict(request.query_params))
+        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+
+    expected_state = request.cookies.get(GOOGLE_OAUTH_STATE_COOKIE)
+    if not state or not expected_state or not secrets.compare_digest(state, expected_state):
+        logger.warning(
+            "Google OAuth callback state mismatch. has_state_param=%s has_state_cookie=%s",
+            bool(state),
+            bool(expected_state)
+        )
+        response = RedirectResponse(url=FRONTEND_URL, status_code=302)
+        response.delete_cookie(GOOGLE_OAUTH_STATE_COOKIE, path="/", samesite="none", secure=True)
+        return response
+
+    token_payload = {
+        "code": code,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "grant_type": "authorization_code",
+    }
+    body = urllib_parse.urlencode(token_payload).encode("utf-8")
+    token_request = urllib_request.Request(
+        GOOGLE_TOKEN_URL,
+        data=body,
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        method="POST"
+    )
+
+    try:
+        token_response = await asyncio.to_thread(urllib_request.urlopen, token_request, timeout=15)
+        token_data = json.loads(token_response.read().decode("utf-8"))
+    except urllib_error.HTTPError as exc:
+        error_body = exc.read().decode("utf-8", errors="replace")
+        logger.exception(
+            "Google OAuth token exchange HTTPError status=%s body=%s",
+            exc.code,
+            error_body[:1000]
+        )
+        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+    except Exception:
+        logger.exception("Google OAuth token exchange failed with unexpected error")
+        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+
+    id_token_value = token_data.get("id_token")
+    access_token = token_data.get("access_token")
+    if not id_token_value:
+        logger.error("Google OAuth token exchange succeeded but id_token is missing. keys=%s", list(token_data.keys()))
+        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+
+    try:
+        token_info = await asyncio.to_thread(
+            id_token.verify_oauth2_token,
+            id_token_value,
+            requests.Request(),
+            GOOGLE_CLIENT_ID
+        )
+    except ValueError:
+        logger.exception("Google OAuth callback id_token verification failed")
+        if not access_token:
+            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        try:
+            userinfo_request = urllib_request.Request(
+                GOOGLE_USERINFO_URL,
+                headers={"Authorization": f"Bearer {access_token}"},
+                method="GET"
+            )
+            userinfo_response = await asyncio.to_thread(urllib_request.urlopen, userinfo_request, timeout=15)
+            token_info = json.loads(userinfo_response.read().decode("utf-8"))
+        except Exception:
+            logger.exception("Google OAuth callback userinfo request failed")
+            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+
+    user = await upsert_google_user(token_info)
+    session_token, expires_at = await create_user_session(user["user_id"])
+    app_redirect_response = RedirectResponse(url=FRONTEND_URL, status_code=302)
+    set_session_cookie(app_redirect_response, session_token, expires_at)
+    app_redirect_response.delete_cookie(GOOGLE_OAUTH_STATE_COOKIE, path="/", samesite="none", secure=True)
+    return app_redirect_response
 
 
 # ==================== CART + WISHLIST MODELS ====================
@@ -1061,6 +1249,11 @@ app.include_router(api_router)
 # NOTE: When allow_credentials=True, the CORS response cannot use '*' as Access-Control-Allow-Origin.
 # If CORS_ORIGINS is set to '*', we switch to allow_origin_regex so Starlette echoes back the request Origin.
 cors_origins = [o.strip() for o in CORS_ORIGINS.split(',') if o.strip()]
+required_cors_origins = ["https://tambvrini.com", "https://www.tambvrini.com"]
+if '*' not in cors_origins:
+    for required_origin in required_cors_origins:
+        if required_origin not in cors_origins:
+            cors_origins.append(required_origin)
 allow_origin_regex = None
 allow_origins = cors_origins
 if '*' in cors_origins:
