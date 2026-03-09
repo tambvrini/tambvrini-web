@@ -360,8 +360,7 @@ const Simple3DViewer = ({
       style={{
         width: '100%',
         height: '100%',
-        maxHeight: 'var(--product-media-max-height, 80vh)',
-        aspectRatio: '4 / 5',
+        maxHeight: 'none',
         overflow: 'hidden',
         position: 'relative',
         ...style,

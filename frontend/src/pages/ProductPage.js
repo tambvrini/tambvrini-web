@@ -232,7 +232,7 @@ export default function ProductPage() {
       {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
 
       {/* Product layout */}
-      <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
+      <div className="product-content">
         <div className="product-page product-layout">
           {/* Left: Gallery */}
           <div className="product-media" data-testid="product-media">

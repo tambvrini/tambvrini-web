@@ -278,11 +278,17 @@ describe('ProductPage', () => {
     getProductById.mockReturnValue(baseProduct);
 
     const { container, root } = await renderProductPage();
+    const productContent = container.querySelector('.product-content');
     const pageGrid = container.querySelector('.product-page');
     const infoPanel = container.querySelector('.product-info');
     const title = container.querySelector('[data-testid="product-name"]');
     const detailButton = container.querySelector('[data-testid="tab-details"]');
 
+    expect(productContent).not.toBeNull();
+    const productContentClasses = productContent.className.split(/\s+/);
+
+    expect(productContentClasses).not.toContain('max-w-[1920px]');
+    expect(productContentClasses).not.toContain('mx-auto');
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();
     expect(title).not.toBeNull();
