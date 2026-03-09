@@ -9,6 +9,7 @@ import logging
 import uuid
 import secrets
 import json
+import socket
 from urllib import parse as urllib_parse
 from urllib import request as urllib_request
 from urllib import error as urllib_error
@@ -38,7 +39,8 @@ db = client[require_env('DB_NAME')]
 JWT_SECRET = require_env('JWT_SECRET')
 STRIPE_API_KEY = require_env('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
-CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'https://tambvrini.com,https://www.tambvrini.com')
+REQUIRED_PRODUCTION_ORIGINS = ["https://tambvrini.com", "https://www.tambvrini.com"]
+CORS_ORIGINS = os.environ.get('CORS_ORIGINS', ",".join(REQUIRED_PRODUCTION_ORIGINS))
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
@@ -252,7 +254,7 @@ async def upsert_google_user(token_info: dict) -> dict:
         updates["google_sub"] = google_sub
     if picture is not None and user.get("picture") != picture:
         updates["picture"] = picture
-    if not user.get("name") and name is not None and user.get("name") != name:
+    if not user.get("name") and name:
         updates["name"] = name
     if updates:
         await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})
@@ -261,7 +263,7 @@ async def upsert_google_user(token_info: dict) -> dict:
     return user
 
 async def create_user_session(user_id: str) -> tuple[str, datetime]:
-    session_token = uuid.uuid4().hex
+    session_token = secrets.token_urlsafe(32)
     expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_DURATION_DAYS)
     await db.user_sessions.insert_one({
         "session_token": session_token,
@@ -272,7 +274,12 @@ async def create_user_session(user_id: str) -> tuple[str, datetime]:
     return session_token, expires_at
 
 def set_session_cookie(response: Response, session_token: str, expires_at: datetime) -> None:
-    max_age = int((expires_at - datetime.now(timezone.utc)).total_seconds())
+    now = datetime.now(timezone.utc)
+    max_age = int((expires_at - now).total_seconds())
+    if max_age <= 0:
+        logger.error("Refusing to set expired session cookie. expires_at=%s", expires_at.isoformat())
+        expires_at = now + timedelta(days=SESSION_DURATION_DAYS)
+        max_age = int((expires_at - now).total_seconds())
     response.set_cookie(
         "session_token",
         session_token,
@@ -439,6 +446,9 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
     try:
         token_response = await asyncio.to_thread(urllib_request.urlopen, token_request, timeout=15)
         token_data = json.loads(token_response.read().decode("utf-8"))
+    except socket.timeout:
+        logger.exception("Google OAuth token exchange request timed out")
+        return RedirectResponse(url=FRONTEND_URL, status_code=302)
     except urllib_error.HTTPError as exc:
         error_body = exc.read().decode("utf-8", errors="replace")
         logger.exception(
@@ -465,6 +475,7 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
             GOOGLE_CLIENT_ID
         )
     except ValueError:
+        # google.oauth2.id_token.verify_oauth2_token raises ValueError when the token is invalid.
         logger.exception("Google OAuth callback id_token verification failed")
         if not access_token:
             return RedirectResponse(url=FRONTEND_URL, status_code=302)
@@ -476,8 +487,17 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
             )
             userinfo_response = await asyncio.to_thread(urllib_request.urlopen, userinfo_request, timeout=15)
             token_info = json.loads(userinfo_response.read().decode("utf-8"))
-        except Exception:
-            logger.exception("Google OAuth callback userinfo request failed")
+        except urllib_error.HTTPError as exc:
+            logger.exception("Google OAuth callback userinfo HTTP error status=%s", exc.code)
+            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        except urllib_error.URLError as exc:
+            logger.exception("Google OAuth callback userinfo network error: %s", exc.reason)
+            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        except socket.timeout:
+            logger.exception("Google OAuth callback userinfo request timed out")
+            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        except json.JSONDecodeError:
+            logger.exception("Google OAuth callback userinfo response was not valid JSON")
             return RedirectResponse(url=FRONTEND_URL, status_code=302)
 
     user = await upsert_google_user(token_info)
@@ -1249,9 +1269,8 @@ app.include_router(api_router)
 # NOTE: When allow_credentials=True, the CORS response cannot use '*' as Access-Control-Allow-Origin.
 # If CORS_ORIGINS is set to '*', we switch to allow_origin_regex so Starlette echoes back the request Origin.
 cors_origins = [o.strip() for o in CORS_ORIGINS.split(',') if o.strip()]
-required_cors_origins = ["https://tambvrini.com", "https://www.tambvrini.com"]
 if '*' not in cors_origins:
-    for required_origin in required_cors_origins:
+    for required_origin in REQUIRED_PRODUCTION_ORIGINS:
         if required_origin not in cors_origins:
             cors_origins.append(required_origin)
 allow_origin_regex = None
