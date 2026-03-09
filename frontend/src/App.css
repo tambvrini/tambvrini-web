@@ -188,6 +188,12 @@
     min-height: 0;
     height: calc(100vh - var(--product-header-offset, 120px));
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.product-media::-webkit-scrollbar {
+    display: none;
 }
 
 .product-info {
