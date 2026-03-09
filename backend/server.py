@@ -14,7 +14,6 @@ from urllib import parse as urllib_parse
 from urllib import request as urllib_request
 from urllib import error as urllib_error
 import bcrypt
-import jwt
 import stripe
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -36,7 +35,6 @@ mongo_url = require_env('MONGO_URL')
 client = AsyncIOMotorClient(mongo_url)
 db = client[require_env('DB_NAME')]
 
-JWT_SECRET = require_env('JWT_SECRET')
 STRIPE_API_KEY = require_env('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
 REQUIRED_PRODUCTION_ORIGINS = ["https://tambvrini.com", "https://www.tambvrini.com"]
@@ -55,8 +53,15 @@ GOOGLE_OAUTH_NEXT_COOKIE = "google_oauth_next"
 GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS = 600
 SESSION_DURATION_DAYS = 7
 REDACTED_EMAIL_PREFIX_CHARS = 2
-LOCAL_DEV_ORIGINS = {"http://localhost:3000", "http://127.0.0.1:3000"}
-ALLOWED_PREVIEW_HOST_SUFFIX = ".vercel.app"
+LOCAL_DEV_ORIGINS = {
+    origin.strip()
+    for origin in os.environ.get(
+        "LOCAL_DEV_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000"
+    ).split(",")
+    if origin.strip()
+}
+ALLOWED_PREVIEW_HOST_SUFFIX = os.environ.get("ALLOWED_PREVIEW_HOST_SUFFIX", ".vercel.app").strip().lower()
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -113,14 +118,6 @@ def hash_password(password: str) -> str:
 
 def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode(), hashed.encode())
-
-def create_token(user_id: str, email: str) -> str:
-    payload = {
-        "user_id": user_id,
-        "email": email,
-        "exp": datetime.now(timezone.utc) + timedelta(days=7)
-    }
-    return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
 def normalize_https_url(url: str, fallback_url: str, strip_trailing_slash: bool = True) -> str:
     candidate = (url or "").strip()
@@ -200,11 +197,11 @@ def normalize_post_auth_redirect_target(target: Optional[str]) -> str:
         return fallback_target
     parsed = urllib_parse.urlparse(candidate)
     if not parsed.scheme or not parsed.netloc:
-        logger.warning("Ignoring non-absolute post-auth redirect target: %s", candidate)
+        logger.warning("Ignoring non-absolute post-auth redirect target.")
         return fallback_target
     origin = f"{parsed.scheme}://{parsed.netloc}"
     if not is_allowed_frontend_origin(origin):
-        logger.warning("Blocked disallowed post-auth redirect origin: %s", origin)
+        logger.warning("Blocked disallowed post-auth redirect origin.")
         return fallback_target
     path = parsed.path or "/"
     if not path.startswith("/"):
@@ -225,26 +222,6 @@ async def get_current_user(request: Request) -> Optional[dict]:
             if expires_at > datetime.now(timezone.utc):
                 user = await db.users.find_one({"user_id": session["user_id"]}, {"_id": 0})
                 if user:
-                    return user
-    auth_header = request.headers.get("Authorization", "")
-    if auth_header.startswith("Bearer "):
-        token = auth_header.split(" ")[1]
-        try:
-            # Try JWT first
-            payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-            user = await db.users.find_one({"user_id": payload["user_id"]}, {"_id": 0})
-            return user
-        except jwt.PyJWTError:
-            # Try session token as fallback
-            session = await db.user_sessions.find_one({"session_token": token}, {"_id": 0})
-            if session:
-                expires_at = session["expires_at"]
-                if isinstance(expires_at, str):
-                    expires_at = datetime.fromisoformat(expires_at)
-                if expires_at.tzinfo is None:
-                    expires_at = expires_at.replace(tzinfo=timezone.utc)
-                if expires_at > datetime.now(timezone.utc):
-                    user = await db.users.find_one({"user_id": session["user_id"]}, {"_id": 0})
                     return user
     return None
 
@@ -343,7 +320,7 @@ def set_session_cookie(response: Response, session_token: str, expires_at: datet
 # ==================== AUTH ROUTES ====================
 
 @api_router.post("/auth/register")
-async def register(data: UserCreate, request: Request, response: Response):
+async def register(request: Request, response: Response, data: UserCreate):
     existing = await db.users.find_one({"email": data.email})
     if existing:
         raise HTTPException(400, "Email ya registrado")
@@ -359,22 +336,18 @@ async def register(data: UserCreate, request: Request, response: Response):
     await db.users.insert_one(user_doc)
     session_token, expires_at = await create_user_session(user_id)
     set_session_cookie(response, session_token, expires_at, request)
-    token = create_token(user_id, data.email)
     return {
-        "token": token,
         "user": {"user_id": user_id, "email": data.email, "name": data.name, "picture": None}
     }
 
 @api_router.post("/auth/login")
-async def login(data: UserLogin, request: Request, response: Response):
+async def login(request: Request, response: Response, data: UserLogin):
     user = await db.users.find_one({"email": data.email}, {"_id": 0})
     if not user or not verify_password(data.password, user.get("password_hash", "")):
         raise HTTPException(401, "Credenciales inválidas")
     session_token, expires_at = await create_user_session(user["user_id"])
     set_session_cookie(response, session_token, expires_at, request)
-    token = create_token(user["user_id"], user["email"])
     return {
-        "token": token,
         "user": {
             "user_id": user["user_id"],
             "email": user["email"],
@@ -409,7 +382,7 @@ async def logout(request: Request, response: Response):
     return {"message": "Sesión cerrada"}
 
 @api_router.post("/auth/google")
-async def login_with_google(data: GoogleAuthRequest, request: Request, response: Response):
+async def login_with_google(request: Request, response: Response, data: GoogleAuthRequest):
     ensure_google_oauth_configured()
     token_value = data.credential or data.id_token
     try:
@@ -430,9 +403,7 @@ async def login_with_google(data: GoogleAuthRequest, request: Request, response:
     user = await upsert_google_user(token_info)
     session_token, expires_at = await create_user_session(user["user_id"])
     set_session_cookie(response, session_token, expires_at, request)
-    token = create_token(user["user_id"], user["email"])
     return {
-        "token": token,
         "user": {
             "user_id": user["user_id"],
             "email": user["email"],
