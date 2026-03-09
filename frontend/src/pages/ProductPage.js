@@ -260,7 +260,7 @@ export default function ProductPage() {
             <div className="flex items-start justify-between gap-4 mb-2">
               <h1
                 data-testid="product-name"
-                className={`font-playfair text-3xl md:text-4xl text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
+                className={`font-playfair text-[clamp(28px,4vw,48px)] leading-[1.08] break-words text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
               >
                 {product.name}
               </h1>

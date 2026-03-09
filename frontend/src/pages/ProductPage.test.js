@@ -222,9 +222,12 @@ describe('ProductPage', () => {
     const { container, root } = await renderProductPage();
     const viewer = container.querySelector('[data-testid="product-model-viewer"]');
     const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
+    const mediaContainer = container.querySelector('.product-gallery-media');
 
     expect(viewer).toBeNull();
     expect(mainImage).not.toBeNull();
+    expect(mediaContainer).not.toBeNull();
+    expect(mainImage.className).toContain('product-gallery-image');
 
     act(() => {
       root.unmount();
@@ -277,10 +280,13 @@ describe('ProductPage', () => {
     const { container, root } = await renderProductPage();
     const pageGrid = container.querySelector('.product-page');
     const infoPanel = container.querySelector('.product-info');
+    const title = container.querySelector('[data-testid="product-name"]');
     const detailButton = container.querySelector('[data-testid="tab-details"]');
 
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();
+    expect(title).not.toBeNull();
+    expect(title.className).toContain('text-[clamp(28px,4vw,48px)]');
     expect(detailButton).not.toBeNull();
 
     act(() => {

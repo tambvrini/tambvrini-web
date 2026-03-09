@@ -359,7 +359,9 @@ const Simple3DViewer = ({
       data-viewer-preset={presetKey}
       style={{
         width: '100%',
-        height: `${VIEWER_HEIGHT_PX}px`,
+        height: '100%',
+        maxHeight: '80vh',
+        aspectRatio: '4 / 5',
         overflow: 'hidden',
         position: 'relative',
         ...style,
