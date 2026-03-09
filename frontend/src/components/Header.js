@@ -10,15 +10,13 @@ const scrollToDrops = () => {
 };
 
 import { X, User, Heart, ShoppingBag, Search, Phone } from 'lucide-react';
+import Logo from './Logo';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
 import SearchOverlay from './SearchOverlay';
 import ContactPanel from './ContactPanel';
-
-const LOGO_WHITE = "/logo-letras-final-blanco.svg";
-const LOGO_DARK = "/logo-letras-final-blanco.svg";
 
 const SCROLL_THRESHOLD = 500;
 
@@ -28,9 +26,10 @@ const MENU_SECTIONS = [
   {
     title: 'Tienda',
     links: [
-      { label: 'Novedades', href: '/#drops', testId: 'menu-link-novedades' },
+      { label: 'Novedades', href: '/tienda?category=novedades', testId: 'menu-link-novedades' },
       { label: 'Hombre', href: '/tienda?gender=hombre', testId: 'menu-link-hombre' },
       { label: 'Mujer', href: '/tienda?gender=mujer', testId: 'menu-link-mujer' },
+      { label: 'Limited Editions', href: '/limited-editions', testId: 'menu-link-limited-editions' },
     ]
   },
 
@@ -39,7 +38,6 @@ const MENU_SECTIONS = [
     links: [
       { label: 'Sobre TAMBVRINI', href: '/marca', testId: 'menu-link-sobre-tambvrini' },
       { label: 'Filosofía', href: '/marca', testId: 'menu-link-filosofia' },
-      { label: 'Artesanía', href: '/marca', testId: 'menu-link-artesania' },
       { label: 'Editorial', href: '/marca', testId: 'menu-link-editorial' },
     ]
   }
@@ -58,6 +56,7 @@ export const Header = () => {
   const { items: wishlistItems } = useWishlist();
 
   const isHomePage = location.pathname === '/';
+  const isProductPage = location.pathname.startsWith('/producto');
   const isWomenCategory =
     location.pathname === '/tienda' && new URLSearchParams(location.search).get('gender') === 'mujer';
   const isMenCategory =
@@ -118,7 +117,12 @@ export const Header = () => {
 
   // On homepage, header logo hidden until scroll passes threshold
   // On other pages, header logo always visible
-  const scrolled = isHomePage ? scrollY > SCROLL_THRESHOLD : scrollY > 80;
+  let scrolled = scrollY > 80;
+  if (isHomePage) {
+    scrolled = scrollY > SCROLL_THRESHOLD;
+  } else if (isProductPage) {
+    scrolled = true;
+  }
   // Delay header logo reveal so we don't see a duplicated "medium" logo during the hero shrink.
   // We fade the header logo in right at the end of the hero animation.
   const headerFadeStart = SCROLL_THRESHOLD - 40; // ~460
@@ -131,9 +135,6 @@ export const Header = () => {
 
   const cinematicHidden = (isWomenCategory || isMenCategory) && cinematicProgress < 0.85;
   const navToneClass = cinematicHidden ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
-  const shouldInvertLogo = (scrolled || !isHomePage) && !cinematicHidden;
-
-  const logoSrc = LOGO_DARK;
 
   return (
     <>
@@ -168,11 +169,11 @@ export const Header = () => {
                 side="left"
                 hideClose
                 overlayClassName="menu-overlay"
-                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-y-auto"
+                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-hidden"
               >
                 <div className="flex flex-col h-full p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
-                    <img src={logoSrc} alt="TAMBVRINI" className={`h-5 ${(scrolled || !isHomePage) ? 'invert' : ''}`} />
+                    <Logo className="logo h-5 w-auto" />
                     <SheetClose asChild>
                       <button data-testid="menu-close-btn">
                         <X size={24} className="text-obsidian/60 hover:text-obsidian" />
@@ -243,7 +244,7 @@ export const Header = () => {
                 setContactOpen(false);
                 setSearchOpen(true);
               }}
-              className={`${navToneClass} transition-colors duration-300`}
+              className={`header-icon ${navToneClass} transition-colors duration-300`}
             >
               <Search size={20} strokeWidth={1.5} />
             </button>
@@ -256,10 +257,8 @@ export const Header = () => {
             className="flex-shrink-0 transition-opacity duration-500"
             style={{ opacity: headerLogoOpacity, pointerEvents: headerLogoVisible ? 'auto' : 'none' }}
           >
-            <img
-              src={logoSrc}
-              alt="TAMBVRINI"
-              className={`transition-all duration-500 ${shouldInvertLogo ? 'invert' : ''} ${isHomePage ? 'h-10 md:h-12' : (scrolled ? 'h-10 md:h-12' : 'h-16 md:h-28')}`}
+            <Logo
+              className={`logo transition-all duration-500 w-auto ${isHomePage ? 'h-10 md:h-12' : (scrolled ? 'h-10 md:h-12' : 'h-16 md:h-28')}`}
             />
           </Link>
 
@@ -268,14 +267,14 @@ export const Header = () => {
             <Link
               to="/cuenta"
               data-testid="account-link"
-              className={`${navToneClass} transition-colors duration-300 hidden sm:block`}
+              className={`header-icon ${navToneClass} transition-colors duration-300 hidden sm:block`}
             >
               <User size={20} strokeWidth={1.5} />
             </Link>
             <Link
               to="/favoritos"
               data-testid="wishlist-link"
-              className={`${navToneClass} transition-colors duration-300 relative`}
+              className={`header-icon ${navToneClass} transition-colors duration-300 relative`}
             >
               <Heart size={20} strokeWidth={1.5} />
               {wishlistItems.length > 0 && (
@@ -287,7 +286,7 @@ export const Header = () => {
             <button
               data-testid="cart-toggle-btn"
               onClick={() => setIsOpen(true)}
-              className={`${navToneClass} transition-colors duration-300 relative`}
+              className={`header-icon ${navToneClass} transition-colors duration-300 relative`}
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
               {totalItems > 0 && (

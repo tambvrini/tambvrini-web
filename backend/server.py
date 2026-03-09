@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Response, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
 import os
 import logging
 import uuid
@@ -10,9 +11,10 @@ import jwt
 import stripe
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, model_validator
 from typing import List, Optional, Dict
-import httpx
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -34,9 +36,7 @@ CORS_ORIGINS = require_env('CORS_ORIGINS')
 ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = require_env("GOOGLE_CLIENT_ID")
-MIN_GOOGLE_TOKEN_TTL_SECONDS = 60
-GOOGLE_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo"
-GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
+REDACTED_EMAIL_PREFIX_CHARS = 2
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -61,7 +61,18 @@ class UserLogin(BaseModel):
     password: str
 
 class GoogleAuthRequest(BaseModel):
-    access_token: str = Field(..., alias="access_token")
+    credential: Optional[str] = None
+    id_token: Optional[str] = None
+
+    @model_validator(mode="after")
+    def ensure_token_present(self):
+        credential = (self.credential or "").strip()
+        id_token_value = (self.id_token or "").strip()
+        self.credential = credential or None
+        self.id_token = id_token_value or None
+        if not self.credential and not self.id_token:
+            raise ValueError("Se requiere credential o id_token")
+        return self
 
 class CheckoutRequest(BaseModel):
     items: List[Dict]
@@ -90,6 +101,28 @@ def create_token(user_id: str, email: str) -> str:
         "exp": datetime.now(timezone.utc) + timedelta(days=7)
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
+def redact_email(value: str) -> str:
+    """Return a redacted email string for safe logging.
+
+    Preserves a small prefix of the local part and replaces the rest with
+    "***". If the local part is missing, returns "unknown" (or "unknown@domain"
+    when a domain exists).
+    """
+    redacted_unknown = "unknown"
+    if not isinstance(value, str):
+        return redacted_unknown
+    normalized_email = value.strip()
+    local_part, separator, domain = normalized_email.partition("@")
+    if not local_part:
+        return f"{redacted_unknown}@{domain}" if domain else redacted_unknown
+    prefix_len = min(len(local_part), REDACTED_EMAIL_PREFIX_CHARS)
+    if prefix_len == 0:
+        return f"{redacted_unknown}@{domain}" if domain else redacted_unknown
+    redacted_email = f"{local_part[:prefix_len]}***"
+    if separator:
+        redacted_email = f"{redacted_email}@{domain}"
+    return redacted_email
 
 async def get_current_user(request: Request) -> Optional[dict]:
     session_token = request.cookies.get("session_token")
@@ -188,42 +221,46 @@ async def logout(request: Request, response: Response):
 
 @api_router.post("/auth/google")
 async def login_with_google(data: GoogleAuthRequest):
-    access_token = data.access_token.strip()
-    if not access_token:
-        raise HTTPException(400, "Token inválido")
-    async with httpx.AsyncClient(timeout=10.0) as client:
-        token_info_response = await client.post(
-            GOOGLE_TOKENINFO_URL,
-            data={"access_token": access_token}
+    token_value = data.credential or data.id_token
+    try:
+        # Run verification in a thread to avoid blocking the async event loop.
+        token_info = await asyncio.to_thread(
+            id_token.verify_oauth2_token,
+            token_value,
+            requests.Request(),
+            GOOGLE_CLIENT_ID
         )
-        if token_info_response.status_code != 200:
-            raise HTTPException(401, "Token de Google inválido")
-        token_info = token_info_response.json()
-        audience = token_info.get("aud") or token_info.get("audience")
-        if audience != GOOGLE_CLIENT_ID:
-            raise HTTPException(401, "Token de Google no corresponde al cliente")
-        try:
-            expires_in = int(token_info.get("expires_in", 0))
-        except (TypeError, ValueError) as exc:
-            logger.warning("Invalid expires_in from Google token info: %s", exc)
-            expires_in = 0
-        if expires_in < MIN_GOOGLE_TOKEN_TTL_SECONDS:
-            raise HTTPException(401, "Token de Google inválido o expirado")
-        profile_response = await client.get(
-            GOOGLE_USERINFO_URL,
-            headers={"Authorization": f"Bearer {access_token}"}
+    except ValueError as exc:
+        logger.warning(
+            "Google OAuth token verification failed (client_id=%s): %s",
+            GOOGLE_CLIENT_ID,
+            exc
         )
-        if profile_response.status_code != 200:
-            raise HTTPException(401, "No se pudo obtener el perfil de Google")
-        profile = profile_response.json()
-    email = profile.get("email")
+        raise HTTPException(401, "Token de Google inválido") from exc
+    email = token_info.get("email")
     if not email:
+        logger.warning(
+            "Google OAuth token missing email claim. total_claims=%s contains_sub=%s contains_email_verified=%s",
+            len(token_info),
+            "sub" in token_info,
+            "email_verified" in token_info
+        )
         raise HTTPException(400, "Email no disponible")
-    if profile.get("email_verified") is not True:
+    email_verified = token_info.get("email_verified")
+    # email_verified may arrive as a boolean or string depending on token payload formatting.
+    is_email_verified = email_verified is True or (
+        isinstance(email_verified, str) and email_verified.lower() == "true"
+    )
+    if not is_email_verified:
+        redacted_email = redact_email(email)
+        logger.warning(
+            "Google OAuth login blocked: email not verified (%s).",
+            redacted_email
+        )
         raise HTTPException(401, "Email no verificado")
-    google_sub = profile.get("sub")
-    name = profile.get("name") or email
-    picture = profile.get("picture")
+    google_sub = token_info.get("sub")
+    name = token_info.get("name") or email
+    picture = token_info.get("picture")
 
     user = await db.users.find_one({"email": email}, {"_id": 0})
     if not user:

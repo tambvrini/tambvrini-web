@@ -2,14 +2,17 @@ import "@/App.css";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
 import { Toaster } from "./components/ui/sonner";
 import { I18nProvider } from "./contexts/I18nContext";
+import { GOOGLE_CLIENT_ID } from "./config/google";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CartDrawer from "./components/CartDrawer";
+import ScrollToTop from "./components/ScrollToTop";
 import HomePage from "./pages/HomePage";
 import ShopPage from "./pages/ShopPage";
 import ProductPage from "./pages/ProductPage";
@@ -31,6 +34,7 @@ function AppRouter() {
 
   return (
     <div>
+      <ScrollToTop />
       <Header />
       <CartDrawer />
       <AnimatePresence mode="wait" initial={false}>
@@ -55,7 +59,7 @@ function AppRouter() {
           </Routes>
         </motion.main>
       </AnimatePresence>
-      <Footer bgColor={isHome ? '#FFFFFF' : undefined} />
+      <Footer />
     </div>
   );
 }
@@ -63,16 +67,18 @@ function AppRouter() {
 function App() {
   return (
     <I18nProvider>
-      <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <BrowserRouter>
-              <AppRouter />
-              <Toaster position="bottom-right" theme="light" />
-            </BrowserRouter>
-          </WishlistProvider>
-        </CartProvider>
-      </AuthProvider>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <AuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <BrowserRouter>
+                <AppRouter />
+                <Toaster position="bottom-right" theme="light" />
+              </BrowserRouter>
+            </WishlistProvider>
+          </CartProvider>
+        </AuthProvider>
+      </GoogleOAuthProvider>
     </I18nProvider>
   );
 }

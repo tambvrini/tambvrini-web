@@ -14,7 +14,8 @@ module.exports = {
             },
             colors: {
                 'editorial-red': '#B33A3A',
-                obsidian: '#111111',
+                obsidian: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
+                black: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
                 marble: '#F5F2EA',
                 gold: '#C5A059',
                 emerald: '#1B4D3E',

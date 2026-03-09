@@ -27,6 +27,33 @@ const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602
 const CAPTAIN_ID = 'sueter-captain';
 const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/pu3df808_0212%20%284%29.mp4';
 
+const LOCAL_THUMBNAILS = new Set([
+  'americana-umbra',
+  'bolso-monograma-tambvrini',
+  'camiseta-imperium',
+  'camiseta-sport-club',
+  'polo-aureus',
+  'polo-domus',
+  'polo-golf',
+  'polo-patricius',
+  'polo-regius',
+  'sueter-captain',
+  'sueter-sylva',
+  'traje-monograma-tambvrini',
+  'ignatius-sweater-thumb',
+]);
+
+const getLocalThumbnail = (product) => {
+  if (!product) return '';
+  if (product.thumbnail_image?.startsWith('/thumbnails/')) return product.thumbnail_image;
+  const candidate = product.slug || product.product_id;
+  if (candidate && LOCAL_THUMBNAILS.has(candidate)) return `/thumbnails/${candidate}.jpg`;
+  if (product.product_id && LOCAL_THUMBNAILS.has(product.product_id)) {
+    return `/thumbnails/${product.product_id}.jpg`;
+  }
+  return '';
+};
+
 export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enableWishlistIcon = false }) => {
   const isTraje = enableHoverVideo && product.product_id === TRAJE_ID;
   const isAureus = enableHoverVideo && product.product_id === AUREUS_ID;
@@ -42,8 +69,19 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
 
   const videoRef = useRef(null);
   const [hovered, setHovered] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [showGalleryImage, setShowGalleryImage] = useState(false);
+  const [galleryReady, setGalleryReady] = useState(false);
 
   const inWishlist = enableWishlistIcon && isInWishlist(product.product_id);
+  const galleryImages = product.images || [];
+  const hasGalleryNavigation = galleryImages.length > 1;
+  const localThumbnailSrc = getLocalThumbnail(product);
+  const fallbackImageSrc = galleryImages[0] || '';
+  const baseImageSrc = localThumbnailSrc || fallbackImageSrc;
+  const galleryImageSrc = galleryReady ? galleryImages[activeImageIndex] : '';
+  const displayImageSrc = showGalleryImage && galleryImageSrc ? galleryImageSrc : baseImageSrc;
+  const isVideoActive = hasHoverVideo && hovered && !showGalleryImage;
 
   useEffect(() => {
     if (!hasHoverVideo) return;
@@ -51,7 +89,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
     const v = videoRef.current;
     if (!v) return;
 
-    if (!hovered) {
+    if (!isVideoActive) {
       v.pause();
       v.currentTime = 0;
       return;
@@ -60,71 +98,120 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
     // Instant start on hover (video is preloaded; play only while hovering)
     const p = v.play();
     if (p && typeof p.catch === 'function') p.catch(() => {});
-  }, [hovered, hasHoverVideo]);
+  }, [isVideoActive, hasHoverVideo]);
+
+  const handleImageNavigation = (direction, event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!hasGalleryNavigation) return;
+
+    setGalleryReady(true);
+    setShowGalleryImage(true);
+    setHovered(false);
+    setActiveImageIndex((prev) => {
+      const nextIndex = prev + direction;
+      if (nextIndex < 0) return galleryImages.length - 1;
+      if (nextIndex >= galleryImages.length) return 0;
+      return nextIndex;
+    });
+  };
 
   return (
     <Link
       to={`/producto/${product.product_id}`}
       data-testid={`product-card-${product.product_id}`}
-      className="group block premium-scale"
+      aria-label={`Ver producto ${product.name}`}
+      className="group block product-card"
       style={{ animationDelay: `${index * 0.03}s` }}
       onMouseEnter={() => {
         const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        if (hasHoverVideo && canHover) setHovered(true);
+        if (!canHover) return;
+        if (hasGalleryNavigation) setGalleryReady(true);
+        if (hasHoverVideo && !showGalleryImage) setHovered(true);
       }}
       onMouseLeave={() => {
         const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        if (hasHoverVideo && canHover) setHovered(false);
+        if (!canHover) return;
+        setHovered(false);
+        setShowGalleryImage(false);
+        setActiveImageIndex(0);
+        setGalleryReady(false);
       }}
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[12px] bg-white flex items-center justify-center">
-          {`/thumbnails/${product.slug}.jpg` ? (
-            <img
-              src={`/thumbnails/${product.slug}.jpg`}
-              alt={product.name}
-              className={`w-full h-auto max-h-full object-contain object-center ${hasHoverVideo ? '' : 'premium-image-zoom'}`}
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
-              <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
-            </div>
-          )}
+      <div className="relative aspect-[3/4] product-card-media flex items-center justify-center">
+        {displayImageSrc ? (
+          <img
+            data-testid="product-card-image"
+            src={displayImageSrc}
+            alt={product.name}
+            className="w-full h-auto max-h-full object-contain object-center"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+          </div>
+        )}
 
-          {hasHoverVideo && (
-            <video
-              ref={videoRef}
-              muted
-              loop
-              playsInline
-              preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
-              poster={`/thumbnails/${product.slug}.jpg`}
-              className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
-              src={
-                isTraje
-                  ? TRAJE_HOVER_VIDEO_URL
-                  : isAureus
-                    ? AUREUS_HOVER_VIDEO_URL
-                    : isBolso
-                      ? BOLSO_HOVER_VIDEO_URL
-                      : isSportClub
-                        ? SPORT_CLUB_HOVER_VIDEO_URL
-                        : isPoloGolf
-                          ? POLO_GOLF_HOVER_VIDEO_URL
-                          : isImperium
-                            ? IMPERIUM_HOVER_VIDEO_URL
-                            : isUmbra
-                              ? UMBRA_HOVER_VIDEO_URL
-                              : CAPTAIN_HOVER_VIDEO_URL
-              }
-            />
-          )}
+        {hasHoverVideo && (
+          <video
+            data-testid="product-card-video"
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            preload={isSportClub || isPoloGolf || isImperium || isUmbra || isCaptain ? 'auto' : 'metadata'}
+            poster={baseImageSrc}
+            className={`absolute inset-0 w-full h-full object-contain object-center pointer-events-none transition-opacity duration-300 ${isVideoActive ? 'opacity-100' : 'opacity-0'}`}
+            src={
+              isTraje
+                ? TRAJE_HOVER_VIDEO_URL
+                : isAureus
+                  ? AUREUS_HOVER_VIDEO_URL
+                  : isBolso
+                    ? BOLSO_HOVER_VIDEO_URL
+                    : isSportClub
+                      ? SPORT_CLUB_HOVER_VIDEO_URL
+                      : isPoloGolf
+                        ? POLO_GOLF_HOVER_VIDEO_URL
+                        : isImperium
+                          ? IMPERIUM_HOVER_VIDEO_URL
+                          : isUmbra
+                            ? UMBRA_HOVER_VIDEO_URL
+                            : CAPTAIN_HOVER_VIDEO_URL
+            }
+          />
+        )}
 
-          {!hasHoverVideo && (
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-obsidian/30" />
-          )}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
+        {hasGalleryNavigation && (
+          <>
+            <button
+              type="button"
+              aria-label="Imagen anterior"
+              data-testid="product-card-arrow-left"
+              className="product-card-arrow product-card-arrow-left"
+              onClick={(event) => handleImageNavigation(-1, event)}
+            >
+              &lsaquo;
+            </button>
+            <button
+              type="button"
+              aria-label="Imagen siguiente"
+              data-testid="product-card-arrow-right"
+              className="product-card-arrow product-card-arrow-right"
+              onClick={(event) => handleImageNavigation(1, event)}
+            >
+              &rsaquo;
+            </button>
+          </>
+        )}
+
+        {!hasHoverVideo && (
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-obsidian/30" />
+        )}
+        <div className="product-card-overlay">
+          <span className="font-montserrat text-[10px] tracking-[0.22em] uppercase text-obsidian/80">Ver producto</span>
 
           {enableWishlistIcon && (
             <button
@@ -146,12 +233,11 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
               />
             </button>
           )}
+        </div>
 
-          </div>
-
-          {product.is_sold_out && (
-            <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
-          )}
+        {product.is_sold_out && (
+          <span className="absolute top-4 left-4 font-montserrat text-[9px] tracking-[0.22em] uppercase text-obsidian/70">Sold out</span>
+        )}
       </div>
 
       <div className="mt-4">
@@ -160,6 +246,7 @@ export const ProductCard = ({ product, index = 0, enableHoverVideo = false, enab
           {product.price?.toLocaleString('en-US', { minimumFractionDigits: 0 })} €
         </p>
       </div>
+
     </Link>
   );
 };

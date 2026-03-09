@@ -248,7 +248,7 @@ export default function ShopPage() {
         <div
           ref={introRef}
           data-testid="category-cinematic-intro"
-          className="relative w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-32 md:-mt-40 h-[160vh]"
+          className="relative w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-32 md:-mt-40 h-[calc(100vh+40px)]"
         >
           <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C] relative z-[20]">
             <div className="relative z-[40] flex items-center justify-center w-full h-full">

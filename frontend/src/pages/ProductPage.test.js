@@ -18,7 +18,12 @@ jest.mock('../contexts/WishlistContext', () => ({
   }),
 }));
 
-jest.mock('../components/ProductCard', () => () => <div data-testid="related-product" />);
+const mockProductCard = jest.fn();
+
+jest.mock('../components/ProductCard', () => (props) => {
+  mockProductCard(props);
+  return <div data-testid="related-product" />;
+});
 
 jest.mock('../data/productHelpers', () => ({
   getProductById: jest.fn(),
@@ -121,6 +126,40 @@ const camisetaImperiumProduct = {
   related_products: [],
 };
 
+const relatedProduct = {
+  product_id: 'related-product',
+  name: 'Producto Relacionado',
+  description: 'Descripción',
+  price: 60,
+  currency: 'EUR',
+  images: ['/products/related/related.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'mujer',
+  sizes: ['M'],
+  colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
+const extraRelatedProduct = {
+  product_id: 'extra-related-product',
+  name: 'Producto Extra',
+  description: 'Descripción',
+  price: 80,
+  currency: 'EUR',
+  images: ['/products/related/extra.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'mujer',
+  sizes: ['L'],
+  colors: [{ name: 'Blanco', hex: '#FFFFFF' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
 const renderProductPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
@@ -139,6 +178,7 @@ describe('ProductPage', () => {
     jest.useFakeTimers();
     window.scrollTo = jest.fn();
     mockProductId = 'sueter-ignatius';
+    mockProductCard.mockClear();
     getProductById.mockReset();
   });
 
@@ -156,12 +196,15 @@ describe('ProductPage', () => {
     });
 
     const { container, root } = await renderProductPage();
-    const viewer = container.querySelector('model-viewer');
+    const viewer = container.querySelector('[data-testid="product-model-viewer"]');
     const galleryImageElements = container.querySelectorAll('[data-testid^="product-gallery-image-"]');
+    const productPage = container.querySelector('[data-testid="product-page"]');
 
     expect(viewer).not.toBeNull();
-    expect(viewer.getAttribute('src')).toBe('/models/ignatius.glb');
+    expect(viewer.getAttribute('data-model-src')).toBe('/models/ignatius.glb');
     expect(galleryImageElements.length).toBe(0);
+    expect(productPage).not.toBeNull();
+    expect(productPage.className).toContain('mb-12');
 
     act(() => {
       root.unmount();
@@ -176,7 +219,7 @@ describe('ProductPage', () => {
     });
 
     const { container, root } = await renderProductPage();
-    const viewer = container.querySelector('model-viewer');
+    const viewer = container.querySelector('[data-testid="product-model-viewer"]');
     const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
 
     expect(viewer).toBeNull();
@@ -214,11 +257,67 @@ describe('ProductPage', () => {
     const thumbnailButtons = container.querySelectorAll('[data-testid^="product-thumb-"]');
 
     expect(modelViewer).not.toBeNull();
-    expect(firstGalleryItem.querySelector('model-viewer')).not.toBeNull();
+    expect(firstGalleryItem.querySelector('[data-testid="product-model-viewer"]')).not.toBeNull();
     expect(firstGalleryImage).not.toBeNull();
     expect(thumbnailButtons.length).toBe(0);
     expect(firstGalleryImage.getAttribute('src'))
       .toBe('/products/americana-umbra/americana-umbra-main.jpg');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('uses the product layout grid and opens the details panel', async () => {
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const pageGrid = container.querySelector('.product-page');
+    const infoPanel = container.querySelector('.product-info');
+    const detailButton = container.querySelector('[data-testid="tab-details"]');
+
+    expect(pageGrid).not.toBeNull();
+    expect(infoPanel).not.toBeNull();
+    expect(detailButton).not.toBeNull();
+
+    act(() => {
+      detailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(document.body.textContent).toContain('Detalles');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('renders up to four recommended products and passes product data', async () => {
+    const relatedProducts = [
+      poloGolfProduct,
+      camisetaImperiumProduct,
+      umbraProduct,
+      relatedProduct,
+      extraRelatedProduct,
+    ];
+
+    getProductById.mockReturnValue({
+      ...baseProduct,
+      related_products: relatedProducts,
+    });
+
+    const { container, root } = await renderProductPage();
+    const recommendations = container.querySelector('[data-testid="product-recommendations"]');
+    const recommendationCards = container.querySelectorAll('[data-testid="related-product"]');
+
+    expect(recommendations).not.toBeNull();
+    expect(recommendationCards.length).toBe(4);
+    expect(mockProductCard.mock.calls.length).toBeGreaterThanOrEqual(4);
+    expect(mockProductCard.mock.calls[0][0].product.product_id).toBe(relatedProducts[0].product_id);
+    expect(mockProductCard.mock.calls[0][0].index).toBe(0);
+    expect(mockProductCard.mock.calls[3][0].product.product_id).toBe(relatedProducts[3].product_id);
+    expect(mockProductCard.mock.calls[3][0].index).toBe(3);
 
     act(() => {
       root.unmount();
@@ -257,6 +356,66 @@ describe('ProductPage', () => {
     expect(mainImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
     expect(fifthImage).not.toBeNull();
     expect(fifthImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('adds the umbra background only for Americana Umbra', async () => {
+    mockProductId = 'americana-umbra';
+    getProductById.mockReturnValue(umbraProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+    const umbraBackground = container.querySelector('.umbra-background');
+    const ignatiusBackground = container.querySelector('.ignatius-background');
+
+    expect(page.classList.contains('umbra-product-page')).toBe(true);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(umbraBackground).not.toBeNull();
+    expect(ignatiusBackground).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('adds the ignatius background only for Suéter Ignatius', async () => {
+    mockProductId = 'sueter-ignatius';
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+    const umbraBackground = container.querySelector('.umbra-background');
+    const ignatiusBackground = container.querySelector('.ignatius-background');
+
+    expect(page.classList.contains('product-page-ignatius')).toBe(true);
+    expect(page.classList.contains('umbra-product-page')).toBe(false);
+    expect(ignatiusBackground).not.toBeNull();
+    expect(umbraBackground).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('keeps the default background for standard products', async () => {
+    mockProductId = 'polo-golf';
+    getProductById.mockReturnValue(poloGolfProduct);
+
+    const { container, root } = await renderProductPage();
+    const page = container.querySelector('[data-testid="product-page"]');
+    const umbraBackground = container.querySelector('.umbra-background');
+    const ignatiusBackground = container.querySelector('.ignatius-background');
+
+    expect(page.classList.contains('umbra-product-page')).toBe(false);
+    expect(page.classList.contains('product-page-ignatius')).toBe(false);
+    expect(umbraBackground).toBeNull();
+    expect(ignatiusBackground).toBeNull();
 
     act(() => {
       root.unmount();
