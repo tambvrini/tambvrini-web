@@ -51,14 +51,20 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const startGoogleLogin = () => {
-    const callbackTarget = `${GOOGLE_OAUTH_BASE_URL}/cuenta`;
+  const forgotPassword = async (email) => {
+    const res = await axios.post(`${API}/auth/forgot-password`, { email }, { withCredentials: true });
+    return res.data;
+  };
+
+  const startGoogleLogin = (callbackPath = '/cuenta') => {
+    const safePath = typeof callbackPath === 'string' ? callbackPath : '/cuenta';
+    const callbackTarget = `${GOOGLE_OAUTH_BASE_URL}${safePath}`;
     const loginUrl = `${GOOGLE_OAUTH_BASE_URL}/api/login/google?next=${encodeURIComponent(callbackTarget)}`;
     window.location.assign(loginUrl);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, startGoogleLogin, getHeaders }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, forgotPassword, startGoogleLogin, getHeaders }}>
       {children}
     </AuthContext.Provider>
   );

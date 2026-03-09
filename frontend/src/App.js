@@ -16,6 +16,9 @@ import ShopPage from "./pages/ShopPage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import AccountPage from "./pages/AccountPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import WishlistPage from "./pages/WishlistPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import BrandPage from "./pages/BrandPage";
@@ -51,6 +54,10 @@ function AppRouter() {
             <Route path="/producto/:productId" element={<ProductPage />} />
             <Route path="/carrito" element={<CartPage />} />
             <Route path="/cuenta" element={<AccountPage />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/favoritos" element={<WishlistPage />} />
             <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
             <Route path="/marca" element={<BrandPage />} />

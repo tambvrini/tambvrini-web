@@ -1,6 +1,6 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import AccountPage from './AccountPage';
+import LoginPage from './LoginPage';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -9,18 +9,15 @@ const mockNavigate = jest.fn();
 
 jest.mock('../contexts/AuthContext', () => ({
   useAuth: () => ({
-    user: null,
     login: jest.fn(),
-    register: jest.fn(),
-    logout: jest.fn(),
     startGoogleLogin: mockStartGoogleLogin,
-    loading: false,
   }),
 }));
 
 jest.mock(
   'react-router-dom',
   () => ({
+    Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a>,
     useNavigate: () => mockNavigate,
   }),
   { virtual: true }
@@ -33,26 +30,28 @@ jest.mock('sonner', () => ({
   },
 }));
 
-const renderAccountPage = async () => {
+const renderLoginPage = async () => {
   const container = document.createElement('div');
   document.body.appendChild(container);
   const root = createRoot(container);
 
   await act(async () => {
-    root.render(<AccountPage />);
+    root.render(
+      <LoginPage />
+    );
   });
 
   return { container, root };
 };
 
-describe('AccountPage Google login', () => {
+describe('LoginPage Google login', () => {
   beforeEach(() => {
     mockStartGoogleLogin.mockReset();
     mockNavigate.mockReset();
   });
 
-  it('calls startGoogleLogin when the Google button is clicked', async () => {
-    const { container, root } = await renderAccountPage();
+  it('calls startGoogleLogin with /account when the Google button is clicked', async () => {
+    const { container, root } = await renderLoginPage();
 
     const googleButton = container.querySelector('[data-testid="google-login-btn"]');
 
@@ -60,7 +59,7 @@ describe('AccountPage Google login', () => {
       googleButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
 
-    expect(mockStartGoogleLogin).toHaveBeenCalledTimes(1);
+    expect(mockStartGoogleLogin).toHaveBeenCalledWith('/account');
     expect(mockNavigate).not.toHaveBeenCalled();
 
     act(() => {
