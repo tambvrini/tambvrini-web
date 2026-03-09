@@ -223,11 +223,16 @@ describe('ProductPage', () => {
     const viewer = container.querySelector('[data-testid="product-model-viewer"]');
     const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
     const mediaContainer = container.querySelector('.product-gallery-media');
+    const galleryItem = container.querySelector('[data-testid="product-gallery-item-0"]');
+    const divider = container.querySelector('.h-px.bg-black\\[\\/0\\.08\\].my-6');
 
     expect(viewer).toBeNull();
     expect(mainImage).not.toBeNull();
     expect(mediaContainer).not.toBeNull();
+    expect(galleryItem).not.toBeNull();
+    expect(galleryItem.className).toContain('product-media-item');
     expect(mainImage.className).toContain('product-gallery-image');
+    expect(divider).toBeNull();
 
     act(() => {
       root.unmount();

@@ -176,11 +176,10 @@ export default function ProductPage() {
         imageIndex += 1;
       }
 
-      const showDivider = index < galleryMedia.length - 1;
-
       return (
         <div
           key={`${media.type}-${index}`}
+          className="product-media-item"
           data-testid={`product-gallery-item-${index}`}
         >
           {media.type === 'model' ? (
@@ -212,9 +211,6 @@ export default function ProductPage() {
                 className="product-gallery-image"
               />
             </div>
-          )}
-          {showDivider && (
-            <div aria-hidden="true" className="h-px bg-black/[0.08] my-6" />
           )}
         </div>
       );
