@@ -40,7 +40,7 @@ const products = [
       "/products/traje-monograma-tambvrini/03.jpeg",
       "/products/traje-monograma-tambvrini/04.jpeg",
       "/products/traje-monograma-tambvrini/05.png",
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
+      "/products/traje-monograma-tambvrini/traje-monograma-tambvrini (1).jpg",
     ],
     thumbnail_image: `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
     category: ["sastrería", "set"],
