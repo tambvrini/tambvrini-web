@@ -40,10 +40,12 @@ export function queryProducts({
   limit = 20,
 } = {}) {
   let filtered = [...products];
-  const isNovedadesCategory = category === "novedades";
+  const normalizedCategory =
+    category === "marroquineria" ? "accesorios" : category;
+  const isNovedadesCategory = normalizedCategory === "novedades";
 
   // Category filters (mirrors backend logic)
-  if (category) {
+  if (normalizedCategory) {
     if (isNovedadesCategory) {
       const hasCreationDates = filtered.every(
         (p) => p.created_at && !Number.isNaN(new Date(p.created_at).getTime())
@@ -57,18 +59,20 @@ export function queryProducts({
           .sort((a, b) => b.createdAtTs - a.createdAtTs)
           .map(({ product }) => product);
       }
-    } else if (category === "2026") {
+    } else if (normalizedCategory === "2026") {
       filtered = filtered.filter((p) =>
         ["camiseta-sport-club", "polo-golf", "sueter-captain"].includes(
           p.product_id
         )
       );
-    } else if (category === "sueteres") {
+    } else if (normalizedCategory === "sueteres") {
       filtered = filtered.filter((p) => p.category?.includes("knitwear"));
-    } else if (category === "polos") {
+    } else if (normalizedCategory === "polos") {
       filtered = filtered.filter((p) => p.category?.includes("polos"));
     } else {
-      filtered = filtered.filter((p) => p.category?.includes(category));
+      filtered = filtered.filter((p) =>
+        p.category?.includes(normalizedCategory)
+      );
     }
   }
 

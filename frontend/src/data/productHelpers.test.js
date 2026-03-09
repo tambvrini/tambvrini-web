@@ -28,4 +28,14 @@ describe('queryProducts', () => {
     expect(result.products.length).toBeGreaterThan(0);
     expect(result.products.every((product) => product.category?.includes('polos'))).toBe(true);
   });
+
+  it('maps marroquineria filter to accesorios without removing products', () => {
+    const accesoriosResult = queryProducts({ category: 'accesorios', limit: 100 });
+    const marroquineriaResult = queryProducts({ category: 'marroquineria', limit: 100 });
+
+    expect(marroquineriaResult.total).toBe(accesoriosResult.total);
+    expect(marroquineriaResult.products.map((product) => product.product_id)).toEqual(
+      accesoriosResult.products.map((product) => product.product_id),
+    );
+  });
 });

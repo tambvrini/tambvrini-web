@@ -14,7 +14,6 @@ const CATEGORY_LABELS = {
   hombre: 'Hombre',
   mujer: 'Mujer',
   accesorios: 'Accesorios',
-  marroquineria: 'Marroquinería',
   calzado: 'Calzado',
 };
 
@@ -27,7 +26,6 @@ const CATEGORY_NAV_ITEMS = [
   ['hombre', CATEGORY_LABELS.hombre],
   ['mujer', CATEGORY_LABELS.mujer],
   ['accesorios', CATEGORY_LABELS.accesorios],
-  ['marroquineria', CATEGORY_LABELS.marroquineria],
   ['calzado', CATEGORY_LABELS.calzado],
 ];
 
@@ -61,6 +59,7 @@ export default function ShopPage() {
   const videoRef = useRef(null);
 
   const category = searchParams.get('category') || searchParams.get('filter') || '';
+  const normalizedCategory = category === 'marroquineria' ? 'accesorios' : category;
   const gender = searchParams.get('gender') || '';
   const collection = searchParams.get('collection') || '';
   const search = searchParams.get('search') || '';
@@ -69,14 +68,14 @@ export default function ShopPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [category, gender, collection, search, sort, page]);
+  }, [normalizedCategory, gender, collection, search, sort, page]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
         const result = queryProducts({
-          category: category || undefined,
+          category: normalizedCategory || undefined,
           gender: gender || undefined,
           collection: collection || undefined,
           search: search || undefined,
@@ -93,12 +92,12 @@ export default function ShopPage() {
       }
     };
     fetchProducts();
-  }, [category, gender, collection, search, sort, page]);
+  }, [normalizedCategory, gender, collection, search, sort, page]);
 
   const getTitle = () => {
     if (search) return `Resultados: "${search}"`;
     if (gender) return HEADER_LABEL_OVERRIDES[gender] || CATEGORY_LABELS[gender] || gender;
-    if (category) return HEADER_LABEL_OVERRIDES[category] || CATEGORY_LABELS[category] || category;
+    if (normalizedCategory) return HEADER_LABEL_OVERRIDES[normalizedCategory] || CATEGORY_LABELS[normalizedCategory] || normalizedCategory;
     if (collection) return COLLECTION_LABELS[collection] || collection;
     return 'Tienda';
   };
@@ -319,7 +318,7 @@ export default function ShopPage() {
                 setSearchParams(p);
               }}
               className={`font-montserrat text-[10px] tracking-[0.15em] uppercase py-2 px-5 border transition-colors duration-300 ${
-                category === key || gender === key
+                normalizedCategory === key || gender === key
                   ? 'border-gold text-gold'
                   : 'border-black/10 text-obsidian/50 hover:text-obsidian hover:border-black/30'
               }`}
