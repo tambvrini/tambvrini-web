@@ -43,8 +43,8 @@ ASSET_BASE_URL = require_env("ASSET_BASE_URL").rstrip("/")
 LEGACY_ASSET_BASE_URL = os.environ.get("LEGACY_ASSET_BASE_URL", "").rstrip("/")
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "").strip()
-DEFAULT_FRONTEND_URL = "https://tambvrini.com"
-DEFAULT_GOOGLE_REDIRECT_URI = f"{DEFAULT_FRONTEND_URL}/api/auth/callback/google"
+DEFAULT_FRONTEND_URL = "https://www.tambvrini.com"
+DEFAULT_GOOGLE_REDIRECT_URI = f"{DEFAULT_FRONTEND_URL}/api/login/google/callback"
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -452,7 +452,7 @@ async def redirect_to_google_oauth(request: Request, next: Optional[str] = None)
     logger.info("Starting Google OAuth flow. redirect_uri=%s post_auth_redirect=%s", GOOGLE_REDIRECT_URI, post_auth_redirect)
     return response
 
-@api_router.get("/auth/callback/google")
+@api_router.get("/login/google/callback")
 async def google_oauth_callback(request: Request, code: Optional[str] = None, state: Optional[str] = None):
     ensure_google_oauth_configured(require_secret=True)
     if not code:

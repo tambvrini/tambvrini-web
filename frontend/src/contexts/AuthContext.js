@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const GOOGLE_OAUTH_BASE_URL = 'https://www.tambvrini.com';
 const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
@@ -51,11 +52,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const startGoogleLogin = () => {
-    if (!window?.location?.origin) {
-      throw new Error('No se pudo iniciar sesión con Google. Inténtalo de nuevo.');
-    }
-    const callbackTarget = `${window.location.origin}/cuenta`;
-    const loginUrl = `${API}/login/google?next=${encodeURIComponent(callbackTarget)}`;
+    const callbackTarget = `${GOOGLE_OAUTH_BASE_URL}/cuenta`;
+    const loginUrl = `${GOOGLE_OAUTH_BASE_URL}/api/login/google?next=${encodeURIComponent(callbackTarget)}`;
     window.location.assign(loginUrl);
   };
 
