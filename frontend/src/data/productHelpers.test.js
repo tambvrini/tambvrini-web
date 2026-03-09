@@ -4,9 +4,14 @@ import { queryProducts } from './productHelpers';
 describe('queryProducts', () => {
   it('returns all products for novedades category', () => {
     const result = queryProducts({ category: 'novedades', limit: 100 });
+    const nonTaggedProduct = products.find((product) => !product.category?.includes('novedades'));
 
     expect(result.total).toBe(products.length);
     expect(result.products).toHaveLength(products.length);
+    expect(nonTaggedProduct).toBeDefined();
+    if (nonTaggedProduct) {
+      expect(result.products.some((product) => product.product_id === nonTaggedProduct.product_id)).toBe(true);
+    }
   });
 
   it('orders novedades by created_at desc when available', () => {

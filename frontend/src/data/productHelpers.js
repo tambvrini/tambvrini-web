@@ -49,9 +49,13 @@ export function queryProducts({
         (p) => p.created_at && !Number.isNaN(new Date(p.created_at).getTime())
       );
       if (hasCreationDates) {
-        filtered.sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
+        filtered = filtered
+          .map((product) => ({
+            product,
+            createdAtTs: new Date(product.created_at).getTime(),
+          }))
+          .sort((a, b) => b.createdAtTs - a.createdAtTs)
+          .map(({ product }) => product);
       }
     } else if (category === "2026") {
       filtered = filtered.filter((p) =>
