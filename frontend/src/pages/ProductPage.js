@@ -179,7 +179,7 @@ export default function ProductPage() {
       return (
         <div
           key={`${media.type}-${index}`}
-          className="product-media-item"
+          className="product-gallery-item"
           data-testid={`product-gallery-item-${index}`}
         >
           {media.type === 'model' ? (
