@@ -38,7 +38,6 @@ const MENU_SECTIONS = [
     links: [
       { label: 'Sobre TAMBVRINI', href: '/marca', testId: 'menu-link-sobre-tambvrini' },
       { label: 'Filosofía', href: '/marca', testId: 'menu-link-filosofia' },
-      { label: 'Artesanía', href: '/marca', testId: 'menu-link-artesania' },
       { label: 'Editorial', href: '/marca', testId: 'menu-link-editorial' },
     ]
   }
@@ -170,7 +169,7 @@ export const Header = () => {
                 side="left"
                 hideClose
                 overlayClassName="menu-overlay"
-                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-y-auto"
+                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-hidden"
               >
                 <div className="flex flex-col h-full p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">

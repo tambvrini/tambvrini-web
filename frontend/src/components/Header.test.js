@@ -187,6 +187,23 @@ describe('Header menu', () => {
 
     expect(tiendaLabels).toEqual(['Novedades', 'Hombre', 'Mujer', 'Limited Editions']);
 
+    const sobreLink = container.querySelector('[data-testid="menu-link-sobre-tambvrini"]');
+    const filosofiaLink = container.querySelector('[data-testid="menu-link-filosofia"]');
+    const editorialLink = container.querySelector('[data-testid="menu-link-editorial"]');
+    const artesaniaLink = container.querySelector('[data-testid="menu-link-artesania"]');
+
+    expect(sobreLink).not.toBeNull();
+    expect(filosofiaLink).not.toBeNull();
+    expect(editorialLink).not.toBeNull();
+    expect(artesaniaLink).toBeNull();
+
+    const marcaList = sobreLink.closest('ul');
+    const marcaLabels = Array.from(marcaList?.querySelectorAll('a') ?? []).map(
+      (link) => link.textContent?.trim()
+    );
+
+    expect(marcaLabels).toEqual(['Sobre TAMBVRINI', 'Filosofía', 'Editorial']);
+
     act(() => {
       root.unmount();
     });
