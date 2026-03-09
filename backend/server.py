@@ -11,9 +11,12 @@ import secrets
 import json
 import socket
 import hashlib
+import smtplib
+import ssl
 from urllib import parse as urllib_parse
 from urllib import request as urllib_request
 from urllib import error as urllib_error
+from email.message import EmailMessage
 import bcrypt
 import stripe
 from datetime import datetime, timezone, timedelta
@@ -54,6 +57,11 @@ GOOGLE_OAUTH_NEXT_COOKIE = "google_oauth_next"
 GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS = 600
 SESSION_DURATION_DAYS = 30
 PASSWORD_RESET_TOKEN_TTL_MINUTES = 30
+SMTP_HOST = os.environ.get("SMTP_HOST", "").strip()
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "").strip()
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
+SMTP_FROM_EMAIL = os.environ.get("SMTP_FROM_EMAIL", "").strip()
 REDACTED_EMAIL_PREFIX_CHARS = 2
 LOCAL_DEV_ORIGINS = {
     origin.strip()
@@ -132,6 +140,15 @@ def verify_password(password: str, hashed: str) -> bool:
         return bcrypt.checkpw(password.encode(), hashed.encode())
     except ValueError:
         return False
+
+def is_strong_password(password: str) -> bool:
+    if len(password) < 8:
+        return False
+    has_lower = any(c.islower() for c in password)
+    has_upper = any(c.isupper() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    has_symbol = any(not c.isalnum() for c in password)
+    return has_lower and has_upper and has_digit and has_symbol
 
 def normalize_https_url(url: str, fallback_url: str, strip_trailing_slash: bool = True) -> str:
     candidate = (url or "").strip()
@@ -309,7 +326,7 @@ async def upsert_google_user(token_info: dict) -> dict:
         updates["picture"] = picture
     if not user.get("name") and name:
         updates["name"] = name
-    if user.get("provider") != "google":
+    if not user.get("provider"):
         updates["provider"] = "google"
     if updates:
         await db.users.update_one({"user_id": user["user_id"]}, {"$set": updates})
@@ -349,11 +366,40 @@ def set_session_cookie(response: Response, session_token: str, expires_at: datet
 def hash_reset_token(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
+async def send_password_reset_email(email: str, reset_link: str) -> None:
+    if not (SMTP_HOST and SMTP_FROM_EMAIL):
+        raise HTTPException(503, "Servicio de recuperación no disponible")
+    message = EmailMessage()
+    message["Subject"] = "Recuperación de contraseña - TAMBVRINI"
+    message["From"] = SMTP_FROM_EMAIL
+    message["To"] = email
+    message.set_content(
+        "Has solicitado recuperar tu contraseña de TAMBVRINI.\n\n"
+        f"Usa este enlace para restablecerla (expira en {PASSWORD_RESET_TOKEN_TTL_MINUTES} minutos):\n"
+        f"{reset_link}\n\n"
+        "Si no solicitaste este cambio, puedes ignorar este correo."
+    )
+
+    def _send() -> None:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10) as server:
+            server.starttls(context=ssl.create_default_context())
+            if SMTP_USER:
+                server.login(SMTP_USER, SMTP_PASSWORD)
+            server.send_message(message)
+
+    try:
+        await asyncio.to_thread(_send)
+    except Exception:
+        logger.exception("Failed to send password reset email to %s", redact_email(email))
+        raise HTTPException(503, "No se pudo enviar el correo de recuperación")
+
 # ==================== AUTH ROUTES ====================
 
 @api_router.post("/auth/register")
 async def register(request: Request, response: Response, data: UserCreate):
     validate_csrf_origin(request)
+    if not is_strong_password(data.password):
+        raise HTTPException(400, "La contraseña debe incluir mayúsculas, minúsculas, número y símbolo")
     normalized_email = data.email.strip().lower()
     existing = await db.users.find_one({"email": normalized_email})
     if existing:
@@ -478,7 +524,8 @@ async def forgot_password(request: Request, data: ForgotPasswordRequest):
         upsert=True
     )
     reset_link = f"{FRONTEND_URL}/reset-password?token={urllib_parse.quote(raw_token)}"
-    logger.info("Password reset requested for %s. reset_link=%s", redact_email(user["email"]), reset_link)
+    await send_password_reset_email(user["email"], reset_link)
+    logger.info("Password reset requested for %s.", redact_email(user["email"]))
     return generic_message
 
 @api_router.post("/auth/reset-password")
@@ -486,8 +533,8 @@ async def reset_password(request: Request, data: ResetPasswordRequest):
     validate_csrf_origin(request)
     token = data.token.strip()
     new_password = data.password.strip()
-    if len(new_password) < 8:
-        raise HTTPException(400, "La contraseña debe tener al menos 8 caracteres")
+    if not is_strong_password(new_password):
+        raise HTTPException(400, "La contraseña debe incluir mayúsculas, minúsculas, número y símbolo")
     token_doc = await db.password_reset_tokens.find_one({"token_hash": hash_reset_token(token)}, {"_id": 0})
     if not token_doc:
         raise HTTPException(400, "Token inválido o expirado")
@@ -500,6 +547,10 @@ async def reset_password(request: Request, data: ResetPasswordRequest):
         await db.password_reset_tokens.delete_one({"token_hash": hash_reset_token(token)})
         raise HTTPException(400, "Token inválido o expirado")
     user_id = token_doc["user_id"]
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0, "provider": 1, "password_hash": 1})
+    if user and user.get("provider") == "google" and not user.get("password_hash"):
+        await db.password_reset_tokens.delete_many({"user_id": user_id})
+        raise HTTPException(403, "Esta cuenta usa acceso con Google")
     await db.users.update_one(
         {"user_id": user_id},
         {"$set": {"password_hash": hash_password(new_password), "provider": "credentials"}}
