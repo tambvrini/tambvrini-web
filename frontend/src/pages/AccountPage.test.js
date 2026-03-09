@@ -4,9 +4,8 @@ import AccountPage from './AccountPage';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const mockLoginWithGoogle = jest.fn();
+const mockStartGoogleLogin = jest.fn();
 const mockNavigate = jest.fn();
-let mockPathname = '/cuenta';
 
 jest.mock('../contexts/AuthContext', () => ({
   useAuth: () => ({
@@ -14,7 +13,7 @@ jest.mock('../contexts/AuthContext', () => ({
     login: jest.fn(),
     register: jest.fn(),
     logout: jest.fn(),
-    loginWithGoogle: mockLoginWithGoogle,
+    startGoogleLogin: mockStartGoogleLogin,
     loading: false,
   }),
 }));
@@ -23,7 +22,6 @@ jest.mock(
   'react-router-dom',
   () => ({
     useNavigate: () => mockNavigate,
-    useLocation: () => ({ pathname: mockPathname, search: '', hash: '' }),
   }),
   { virtual: true }
 );
@@ -33,16 +31,6 @@ jest.mock('sonner', () => ({
     success: jest.fn(),
     error: jest.fn(),
   },
-}));
-
-jest.mock('@react-oauth/google', () => ({
-  GoogleLogin: ({ onSuccess }) => (
-    <button
-      type="button"
-      data-testid="google-login-provider"
-      onClick={() => onSuccess({ credential: 'mock-id-token' })}
-    />
-  ),
 }));
 
 const renderAccountPage = async () => {
@@ -59,24 +47,21 @@ const renderAccountPage = async () => {
 
 describe('AccountPage Google login', () => {
   beforeEach(() => {
-    mockLoginWithGoogle.mockReset();
+    mockStartGoogleLogin.mockReset();
     mockNavigate.mockReset();
-    mockPathname = '/cuenta';
   });
 
-  it('calls loginWithGoogle and redirects to /cuenta on successful login', async () => {
-    mockLoginWithGoogle.mockResolvedValue({});
-    mockPathname = '/login';
+  it('calls startGoogleLogin when the Google button is clicked', async () => {
     const { container, root } = await renderAccountPage();
 
-    const googleButton = container.querySelector('[data-testid="google-login-provider"]');
+    const googleButton = container.querySelector('[data-testid="google-login-btn"]');
 
     await act(async () => {
       googleButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
 
-    expect(mockLoginWithGoogle).toHaveBeenCalledWith('mock-id-token');
-    expect(mockNavigate).toHaveBeenCalledWith('/cuenta');
+    expect(mockStartGoogleLogin).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).not.toHaveBeenCalled();
 
     act(() => {
       root.unmount();

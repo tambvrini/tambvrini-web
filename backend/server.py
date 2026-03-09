@@ -51,9 +51,12 @@ GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 GOOGLE_OAUTH_STATE_COOKIE = "google_oauth_state"
+GOOGLE_OAUTH_NEXT_COOKIE = "google_oauth_next"
 GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS = 600
 SESSION_DURATION_DAYS = 7
 REDACTED_EMAIL_PREFIX_CHARS = 2
+LOCAL_DEV_ORIGINS = {"http://localhost:3000", "http://127.0.0.1:3000"}
+ALLOWED_PREVIEW_HOST_SUFFIX = ".vercel.app"
 
 def resolve_asset_url(url: str) -> str:
     if LEGACY_ASSET_BASE_URL and url.startswith(f"{LEGACY_ASSET_BASE_URL}/"):
@@ -162,6 +165,52 @@ def redact_email(value: str) -> str:
     if separator:
         redacted_email = f"{redacted_email}@{domain}"
     return redacted_email
+
+def infer_request_scheme(request: Request) -> str:
+    forwarded_proto = (request.headers.get("x-forwarded-proto") or "").split(",")[0].strip().lower()
+    if forwarded_proto in {"http", "https"}:
+        return forwarded_proto
+    return request.url.scheme.lower()
+
+def should_use_secure_cookies(request: Request) -> bool:
+    return infer_request_scheme(request) == "https"
+
+def get_cookie_samesite(request: Request) -> str:
+    return "none" if should_use_secure_cookies(request) else "lax"
+
+def is_allowed_frontend_origin(origin: str) -> bool:
+    candidate = (origin or "").strip()
+    if not candidate:
+        return False
+    if candidate in LOCAL_DEV_ORIGINS:
+        return True
+
+    parsed = urllib_parse.urlparse(candidate)
+    if parsed.scheme != "https":
+        return False
+    if candidate in REQUIRED_PRODUCTION_ORIGINS:
+        return True
+    host = (parsed.hostname or "").lower()
+    return host.endswith(ALLOWED_PREVIEW_HOST_SUFFIX)
+
+def normalize_post_auth_redirect_target(target: Optional[str]) -> str:
+    fallback_target = f"{FRONTEND_URL}/cuenta"
+    candidate = (target or "").strip()
+    if not candidate:
+        return fallback_target
+    parsed = urllib_parse.urlparse(candidate)
+    if not parsed.scheme or not parsed.netloc:
+        logger.warning("Ignoring non-absolute post-auth redirect target: %s", candidate)
+        return fallback_target
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    if not is_allowed_frontend_origin(origin):
+        logger.warning("Blocked disallowed post-auth redirect origin: %s", origin)
+        return fallback_target
+    path = parsed.path or "/"
+    if not path.startswith("/"):
+        path = f"/{path}"
+    query = f"?{parsed.query}" if parsed.query else ""
+    return f"{origin}{path}{query}"
 
 async def get_current_user(request: Request) -> Optional[dict]:
     session_token = request.cookies.get("session_token")
@@ -273,7 +322,7 @@ async def create_user_session(user_id: str) -> tuple[str, datetime]:
     })
     return session_token, expires_at
 
-def set_session_cookie(response: Response, session_token: str, expires_at: datetime) -> None:
+def set_session_cookie(response: Response, session_token: str, expires_at: datetime, request: Request) -> None:
     now = datetime.now(timezone.utc)
     max_age = int((expires_at - now).total_seconds())
     if max_age <= 0:
@@ -284,8 +333,8 @@ def set_session_cookie(response: Response, session_token: str, expires_at: datet
         "session_token",
         session_token,
         httponly=True,
-        secure=True,
-        samesite="none",
+        secure=should_use_secure_cookies(request),
+        samesite=get_cookie_samesite(request),
         max_age=max_age,
         expires=expires_at,
         path="/"
@@ -294,7 +343,7 @@ def set_session_cookie(response: Response, session_token: str, expires_at: datet
 # ==================== AUTH ROUTES ====================
 
 @api_router.post("/auth/register")
-async def register(data: UserCreate):
+async def register(data: UserCreate, request: Request, response: Response):
     existing = await db.users.find_one({"email": data.email})
     if existing:
         raise HTTPException(400, "Email ya registrado")
@@ -308,6 +357,8 @@ async def register(data: UserCreate):
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.users.insert_one(user_doc)
+    session_token, expires_at = await create_user_session(user_id)
+    set_session_cookie(response, session_token, expires_at, request)
     token = create_token(user_id, data.email)
     return {
         "token": token,
@@ -315,10 +366,12 @@ async def register(data: UserCreate):
     }
 
 @api_router.post("/auth/login")
-async def login(data: UserLogin):
+async def login(data: UserLogin, request: Request, response: Response):
     user = await db.users.find_one({"email": data.email}, {"_id": 0})
     if not user or not verify_password(data.password, user.get("password_hash", "")):
         raise HTTPException(401, "Credenciales inválidas")
+    session_token, expires_at = await create_user_session(user["user_id"])
+    set_session_cookie(response, session_token, expires_at, request)
     token = create_token(user["user_id"], user["email"])
     return {
         "token": token,
@@ -347,11 +400,16 @@ async def logout(request: Request, response: Response):
     session_token = request.cookies.get("session_token")
     if session_token:
         await db.user_sessions.delete_one({"session_token": session_token})
-    response.delete_cookie("session_token", path="/", samesite="none", secure=True)
+    response.delete_cookie(
+        "session_token",
+        path="/",
+        samesite=get_cookie_samesite(request),
+        secure=should_use_secure_cookies(request)
+    )
     return {"message": "Sesión cerrada"}
 
 @api_router.post("/auth/google")
-async def login_with_google(data: GoogleAuthRequest, response: Response):
+async def login_with_google(data: GoogleAuthRequest, request: Request, response: Response):
     ensure_google_oauth_configured()
     token_value = data.credential or data.id_token
     try:
@@ -371,7 +429,7 @@ async def login_with_google(data: GoogleAuthRequest, response: Response):
         raise HTTPException(401, "Token de Google inválido") from exc
     user = await upsert_google_user(token_info)
     session_token, expires_at = await create_user_session(user["user_id"])
-    set_session_cookie(response, session_token, expires_at)
+    set_session_cookie(response, session_token, expires_at, request)
     token = create_token(user["user_id"], user["email"])
     return {
         "token": token,
@@ -384,9 +442,10 @@ async def login_with_google(data: GoogleAuthRequest, response: Response):
     }
 
 @api_router.get("/login/google")
-async def redirect_to_google_oauth():
+async def redirect_to_google_oauth(request: Request, next: Optional[str] = None):
     ensure_google_oauth_configured(require_secret=True)
     state = secrets.token_urlsafe(32)
+    post_auth_redirect = normalize_post_auth_redirect_target(next)
     params = {
         "client_id": GOOGLE_CLIENT_ID,
         "redirect_uri": GOOGLE_REDIRECT_URI,
@@ -399,15 +458,27 @@ async def redirect_to_google_oauth():
     }
     url = f"{GOOGLE_AUTH_URL}?{urllib_parse.urlencode(params)}"
     response = RedirectResponse(url=url, status_code=302)
+    secure_cookie = should_use_secure_cookies(request)
+    cookie_samesite = get_cookie_samesite(request)
     response.set_cookie(
         GOOGLE_OAUTH_STATE_COOKIE,
         state,
         httponly=True,
-        secure=True,
-        samesite="none",
+        secure=secure_cookie,
+        samesite=cookie_samesite,
         max_age=GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS,
         path="/"
     )
+    response.set_cookie(
+        GOOGLE_OAUTH_NEXT_COOKIE,
+        post_auth_redirect,
+        httponly=True,
+        secure=secure_cookie,
+        samesite=cookie_samesite,
+        max_age=GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS,
+        path="/"
+    )
+    logger.info("Starting Google OAuth flow. redirect_uri=%s post_auth_redirect=%s", GOOGLE_REDIRECT_URI, post_auth_redirect)
     return response
 
 @api_router.get("/auth/callback/google")
@@ -415,17 +486,21 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
     ensure_google_oauth_configured(require_secret=True)
     if not code:
         logger.warning("Google OAuth callback missing authorization code. query=%s", dict(request.query_params))
-        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        return RedirectResponse(url=f"{FRONTEND_URL}/cuenta", status_code=302)
 
     expected_state = request.cookies.get(GOOGLE_OAUTH_STATE_COOKIE)
+    post_auth_redirect = normalize_post_auth_redirect_target(request.cookies.get(GOOGLE_OAUTH_NEXT_COOKIE))
     if not state or not expected_state or not secrets.compare_digest(state, expected_state):
         logger.warning(
             "Google OAuth callback state mismatch. has_state_param=%s has_state_cookie=%s",
             bool(state),
             bool(expected_state)
         )
-        response = RedirectResponse(url=FRONTEND_URL, status_code=302)
-        response.delete_cookie(GOOGLE_OAUTH_STATE_COOKIE, path="/", samesite="none", secure=True)
+        response = RedirectResponse(url=post_auth_redirect, status_code=302)
+        secure_cookie = should_use_secure_cookies(request)
+        cookie_samesite = get_cookie_samesite(request)
+        response.delete_cookie(GOOGLE_OAUTH_STATE_COOKIE, path="/", samesite=cookie_samesite, secure=secure_cookie)
+        response.delete_cookie(GOOGLE_OAUTH_NEXT_COOKIE, path="/", samesite=cookie_samesite, secure=secure_cookie)
         return response
 
     token_payload = {
@@ -448,7 +523,7 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
         token_data = json.loads(token_response.read().decode("utf-8"))
     except socket.timeout:
         logger.exception("Google OAuth token exchange request timed out")
-        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
     except urllib_error.HTTPError as exc:
         error_body = exc.read().decode("utf-8", errors="replace")
         logger.exception(
@@ -456,16 +531,16 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
             exc.code,
             error_body[:1000]
         )
-        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
     except Exception:
         logger.exception("Google OAuth token exchange failed with unexpected error")
-        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
 
     id_token_value = token_data.get("id_token")
     access_token = token_data.get("access_token")
     if not id_token_value:
         logger.error("Google OAuth token exchange succeeded but id_token is missing. keys=%s", list(token_data.keys()))
-        return RedirectResponse(url=FRONTEND_URL, status_code=302)
+        return RedirectResponse(url=post_auth_redirect, status_code=302)
 
     try:
         token_info = await asyncio.to_thread(
@@ -478,7 +553,7 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
         # google.oauth2.id_token.verify_oauth2_token raises ValueError when the token is invalid.
         logger.exception("Google OAuth callback id_token verification failed")
         if not access_token:
-            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+            return RedirectResponse(url=post_auth_redirect, status_code=302)
         try:
             userinfo_request = urllib_request.Request(
                 GOOGLE_USERINFO_URL,
@@ -489,22 +564,26 @@ async def google_oauth_callback(request: Request, code: Optional[str] = None, st
             token_info = json.loads(userinfo_response.read().decode("utf-8"))
         except urllib_error.HTTPError as exc:
             logger.exception("Google OAuth callback userinfo HTTP error status=%s", exc.code)
-            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+            return RedirectResponse(url=post_auth_redirect, status_code=302)
         except urllib_error.URLError as exc:
             logger.exception("Google OAuth callback userinfo network error: %s", exc.reason)
-            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+            return RedirectResponse(url=post_auth_redirect, status_code=302)
         except socket.timeout:
             logger.exception("Google OAuth callback userinfo request timed out")
-            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+            return RedirectResponse(url=post_auth_redirect, status_code=302)
         except json.JSONDecodeError:
             logger.exception("Google OAuth callback userinfo response was not valid JSON")
-            return RedirectResponse(url=FRONTEND_URL, status_code=302)
+            return RedirectResponse(url=post_auth_redirect, status_code=302)
 
     user = await upsert_google_user(token_info)
     session_token, expires_at = await create_user_session(user["user_id"])
-    app_redirect_response = RedirectResponse(url=FRONTEND_URL, status_code=302)
-    set_session_cookie(app_redirect_response, session_token, expires_at)
-    app_redirect_response.delete_cookie(GOOGLE_OAUTH_STATE_COOKIE, path="/", samesite="none", secure=True)
+    app_redirect_response = RedirectResponse(url=post_auth_redirect, status_code=302)
+    set_session_cookie(app_redirect_response, session_token, expires_at, request)
+    secure_cookie = should_use_secure_cookies(request)
+    cookie_samesite = get_cookie_samesite(request)
+    app_redirect_response.delete_cookie(GOOGLE_OAUTH_STATE_COOKIE, path="/", samesite=cookie_samesite, secure=secure_cookie)
+    app_redirect_response.delete_cookie(GOOGLE_OAUTH_NEXT_COOKIE, path="/", samesite=cookie_samesite, secure=secure_cookie)
+    logger.info("Google OAuth callback completed. redirecting_to=%s", post_auth_redirect)
     return app_redirect_response
 
 

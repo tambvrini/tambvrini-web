@@ -2,13 +2,11 @@ import "@/App.css";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
 import { Toaster } from "./components/ui/sonner";
 import { I18nProvider } from "./contexts/I18nContext";
-import { GOOGLE_CLIENT_ID } from "./config/google";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CartDrawer from "./components/CartDrawer";
@@ -67,18 +65,16 @@ function AppRouter() {
 function App() {
   return (
     <I18nProvider>
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <BrowserRouter>
-                <AppRouter />
-                <Toaster position="bottom-right" theme="light" />
-              </BrowserRouter>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
-      </GoogleOAuthProvider>
+      <AuthProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <BrowserRouter>
+              <AppRouter />
+              <Toaster position="bottom-right" theme="light" />
+            </BrowserRouter>
+          </WishlistProvider>
+        </CartProvider>
+      </AuthProvider>
     </I18nProvider>
   );
 }
