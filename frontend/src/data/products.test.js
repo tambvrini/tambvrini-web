@@ -27,4 +27,17 @@ describe('products data', () => {
       '/products/polo-aureus/polo-aureus-look-06.jpg',
     ]);
   });
+
+  it('loads the Suéter Captain gallery images in order', () => {
+    const captain = products.find((product) => product.product_id === 'sueter-captain');
+
+    expect(captain).toBeDefined();
+    expect(captain.images).toEqual([
+      '/products/sueter-captain/sueter-captain-look-01.jpg',
+      '/products/sueter-captain/sueter-captain-look-02.jpg',
+      '/products/sueter-captain/sueter-captain-look-03.jpg',
+      '/products/sueter-captain/sueter-captain-look-04.jpg',
+      '/products/sueter-captain/sueter-captain-look-05.jpg',
+    ]);
+  });
 });

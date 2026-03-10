@@ -160,8 +160,7 @@ const products = [
   },
 
   // ──────────────────────────────────────────────────
-  // 5. Suéter Captain  (recovered from category-2026 mapping + frontend refs)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  // 5. Suéter Captain
   // ──────────────────────────────────────────────────
   {
     product_id: "sueter-captain",
@@ -171,7 +170,13 @@ const products = [
       "Suéter Captain de la colección Sport Club 2026. Punto fino premium con bordado del escudo Sport Club. Diseñado para el rendimiento con estética de club privado europeo.",
     price: 50.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/sueter-captain/sueter-captain-look-01.jpg",
+      "/products/sueter-captain/sueter-captain-look-02.jpg",
+      "/products/sueter-captain/sueter-captain-look-03.jpg",
+      "/products/sueter-captain/sueter-captain-look-04.jpg",
+      "/products/sueter-captain/sueter-captain-look-05.jpg",
+    ],
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
