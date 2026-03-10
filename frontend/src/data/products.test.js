@@ -70,4 +70,18 @@ describe('products data', () => {
       '/products/polo-patricius/polo-patricius-look-07.jpg',
     ]);
   });
+
+  it('loads the Polo Regius gallery images in order', () => {
+    const regius = products.find((product) => product.product_id === 'polo-regius');
+
+    expect(regius).toBeDefined();
+    expect(regius.images).toEqual([
+      '/products/polo-regius/polo-regius-look-01.jpg',
+      '/products/polo-regius/polo-regius-look-02.jpg',
+      '/products/polo-regius/polo-regius-look-03.jpg',
+      '/products/polo-regius/polo-regius-look-04.jpg',
+      '/products/polo-regius/polo-regius-look-05.jpg',
+      '/products/polo-regius/polo-regius-look-06.jpg',
+    ]);
+  });
 });
