@@ -40,4 +40,19 @@ describe('products data', () => {
       '/products/sueter-captain/sueter-captain-look-05.jpg',
     ]);
   });
+
+  it('loads the Suéter Sylva gallery images in order', () => {
+    const sylva = products.find((product) => product.product_id === 'sueter-sylva');
+
+    expect(sylva).toBeDefined();
+    expect(sylva.images).toEqual([
+      '/products/sueter-sylva/sueter-sylva-look-01.jpg',
+      '/products/sueter-sylva/sueter-sylva-look-02.jpg',
+      '/products/sueter-sylva/sueter-sylva-look-03.jpg',
+      '/products/sueter-sylva/sueter-sylva-look-04.jpg',
+      '/products/sueter-sylva/sueter-sylva-look-05.jpg',
+      '/products/sueter-sylva/sueter-sylva-look-07.jpg',
+      '/products/sueter-sylva/sueter-sylva-look-08.jpg',
+    ]);
+  });
 });
