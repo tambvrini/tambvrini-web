@@ -55,4 +55,19 @@ describe('products data', () => {
       '/products/sueter-sylva/sueter-sylva-look-08.jpg',
     ]);
   });
+
+  it('loads the Polo Patricius gallery images in order', () => {
+    const patricius = products.find((product) => product.product_id === 'polo-patricius');
+
+    expect(patricius).toBeDefined();
+    expect(patricius.images).toEqual([
+      '/products/polo-patricius/polo-patricius-look-01.jpg',
+      '/products/polo-patricius/polo-patricius-look-02.jpg',
+      '/products/polo-patricius/polo-patricius-look-03.jpg',
+      '/products/polo-patricius/polo-patricius-look-04.jpg',
+      '/products/polo-patricius/polo-patricius-look-05.jpg',
+      '/products/polo-patricius/polo-patricius-look-06.jpg',
+      '/products/polo-patricius/polo-patricius-look-07.jpg',
+    ]);
+  });
 });
