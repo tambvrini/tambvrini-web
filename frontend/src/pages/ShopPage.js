@@ -45,6 +45,7 @@ const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c
 const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/nqiyik78_video%20final%20tambvrini%202.mov";
 
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
+const COLLECTION_2026_HEADER_IMAGE = '/images/header-gafas.jpeg';
 const COLLECTION_2026_EDITORIAL_IMAGE = '/images/2026.PNG';
 
 export default function ShopPage() {
@@ -345,6 +346,20 @@ export default function ShopPage() {
             </button>
           ))}
         </div>
+
+        {isCollection2026View && (
+          <div data-testid="editorial-2026-header-banner" className="mb-12">
+            <div className="overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)]">
+              <img
+                data-testid="editorial-2026-header-image"
+                src={COLLECTION_2026_HEADER_IMAGE}
+                alt="Editorial 2026 Header TAMBVRINI"
+                loading="lazy"
+                className="w-full h-auto object-cover object-center"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Products grid */}
         {loading ? (

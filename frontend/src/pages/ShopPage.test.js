@@ -55,7 +55,7 @@ describe('ShopPage 2026 editorial image', () => {
     jest.useRealTimers();
   });
 
-  it('inserts the 2026 editorial block after Suéter Captain in the 2026 grid', async () => {
+  it('renders 2026 header banner and inserts the vertical editorial block after Suéter Captain', async () => {
     mockQueryProducts.mockReturnValue({
       products: [
         { product_id: 'camiseta-sport-club', name: 'Camiseta Sport Club' },
@@ -79,16 +79,22 @@ describe('ShopPage 2026 editorial image', () => {
     });
 
     const captainCard = container.querySelector('[data-testid="product-card-sueter-captain"]');
+    const headerBanner = container.querySelector('[data-testid="editorial-2026-header-banner"]');
+    const headerImage = container.querySelector('[data-testid="editorial-2026-header-image"]');
     const editorialInsert = container.querySelector('[data-testid="editorial-2026-insert"]');
     const editorialImage = container.querySelector('[data-testid="editorial-2026-image"]');
     const nextProduct = container.querySelector('[data-testid="product-card-polo-regius"]');
 
     expect(captainCard).not.toBeNull();
+    expect(headerBanner).not.toBeNull();
+    expect(headerImage).not.toBeNull();
     expect(editorialInsert).not.toBeNull();
     expect(editorialImage).not.toBeNull();
     expect(nextProduct).not.toBeNull();
+    expect(headerImage.getAttribute('src')).toBe('/images/header-gafas.jpeg');
     expect(editorialImage.getAttribute('src')).toBe('/images/2026.PNG');
     expect(editorialInsert.className.includes('lg:row-span-2')).toBe(true);
+    expect(headerBanner.compareDocumentPosition(captainCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     const gridChildren = Array.from(captainCard.parentElement.children);
     const captainIndex = gridChildren.indexOf(captainCard);
     const editorialIndex = gridChildren.indexOf(editorialInsert);
