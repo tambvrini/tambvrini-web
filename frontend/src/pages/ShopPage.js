@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { queryProducts } from '@/data/productHelpers';
 import catalogProducts from '@/data/products';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
@@ -47,17 +48,6 @@ const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
 const COLLECTION_2026_HEADER_IMAGE = '/images/header-gafas.jpeg';
 const COLLECTION_2026_EDITORIAL_IMAGE = '/images/2026.PNG';
-const HOVER_VIDEO_PRODUCT_IDS = new Set([
-  'traje-monograma-tambvrini',
-  'polo-aureus',
-  'bolso-monograma-tambvrini',
-  'camiseta-sport-club',
-  'polo-golf',
-  'camiseta-imperium',
-  'americana-umbra',
-  'sueter-captain',
-]);
-const supportsHoverVideo = (productId) => HOVER_VIDEO_PRODUCT_IDS.has(productId);
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();

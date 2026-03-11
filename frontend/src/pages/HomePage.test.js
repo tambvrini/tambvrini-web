@@ -31,16 +31,6 @@ jest.mock(
 jest.mock('../components/ProductCard', () => ({
   __esModule: true,
   default: (props) => <div data-testid={`product-card-${props.product.product_id}`} />,
-  supportsHoverVideo: (productId) => [
-    'traje-monograma-tambvrini',
-    'polo-aureus',
-    'bolso-monograma-tambvrini',
-    'camiseta-sport-club',
-    'polo-golf',
-    'camiseta-imperium',
-    'americana-umbra',
-    'sueter-captain',
-  ].includes(productId),
 }));
 
 jest.mock('../components/IntroVideoSection.tsx', () => () => (

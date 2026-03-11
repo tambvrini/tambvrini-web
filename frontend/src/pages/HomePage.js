@@ -6,6 +6,7 @@ import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
 import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const HERO_IMAGE = "/images/header-final.jpg";
 const HERO_WRAPPER_CLASSES = "h-screen overflow-hidden";
@@ -19,17 +20,6 @@ const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
 const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
-const HOVER_VIDEO_PRODUCT_IDS = new Set([
-  'traje-monograma-tambvrini',
-  'polo-aureus',
-  'bolso-monograma-tambvrini',
-  'camiseta-sport-club',
-  'polo-golf',
-  'camiseta-imperium',
-  'americana-umbra',
-  'sueter-captain',
-]);
-const supportsHoverVideo = (productId) => HOVER_VIDEO_PRODUCT_IDS.has(productId);
 const HTML_MEDIA_READY_STATE_FALLBACK = 2; // Fallback for HTMLMediaElement.HAVE_CURRENT_DATA (2) in non-browser envs.
 const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
   ? HTMLMediaElement.HAVE_CURRENT_DATA

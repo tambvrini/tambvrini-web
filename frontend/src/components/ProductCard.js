@@ -27,19 +27,6 @@ const UMBRA_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602
 const CAPTAIN_ID = 'sueter-captain';
 const CAPTAIN_HOVER_VIDEO_URL = 'https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/pu3df808_0212%20%284%29.mp4';
 
-export const HOVER_VIDEO_PRODUCT_IDS = new Set([
-  TRAJE_ID,
-  AUREUS_ID,
-  BOLSO_ID,
-  SPORT_CLUB_ID,
-  POLO_GOLF_ID,
-  IMPERIUM_ID,
-  UMBRA_ID,
-  CAPTAIN_ID,
-]);
-
-export const supportsHoverVideo = (productId) => HOVER_VIDEO_PRODUCT_IDS.has(productId);
-
 const LOCAL_THUMBNAILS = new Set([
   'americana-umbra',
   'bolso-monograma-tambvrini',

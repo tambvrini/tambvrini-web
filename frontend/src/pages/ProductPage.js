@@ -8,20 +8,10 @@ import ModelViewer from '../components/ModelViewer';
 import Simple3DViewer from '../components/Simple3DViewer.tsx';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
 const MAX_RECOMMENDED_PRODUCTS = 4;
-const HOVER_VIDEO_PRODUCT_IDS = new Set([
-  'traje-monograma-tambvrini',
-  'polo-aureus',
-  'bolso-monograma-tambvrini',
-  'camiseta-sport-club',
-  'polo-golf',
-  'camiseta-imperium',
-  'americana-umbra',
-  'sueter-captain',
-]);
-const supportsHoverVideo = (productId) => HOVER_VIDEO_PRODUCT_IDS.has(productId);
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;

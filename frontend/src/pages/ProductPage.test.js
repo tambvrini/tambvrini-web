@@ -26,16 +26,6 @@ jest.mock('../components/ProductCard', () => ({
     mockProductCard(props);
     return <div data-testid="related-product" />;
   },
-  supportsHoverVideo: (productId) => [
-    'traje-monograma-tambvrini',
-    'polo-aureus',
-    'bolso-monograma-tambvrini',
-    'camiseta-sport-club',
-    'polo-golf',
-    'camiseta-imperium',
-    'americana-umbra',
-    'sueter-captain',
-  ].includes(productId),
 }));
 
 jest.mock('../data/productHelpers', () => ({

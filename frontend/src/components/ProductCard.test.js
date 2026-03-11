@@ -1,6 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import ProductCard, { supportsHoverVideo } from './ProductCard';
+import ProductCard from './ProductCard';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -164,5 +165,6 @@ describe('ProductCard', () => {
   it('returns true for products with configured hover videos', () => {
     expect(supportsHoverVideo('polo-golf')).toBe(true);
     expect(supportsHoverVideo('polo-regius')).toBe(false);
+    expect(supportsHoverVideo('polo-domus')).toBe(false);
   });
 });
