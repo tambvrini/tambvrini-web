@@ -11,6 +11,17 @@ import { getProductById } from '../data/productHelpers';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
 const MAX_RECOMMENDED_PRODUCTS = 4;
+const HOVER_VIDEO_PRODUCT_IDS = new Set([
+  'traje-monograma-tambvrini',
+  'polo-aureus',
+  'bolso-monograma-tambvrini',
+  'camiseta-sport-club',
+  'polo-golf',
+  'camiseta-imperium',
+  'americana-umbra',
+  'sueter-captain',
+]);
+const supportsHoverVideo = (productId) => HOVER_VIDEO_PRODUCT_IDS.has(productId);
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;
@@ -487,7 +498,7 @@ export default function ProductPage() {
             </h2>
             <div className="product-recommendations" data-testid="product-recommendations">
               {relatedProducts.slice(0, MAX_RECOMMENDED_PRODUCTS).map((item, index) => (
-                <ProductCard key={item.product_id} product={item} index={index} />
+                <ProductCard key={item.product_id} product={item} index={index} enableHoverVideo={supportsHoverVideo(item.product_id)} />
               ))}
             </div>
           </section>

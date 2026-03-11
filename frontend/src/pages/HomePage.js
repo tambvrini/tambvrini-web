@@ -19,6 +19,17 @@ const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
 const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
+const HOVER_VIDEO_PRODUCT_IDS = new Set([
+  'traje-monograma-tambvrini',
+  'polo-aureus',
+  'bolso-monograma-tambvrini',
+  'camiseta-sport-club',
+  'polo-golf',
+  'camiseta-imperium',
+  'americana-umbra',
+  'sueter-captain',
+]);
+const supportsHoverVideo = (productId) => HOVER_VIDEO_PRODUCT_IDS.has(productId);
 const HTML_MEDIA_READY_STATE_FALLBACK = 2; // Fallback for HTMLMediaElement.HAVE_CURRENT_DATA (2) in non-browser envs.
 const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
   ? HTMLMediaElement.HAVE_CURRENT_DATA
@@ -368,7 +379,7 @@ const DropGridSection = () => {
                     key={p.product_id}
                     product={p}
                     index={i}
-                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini' || p.product_id === 'polo-domus' || p.product_id === 'sueter-sylva' || p.product_id === 'polo-patricius'}
+                    enableHoverVideo={supportsHoverVideo(p.product_id)}
                     enableWishlistIcon
                   />
                 ))}
@@ -458,7 +469,7 @@ const DropGridSection = () => {
                     key={p.product_id}
                     product={p}
                     index={i + firstRow.length}
-                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
+                    enableHoverVideo={supportsHoverVideo(p.product_id)}
                     enableWishlistIcon
                   />
                 ))}
@@ -471,7 +482,7 @@ const DropGridSection = () => {
                       key={item.product_id}
                       product={item}
                       index={displayed.length + i}
-                      enableHoverVideo={item.product_id === 'camiseta-sport-club' || item.product_id === 'polo-golf' || item.product_id === 'camiseta-imperium' || item.product_id === 'americana-umbra' || item.product_id === 'sueter-captain' || item.product_id === 'polo-aureus' || item.product_id === 'traje-monograma-tambvrini' || item.product_id === 'bolso-monograma-tambvrini'}
+                      enableHoverVideo={supportsHoverVideo(item.product_id)}
                       enableWishlistIcon
                     />
                   ))}

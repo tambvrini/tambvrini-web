@@ -6,6 +6,7 @@ import ShopPage from './ShopPage';
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const mockQueryProducts = jest.fn();
+const mockProductCard = jest.fn();
 
 jest.mock(
   '@/data/productHelpers',
@@ -21,9 +22,23 @@ jest.mock(
   { virtual: true }
 );
 
-jest.mock('../components/ProductCard', () => ({ product }) => (
-  <div data-testid={`product-card-${product.product_id}`}>{product.name}</div>
-));
+jest.mock('../components/ProductCard', () => ({
+  __esModule: true,
+  default: (props) => {
+    mockProductCard(props);
+    return <div data-testid={`product-card-${props.product.product_id}`}>{props.product.name}</div>;
+  },
+  supportsHoverVideo: (productId) => [
+    'traje-monograma-tambvrini',
+    'polo-aureus',
+    'bolso-monograma-tambvrini',
+    'camiseta-sport-club',
+    'polo-golf',
+    'camiseta-imperium',
+    'americana-umbra',
+    'sueter-captain',
+  ].includes(productId),
+}));
 
 jest.mock('../components/ui/select', () => ({
   Select: ({ children }) => <div>{children}</div>,
@@ -46,6 +61,7 @@ describe('ShopPage 2026 editorial image', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     window.scrollTo = jest.fn();
+    mockProductCard.mockClear();
   });
 
   afterEach(() => {
@@ -101,6 +117,10 @@ describe('ShopPage 2026 editorial image', () => {
     const nextProductIndex = gridChildren.indexOf(nextProduct);
     expect(editorialIndex).toBe(captainIndex + 1);
     expect(nextProductIndex).toBeGreaterThan(editorialIndex);
+    const poloGolfProps = mockProductCard.mock.calls.find(([props]) => props.product.product_id === 'polo-golf')?.[0];
+    const regiusProps = mockProductCard.mock.calls.find(([props]) => props.product.product_id === 'polo-regius')?.[0];
+    expect(poloGolfProps?.enableHoverVideo).toBe(true);
+    expect(regiusProps?.enableHoverVideo).toBe(false);
 
     act(() => {
       root.unmount();

@@ -47,6 +47,17 @@ const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
 const COLLECTION_2026_HEADER_IMAGE = '/images/header-gafas.jpeg';
 const COLLECTION_2026_EDITORIAL_IMAGE = '/images/2026.PNG';
+const HOVER_VIDEO_PRODUCT_IDS = new Set([
+  'traje-monograma-tambvrini',
+  'polo-aureus',
+  'bolso-monograma-tambvrini',
+  'camiseta-sport-club',
+  'polo-golf',
+  'camiseta-imperium',
+  'americana-umbra',
+  'sueter-captain',
+]);
+const supportsHoverVideo = (productId) => HOVER_VIDEO_PRODUCT_IDS.has(productId);
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -396,7 +407,7 @@ export default function ShopPage() {
                   key={p.product_id}
                   product={p}
                   index={i}
-                enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-domus' || p.product_id === 'sueter-sylva' || p.product_id === 'polo-patricius'}
+                enableHoverVideo={supportsHoverVideo(p.product_id)}
                 />
               ))}
             </div>
@@ -415,7 +426,7 @@ export default function ShopPage() {
                   key={p.product_id}
                   product={p}
                   index={i + mensFirst.length}
-                  enableHoverVideo={p.product_id === 'camiseta-sport-club'}
+                  enableHoverVideo={supportsHoverVideo(p.product_id)}
                 />
               ))}
             </div>
@@ -471,7 +482,7 @@ export default function ShopPage() {
                   key={item.product_id}
                   product={item}
                   index={i}
-                  enableHoverVideo={item.product_id === 'camiseta-sport-club' || item.product_id === 'polo-domus' || item.product_id === 'sueter-sylva' || item.product_id === 'polo-patricius'}
+                  enableHoverVideo={supportsHoverVideo(item.product_id)}
                 />
               )
             ))}

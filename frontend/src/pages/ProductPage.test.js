@@ -20,10 +20,23 @@ jest.mock('../contexts/WishlistContext', () => ({
 
 const mockProductCard = jest.fn();
 
-jest.mock('../components/ProductCard', () => (props) => {
-  mockProductCard(props);
-  return <div data-testid="related-product" />;
-});
+jest.mock('../components/ProductCard', () => ({
+  __esModule: true,
+  default: (props) => {
+    mockProductCard(props);
+    return <div data-testid="related-product" />;
+  },
+  supportsHoverVideo: (productId) => [
+    'traje-monograma-tambvrini',
+    'polo-aureus',
+    'bolso-monograma-tambvrini',
+    'camiseta-sport-club',
+    'polo-golf',
+    'camiseta-imperium',
+    'americana-umbra',
+    'sueter-captain',
+  ].includes(productId),
+}));
 
 jest.mock('../data/productHelpers', () => ({
   getProductById: jest.fn(),
@@ -334,8 +347,10 @@ describe('ProductPage', () => {
     expect(mockProductCard.mock.calls.length).toBeGreaterThanOrEqual(4);
     expect(mockProductCard.mock.calls[0][0].product.product_id).toBe(relatedProducts[0].product_id);
     expect(mockProductCard.mock.calls[0][0].index).toBe(0);
+    expect(mockProductCard.mock.calls[0][0].enableHoverVideo).toBe(true);
     expect(mockProductCard.mock.calls[3][0].product.product_id).toBe(relatedProducts[3].product_id);
     expect(mockProductCard.mock.calls[3][0].index).toBe(3);
+    expect(mockProductCard.mock.calls[3][0].enableHoverVideo).toBe(false);
 
     act(() => {
       root.unmount();
