@@ -176,11 +176,10 @@ export default function ProductPage() {
         imageIndex += 1;
       }
 
-      const showDivider = index < galleryMedia.length - 1;
-
       return (
         <div
           key={`${media.type}-${index}`}
+          className="product-gallery-item"
           data-testid={`product-gallery-item-${index}`}
         >
           {media.type === 'model' ? (
@@ -189,6 +188,7 @@ export default function ProductPage() {
                 <Simple3DViewer
                   data-testid="product-model-viewer"
                   src={media.src}
+                  productId={product.product_id}
                   className="product-model-viewer"
                   aria-label={`Vista 3D de ${product.name}`}
                 />
@@ -212,9 +212,6 @@ export default function ProductPage() {
               />
             </div>
           )}
-          {showDivider && (
-            <div aria-hidden="true" className="h-px bg-black/[0.08] my-6" />
-          )}
         </div>
       );
     });
@@ -231,7 +228,7 @@ export default function ProductPage() {
       {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
 
       {/* Product layout */}
-      <div className="product-content max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
+      <div className="product-content">
         <div className="product-page product-layout">
           {/* Left: Gallery */}
           <div className="product-media" data-testid="product-media">
@@ -259,7 +256,7 @@ export default function ProductPage() {
             <div className="flex items-start justify-between gap-4 mb-2">
               <h1
                 data-testid="product-name"
-                className={`font-playfair text-3xl md:text-4xl text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
+                className={`font-playfair text-[clamp(28px,4vw,48px)] leading-[1.08] break-words text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
               >
                 {product.name}
               </h1>

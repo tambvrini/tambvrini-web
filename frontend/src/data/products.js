@@ -40,7 +40,7 @@ const products = [
       "/products/traje-monograma-tambvrini/03.jpeg",
       "/products/traje-monograma-tambvrini/04.jpeg",
       "/products/traje-monograma-tambvrini/05.png",
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
+      "/products/traje-monograma-tambvrini/traje-monograma-tambvrini (1).jpg",
     ],
     thumbnail_image: `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
     category: ["sastrería", "set"],
@@ -160,8 +160,7 @@ const products = [
   },
 
   // ──────────────────────────────────────────────────
-  // 5. Suéter Captain  (recovered from category-2026 mapping + frontend refs)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  // 5. Suéter Captain
   // ──────────────────────────────────────────────────
   {
     product_id: "sueter-captain",
@@ -171,7 +170,13 @@ const products = [
       "Suéter Captain de la colección Sport Club 2026. Punto fino premium con bordado del escudo Sport Club. Diseñado para el rendimiento con estética de club privado europeo.",
     price: 50.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/sueter-captain/sueter-captain-look-01.jpg",
+      "/products/sueter-captain/sueter-captain-look-02.jpg",
+      "/products/sueter-captain/sueter-captain-look-03.jpg",
+      "/products/sueter-captain/sueter-captain-look-04.jpg",
+      "/products/sueter-captain/sueter-captain-look-05.jpg",
+    ],
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -316,7 +321,15 @@ const products = [
       "Suéter Sylva de punto fino premium. Diseño elegante con acabado de lujo y estética de club privado europeo.",
     price: 40.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/sueter-sylva/sueter-sylva-look-01.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-02.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-03.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-04.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-05.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-07.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-08.jpg",
+    ],
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -341,7 +354,15 @@ const products = [
       "Polo Patricius de algodón premium con bordado exclusivo. Inspiración clásica romana con estética de lujo contemporáneo.",
     price: 25.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/polo-patricius/polo-patricius-look-01.jpg",
+      "/products/polo-patricius/polo-patricius-look-02.jpg",
+      "/products/polo-patricius/polo-patricius-look-03.jpg",
+      "/products/polo-patricius/polo-patricius-look-04.jpg",
+      "/products/polo-patricius/polo-patricius-look-05.jpg",
+      "/products/polo-patricius/polo-patricius-look-06.jpg",
+      "/products/polo-patricius/polo-patricius-look-07.jpg",
+    ],
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -366,7 +387,14 @@ const products = [
       "Polo Regius de algodón premium con bordado exclusivo. La máxima expresión de la elegancia deportiva mediterránea.",
     price: 30.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/polo-regius/polo-regius-look-01.jpg",
+      "/products/polo-regius/polo-regius-look-02.jpg",
+      "/products/polo-regius/polo-regius-look-03.jpg",
+      "/products/polo-regius/polo-regius-look-04.jpg",
+      "/products/polo-regius/polo-regius-look-05.jpg",
+      "/products/polo-regius/polo-regius-look-06.jpg",
+    ],
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],

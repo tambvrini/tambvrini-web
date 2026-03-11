@@ -2,7 +2,7 @@
  * Client-side product helpers that replicate the backend query logic
  * so the shop pages can read ONLY from the local data file.
  */
-import products from "@/data/products";
+import products from "./products";
 
 /**
  * Return a single product by its product_id, plus up to 4 related products
@@ -40,21 +40,39 @@ export function queryProducts({
   limit = 20,
 } = {}) {
   let filtered = [...products];
+  const normalizedCategory =
+    category === "marroquineria" ? "accesorios" : category;
+  const isNovedadesCategory = normalizedCategory === "novedades";
 
   // Category filters (mirrors backend logic)
-  if (category) {
-    if (category === "2026") {
+  if (normalizedCategory) {
+    if (isNovedadesCategory) {
+      const hasCreationDates = filtered.every(
+        (p) => p.created_at && !Number.isNaN(new Date(p.created_at).getTime())
+      );
+      if (hasCreationDates) {
+        filtered = filtered
+          .map((product) => ({
+            product,
+            createdAtTs: new Date(product.created_at).getTime(),
+          }))
+          .sort((a, b) => b.createdAtTs - a.createdAtTs)
+          .map(({ product }) => product);
+      }
+    } else if (normalizedCategory === "2026") {
       filtered = filtered.filter((p) =>
         ["camiseta-sport-club", "polo-golf", "sueter-captain"].includes(
           p.product_id
         )
       );
-    } else if (category === "sueteres") {
+    } else if (normalizedCategory === "sueteres") {
       filtered = filtered.filter((p) => p.category?.includes("knitwear"));
-    } else if (category === "polos") {
+    } else if (normalizedCategory === "polos") {
       filtered = filtered.filter((p) => p.category?.includes("polos"));
     } else {
-      filtered = filtered.filter((p) => p.category?.includes(category));
+      filtered = filtered.filter((p) =>
+        p.category?.includes(normalizedCategory)
+      );
     }
   }
 
@@ -77,7 +95,7 @@ export function queryProducts({
     );
   }
 
-  if (is_new) {
+  if (is_new && !isNovedadesCategory) {
     filtered = filtered.filter((p) => p.is_new);
   }
 

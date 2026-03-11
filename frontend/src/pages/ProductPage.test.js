@@ -202,6 +202,7 @@ describe('ProductPage', () => {
 
     expect(viewer).not.toBeNull();
     expect(viewer.getAttribute('data-model-src')).toBe('/models/ignatius.glb');
+    expect(viewer.getAttribute('data-viewer-preset')).toBe('ignatius');
     expect(galleryImageElements.length).toBe(0);
     expect(productPage).not.toBeNull();
     expect(productPage.className).toContain('mb-12');
@@ -221,9 +222,16 @@ describe('ProductPage', () => {
     const { container, root } = await renderProductPage();
     const viewer = container.querySelector('[data-testid="product-model-viewer"]');
     const mainImage = container.querySelector('[data-testid="product-gallery-image-0"]');
+    const mediaContainer = container.querySelector('.product-gallery-media');
+    const galleryItem = container.querySelector('[data-testid="product-gallery-item-0"]');
 
     expect(viewer).toBeNull();
     expect(mainImage).not.toBeNull();
+    expect(mediaContainer).not.toBeNull();
+    expect(galleryItem).not.toBeNull();
+    expect(galleryItem.className).toContain('product-gallery-item');
+    expect(galleryItem.childElementCount).toBe(1);
+    expect(mainImage.className).toContain('product-gallery-image');
 
     act(() => {
       root.unmount();
@@ -258,6 +266,7 @@ describe('ProductPage', () => {
 
     expect(modelViewer).not.toBeNull();
     expect(firstGalleryItem.querySelector('[data-testid="product-model-viewer"]')).not.toBeNull();
+    expect(modelViewer.getAttribute('data-viewer-preset')).toBe('default');
     expect(firstGalleryImage).not.toBeNull();
     expect(thumbnailButtons.length).toBe(0);
     expect(firstGalleryImage.getAttribute('src'))
@@ -273,12 +282,21 @@ describe('ProductPage', () => {
     getProductById.mockReturnValue(baseProduct);
 
     const { container, root } = await renderProductPage();
+    const productContent = container.querySelector('.product-content');
     const pageGrid = container.querySelector('.product-page');
     const infoPanel = container.querySelector('.product-info');
+    const title = container.querySelector('[data-testid="product-name"]');
     const detailButton = container.querySelector('[data-testid="tab-details"]');
 
+    expect(productContent).not.toBeNull();
+    const productContentClasses = productContent.className.split(/\s+/);
+
+    expect(productContentClasses).not.toContain('max-w-[1920px]');
+    expect(productContentClasses).not.toContain('mx-auto');
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();
+    expect(title).not.toBeNull();
+    expect(title.className).toContain('break-words');
     expect(detailButton).not.toBeNull();
 
     act(() => {

@@ -2,13 +2,11 @@ import "@/App.css";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
 import { Toaster } from "./components/ui/sonner";
 import { I18nProvider } from "./contexts/I18nContext";
-import { GOOGLE_CLIENT_ID } from "./config/google";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CartDrawer from "./components/CartDrawer";
@@ -18,6 +16,9 @@ import ShopPage from "./pages/ShopPage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import AccountPage from "./pages/AccountPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import WishlistPage from "./pages/WishlistPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import BrandPage from "./pages/BrandPage";
@@ -53,6 +54,10 @@ function AppRouter() {
             <Route path="/producto/:productId" element={<ProductPage />} />
             <Route path="/carrito" element={<CartPage />} />
             <Route path="/cuenta" element={<AccountPage />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/favoritos" element={<WishlistPage />} />
             <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
             <Route path="/marca" element={<BrandPage />} />
@@ -67,18 +72,16 @@ function AppRouter() {
 function App() {
   return (
     <I18nProvider>
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <BrowserRouter>
-                <AppRouter />
-                <Toaster position="bottom-right" theme="light" />
-              </BrowserRouter>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
-      </GoogleOAuthProvider>
+      <AuthProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <BrowserRouter>
+              <AppRouter />
+              <Toaster position="bottom-right" theme="light" />
+            </BrowserRouter>
+          </WishlistProvider>
+        </CartProvider>
+      </AuthProvider>
     </I18nProvider>
   );
 }
