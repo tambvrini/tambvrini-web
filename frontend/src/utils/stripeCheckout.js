@@ -1,22 +1,4 @@
-import { loadStripe } from '@stripe/stripe-js';
-
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-let stripePromise;
-
-export const getStripePublicKey = () => {
-  const key = process.env.NEXT_PUBLIC_STRIPE_KEY;
-  if (!key) {
-    throw new Error('Missing Stripe public key: set NEXT_PUBLIC_STRIPE_KEY');
-  }
-  return key;
-};
-
-const getStripe = () => {
-  if (!stripePromise) {
-    stripePromise = loadStripe(getStripePublicKey());
-  }
-  return stripePromise;
-};
 
 export const mapCartItemsToCheckoutItems = (items = []) => (
   items
@@ -61,18 +43,9 @@ export const redirectToStripeCheckout = async ({ items, headers = {} }) => {
   }
 
   const data = await response.json();
-  const sessionId = data?.session_id;
-  if (!sessionId) {
-    throw new Error('No session id returned from checkout session endpoint');
+  const checkoutUrl = data?.url;
+  if (!checkoutUrl) {
+    throw new Error('No checkout url returned from checkout session endpoint');
   }
-
-  const stripe = await getStripe();
-  if (!stripe) {
-    throw new Error('Stripe.js could not be initialized');
-  }
-
-  const { error } = await stripe.redirectToCheckout({ sessionId });
-  if (error) {
-    throw error;
-  }
+  window.location.href = checkoutUrl;
 };

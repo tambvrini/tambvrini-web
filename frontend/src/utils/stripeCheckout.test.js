@@ -1,15 +1,11 @@
-import { loadStripe } from '@stripe/stripe-js';
-import { getStripePublicKey, mapCartItemsToCheckoutItems, redirectToStripeCheckout } from './stripeCheckout';
-
-jest.mock('@stripe/stripe-js', () => ({
-  loadStripe: jest.fn(),
-}));
+import { mapCartItemsToCheckoutItems, redirectToStripeCheckout } from './stripeCheckout';
 
 describe('stripeCheckout', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     global.fetch = jest.fn();
-    process.env.NEXT_PUBLIC_STRIPE_KEY = 'pk_test_123';
+    delete window.location;
+    window.location = { href: 'http://localhost' };
   });
 
   it('maps cart items to checkout payload with product data and optional attributes', () => {
@@ -32,28 +28,10 @@ describe('stripeCheckout', () => {
     ])).toThrow('Invalid cart item price for polo-golf');
   });
 
-  it('throws when Stripe public key is missing', () => {
-    const originalNextKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
-
-    delete process.env.NEXT_PUBLIC_STRIPE_KEY;
-
-    expect(() => getStripePublicKey()).toThrow(
-      'Missing Stripe public key: set NEXT_PUBLIC_STRIPE_KEY'
-    );
-
-    if (typeof originalNextKey === 'undefined') {
-      delete process.env.NEXT_PUBLIC_STRIPE_KEY;
-    } else {
-      process.env.NEXT_PUBLIC_STRIPE_KEY = originalNextKey;
-    }
-  });
-
-  it('posts items and redirects to Stripe Checkout using returned session id', async () => {
-    const redirectToCheckout = jest.fn().mockResolvedValue({});
-    loadStripe.mockResolvedValue({ redirectToCheckout });
+  it('posts items and redirects to returned checkout url', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ session_id: 'cs_test_123' }),
+      json: async () => ({ url: 'https://checkout.stripe.com/c/pay/cs_test_123' }),
     });
 
     await redirectToStripeCheckout({
@@ -73,6 +51,6 @@ describe('stripeCheckout', () => {
         }),
       }
     );
-    expect(redirectToCheckout).toHaveBeenCalledWith({ sessionId: 'cs_test_123' });
+    expect(window.location.href).toBe('https://checkout.stripe.com/c/pay/cs_test_123');
   });
 });
