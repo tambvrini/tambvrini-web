@@ -7,6 +7,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const mockNavigate = jest.fn();
 const mockInitialize = jest.fn();
 const mockPrompt = jest.fn();
+const mockRenderButton = jest.fn();
 
 jest.mock('../contexts/AuthContext', () => ({
   useAuth: () => ({
@@ -51,6 +52,7 @@ describe('LoginPage Google login', () => {
     mockNavigate.mockReset();
     mockInitialize.mockReset();
     mockPrompt.mockReset();
+    mockRenderButton.mockReset();
     process.env.REACT_APP_GOOGLE_CLIENT_ID = 'test-google-client-id';
     delete window.location;
     window.location = { ...originalLocation, href: 'http://localhost/' };
@@ -59,6 +61,7 @@ describe('LoginPage Google login', () => {
         id: {
           initialize: mockInitialize,
           prompt: mockPrompt,
+          renderButton: mockRenderButton,
         },
       },
     };
@@ -84,7 +87,28 @@ describe('LoginPage Google login', () => {
     container.remove();
   });
 
-  it('opens GIS prompt when the Google button is clicked', async () => {
+  it('renders official GIS button with configured options', async () => {
+    const { root, container } = await renderLoginPage();
+
+    expect(mockRenderButton).toHaveBeenCalledWith(
+      expect.any(HTMLElement),
+      expect.objectContaining({
+        theme: 'outline',
+        size: 'large',
+        type: 'standard',
+        shape: 'pill',
+        text: 'signin_with',
+        logo_alignment: 'left',
+      })
+    );
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('does not use GIS prompt when the Google button is clicked', async () => {
     const { container, root } = await renderLoginPage();
 
     const googleButton = container.querySelector('[data-testid="google-login-btn"]');
@@ -93,7 +117,7 @@ describe('LoginPage Google login', () => {
       googleButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
 
-    expect(mockPrompt).toHaveBeenCalled();
+    expect(mockPrompt).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
 
     act(() => {
