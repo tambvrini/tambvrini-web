@@ -576,13 +576,6 @@ input[type="password"] {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Remove Emergent badge (injected by emergent-main.js) */
-#emergent-badge {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-}
-
 /* Americana Umbra cinematic background */
 .umbra-background {
     position: fixed;

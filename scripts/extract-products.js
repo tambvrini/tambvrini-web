@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Extract products from the live Emergent backend and write
+ * Extract products from a live backend and write
  * frontend/src/data/products.js with the REAL catalog.
  *
  * Usage (from repo root):
- *   BACKEND_URL=https://tambvrini-luxury-4.preview.emergentagent.com node scripts/extract-products.js
+ *   BACKEND_URL=https://example.com node scripts/extract-products.js
  *
  * Or with the URL from frontend/.env:
  *   node scripts/extract-products.js
