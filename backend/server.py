@@ -138,7 +138,7 @@ async def create_checkout_session(data: CheckoutRequest):
         shipping_options=shipping_options,
     )
 
-    return {"session_id": session.id}
+    return {"url": session.url, "session_id": session.id}
 
 
 @api_router.get("/checkout/status/{session_id}")
