@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-  const handleGoogleCredentialResponse = (response) => {
+  const handleGoogleCredentialResponse = useCallback((response) => {
     try {
       const token = response?.credential;
       if (!token) {
@@ -27,10 +27,11 @@ export default function LoginPage() {
       };
       localStorage.setItem('user', JSON.stringify(googleUser));
       window.location.href = '/account';
-    } catch {
+    } catch (error) {
+      console.error('Google credential processing error:', error);
       toast.error('No se pudo iniciar sesión con Google');
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!googleClientId || !window.google?.accounts?.id?.initialize) return;
@@ -38,7 +39,7 @@ export default function LoginPage() {
       client_id: googleClientId,
       callback: handleGoogleCredentialResponse,
     });
-  }, [googleClientId]);
+  }, [googleClientId, handleGoogleCredentialResponse]);
 
   const handleGoogleLoginClick = () => {
     window.google?.accounts?.id?.prompt?.();

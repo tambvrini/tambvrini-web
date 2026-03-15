@@ -28,22 +28,12 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [checkAuth]);
 
-  const login = async (email) => {
-    const userData = {
-      email,
-      name: email.split('@')[0],
-      picture: '',
-    };
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
-    setUser(userData);
-    return { user: userData };
+  const login = async () => {
+    throw new Error('El inicio de sesión con correo no está disponible en este momento.');
   };
 
-  const register = async (email, password, name) => {
-    const userData = { email, name, picture: '' };
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
-    setUser(userData);
-    return { user: userData };
+  const register = async () => {
+    throw new Error('El registro con correo no está disponible en este momento.');
   };
 
   const logout = async () => {
@@ -52,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const forgotPassword = async (email) => {
-    return { email };
+    return { email, ok: true };
   };
 
   const startGoogleLogin = () => {
