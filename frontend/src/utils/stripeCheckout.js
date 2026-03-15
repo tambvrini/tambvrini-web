@@ -3,9 +3,17 @@ import { loadStripe } from '@stripe/stripe-js';
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 let stripePromise;
 
+export const getStripePublicKey = () => {
+  const key = process.env.NEXT_PUBLIC_STRIPE_KEY || process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+  if (!key) {
+    throw new Error('Missing Stripe public key: set NEXT_PUBLIC_STRIPE_KEY or REACT_APP_STRIPE_PUBLIC_KEY');
+  }
+  return key;
+};
+
 const getStripe = () => {
   if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY || process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
+    stripePromise = loadStripe(getStripePublicKey());
   }
   return stripePromise;
 };

@@ -42,7 +42,6 @@ db = client[require_env('DB_NAME')]
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY') or os.environ.get('STRIPE_API_KEY')
 if not STRIPE_SECRET_KEY:
     raise RuntimeError("Missing required environment variable: STRIPE_SECRET_KEY")
-STRIPE_API_KEY = STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
 REQUIRED_PRODUCTION_ORIGINS = ["https://tambvrini.com", "https://www.tambvrini.com"]
 CORS_ORIGINS = os.environ.get('CORS_ORIGINS', ",".join(REQUIRED_PRODUCTION_ORIGINS))
@@ -893,7 +892,7 @@ async def create_stripe_checkout_session(data: StripeCheckoutSessionRequest):
 
 @api_router.post("/checkout/create-session")
 async def create_checkout_session(request: Request, data: CheckoutRequest):
-    if not STRIPE_API_KEY:
+    if not STRIPE_SECRET_KEY:
         raise HTTPException(500, "Stripe no configurado")
 
     total = 0.0
@@ -943,7 +942,7 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
     if user_id:
         metadata["user_id"] = user_id
 
-    stripe.api_key = STRIPE_API_KEY
+    stripe.api_key = STRIPE_SECRET_KEY
 
     shipping_address_collection = {
         "allowed_countries": ["ES"]
@@ -1001,10 +1000,10 @@ async def create_checkout_session(request: Request, data: CheckoutRequest):
 
 @api_router.get("/checkout/status/{session_id}")
 async def get_checkout_status(session_id: str):
-    if not STRIPE_API_KEY:
+    if not STRIPE_SECRET_KEY:
         raise HTTPException(500, "Stripe no configurado")
 
-    stripe.api_key = STRIPE_API_KEY
+    stripe.api_key = STRIPE_SECRET_KEY
     session = stripe.checkout.Session.retrieve(session_id)
     payment_status = session.get("payment_status")
     status = "complete" if payment_status == "paid" else "pending"
@@ -1030,12 +1029,12 @@ async def get_checkout_status(session_id: str):
 
 @api_router.post("/webhook/stripe")
 async def stripe_webhook(request: Request):
-    if not STRIPE_API_KEY:
+    if not STRIPE_SECRET_KEY:
         raise HTTPException(500, "Stripe no configurado")
 
     body = await request.body()
     signature = request.headers.get("Stripe-Signature", "")
-    stripe.api_key = STRIPE_API_KEY
+    stripe.api_key = STRIPE_SECRET_KEY
     try:
         event = stripe.Webhook.construct_event(body, signature, STRIPE_WEBHOOK_SECRET)
 
