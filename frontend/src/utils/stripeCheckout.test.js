@@ -12,28 +12,24 @@ describe('stripeCheckout', () => {
     process.env.NEXT_PUBLIC_STRIPE_KEY = 'pk_test_123';
   });
 
-  it('maps cart items to checkout payload with cents and optional image', () => {
+  it('maps cart items to checkout payload with product data and optional attributes', () => {
     const payload = mapCartItemsToCheckoutItems([
-      { name: 'Polo Golf', price: 30, quantity: 2, image: '/img-1.jpg', slug: 'polo-golf' },
-      { name: 'Polo Regius', price: 20.5, quantity: 1, product_id: 'polo-regius' },
+      { product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 2, image: '/img-1.jpg', size: 'M', color: 'navy' },
+      { product_id: 'polo-regius', name: 'Polo Regius', price: 20.5, quantity: 1 },
       { name: 'Invalid', price: 10, quantity: 0 },
       { name: 'Invalid 2', price: 10, quantity: -1 },
     ]);
 
     expect(payload).toEqual([
-      { name: 'Polo Golf', price: 3000, quantity: 2, image: '/img-1.jpg', slug: 'polo-golf' },
-      { name: 'Polo Regius', price: 2050, quantity: 1, slug: 'polo-regius' },
+      { product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 2, image: '/img-1.jpg', size: 'M', color: 'navy' },
+      { product_id: 'polo-regius', name: 'Polo Regius', price: 20.5, quantity: 1 },
     ]);
   });
 
-  it('uses explicit slug when both slug and product_id are present', () => {
-    const payload = mapCartItemsToCheckoutItems([
-      { name: 'Polo', price: 10, quantity: 1, slug: 'explicit-slug', product_id: 'fallback-slug' },
-    ]);
-
-    expect(payload).toEqual([
-      { name: 'Polo', price: 1000, quantity: 1, slug: 'explicit-slug' },
-    ]);
+  it('throws when an item has an invalid price', () => {
+    expect(() => mapCartItemsToCheckoutItems([
+      { product_id: 'polo-golf', name: 'Polo Golf', price: 'invalid', quantity: 1 },
+    ])).toThrow('Invalid cart item price for polo-golf');
   });
 
   it('throws when Stripe public key is missing', () => {
@@ -57,21 +53,24 @@ describe('stripeCheckout', () => {
     loadStripe.mockResolvedValue({ redirectToCheckout });
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ sessionId: 'cs_test_123' }),
+      json: async () => ({ session_id: 'cs_test_123' }),
     });
 
     await redirectToStripeCheckout({
-      items: [{ name: 'Polo Golf', price: 30, quantity: 1, image: '/img.jpg', slug: 'polo-golf' }],
+      items: [{ product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 1, image: '/img.jpg', size: 'M', color: 'navy' }],
       headers: { Authorization: 'Bearer token' },
     });
 
     expect(fetch).toHaveBeenCalledWith(
-      `${process.env.REACT_APP_BACKEND_URL}/api/create-checkout-session`,
+      `${process.env.REACT_APP_BACKEND_URL}/api/checkout/create-session`,
       {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer token' },
-        body: JSON.stringify({ items: [{ name: 'Polo Golf', price: 3000, quantity: 1, slug: 'polo-golf', image: '/img.jpg' }] }),
+        body: JSON.stringify({
+          items: [{ product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 1, size: 'M', color: 'navy', image: '/img.jpg' }],
+          origin_url: window.location.origin,
+        }),
       }
     );
     expect(redirectToCheckout).toHaveBeenCalledWith({ sessionId: 'cs_test_123' });
