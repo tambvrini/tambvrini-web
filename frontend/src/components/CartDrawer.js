@@ -3,11 +3,9 @@ import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Sheet, SheetContent, SheetClose } from '../components/ui/sheet';
-import axios from 'axios';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import { redirectToStripeCheckout } from '../utils/stripeCheckout';
 
 export const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice } = useCart();
@@ -26,19 +24,10 @@ export const CartDrawer = () => {
     }
     setLoading(true);
     try {
-      const checkoutItems = items.map(i => ({
-        product_id: i.product_id,
-        quantity: i.quantity,
-        size: i.size,
-        color: i.color
-      }));
-      const res = await axios.post(`${API}/checkout/create-session`, {
-        items: checkoutItems,
-        origin_url: window.location.origin
-      }, { headers: getHeaders(), withCredentials: true });
-      if (res.data.url) {
-        window.location.href = res.data.url;
-      }
+      await redirectToStripeCheckout({
+        items,
+        headers: getHeaders(),
+      });
     } catch (err) {
       console.error('Checkout error:', err);
     } finally {

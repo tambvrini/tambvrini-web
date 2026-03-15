@@ -39,7 +39,10 @@ mongo_url = require_env('MONGO_URL')
 client = AsyncIOMotorClient(mongo_url)
 db = client[require_env('DB_NAME')]
 
-STRIPE_API_KEY = require_env('STRIPE_API_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY') or os.environ.get('STRIPE_API_KEY')
+if not STRIPE_SECRET_KEY:
+    raise RuntimeError("Missing required environment variable: STRIPE_SECRET_KEY")
+STRIPE_API_KEY = STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
 REQUIRED_PRODUCTION_ORIGINS = ["https://tambvrini.com", "https://www.tambvrini.com"]
 CORS_ORIGINS = os.environ.get('CORS_ORIGINS', ",".join(REQUIRED_PRODUCTION_ORIGINS))
@@ -119,6 +122,15 @@ class ResetPasswordRequest(BaseModel):
 class CheckoutRequest(BaseModel):
     items: List[Dict]
     origin_url: str
+
+class StripeCheckoutItem(BaseModel):
+    name: str
+    price: int
+    quantity: int
+    image: Optional[str] = None
+
+class StripeCheckoutSessionRequest(BaseModel):
+    items: List[StripeCheckoutItem]
 
 class NewsletterRequest(BaseModel):
     email: str
@@ -840,6 +852,44 @@ async def replace_product(payload: Dict):
 
 
 # ==================== CHECKOUT ====================
+
+@api_router.post("/create-checkout-session")
+async def create_stripe_checkout_session(data: StripeCheckoutSessionRequest):
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(500, "Stripe no configurado")
+
+    if len(data.items) == 0:
+        raise HTTPException(400, "No hay productos para pagar")
+
+    line_items = []
+    for item in data.items:
+        if item.quantity <= 0:
+            raise HTTPException(400, "La cantidad debe ser mayor que cero")
+        if item.price <= 0:
+            raise HTTPException(400, "El precio debe ser mayor que cero")
+
+        product_data = {"name": item.name}
+        if item.image:
+            product_data["images"] = [item.image]
+
+        line_items.append({
+            "price_data": {
+                "currency": "eur",
+                "product_data": product_data,
+                "unit_amount": item.price
+            },
+            "quantity": item.quantity
+        })
+
+    stripe.api_key = STRIPE_SECRET_KEY
+    session = stripe.checkout.sessions.create(
+        line_items=line_items,
+        mode="payment",
+        success_url=f"{FRONTEND_URL}/checkout/success?session_id={{CHECKOUT_SESSION_ID}}",
+        cancel_url=f"{FRONTEND_URL}/carrito",
+    )
+
+    return {"sessionId": session.id}
 
 @api_router.post("/checkout/create-session")
 async def create_checkout_session(request: Request, data: CheckoutRequest):
