@@ -41,7 +41,7 @@ db = client[require_env('DB_NAME')]
 
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY') or os.environ.get('STRIPE_API_KEY')
 if not STRIPE_SECRET_KEY:
-    raise RuntimeError("Missing required environment variable: STRIPE_SECRET_KEY")
+    raise RuntimeError("Missing required environment variable: STRIPE_SECRET_KEY or STRIPE_API_KEY")
 STRIPE_WEBHOOK_SECRET = require_env("STRIPE_WEBHOOK_SECRET")
 REQUIRED_PRODUCTION_ORIGINS = ["https://tambvrini.com", "https://www.tambvrini.com"]
 CORS_ORIGINS = os.environ.get('CORS_ORIGINS', ",".join(REQUIRED_PRODUCTION_ORIGINS))
@@ -126,6 +126,7 @@ class StripeCheckoutItem(BaseModel):
     name: str
     price: int
     quantity: int
+    slug: str
     image: Optional[str] = None
 
 class StripeCheckoutSessionRequest(BaseModel):
@@ -867,9 +868,15 @@ async def create_stripe_checkout_session(data: StripeCheckoutSessionRequest):
         if item.price <= 0:
             raise HTTPException(400, "El precio debe ser mayor que cero")
 
-        product_data = {"name": item.name}
+        product_data = {
+            "name": item.name,
+            "metadata": {"slug": item.slug}
+        }
         if item.image:
-            product_data["images"] = [item.image]
+            image_url = item.image
+            if image_url.startswith("/"):
+                image_url = f"{ASSET_BASE_URL}{image_url}"
+            product_data["images"] = [image_url]
 
         line_items.append({
             "price_data": {
@@ -884,8 +891,8 @@ async def create_stripe_checkout_session(data: StripeCheckoutSessionRequest):
     session = stripe.checkout.sessions.create(
         line_items=line_items,
         mode="payment",
-        success_url=f"{FRONTEND_URL}/checkout/success?session_id={{CHECKOUT_SESSION_ID}}",
-        cancel_url=f"{FRONTEND_URL}/carrito",
+        success_url="https://tambvrini.com/success",
+        cancel_url="https://tambvrini.com/cart",
     )
 
     return {"sessionId": session.id}

@@ -4,9 +4,9 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 let stripePromise;
 
 export const getStripePublicKey = () => {
-  const key = process.env.NEXT_PUBLIC_STRIPE_KEY || process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+  const key = process.env.NEXT_PUBLIC_STRIPE_KEY;
   if (!key) {
-    throw new Error('Missing Stripe public key: set NEXT_PUBLIC_STRIPE_KEY or REACT_APP_STRIPE_PUBLIC_KEY');
+    throw new Error('Missing Stripe public key: set NEXT_PUBLIC_STRIPE_KEY');
   }
   return key;
 };
@@ -25,6 +25,7 @@ export const mapCartItemsToCheckoutItems = (items = []) => (
       name: item.name,
       price: Math.round(Number(item.price || 0) * 100),
       quantity: item.quantity,
+      slug: item.slug || item.product_id,
       ...(item.image ? { image: item.image } : {}),
     }))
 );
@@ -44,7 +45,8 @@ export const redirectToStripeCheckout = async ({ items, headers = {} }) => {
   });
 
   if (!response.ok) {
-    throw new Error('Checkout session request failed');
+    const errorText = await response.text();
+    throw new Error(`Checkout session request failed with status ${response.status}: ${errorText}`);
   }
 
   const data = await response.json();

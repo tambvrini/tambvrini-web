@@ -14,38 +14,41 @@ describe('stripeCheckout', () => {
 
   it('maps cart items to checkout payload with cents and optional image', () => {
     const payload = mapCartItemsToCheckoutItems([
-      { name: 'Polo Golf', price: 30, quantity: 2, image: '/img-1.jpg' },
-      { name: 'Polo Regius', price: 20.5, quantity: 1 },
+      { name: 'Polo Golf', price: 30, quantity: 2, image: '/img-1.jpg', slug: 'polo-golf' },
+      { name: 'Polo Regius', price: 20.5, quantity: 1, product_id: 'polo-regius' },
       { name: 'Invalid', price: 10, quantity: 0 },
       { name: 'Invalid 2', price: 10, quantity: -1 },
     ]);
 
     expect(payload).toEqual([
-      { name: 'Polo Golf', price: 3000, quantity: 2, image: '/img-1.jpg' },
-      { name: 'Polo Regius', price: 2050, quantity: 1 },
+      { name: 'Polo Golf', price: 3000, quantity: 2, image: '/img-1.jpg', slug: 'polo-golf' },
+      { name: 'Polo Regius', price: 2050, quantity: 1, slug: 'polo-regius' },
+    ]);
+  });
+
+  it('uses explicit slug when both slug and product_id are present', () => {
+    const payload = mapCartItemsToCheckoutItems([
+      { name: 'Polo', price: 10, quantity: 1, slug: 'explicit-slug', product_id: 'fallback-slug' },
+    ]);
+
+    expect(payload).toEqual([
+      { name: 'Polo', price: 1000, quantity: 1, slug: 'explicit-slug' },
     ]);
   });
 
   it('throws when Stripe public key is missing', () => {
     const originalNextKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
-    const originalReactKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
     delete process.env.NEXT_PUBLIC_STRIPE_KEY;
-    delete process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
     expect(() => getStripePublicKey()).toThrow(
-      'Missing Stripe public key: set NEXT_PUBLIC_STRIPE_KEY or REACT_APP_STRIPE_PUBLIC_KEY'
+      'Missing Stripe public key: set NEXT_PUBLIC_STRIPE_KEY'
     );
 
     if (typeof originalNextKey === 'undefined') {
       delete process.env.NEXT_PUBLIC_STRIPE_KEY;
     } else {
       process.env.NEXT_PUBLIC_STRIPE_KEY = originalNextKey;
-    }
-    if (typeof originalReactKey === 'undefined') {
-      delete process.env.REACT_APP_STRIPE_PUBLIC_KEY;
-    } else {
-      process.env.REACT_APP_STRIPE_PUBLIC_KEY = originalReactKey;
     }
   });
 
@@ -58,7 +61,7 @@ describe('stripeCheckout', () => {
     });
 
     await redirectToStripeCheckout({
-      items: [{ name: 'Polo Golf', price: 30, quantity: 1, image: '/img.jpg' }],
+      items: [{ name: 'Polo Golf', price: 30, quantity: 1, image: '/img.jpg', slug: 'polo-golf' }],
       headers: { Authorization: 'Bearer token' },
     });
 
@@ -68,7 +71,7 @@ describe('stripeCheckout', () => {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer token' },
-        body: JSON.stringify({ items: [{ name: 'Polo Golf', price: 3000, quantity: 1, image: '/img.jpg' }] }),
+        body: JSON.stringify({ items: [{ name: 'Polo Golf', price: 3000, quantity: 1, slug: 'polo-golf', image: '/img.jpg' }] }),
       }
     );
     expect(redirectToCheckout).toHaveBeenCalledWith({ sessionId: 'cs_test_123' });
