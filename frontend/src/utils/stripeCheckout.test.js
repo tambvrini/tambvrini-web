@@ -1,56 +1,54 @@
-import { mapCartItemsToCheckoutItems, redirectToStripeCheckout } from './stripeCheckout';
+jest.mock('@stripe/stripe-js', () => ({
+  loadStripe: jest.fn(),
+}));
 
 describe('stripeCheckout', () => {
+  const redirectToCheckout = jest.fn();
+  let loadStripe;
+
   beforeEach(() => {
+    jest.resetModules();
     jest.clearAllMocks();
-    global.fetch = jest.fn();
-    delete window.location;
-    window.location = { href: 'http://localhost' };
+    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY = 'pk_test_tambvrini';
+    ({ loadStripe } = require('@stripe/stripe-js'));
+    loadStripe.mockResolvedValue({ redirectToCheckout });
   });
 
-  it('maps cart items to checkout payload with product data and optional attributes', () => {
-    const payload = mapCartItemsToCheckoutItems([
-      { product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 2, image: '/img-1.jpg', size: 'M', color: 'navy' },
-      { product_id: 'polo-regius', name: 'Polo Regius', price: 20.5, quantity: 1 },
-      { name: 'Invalid', price: 10, quantity: 0 },
-      { name: 'Invalid 2', price: 10, quantity: -1 },
+  it('maps cart items to stripe line items', () => {
+    const { mapCartItemsToLineItems } = require('./stripeCheckout');
+    const payload = mapCartItemsToLineItems([
+      { product_id: 'polo-golf', stripe_price_id: 'price_polo_golf', quantity: 2 },
+      { product_id: 'polo-regius', stripe_price_id: 'price_polo_regius', quantity: 1 },
+      { product_id: 'invalid-1', stripe_price_id: 'price_invalid_1', quantity: 0 },
+      { product_id: 'invalid-2', stripe_price_id: 'price_invalid_2', quantity: -1 },
     ]);
 
     expect(payload).toEqual([
-      { product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 2, image: '/img-1.jpg', size: 'M', color: 'navy' },
-      { product_id: 'polo-regius', name: 'Polo Regius', price: 20.5, quantity: 1 },
+      { price: 'price_polo_golf', quantity: 2 },
+      { price: 'price_polo_regius', quantity: 1 },
     ]);
   });
 
-  it('throws when an item has an invalid price', () => {
-    expect(() => mapCartItemsToCheckoutItems([
-      { product_id: 'polo-golf', name: 'Polo Golf', price: 'invalid', quantity: 1 },
-    ])).toThrow('Invalid cart item price for polo-golf');
+  it('throws when an item has no stripe_price_id', () => {
+    const { mapCartItemsToLineItems } = require('./stripeCheckout');
+    expect(() => mapCartItemsToLineItems([
+      { product_id: 'missing-price-id', quantity: 1 },
+    ])).toThrow('Missing stripe_price_id for missing-price-id');
   });
 
-  it('posts items and redirects to returned checkout url', async () => {
-    fetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({ url: 'https://checkout.stripe.com/c/pay/cs_test_123' }),
-    });
+  it('redirects to Stripe checkout with lineItems', async () => {
+    const { redirectToStripeCheckout } = require('./stripeCheckout');
+    redirectToCheckout.mockResolvedValue({});
 
     await redirectToStripeCheckout({
-      items: [{ product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 1, image: '/img.jpg', size: 'M', color: 'navy' }],
-      headers: { Authorization: 'Bearer token' },
+      items: [{ product_id: 'polo-golf', stripe_price_id: 'price_polo_golf', quantity: 1 }],
     });
 
-    expect(fetch).toHaveBeenCalledWith(
-      `${process.env.REACT_APP_BACKEND_URL}/api/checkout/create-session`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer token' },
-        body: JSON.stringify({
-          items: [{ product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 1, size: 'M', color: 'navy', image: '/img.jpg' }],
-          origin_url: window.location.origin,
-        }),
-      }
-    );
-    expect(window.location.href).toBe('https://checkout.stripe.com/c/pay/cs_test_123');
+    expect(redirectToCheckout).toHaveBeenCalledWith({
+      lineItems: [{ price: 'price_polo_golf', quantity: 1 }],
+      mode: 'payment',
+      successUrl: `${window.location.origin}/checkout-success`,
+      cancelUrl: `${window.location.origin}/carrito`,
+    });
   });
 });

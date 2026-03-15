@@ -1,33 +1,20 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext';
 import { Sheet, SheetContent, SheetClose } from '../components/ui/sheet';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { redirectToStripeCheckout } from '../utils/stripeCheckout';
 
 export const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice } = useCart();
-  const { user, getHeaders } = useAuth();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const freeShippingThreshold = 75;
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
-    if (!user) {
-      toast.error('Inicia sesión para finalizar la compra');
-      setIsOpen(false);
-      navigate('/cuenta');
-      return;
-    }
     setLoading(true);
     try {
-      await redirectToStripeCheckout({
-        items,
-        headers: getHeaders(),
-      });
+      await redirectToStripeCheckout({ items });
     } catch (err) {
       console.error('Checkout error:', err);
     } finally {
@@ -140,7 +127,7 @@ export const CartDrawer = () => {
               disabled={loading}
               className="w-full py-4 bg-white text-obsidian font-montserrat text-[11px] tracking-[0.2em] uppercase hover:bg-gold transition-colors duration-500 disabled:opacity-50"
             >
-              {loading ? 'Procesando...' : (user ? 'Finalizar Compra' : 'Inicia sesión para pagar')}
+              {loading ? 'Procesando...' : 'Finalizar Compra'}
             </button>
             <Link
               to="/carrito"

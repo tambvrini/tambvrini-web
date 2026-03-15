@@ -84,4 +84,10 @@ describe('products data', () => {
       '/products/polo-regius/polo-regius-look-06.jpg',
     ]);
   });
+
+  it('includes stripe_price_id for each product', () => {
+    products.forEach((product) => {
+      expect(product.stripe_price_id).toEqual(expect.stringMatching(/^price_/));
+    });
+  });
 });
