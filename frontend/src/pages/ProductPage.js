@@ -380,6 +380,14 @@ export default function ProductPage() {
 
             {/* Actions */}
             <div className="mb-4">
+              {product.product_id === 'camiseta-sport-club' && (
+                <a
+                  href="https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00"
+                  className="buy-btn umbra-keep-dark w-full py-3 mb-3 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 bg-white text-obsidian hover:bg-gold text-center block"
+                >
+                  Comprar
+                </a>
+              )}
               <button
                 data-testid="add-to-cart-btn"
                 onClick={handleAddToCart}

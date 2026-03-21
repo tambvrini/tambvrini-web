@@ -129,6 +129,23 @@ const camisetaImperiumProduct = {
   related_products: [],
 };
 
+const camisetaSportClubProduct = {
+  product_id: 'camiseta-sport-club',
+  name: 'Camiseta Sport Club',
+  description: 'Descripción',
+  price: 20,
+  currency: 'EUR',
+  images: ['/products/camiseta-sport-club/camiseta-sport-club-look-01.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'hombre',
+  sizes: ['S', 'M', 'L'],
+  colors: [{ name: 'Blanco', hex: '#FFFFFF' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
 const relatedProduct = {
   product_id: 'related-product',
   name: 'Producto Relacionado',
@@ -379,6 +396,40 @@ describe('ProductPage', () => {
     expect(mainImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
     expect(fifthImage).not.toBeNull();
     expect(fifthImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('shows a Comprar stripe link only for Camiseta Sport Club', async () => {
+    mockProductId = 'camiseta-sport-club';
+    getProductById.mockReturnValue(camisetaSportClubProduct);
+
+    const { container, root } = await renderProductPage();
+    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
+
+    expect(buyLink).not.toBeNull();
+    expect(buyLink.getAttribute('href')).toBe('https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00');
+    expect(buyLink.className).toContain('buy-btn');
+    expect(addToCartButton).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('does not show Comprar stripe link for other products', async () => {
+    mockProductId = 'sueter-ignatius';
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+
+    expect(buyLink).toBeUndefined();
 
     act(() => {
       root.unmount();
