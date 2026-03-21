@@ -298,10 +298,14 @@ describe('HomePage featured grid', () => {
   it('renders the hero header image with cover fit', async () => {
     const { container, root } = await renderHomePage();
 
+    const heroSource = container.querySelector(
+      'picture source[media="(max-width: 767px)"]'
+    );
     const heroImage = container.querySelector(
       'img[alt="TAMBVRINI Campaign"]'
     );
 
+    expect(heroSource?.getAttribute('srcset')).toBe('/images/header-tambvrini-yo-2.jpg');
     expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo.jpg');
     expect(heroImage?.className).toContain('hero-image-cinematic');
     expect(heroImage?.className).toContain('object-cover');
