@@ -6,8 +6,10 @@ import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
 import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
-const HERO_IMAGE = "/images/header-final.jpg";
+const HERO_IMAGE = "/images/header-tambvrini-yo.jpg";
+const HERO_IMAGE_MOBILE = "/images/header-vertical-final.jpg.jpeg";
 const HERO_WRAPPER_CLASSES = "h-screen overflow-hidden";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
@@ -66,13 +68,16 @@ const HeroSection = () => {
       <section data-testid="hero-section" className="hero relative w-full">
         {/* Background image */}
         <div className={`relative w-full ${HERO_WRAPPER_CLASSES}`}>
-          <img
-            src={HERO_IMAGE}
-            alt="TAMBVRINI Campaign"
-            loading="eager"
-            fetchPriority="high"
-            className="hero-image-cinematic block w-full h-full object-cover object-center"
-          />
+          <picture>
+            <source media="(max-width: 767px)" srcSet={HERO_IMAGE_MOBILE} type="image/jpeg" />
+            <img
+              src={HERO_IMAGE}
+              alt="TAMBVRINI Campaign"
+              loading="eager"
+              fetchPriority="high"
+              className="hero-image-cinematic block w-full h-full object-cover object-center"
+            />
+          </picture>
           <div className="absolute inset-0 z-10">
             <div className="relative w-full h-full">
               {/* CTA Buttons at bottom of hero */}
@@ -87,7 +92,7 @@ const HeroSection = () => {
                   to="/tienda?gender=hombre"
                   data-testid="hero-shop-men"
                   onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                  className="btn-luxury text-center"
+                  className="btn-luxury hero-cta-luxury text-center"
                 >
                   Comprar Hombre
                 </Link>
@@ -95,7 +100,7 @@ const HeroSection = () => {
                   to="/tienda?gender=mujer"
                   data-testid="hero-shop-women"
                   onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                  className="btn-luxury text-center"
+                  className="btn-luxury hero-cta-luxury text-center"
                 >
                   Comprar Mujer
                 </Link>
@@ -106,7 +111,7 @@ const HeroSection = () => {
                     const el = document.getElementById('drops');
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
-                  className="btn-luxury btn-gold text-center"
+                  className="btn-luxury btn-gold hero-cta-luxury text-center"
                 >
                   Explorar
                 </button>
@@ -368,7 +373,7 @@ const DropGridSection = () => {
                     key={p.product_id}
                     product={p}
                     index={i}
-                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini' || p.product_id === 'polo-domus' || p.product_id === 'sueter-sylva' || p.product_id === 'polo-patricius'}
+                    enableHoverVideo={supportsHoverVideo(p.product_id)}
                     enableWishlistIcon
                   />
                 ))}
@@ -458,7 +463,7 @@ const DropGridSection = () => {
                     key={p.product_id}
                     product={p}
                     index={i + firstRow.length}
-                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
+                    enableHoverVideo={supportsHoverVideo(p.product_id)}
                     enableWishlistIcon
                   />
                 ))}
@@ -471,7 +476,7 @@ const DropGridSection = () => {
                       key={item.product_id}
                       product={item}
                       index={displayed.length + i}
-                      enableHoverVideo={item.product_id === 'camiseta-sport-club' || item.product_id === 'polo-golf' || item.product_id === 'camiseta-imperium' || item.product_id === 'americana-umbra' || item.product_id === 'sueter-captain' || item.product_id === 'polo-aureus' || item.product_id === 'traje-monograma-tambvrini' || item.product_id === 'bolso-monograma-tambvrini'}
+                      enableHoverVideo={supportsHoverVideo(item.product_id)}
                       enableWishlistIcon
                     />
                   ))}

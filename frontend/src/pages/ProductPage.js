@@ -8,6 +8,7 @@ import ModelViewer from '../components/ModelViewer';
 import Simple3DViewer from '../components/Simple3DViewer.tsx';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
 const MAX_RECOMMENDED_PRODUCTS = 4;
@@ -379,6 +380,14 @@ export default function ProductPage() {
 
             {/* Actions */}
             <div className="mb-4">
+              {product.product_id === 'camiseta-sport-club' && (
+                <a
+                  href="https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00"
+                  className="buy-btn umbra-keep-dark w-full py-3 mb-3 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 bg-white text-obsidian hover:bg-gold text-center block"
+                >
+                  Comprar
+                </a>
+              )}
               <button
                 data-testid="add-to-cart-btn"
                 onClick={handleAddToCart}
@@ -487,7 +496,7 @@ export default function ProductPage() {
             </h2>
             <div className="product-recommendations" data-testid="product-recommendations">
               {relatedProducts.slice(0, MAX_RECOMMENDED_PRODUCTS).map((item, index) => (
-                <ProductCard key={item.product_id} product={item} index={index} />
+                <ProductCard key={item.product_id} product={item} index={index} enableHoverVideo={supportsHoverVideo(item.product_id)} />
               ))}
             </div>
           </section>

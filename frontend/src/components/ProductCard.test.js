@@ -1,6 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import ProductCard from './ProductCard';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -147,5 +148,23 @@ describe('ProductCard', () => {
       root.unmount();
     });
     container.remove();
+  });
+
+  it('does not render the old dark hover overlay on non-video cards', async () => {
+    const { container, root } = await renderProductCard({ product_id: 'sueter-ignatius', slug: 'sueter-ignatius' }, { enableHoverVideo: false });
+    const darkOverlay = container.querySelector('.bg-obsidian\\/30');
+
+    expect(darkOverlay).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('returns true for products with configured hover videos', () => {
+    expect(supportsHoverVideo('polo-golf')).toBe(true);
+    expect(supportsHoverVideo('polo-regius')).toBe(false);
+    expect(supportsHoverVideo('polo-domus')).toBe(false);
   });
 });

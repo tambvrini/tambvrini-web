@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const USER_STORAGE_KEY = 'user';
 const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
@@ -14,12 +13,10 @@ export const AuthProvider = ({ children }) => {
     return {};
   }, []);
 
-  const checkAuth = useCallback(async () => {
+  const checkAuth = useCallback(() => {
     try {
-      const res = await axios.get(`${API}/auth/me`, {
-        withCredentials: true
-      });
-      setUser(res.data);
+      const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+      setUser(storedUser ? JSON.parse(storedUser) : null);
     } catch {
       setUser(null);
     } finally {
@@ -31,39 +28,25 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [checkAuth]);
 
-  const login = async (email, password) => {
-    const res = await axios.post(`${API}/auth/login`, { email, password }, { withCredentials: true });
-    setUser(res.data.user);
-    return res.data;
+  const login = async () => {
+    throw new Error('El inicio de sesión con correo no está disponible en este momento.');
   };
 
-  const register = async (email, password, name) => {
-    const res = await axios.post(`${API}/auth/register`, { email, password, name }, { withCredentials: true });
-    setUser(res.data.user);
-    return res.data;
+  const register = async () => {
+    throw new Error('El registro con correo no está disponible en este momento.');
   };
 
   const logout = async () => {
-    try {
-      await axios.post(`${API}/auth/logout`, {}, { headers: getHeaders(), withCredentials: true });
-    } catch { /* ignore */ }
+    localStorage.removeItem(USER_STORAGE_KEY);
     setUser(null);
   };
 
   const forgotPassword = async (email) => {
-    const res = await axios.post(`${API}/auth/forgot-password`, { email }, { withCredentials: true });
-    return res.data;
+    return { email, ok: true };
   };
 
-  const startGoogleLogin = (callbackPath = '/account') => {
-    const rawPath = typeof callbackPath === 'string' ? callbackPath.trim() : '/account';
-    const pathWithoutQuery = rawPath.split('?', 1)[0];
-    const pathnameOnly = pathWithoutQuery.split('#', 1)[0];
-    const safePath = pathnameOnly.startsWith('/') && !pathnameOnly.startsWith('//')
-      ? pathnameOnly
-      : '/account';
-    const loginUrl = `/api/login/google?next=${safePath}`;
-    window.location.assign(loginUrl);
+  const startGoogleLogin = () => {
+    window.google?.accounts?.id?.prompt?.();
   };
 
   return (

@@ -20,10 +20,13 @@ jest.mock('../contexts/WishlistContext', () => ({
 
 const mockProductCard = jest.fn();
 
-jest.mock('../components/ProductCard', () => (props) => {
-  mockProductCard(props);
-  return <div data-testid="related-product" />;
-});
+jest.mock('../components/ProductCard', () => ({
+  __esModule: true,
+  default: (props) => {
+    mockProductCard(props);
+    return <div data-testid="related-product" />;
+  },
+}));
 
 jest.mock('../data/productHelpers', () => ({
   getProductById: jest.fn(),
@@ -120,6 +123,23 @@ const camisetaImperiumProduct = {
   gender: 'mujer',
   sizes: ['XS', 'S', 'M', 'L'],
   colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  related_products: [],
+};
+
+const camisetaSportClubProduct = {
+  product_id: 'camiseta-sport-club',
+  name: 'Camiseta Sport Club',
+  description: 'Descripción',
+  price: 20,
+  currency: 'EUR',
+  images: ['/products/camiseta-sport-club/camiseta-sport-club-look-01.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'hombre',
+  sizes: ['S', 'M', 'L'],
+  colors: [{ name: 'Blanco', hex: '#FFFFFF' }],
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
@@ -334,8 +354,10 @@ describe('ProductPage', () => {
     expect(mockProductCard.mock.calls.length).toBeGreaterThanOrEqual(4);
     expect(mockProductCard.mock.calls[0][0].product.product_id).toBe(relatedProducts[0].product_id);
     expect(mockProductCard.mock.calls[0][0].index).toBe(0);
+    expect(mockProductCard.mock.calls[0][0].enableHoverVideo).toBe(true);
     expect(mockProductCard.mock.calls[3][0].product.product_id).toBe(relatedProducts[3].product_id);
     expect(mockProductCard.mock.calls[3][0].index).toBe(3);
+    expect(mockProductCard.mock.calls[3][0].enableHoverVideo).toBe(false);
 
     act(() => {
       root.unmount();
@@ -374,6 +396,40 @@ describe('ProductPage', () => {
     expect(mainImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[0]);
     expect(fifthImage).not.toBeNull();
     expect(fifthImage.getAttribute('src')).toBe(camisetaImperiumProduct.images[4]);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('shows a Comprar stripe link only for Camiseta Sport Club', async () => {
+    mockProductId = 'camiseta-sport-club';
+    getProductById.mockReturnValue(camisetaSportClubProduct);
+
+    const { container, root } = await renderProductPage();
+    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
+
+    expect(buyLink).not.toBeNull();
+    expect(buyLink.getAttribute('href')).toBe('https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00');
+    expect(buyLink.className).toContain('buy-btn');
+    expect(addToCartButton).not.toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('does not show Comprar stripe link for other products', async () => {
+    mockProductId = 'sueter-ignatius';
+    getProductById.mockReturnValue(baseProduct);
+
+    const { container, root } = await renderProductPage();
+    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+
+    expect(buyLink).toBeUndefined();
 
     act(() => {
       root.unmount();

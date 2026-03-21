@@ -1,5 +1,5 @@
 /**
- * TAMBVRINI — Real product catalog restored from the Emergent export.
+ * TAMBVRINI — Product catalog.
  *
  * Sources used to recover this dataset:
  *   • backend/server.py  SEED_PRODUCTS  (bolso-monograma, camiseta-sport-club, traje-monograma)
@@ -9,7 +9,7 @@
  *   • frontend/src/pages/ProductPage.js        (sold-out-size rules)
  *   • frontend/src/pages/HomePage.js           (layout / spotlight references)
  *   • frontend/src/pages/ShopPage.js           (category-2026 mapping, gender filters)
- *   • memory/PRD.md + .emergent/summary.txt    (product names, gallery sizes, dates)
+ *   • memory/PRD.md                             (product names, gallery sizes, dates)
  *   • test_result.md                           (Polo Aureus price, colors, sizes)
  *
  * Products whose image URLs existed ONLY in the live MongoDB (never committed)
@@ -19,6 +19,22 @@
  */
 
 const ASSET = "https://customer-assets.emergentagent.com";
+// Replace these defaults with real Stripe Dashboard price IDs per environment.
+const STRIPE_PRICE_IDS = {
+  "traje-monograma-tambvrini": "price_traje_monograma_tambvrini",
+  "bolso-monograma-tambvrini": "price_bolso_monograma_tambvrini",
+  "camiseta-sport-club": "price_camiseta_sport_club",
+  "polo-golf": "price_polo_golf",
+  "sueter-captain": "price_sueter_captain",
+  "polo-aureus": "price_polo_aureus",
+  "camiseta-imperium": "price_camiseta_imperium",
+  "americana-umbra": "price_americana_umbra",
+  "polo-domus": "price_polo_domus",
+  "sueter-sylva": "price_sueter_sylva",
+  "polo-patricius": "price_polo_patricius",
+  "polo-regius": "price_polo_regius",
+  "sueter-ignatius": "price_sueter_ignatius",
+};
 
 const products = [
   // ──────────────────────────────────────────────────
@@ -433,6 +449,9 @@ const products = [
     collections: ["roma"],
     created_at: "2026-03-04T00:00:00+00:00",
   },
-];
+].map((product) => ({
+  ...product,
+  stripe_price_id: STRIPE_PRICE_IDS[product.product_id],
+}));
 
 export default products;

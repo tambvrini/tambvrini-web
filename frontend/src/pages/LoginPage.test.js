@@ -4,13 +4,14 @@ import LoginPage from './LoginPage';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const mockStartGoogleLogin = jest.fn();
 const mockNavigate = jest.fn();
+const mockInitialize = jest.fn();
+const mockPrompt = jest.fn();
+const mockRenderButton = jest.fn();
 
 jest.mock('../contexts/AuthContext', () => ({
   useAuth: () => ({
     login: jest.fn(),
-    startGoogleLogin: mockStartGoogleLogin,
   }),
 }));
 
@@ -45,12 +46,69 @@ const renderLoginPage = async () => {
 };
 
 describe('LoginPage Google login', () => {
+  const originalLocation = window.location;
+
   beforeEach(() => {
-    mockStartGoogleLogin.mockReset();
     mockNavigate.mockReset();
+    mockInitialize.mockReset();
+    mockPrompt.mockReset();
+    mockRenderButton.mockReset();
+    process.env.REACT_APP_GOOGLE_CLIENT_ID = 'test-google-client-id';
+    delete window.location;
+    window.location = { ...originalLocation, href: 'http://localhost/' };
+    window.google = {
+      accounts: {
+        id: {
+          initialize: mockInitialize,
+          prompt: mockPrompt,
+          renderButton: mockRenderButton,
+        },
+      },
+    };
   });
 
-  it('calls startGoogleLogin with /account when the Google button is clicked', async () => {
+  afterEach(() => {
+    window.location = originalLocation;
+  });
+
+  it('initializes Google Identity Services on mount', async () => {
+    const { root, container } = await renderLoginPage();
+
+    expect(mockInitialize).toHaveBeenCalledWith(
+      expect.objectContaining({
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        callback: expect.any(Function),
+      })
+    );
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('renders official GIS button with configured options', async () => {
+    const { root, container } = await renderLoginPage();
+
+    expect(mockRenderButton).toHaveBeenCalledWith(
+      expect.any(HTMLElement),
+      expect.objectContaining({
+        theme: 'outline',
+        size: 'large',
+        type: 'standard',
+        shape: 'pill',
+        text: 'signin_with',
+        logo_alignment: 'left',
+      })
+    );
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('does not use GIS prompt when the Google button is clicked', async () => {
     const { container, root } = await renderLoginPage();
 
     const googleButton = container.querySelector('[data-testid="google-login-btn"]');
@@ -59,9 +117,37 @@ describe('LoginPage Google login', () => {
       googleButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
 
-    expect(mockStartGoogleLogin).toHaveBeenCalledWith('/account');
+    expect(mockPrompt).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
 
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('stores decoded user and redirects when GIS callback returns credential', async () => {
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+    const { root, container } = await renderLoginPage();
+    const initializeConfig = mockInitialize.mock.calls[0][0];
+    const payload = btoa(JSON.stringify({
+      email: 'google-user@tambvrini.com',
+      name: 'Google User',
+      picture: 'https://example.com/avatar.jpg',
+    }));
+
+    await act(async () => {
+      initializeConfig.callback({ credential: `header.${payload}.signature` });
+    });
+
+    expect(setItemSpy).toHaveBeenCalledWith('user', JSON.stringify({
+      email: 'google-user@tambvrini.com',
+      name: 'Google User',
+      picture: 'https://example.com/avatar.jpg',
+    }));
+    expect(window.location.href).toContain('/account');
+
+    setItemSpy.mockRestore();
     act(() => {
       root.unmount();
     });

@@ -121,6 +121,7 @@ export const CartProvider = ({ children }) => {
         product_id: product.product_id,
         name: product.name,
         price: product.price,
+        stripe_price_id: product.stripe_price_id,
         image: product.thumbnail_image || product.images?.[0],
         size, color, quantity
       }];

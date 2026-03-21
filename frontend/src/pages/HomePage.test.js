@@ -28,9 +28,10 @@ jest.mock(
   { virtual: true }
 );
 
-jest.mock('../components/ProductCard', () => (props) => (
-  <div data-testid={`product-card-${props.product.product_id}`} />
-));
+jest.mock('../components/ProductCard', () => ({
+  __esModule: true,
+  default: (props) => <div data-testid={`product-card-${props.product.product_id}`} />,
+}));
 
 jest.mock('../components/IntroVideoSection.tsx', () => () => (
   <div data-testid="intro-video" />
@@ -297,11 +298,17 @@ describe('HomePage featured grid', () => {
   it('renders the hero header image with cover fit', async () => {
     const { container, root } = await renderHomePage();
 
+    const heroSource = container.querySelector(
+      'picture source[media="(max-width: 767px)"]'
+    );
     const heroImage = container.querySelector(
       'img[alt="TAMBVRINI Campaign"]'
     );
 
-    expect(heroImage?.getAttribute('src')).toBe('/images/header-final.jpg');
+    expect(heroSource?.getAttribute('srcset')).toBe('/images/header-vertical-final.jpg.jpeg');
+    expect(heroSource?.getAttribute('media')).toBe('(max-width: 767px)');
+    expect(heroSource?.getAttribute('type')).toBe('image/jpeg');
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo.jpg');
     expect(heroImage?.className).toContain('hero-image-cinematic');
     expect(heroImage?.className).toContain('object-cover');
     expect(heroImage?.className).toContain('object-center');
