@@ -302,7 +302,7 @@ describe('HomePage featured grid', () => {
       'img[alt="TAMBVRINI Campaign"]'
     );
 
-    expect(heroImage?.getAttribute('src')).toBe('/images/header-final.jpg');
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo.jpg');
     expect(heroImage?.className).toContain('hero-image-cinematic');
     expect(heroImage?.className).toContain('object-cover');
     expect(heroImage?.className).toContain('object-center');

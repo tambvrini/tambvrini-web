@@ -8,7 +8,7 @@ import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
 import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
-const HERO_IMAGE = "/images/header-final.jpg";
+const HERO_IMAGE = "/images/header-tambvrini-yo.jpg";
 const HERO_WRAPPER_CLASSES = "h-screen overflow-hidden";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
