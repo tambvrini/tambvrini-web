@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Heart, Minus, Plus, ChevronRight, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -138,10 +138,6 @@ export default function ProductPage() {
     );
   }
 
-  const selectorLayoutClass = product.colors?.length
-    ? 'product-options'
-    : 'product-options product-options--single';
-
   const galleryImages = product.product_id === 'americana-umbra'
     ? [
         '/products/americana-umbra/americana-umbra-main.jpg',
@@ -164,6 +160,11 @@ export default function ProductPage() {
     || LOGO_FALLBACK_POSTER;
   const shouldUseSimpleViewer = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
+  const categoryLabel = Array.isArray(product.category) && product.category.length > 0
+    ? product.category
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' / ')
+    : 'Apparel';
   const sizeLabel = Array.isArray(product.sizes) && product.sizes.length > 0
     ? product.sizes.join(', ')
     : 'Consulta disponibilidad en tienda';
@@ -244,20 +245,13 @@ export default function ProductPage() {
 
           {/* Right: Product info */}
           <div className="product-info">
-            <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40 mb-4">
-              <Link to="/" className="hover:text-obsidian transition-colors">Inicio</Link>
-              <ChevronRight size={10} />
-              <Link to="/tienda" className="hover:text-obsidian transition-colors">Tienda</Link>
-              <ChevronRight size={10} />
-              <span className="text-obsidian/60">{product.name}</span>
-            </nav>
-            <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-gold/60 mb-2">
-              {product.category?.join(' / ')}
+            <p className="product-label">
+              {categoryLabel}
             </p>
-            <div className="flex items-start justify-between gap-4 mb-2">
+            <div className="flex items-start justify-between gap-4 mb-6">
               <h1
                 data-testid="product-name"
-                className={`font-playfair text-[clamp(28px,4vw,48px)] leading-[1.08] break-words text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
+                className={`product-title ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
               >
                 {product.name}
               </h1>
@@ -267,24 +261,23 @@ export default function ProductPage() {
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-obsidian/60 tracking-wide mb-2">
+            <p data-testid="product-price" className="product-price">
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (
-              <p className="font-montserrat text-xs text-obsidian/50 tracking-wide mb-3">
+              <p className="font-montserrat text-xs text-obsidian/50 tracking-wide mb-6">
                 Solo queda talla M disponible
               </p>
             )}
             {product.product_id !== 'polo-aureus' && (
-              <div className="mb-3" />
+              <div className="mb-6" />
             )}
 
-            <div className={selectorLayoutClass}>
-              {/* Color selector */}
+            <div className="product-variant-stack">
               {product.colors?.length > 0 && (
-                <div className="flex-1">
-                  <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-2">Color</p>
-                  <div className="flex flex-wrap gap-2">
+                <div className="product-variant-row">
+                  <p className="product-variant-label">Color:</p>
+                  <div className="flex flex-wrap items-center gap-4">
                     {product.colors.map((c, i) => (
                       <button
                         key={i}
@@ -292,22 +285,21 @@ export default function ProductPage() {
                         onClick={() => setSelectedColor(c.name)}
                         aria-label={`Seleccionar color ${c.name}`}
                         disabled={product.is_sold_out}
-                        className={`flex items-center gap-2 px-3 py-2 border transition-colors duration-300 ${
-                          selectedColor === c.name ? 'border-gold text-gold' : 'border-black/10 text-obsidian/60'
-                        } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-black/30'}`}
+                        className={`product-color-option ${
+                          selectedColor === c.name ? 'is-selected' : ''
+                        } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : ''}`}
                       >
-                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: c.hex }} />
-                        <span className="font-montserrat text-[10px] tracking-wide">{c.name}</span>
+                        <span className="product-color-swatch" style={{ backgroundColor: c.hex }} />
+                        <span>{c.name}</span>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Size selector */}
-              <div className="flex-1">
-                <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-2">Talla</p>
-                <div className="flex flex-wrap gap-2">
+              <div className="product-variant-row">
+                <p className="product-variant-label">Talla:</p>
+                <div className="product-size-options">
                   {product.sizes.map((s, i) => {
                     const isSizeSoldOut =
                       (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(s)) ||
@@ -322,11 +314,9 @@ export default function ProductPage() {
                         onClick={() => setSelectedSize(s)}
                         aria-label={`Seleccionar talla ${s}`}
                         disabled={disabled}
-                        className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
-                          selectedSize === s
-                            ? 'border-obsidian text-obsidian bg-black/5'
-                            : 'border-black/10 text-obsidian/50'
-                        } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'} ${
+                        className={`product-size-option ${selectedSize === s ? 'is-selected' : ''} ${
+                          disabled ? 'is-disabled' : ''
+                        } ${
                           isIgnatiusProduct && selectedSize === s ? 'ignatius-glow' : ''
                         }`}
                       >
@@ -339,38 +329,35 @@ export default function ProductPage() {
             </div>
 
             {/* Quantity + wishlist */}
-            <div className="product-options product-options--compact">
-              <div className={product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}>
-                <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-2">Cantidad</p>
-                <div className="flex items-center border border-black/10">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    aria-label="Disminuir cantidad"
-                    disabled={product.is_sold_out}
-                    className={`w-12 h-12 flex items-center justify-center text-obsidian/50 border-r border-black/10 ${
-                      product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
-                    }`}
-                  >
-                    <Minus size={14} />
-                  </button>
-                  <span className="w-16 h-12 flex items-center justify-center font-montserrat text-sm text-obsidian">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    aria-label="Aumentar cantidad"
-                    disabled={product.is_sold_out}
-                    className={`w-12 h-12 flex items-center justify-center text-obsidian/50 border-l border-black/10 ${
-                      product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
-                    }`}
-                  >
-                    <Plus size={14} />
-                  </button>
-                </div>
+            <div className="product-controls-row">
+              <div className={`product-quantity-control ${product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}`}>
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  aria-label="Disminuir cantidad"
+                  disabled={product.is_sold_out}
+                  className={`product-quantity-button ${
+                    product.is_sold_out ? 'cursor-not-allowed' : ''
+                  }`}
+                >
+                  <Minus size={14} />
+                </button>
+                <span className="product-quantity-value">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  aria-label="Aumentar cantidad"
+                  disabled={product.is_sold_out}
+                  className={`product-quantity-button ${
+                    product.is_sold_out ? 'cursor-not-allowed' : ''
+                  }`}
+                >
+                  <Plus size={14} />
+                </button>
               </div>
               <button
                 data-testid="product-wishlist-btn"
                 onClick={() => toggleItem(product)}
                 aria-label={inWishlist ? 'Eliminar de la lista de deseos' : 'Añadir a la lista de deseos'}
-                className={`product-wishlist w-14 h-14 border flex items-center justify-center transition-colors duration-300 ${
+                className={`product-wishlist transition-colors duration-300 ${
                   inWishlist ? 'border-gold' : 'border-black/10 hover:border-black/30'
                 }`}
               >
@@ -379,32 +366,36 @@ export default function ProductPage() {
             </div>
 
             {/* Actions */}
-            <div className="mb-4">
+            <div className="mb-10">
               {product.product_id === 'camiseta-sport-club' && (
                 <a
                   href="https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00"
-                  className="buy-btn umbra-keep-dark w-full py-3 mb-3 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 bg-white text-obsidian hover:bg-gold text-center block"
+                  className="buy-btn product-secondary-cta"
                 >
-                  Comprar
+                  Comprar ahora
                 </a>
               )}
               <button
                 data-testid="add-to-cart-btn"
                 onClick={handleAddToCart}
                 disabled={product.is_sold_out}
-                className={`umbra-keep-dark w-full py-3 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 ${
+                className={`product-primary-cta ${
                   product.is_sold_out
                     ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
-                    : 'bg-white text-obsidian hover:bg-gold'
+                    : 'bg-obsidian text-white hover:opacity-90'
                 } ${isIgnatiusProduct ? 'ignatius-glow' : ''}`}
               >
-                {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
+                {product.is_sold_out ? 'SOLD OUT' : 'AÑADIR AL CARRITO'}
               </button>
             </div>
 
             {/* Info tabs */}
-            <div className="border-t border-white/5">
-              {['details', 'size', 'shipping'].map((tab) => (
+            <div className="product-detail-links">
+              {[
+                ['details', 'Product details'],
+                ['size', 'Size guide'],
+                ['shipping', 'Delivery & returns'],
+              ].map(([tab, label]) => (
                 <button
                   key={tab}
                   data-testid={`tab-${tab}`}
@@ -412,12 +403,10 @@ export default function ProductPage() {
                     setActiveDetail(tab);
                     setDetailsOpen(true);
                   }}
-                  className="w-full py-3 border-b border-white/5 flex justify-between items-center text-left"
+                  className="product-detail-link"
                 >
-                  <span className="font-montserrat text-xs tracking-[0.15em] uppercase text-obsidian/60">
-                    {detailLabels[tab]}
-                  </span>
-                  <Plus size={14} className="text-obsidian/30 transition-transform duration-300" />
+                  <span>{label}</span>
+                  <ChevronRight size={14} />
                 </button>
               ))}
             </div>
@@ -501,7 +490,6 @@ export default function ProductPage() {
             </div>
           </section>
         )}
-
       </div>
     </div>
   );
