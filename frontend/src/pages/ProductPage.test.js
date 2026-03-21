@@ -305,8 +305,12 @@ describe('ProductPage', () => {
     const productContent = container.querySelector('.product-content');
     const pageGrid = container.querySelector('.product-page');
     const infoPanel = container.querySelector('.product-info');
+    const breadcrumb = container.querySelector('[data-testid="product-breadcrumb"]');
     const title = container.querySelector('[data-testid="product-name"]');
     const detailButton = container.querySelector('[data-testid="tab-details"]');
+    const quantityValue = container.querySelector('[data-testid="quantity-value"]');
+    const decreaseButton = container.querySelector('[data-testid="quantity-decrease-btn"]');
+    const increaseButton = container.querySelector('[data-testid="quantity-increase-btn"]');
 
     expect(productContent).not.toBeNull();
     const productContentClasses = productContent.className.split(/\s+/);
@@ -315,9 +319,23 @@ describe('ProductPage', () => {
     expect(productContentClasses).not.toContain('mx-auto');
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();
+    expect(infoPanel.className).toContain('product-info');
+    expect(breadcrumb).not.toBeNull();
+    expect(breadcrumb.textContent.trim()).toBe('KNITWEAR / APPAREL');
+    expect(breadcrumb.querySelectorAll('a').length).toBe(0);
     expect(title).not.toBeNull();
     expect(title.className).toContain('break-words');
+    expect(title.className).toContain('text-center');
     expect(detailButton).not.toBeNull();
+    expect(quantityValue).not.toBeNull();
+    expect(quantityValue.className).toContain('w-11');
+    expect(quantityValue.className).toContain('h-11');
+    expect(decreaseButton.className).toContain('w-11');
+    expect(decreaseButton.className).toContain('h-11');
+    expect(increaseButton.className).toContain('w-11');
+    expect(increaseButton.className).toContain('h-11');
+    expect(document.body.textContent).not.toContain('Inicio');
+    expect(document.body.textContent).not.toContain('Tienda');
 
     act(() => {
       detailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
