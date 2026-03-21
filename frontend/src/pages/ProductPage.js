@@ -396,12 +396,8 @@ export default function ProductPage() {
                   key={tab}
                   data-testid={`tab-${tab}`}
                   onClick={() => {
-                    if (activeDetail === tab && detailsOpen) {
-                      setDetailsOpen(false);
-                      return;
-                    }
+                    setDetailsOpen(activeDetail !== tab || !detailsOpen);
                     setActiveDetail(tab);
-                    setDetailsOpen(true);
                   }}
                   className="w-full py-4 border-b border-black/10 flex justify-between items-center text-left"
                 >
@@ -423,15 +419,13 @@ export default function ProductPage() {
               }`}
               aria-hidden={!detailsOpen}
             >
-              <div className="pt-5 pb-1">
+              <div className={`pt-5 pb-1 ${detailsOpen ? '' : 'hidden'}`}>
                 <div className="space-y-4">
                   <div>
                     <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-obsidian/40 mb-1">
-                      {detailsOpen ? 'Detalles' : ''}
+                      Detalles
                     </p>
-                    <h3 className="font-playfair text-xl text-obsidian">
-                      {detailsOpen ? detailLabels[activeDetail] : ''}
-                    </h3>
+                    <h3 className="font-playfair text-xl text-obsidian">{detailLabels[activeDetail]}</h3>
                   </div>
                   {activeDetail === 'details' && (
                     <div className="space-y-3">
