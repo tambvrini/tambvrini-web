@@ -305,7 +305,7 @@ describe('HomePage featured grid', () => {
       'img[alt="TAMBVRINI Campaign"]'
     );
 
-    expect(heroSource?.getAttribute('srcset')).toBe('/images/header-tambvrini-yo-2.jpg');
+    expect(heroSource?.getAttribute('srcset')).toBe('/images/header-vertical-final.jpg.jpeg');
     expect(heroSource?.getAttribute('media')).toBe('(max-width: 767px)');
     expect(heroSource?.getAttribute('type')).toBe('image/jpeg');
     expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo.jpg');
