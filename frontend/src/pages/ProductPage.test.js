@@ -316,7 +316,7 @@ describe('ProductPage', () => {
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();
     expect(title).not.toBeNull();
-    expect(title.className).toContain('break-words');
+    expect(title.className).toContain('product-title');
     expect(detailButton).not.toBeNull();
 
     act(() => {
@@ -408,7 +408,7 @@ describe('ProductPage', () => {
     getProductById.mockReturnValue(camisetaSportClubProduct);
 
     const { container, root } = await renderProductPage();
-    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar ahora');
     const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
 
     expect(buyLink).not.toBeNull();
@@ -427,7 +427,7 @@ describe('ProductPage', () => {
     getProductById.mockReturnValue(baseProduct);
 
     const { container, root } = await renderProductPage();
-    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar ahora');
 
     expect(buyLink).toBeUndefined();
 
