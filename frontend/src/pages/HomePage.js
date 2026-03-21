@@ -69,7 +69,7 @@ const HeroSection = () => {
         {/* Background image */}
         <div className={`relative w-full ${HERO_WRAPPER_CLASSES}`}>
           <picture>
-            <source media="(max-width: 767px)" srcSet={HERO_IMAGE_MOBILE} />
+            <source media="(max-width: 767px)" srcSet={HERO_IMAGE_MOBILE} type="image/jpeg" />
             <img
               src={HERO_IMAGE}
               alt="TAMBVRINI Campaign"

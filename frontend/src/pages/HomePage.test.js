@@ -306,6 +306,8 @@ describe('HomePage featured grid', () => {
     );
 
     expect(heroSource?.getAttribute('srcset')).toBe('/images/header-tambvrini-yo-2.jpg');
+    expect(heroSource?.getAttribute('media')).toBe('(max-width: 767px)');
+    expect(heroSource?.getAttribute('type')).toBe('image/jpeg');
     expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo.jpg');
     expect(heroImage?.className).toContain('hero-image-cinematic');
     expect(heroImage?.className).toContain('object-cover');
