@@ -373,6 +373,34 @@
     border-color: #C5A059;
 }
 
+.hero-cta-luxury {
+    background: var(--ink-primary);
+    color: #F5F2EA;
+    border-color: rgba(17, 17, 17, 0.35);
+    transition: all 0.25s ease;
+    backdrop-filter: blur(2px);
+}
+
+.hero-cta-luxury::before {
+    left: 0;
+}
+
+.hero-cta-luxury.btn-gold {
+    background: #C5A059;
+    color: var(--ink-primary);
+    border-color: #C5A059;
+}
+
+.hero-cta-luxury:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.05);
+}
+
+.hero-cta-luxury:active {
+    transform: translateY(0px) scale(0.98);
+}
+
 /* Section divider */
 .section-divider {
     width: 60px;

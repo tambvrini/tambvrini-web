@@ -88,7 +88,7 @@ const HeroSection = () => {
                   to="/tienda?gender=hombre"
                   data-testid="hero-shop-men"
                   onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                  className="btn-luxury text-center"
+                  className="btn-luxury hero-cta-luxury text-center"
                 >
                   Comprar Hombre
                 </Link>
@@ -96,7 +96,7 @@ const HeroSection = () => {
                   to="/tienda?gender=mujer"
                   data-testid="hero-shop-women"
                   onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                  className="btn-luxury text-center"
+                  className="btn-luxury hero-cta-luxury text-center"
                 >
                   Comprar Mujer
                 </Link>
@@ -107,7 +107,7 @@ const HeroSection = () => {
                     const el = document.getElementById('drops');
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
-                  className="btn-luxury btn-gold text-center"
+                  className="btn-luxury btn-gold hero-cta-luxury text-center"
                 >
                   Explorar
                 </button>
