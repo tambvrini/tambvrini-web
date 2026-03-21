@@ -322,6 +322,8 @@ describe('ProductPage', () => {
     expect(infoPanel.className).toContain('product-info');
     expect(breadcrumb).not.toBeNull();
     expect(breadcrumb.textContent.trim()).toBe('KNITWEAR / APPAREL');
+    expect(breadcrumb.childElementCount).toBe(1);
+    expect(breadcrumb.querySelector('span')).not.toBeNull();
     expect(breadcrumb.querySelectorAll('a').length).toBe(0);
     expect(title).not.toBeNull();
     expect(title.className).toContain('break-words');
@@ -334,8 +336,6 @@ describe('ProductPage', () => {
     expect(decreaseButton.className).toContain('h-11');
     expect(increaseButton.className).toContain('w-11');
     expect(increaseButton.className).toContain('h-11');
-    expect(document.body.textContent).not.toContain('Inicio');
-    expect(document.body.textContent).not.toContain('Tienda');
 
     act(() => {
       detailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));

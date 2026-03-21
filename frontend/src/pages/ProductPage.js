@@ -297,7 +297,7 @@ export default function ProductPage() {
                         onClick={() => setSelectedColor(c.name)}
                         aria-label={`Seleccionar color ${c.name}`}
                         disabled={product.is_sold_out}
-                        className={`flex min-h-11 items-center justify-center gap-2 border px-3 py-2 text-center transition-colors duration-300 ${
+                        className={`flex h-11 items-center justify-center gap-2 border px-3 py-2 text-center transition-colors duration-300 ${
                           selectedColor === c.name ? 'border-gold text-gold' : 'border-black/10 text-obsidian/60'
                         } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-black/30'}`}
                       >
@@ -395,7 +395,7 @@ export default function ProductPage() {
               {product.product_id === 'camiseta-sport-club' && (
                 <a
                   href="https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00"
-                  className="buy-btn umbra-keep-dark mb-3 flex min-h-[48px] w-full items-center justify-center bg-white px-4 py-3 text-center font-montserrat text-[11px] uppercase tracking-[0.2em] text-obsidian transition-colors duration-300 hover:bg-black/[0.04]"
+                  className="buy-btn umbra-keep-dark mb-3 flex min-h-[48px] w-full items-center justify-center bg-white px-4 py-3 text-center font-montserrat text-[11px] uppercase tracking-[0.2em] text-obsidian transition-colors duration-300 hover:bg-gold/10"
                 >
                   Comprar
                 </a>
@@ -407,7 +407,7 @@ export default function ProductPage() {
                 className={`umbra-keep-dark flex min-h-[48px] w-full items-center justify-center px-4 py-3 text-center font-montserrat text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
                   product.is_sold_out
                     ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
-                    : 'bg-white text-obsidian hover:bg-black/[0.04]'
+                    : 'bg-white text-obsidian hover:bg-gold/10'
                 } ${isIgnatiusProduct ? 'ignatius-glow' : ''}`}
               >
                 {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
