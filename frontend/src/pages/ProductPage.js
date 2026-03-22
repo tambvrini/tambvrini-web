@@ -353,7 +353,7 @@ export default function ProductPage() {
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     aria-label="Disminuir cantidad"
                     disabled={product.is_sold_out}
-                    className={`quantity-selector__button flex h-11 w-11 items-center justify-center border-r border-black/10 text-obsidian/50 transition-colors duration-300 ${
+                    className={`quantity-selector__button flex items-center justify-center border-r border-black/10 text-obsidian/50 transition-colors duration-300 ${
                       product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
                     }`}
                   >
@@ -361,7 +361,7 @@ export default function ProductPage() {
                   </button>
                   <span
                     data-testid="quantity-value"
-                    className="quantity-selector__value flex h-11 w-11 items-center justify-center font-montserrat text-sm text-obsidian"
+                    className="quantity-selector__value flex items-center justify-center font-montserrat text-sm text-obsidian"
                   >
                     {quantity}
                   </span>
@@ -370,7 +370,7 @@ export default function ProductPage() {
                     onClick={() => setQuantity(quantity + 1)}
                     aria-label="Aumentar cantidad"
                     disabled={product.is_sold_out}
-                    className={`quantity-selector__button flex h-11 w-11 items-center justify-center border-l border-black/10 text-obsidian/50 transition-colors duration-300 ${
+                    className={`quantity-selector__button flex items-center justify-center border-l border-black/10 text-obsidian/50 transition-colors duration-300 ${
                       product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
                     }`}
                   >
@@ -395,7 +395,7 @@ export default function ProductPage() {
               {product.product_id === 'camiseta-sport-club' && (
                 <a
                   href="https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00"
-                  className="product-primary-cta buy-btn umbra-keep-dark flex min-h-[48px] w-full items-center justify-center bg-white px-4 py-3 text-center font-montserrat text-[11px] uppercase tracking-[0.2em] text-obsidian transition-colors duration-300 hover:bg-gold/10"
+                  className="product-primary-cta buy-btn umbra-keep-dark flex min-h-[48px] w-full items-center justify-center px-4 py-3 text-center font-montserrat text-[11px] uppercase tracking-[0.2em] transition-colors duration-300"
                 >
                   Comprar
                 </a>
@@ -406,8 +406,8 @@ export default function ProductPage() {
                 disabled={product.is_sold_out}
                 className={`product-primary-cta umbra-keep-dark flex min-h-[48px] w-full items-center justify-center px-4 py-3 text-center font-montserrat text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
                   product.is_sold_out
-                    ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
-                    : 'bg-white text-obsidian hover:bg-gold/10'
+                    ? 'cursor-not-allowed'
+                    : ''
                 } ${isIgnatiusProduct ? 'ignatius-glow' : ''}`}
               >
                 {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}

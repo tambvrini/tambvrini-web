@@ -321,7 +321,7 @@ describe('ProductPage', () => {
     expect(infoPanel).not.toBeNull();
     expect(infoPanel.className).toContain('product-info');
     expect(breadcrumb).not.toBeNull();
-    expect(breadcrumb.textContent.trim()).toBe('KNITWEAR / APPAREL');
+    expect(breadcrumb.textContent.trim()).toBe(baseProduct.category.slice(0, 2).join(' / ').toUpperCase());
     expect(breadcrumb.childElementCount).toBe(1);
     expect(breadcrumb.querySelector('span')).not.toBeNull();
     expect(breadcrumb.querySelectorAll('a').length).toBe(0);
@@ -330,12 +330,9 @@ describe('ProductPage', () => {
     expect(title.className).toContain('text-center');
     expect(detailButton).not.toBeNull();
     expect(quantityValue).not.toBeNull();
-    expect(quantityValue.className).toContain('w-11');
-    expect(quantityValue.className).toContain('h-11');
-    expect(decreaseButton.className).toContain('w-11');
-    expect(decreaseButton.className).toContain('h-11');
-    expect(increaseButton.className).toContain('w-11');
-    expect(increaseButton.className).toContain('h-11');
+    expect(quantityValue.className).toContain('quantity-selector__value');
+    expect(decreaseButton.className).toContain('quantity-selector__button');
+    expect(increaseButton.className).toContain('quantity-selector__button');
 
     act(() => {
       detailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
