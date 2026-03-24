@@ -34,8 +34,8 @@ export const mapCartItemsToLineItems = (items = []) => (
 
 export const redirectToStripeCheckout = async ({ items }) => {
   const lineItems = mapCartItemsToLineItems(items);
-  let shippingOptions = [];
   if (lineItems.length === 0) return;
+  let shippingOptions = [];
   const totalAmount = lineItems.reduce(
     (sum, item) => sum + (item.price_data.unit_amount * item.quantity),
     0
