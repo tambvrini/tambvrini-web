@@ -33,9 +33,46 @@ export const mapCartItemsToLineItems = (items = []) => (
 
 export const redirectToStripeCheckout = async ({ items }) => {
   const lineItems = mapCartItemsToLineItems(items);
+  const totalAmount = lineItems.reduce(
+    (sum, item) => sum + (item.price_data.unit_amount * item.quantity),
+    0
+  );
+  let shippingOptions = [];
   if (lineItems.length === 0) return;
   if (!stripePromise) {
     throw new Error('Stripe publishable key is not configured');
+  }
+
+  if (totalAmount >= 7500) {
+    shippingOptions = [
+      {
+        shippingRateData: {
+          type: 'fixed_amount',
+          fixedAmount: {
+            amount: 0,
+            currency: 'eur',
+          },
+          displayName: 'Envío gratuito',
+        },
+      },
+    ];
+  } else {
+    shippingOptions = [
+      {
+        shippingRateData: {
+          type: 'fixed_amount',
+          fixedAmount: {
+            amount: 500,
+            currency: 'eur',
+          },
+          displayName: 'Envío estándar',
+          deliveryEstimate: {
+            minimum: { unit: 'business_day', value: 2 },
+            maximum: { unit: 'business_day', value: 5 },
+          },
+        },
+      },
+    ];
   }
 
   const stripe = await stripePromise;
@@ -54,22 +91,7 @@ export const redirectToStripeCheckout = async ({ items }) => {
     shippingAddressCollection: {
       allowedCountries: ['ES', 'FR', 'IT', 'DE'],
     },
-    shippingOptions: [
-      {
-        shippingRateData: {
-          type: 'fixed_amount',
-          fixedAmount: {
-            amount: 500,
-            currency: 'eur',
-          },
-          displayName: 'Envío estándar',
-          deliveryEstimate: {
-            minimum: { unit: 'business_day', value: 2 },
-            maximum: { unit: 'business_day', value: 5 },
-          },
-        },
-      },
-    ],
+    shippingOptions,
     automaticTax: { enabled: true },
   });
 
