@@ -77,6 +77,27 @@ describe('stripeCheckout', () => {
       mode: 'payment',
       successUrl: `${window.location.origin}/checkout-success`,
       cancelUrl: `${window.location.origin}/carrito`,
+      billingAddressCollection: 'required',
+      shippingAddressCollection: {
+        allowedCountries: ['ES', 'FR', 'IT', 'DE'],
+      },
+      shippingOptions: [
+        {
+          shippingRateData: {
+            type: 'fixed_amount',
+            fixedAmount: {
+              amount: 500,
+              currency: 'eur',
+            },
+            displayName: 'Envío estándar',
+            deliveryEstimate: {
+              minimum: { unit: 'business_day', value: 2 },
+              maximum: { unit: 'business_day', value: 5 },
+            },
+          },
+        },
+      ],
+      automaticTax: { enabled: true },
     });
   });
 });
