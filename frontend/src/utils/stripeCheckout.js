@@ -4,6 +4,7 @@ const STRIPE_PUBLISHABLE_KEY =
   process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const CHECKOUT_PENDING_STORAGE_KEY = 'stripe_checkout_pending';
 const CHECKOUT_PENDING_VALUE = 'true';
+const FREE_SHIPPING_THRESHOLD_CENTS = 7500;
 
 const stripePromise = STRIPE_PUBLISHABLE_KEY ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null;
 
@@ -33,17 +34,17 @@ export const mapCartItemsToLineItems = (items = []) => (
 
 export const redirectToStripeCheckout = async ({ items }) => {
   const lineItems = mapCartItemsToLineItems(items);
+  let shippingOptions = [];
+  if (lineItems.length === 0) return;
   const totalAmount = lineItems.reduce(
     (sum, item) => sum + (item.price_data.unit_amount * item.quantity),
     0
   );
-  let shippingOptions = [];
-  if (lineItems.length === 0) return;
   if (!stripePromise) {
     throw new Error('Stripe publishable key is not configured');
   }
 
-  if (totalAmount >= 7500) {
+  if (totalAmount >= FREE_SHIPPING_THRESHOLD_CENTS) {
     shippingOptions = [
       {
         shippingRateData: {
