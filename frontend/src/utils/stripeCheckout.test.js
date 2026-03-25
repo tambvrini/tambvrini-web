@@ -57,7 +57,7 @@ describe('stripeCheckout', () => {
     ])).toThrow('Invalid product price for missing-price');
   });
 
-  it('redirects to Stripe checkout with lineItems', async () => {
+  it('redirects to Stripe checkout with paid shipping below the free-shipping threshold', async () => {
     const { redirectToStripeCheckout } = require('./stripeCheckout');
     redirectToCheckout.mockResolvedValue({});
 
@@ -77,6 +77,67 @@ describe('stripeCheckout', () => {
       mode: 'payment',
       successUrl: `${window.location.origin}/checkout-success`,
       cancelUrl: `${window.location.origin}/carrito`,
+      billingAddressCollection: 'required',
+      shippingAddressCollection: {
+        allowedCountries: ['ES', 'FR', 'IT', 'DE'],
+      },
+      shippingOptions: [
+        {
+          shippingRateData: {
+            type: 'fixed_amount',
+            fixedAmount: {
+              amount: 500,
+              currency: 'eur',
+            },
+            displayName: 'Envío estándar',
+            deliveryEstimate: {
+              minimum: { unit: 'business_day', value: 2 },
+              maximum: { unit: 'business_day', value: 5 },
+            },
+          },
+        },
+      ],
+      automaticTax: { enabled: true },
+    });
+  });
+
+  it('redirects to Stripe checkout with free shipping at the free-shipping threshold', async () => {
+    const { redirectToStripeCheckout } = require('./stripeCheckout');
+    redirectToCheckout.mockResolvedValue({});
+
+    await redirectToStripeCheckout({
+      items: [{ product_id: 'polo-regius', name: 'Polo Regius', price: 75, quantity: 1 }],
+    });
+
+    expect(redirectToCheckout).toHaveBeenCalledWith({
+      lineItems: [{
+        price_data: {
+          currency: 'eur',
+          product_data: { name: 'Polo Regius' },
+          unit_amount: 7500,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      successUrl: `${window.location.origin}/checkout-success`,
+      cancelUrl: `${window.location.origin}/carrito`,
+      billingAddressCollection: 'required',
+      shippingAddressCollection: {
+        allowedCountries: ['ES', 'FR', 'IT', 'DE'],
+      },
+      shippingOptions: [
+        {
+          shippingRateData: {
+            type: 'fixed_amount',
+            fixedAmount: {
+              amount: 0,
+              currency: 'eur',
+            },
+            displayName: 'Envío gratuito',
+          },
+        },
+      ],
+      automaticTax: { enabled: true },
     });
   });
 });

@@ -305,8 +305,14 @@ describe('ProductPage', () => {
     const productContent = container.querySelector('.product-content');
     const pageGrid = container.querySelector('.product-page');
     const infoPanel = container.querySelector('.product-info');
+    const breadcrumb = container.querySelector('[data-testid="product-breadcrumb"]');
     const title = container.querySelector('[data-testid="product-name"]');
     const detailButton = container.querySelector('[data-testid="tab-details"]');
+    const sizeButton = container.querySelector('[data-testid="tab-size"]');
+    const shippingButton = container.querySelector('[data-testid="tab-shipping"]');
+    const quantityValue = container.querySelector('[data-testid="quantity-value"]');
+    const decreaseButton = container.querySelector('[data-testid="quantity-decrease-btn"]');
+    const increaseButton = container.querySelector('[data-testid="quantity-increase-btn"]');
 
     expect(productContent).not.toBeNull();
     const productContentClasses = productContent.className.split(/\s+/);
@@ -315,9 +321,23 @@ describe('ProductPage', () => {
     expect(productContentClasses).not.toContain('mx-auto');
     expect(pageGrid).not.toBeNull();
     expect(infoPanel).not.toBeNull();
+    expect(infoPanel.className).toContain('product-info');
+    expect(breadcrumb).not.toBeNull();
+    expect(breadcrumb.textContent.trim()).toBe(baseProduct.category.slice(0, 2).join(' / ').toUpperCase());
+    expect(breadcrumb.childElementCount).toBe(1);
+    expect(breadcrumb.querySelector('span')).not.toBeNull();
+    expect(breadcrumb.querySelectorAll('a').length).toBe(0);
     expect(title).not.toBeNull();
     expect(title.className).toContain('break-words');
+    expect(title.className).toContain('text-center');
     expect(detailButton).not.toBeNull();
+    expect(sizeButton).toBeNull();
+    expect(shippingButton).toBeNull();
+    expect(container.querySelectorAll('[data-testid^="tab-"]').length).toBe(1);
+    expect(quantityValue).not.toBeNull();
+    expect(quantityValue.className).toContain('quantity-selector__value');
+    expect(decreaseButton.className).toContain('quantity-selector__button');
+    expect(increaseButton.className).toContain('quantity-selector__button');
 
     act(() => {
       detailButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
