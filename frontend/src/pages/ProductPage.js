@@ -293,8 +293,6 @@ export default function ProductPage() {
                 src={media.src}
                 alt={product.name}
                 className="product-gallery-image"
-                loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
-                decoding="async"
               />
             </div>
           )}

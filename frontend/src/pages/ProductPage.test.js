@@ -319,13 +319,14 @@ describe('ProductPage', () => {
     expect(secondDot.getAttribute('aria-current')).toBe('true');
     expect(firstDot.getAttribute('aria-current')).toBeNull();
 
+    const slideWidth = mediaContainer.clientWidth;
     mediaContainer.scrollTo = jest.fn();
 
     act(() => {
       thirdDot.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
 
-    expect(mediaContainer.scrollTo).toHaveBeenCalledWith({ left: 640, behavior: 'smooth' });
+    expect(mediaContainer.scrollTo).toHaveBeenCalledWith({ left: slideWidth * 2, behavior: 'smooth' });
 
     act(() => {
       root.unmount();
