@@ -50,10 +50,10 @@ describe('stripeCheckout', () => {
   });
 
   it('navigates to the payment link for single-product carts', async () => {
-    const { redirectToStripeCheckout } = require('./stripeCheckout');
+    const { processCartCheckout } = require('./stripeCheckout');
     const navigate = jest.fn();
 
-    await expect(redirectToStripeCheckout({
+    await expect(processCartCheckout({
       items: [{
         product_id: 'polo-golf',
         stripePaymentLink: 'https://buy.stripe.com/polo-golf',
@@ -69,10 +69,10 @@ describe('stripeCheckout', () => {
   });
 
   it('does not navigate for multi-product carts', async () => {
-    const { redirectToStripeCheckout } = require('./stripeCheckout');
+    const { processCartCheckout } = require('./stripeCheckout');
     const navigate = jest.fn();
 
-    await expect(redirectToStripeCheckout({
+    await expect(processCartCheckout({
       items: [
         {
           product_id: 'polo-golf',

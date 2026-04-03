@@ -4,7 +4,7 @@ import { useCart } from '../contexts/CartContext';
 import { Sheet, SheetContent, SheetClose } from '../components/ui/sheet';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { getCartCheckoutState, redirectToStripeCheckout } from '../utils/stripeCheckout';
+import { getCartCheckoutState, processCartCheckout } from '../utils/stripeCheckout';
 
 export const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice } = useCart();
@@ -22,7 +22,7 @@ export const CartDrawer = () => {
         return;
       }
 
-      await redirectToStripeCheckout({ items });
+      await processCartCheckout({ items });
     } catch (err) {
       console.error('Checkout error:', err);
       toast.error('No se pudo iniciar el pago');

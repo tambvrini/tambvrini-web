@@ -3,7 +3,7 @@ import { X, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { getCartCheckoutState, redirectToStripeCheckout } from '../utils/stripeCheckout';
+import { getCartCheckoutState, processCartCheckout } from '../utils/stripeCheckout';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
@@ -21,7 +21,7 @@ export default function CartPage() {
         return;
       }
 
-      await redirectToStripeCheckout({ items });
+      await processCartCheckout({ items });
     } catch (err) {
       console.error('Checkout error:', err);
       toast.error('No se pudo iniciar el pago');

@@ -25,7 +25,7 @@ export const getCartCheckoutState = (items = []) => {
   };
 };
 
-export const redirectToStripeCheckout = async ({ items, navigate = (url) => window.location.assign(url) }) => {
+export const processCartCheckout = async ({ items, navigate = (url) => window.location.assign(url) }) => {
   const checkoutState = getCartCheckoutState(items);
 
   if (checkoutState.type !== 'single') {
