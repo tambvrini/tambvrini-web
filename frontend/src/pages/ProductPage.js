@@ -8,6 +8,7 @@ import ModelViewer from '../components/ModelViewer';
 import Simple3DViewer from '../components/Simple3DViewer.tsx';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
+import { getStripeLink } from '../constants/stripeProducts';
 import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
@@ -28,6 +29,8 @@ const resolveFallbackPoster = (thumbnailImage, media) => {
   const firstImage = media.find((item) => item.type === 'image')?.src;
   return firstImage || '';
 };
+
+const requiresColorSelection = (productName) => productName === 'Camiseta Imperium';
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -175,10 +178,31 @@ export default function ProductPage() {
   const hasSizeVariants = Array.isArray(product.sizes) && product.sizes.length > 0;
   const hasAvailableSizes = !hasSizeVariants || product.sizes.some((size) => !isSizeSoldOut(product, size));
   const isProductUnavailable = product.is_sold_out || !hasAvailableSizes;
-  const productPaymentLink = product.stripePaymentLink;
+  const selectedStripeLink = getStripeLink(product.name, selectedSize, selectedColor);
+  const anyStripeLinkAvailable = hasSizeVariants
+    ? product.sizes.some((size) => !isSizeSoldOut(product, size) && Boolean(getStripeLink(product.name, size, selectedColor)))
+    : Boolean(getStripeLink(product.name, '', selectedColor));
+  const isBuyNowDisabled = isProductUnavailable || !selectedStripeLink;
   const categoryLabel = Array.isArray(product.category) && product.category.length > 0
     ? product.category.slice(0, 2).join(' / ').toUpperCase()
     : 'APPAREL';
+
+  const handleBuyNow = () => {
+    if (isProductUnavailable) return;
+    if (requiresColorSelection(product.name) && !selectedColor) {
+      toast.error('Selecciona un color');
+      return;
+    }
+    if (hasSizeVariants && !selectedSize && !getStripeLink(product.name, '', selectedColor)) {
+      toast.error('Selecciona una talla');
+      return;
+    }
+    if (!selectedStripeLink) {
+      toast.error('Producto no disponible');
+      return;
+    }
+    window.open(selectedStripeLink, '_blank', 'noopener,noreferrer');
+  };
   const galleryItems = (() => {
     let imageIndex = 0;
 
@@ -320,10 +344,11 @@ export default function ProductPage() {
                 <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Talla</p>
                   <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
                     {product.sizes.map((s, i) => {
-                    const sizeSoldOut = isSizeSoldOut(product, s);
-                    const disabled = isProductUnavailable || sizeSoldOut;
-                    return (
-                      <button
+                     const sizeSoldOut = isSizeSoldOut(product, s);
+                     const hasStripeLinkForSize = Boolean(getStripeLink(product.name, s, selectedColor));
+                     const disabled = isProductUnavailable || sizeSoldOut || !hasStripeLinkForSize;
+                     return (
+                       <button
                         key={i}
                         data-testid={`size-btn-${s}`}
                         onClick={() => setSelectedSize(s)}
@@ -394,16 +419,18 @@ export default function ProductPage() {
 
             {/* Actions */}
             <div className="product-cta-group product-section mx-auto w-full max-w-[28rem]">
-              {!isProductUnavailable && productPaymentLink && (
-                <a
+              {!isProductUnavailable && anyStripeLinkAvailable && (
+                <button
+                  type="button"
                   data-testid="buy-now-btn"
-                  href={productPaymentLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="product-primary-cta cta-button buy-btn umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300"
+                  onClick={handleBuyNow}
+                  disabled={isBuyNowDisabled}
+                  className={`product-primary-cta cta-button buy-btn umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isBuyNowDisabled ? 'cursor-not-allowed opacity-60' : ''
+                  }`}
                 >
                   COMPRAR AHORA
-                </a>
+                </button>
               )}
               {isProductUnavailable ? (
                 <span

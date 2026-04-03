@@ -281,7 +281,7 @@ const products = [
     ],
     category: ["camisetas", "apparel"],
     gender: "mujer",
-    sizes: ["XS", "S", "M", "L"],
+    sizes: ["S", "M", "L", "XL"],
     colors: [
       { name: "Negro", hex: "#0A0A0A" },
       { name: "Beige", hex: "#D8C3A5" },
