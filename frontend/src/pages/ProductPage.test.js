@@ -2,6 +2,7 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import ProductPage from './ProductPage';
 import { getProductById } from '../data/productHelpers';
+import { STRIPE_PAYMENT_LINKS } from '../constants/stripeProducts';
 
 jest.mock('@google/model-viewer', () => ({}));
 
@@ -58,7 +59,7 @@ const baseProduct = {
   composition: 'Algodón',
   care: 'Lavado a mano',
   is_sold_out: false,
-  stripePaymentLink: 'https://buy.stripe.com/14A14o6vZcSNflq39T1Jm03',
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.sueterIgnatius,
   related_products: [],
 };
 
@@ -78,7 +79,7 @@ const umbraProduct = {
   composition: 'Lana premium',
   care: 'Solo limpieza en seco',
   is_sold_out: false,
-  stripePaymentLink: 'https://buy.stripe.com/3cI00kf2vf0V1uA9yh1Jm01',
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.americanaUmbra,
   related_products: [],
 };
 
@@ -102,7 +103,7 @@ const poloGolfProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
-  stripePaymentLink: 'https://buy.stripe.com/eVq7sM5rVdWRb5ah0J1Jm05',
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.poloGolf,
   related_products: [],
 };
 
@@ -133,7 +134,7 @@ const camisetaImperiumProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
-  stripePaymentLink: 'https://buy.stripe.com/cNibJ28E73id4GMcKt1Jm02',
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.camisetaImperium,
   related_products: [],
 };
 
@@ -151,7 +152,7 @@ const camisetaSportClubProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
-  stripePaymentLink: 'https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00',
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.camisetaSportClub,
   related_products: [],
 };
 
@@ -308,6 +309,8 @@ describe('ProductPage', () => {
     const { container, root } = await renderProductPage();
     const negroButton = container.querySelector('[data-testid="color-btn-0"]');
     const beigeButton = container.querySelector('[data-testid="color-btn-1"]');
+    const sizeButton = container.querySelector('[data-testid="size-btn-XS"]');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
 
     expect(negroButton).not.toBeNull();
     expect(beigeButton).not.toBeNull();
@@ -322,6 +325,16 @@ describe('ProductPage', () => {
 
     expect(beigeButton.className).toContain('border-gold');
     expect(negroButton.className).not.toContain('border-gold');
+
+    act(() => {
+      sizeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    act(() => {
+      addToCartButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(mockAddItem).toHaveBeenCalledWith(camisetaImperiumProduct, 'XS', 'Beige', 1);
 
     act(() => {
       root.unmount();
