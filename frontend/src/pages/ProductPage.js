@@ -169,7 +169,7 @@ export default function ProductPage() {
     || LOGO_FALLBACK_POSTER;
   const shouldUseSimpleViewer = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
-  const hasAvailableSizes = !Array.isArray(product.sizes) || product.sizes.some((size) => !isSizeSoldOut(product, size));
+  const hasAvailableSizes = Array.isArray(product.sizes) && product.sizes.some((size) => !isSizeSoldOut(product, size));
   const isProductUnavailable = product.is_sold_out || !hasAvailableSizes;
   const productPaymentLink = product.stripePaymentLink;
   const categoryLabel = Array.isArray(product.category) && product.category.length > 0

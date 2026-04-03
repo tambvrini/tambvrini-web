@@ -439,7 +439,7 @@ describe('ProductPage', () => {
     expect(buyLink).not.toBeNull();
     expect(buyLink.getAttribute('href')).toBe('https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00');
     expect(buyLink.getAttribute('target')).toBe('_blank');
-    expect(buyLink.getAttribute('rel')).toContain('noopener');
+    expect(buyLink.getAttribute('rel')).toBe('noopener noreferrer');
     expect(buyLink.className).toContain('buy-btn');
     expect(addToCartButton).not.toBeNull();
 

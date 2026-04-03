@@ -91,4 +91,25 @@ describe('products data', () => {
       expect(product.stripePriceId).toEqual(expect.stringMatching(/^price_/));
     });
   });
+
+  it('includes Stripe payment links for products that support direct checkout', () => {
+    const directCheckoutProductIds = new Set([
+      'camiseta-sport-club',
+      'polo-golf',
+      'sueter-captain',
+      'polo-aureus',
+      'camiseta-imperium',
+      'americana-umbra',
+      'sueter-sylva',
+      'polo-patricius',
+      'polo-regius',
+      'sueter-ignatius',
+    ]);
+
+    products
+      .filter((product) => directCheckoutProductIds.has(product.product_id))
+      .forEach((product) => {
+        expect(product.stripePaymentLink).toEqual(expect.stringMatching(/^https:\/\/buy\.stripe\.com\//));
+      });
+  });
 });
