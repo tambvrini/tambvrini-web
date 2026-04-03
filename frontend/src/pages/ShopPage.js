@@ -10,24 +10,24 @@ import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
   '2026': '2026',
+  'sport-club': 'Sport Club',
   polos: 'Polos',
   sueteres: 'Suéteres',
   hombre: 'Hombre',
   mujer: 'Mujer',
   accesorios: 'Accesorios',
-  calzado: 'Calzado',
 };
 
 const CATEGORY_NAV_ITEMS = [
   ['2026', CATEGORY_LABELS['2026']],
   ['limited-editions', 'Limited Editions'],
   ['novedades', CATEGORY_LABELS.novedades],
+  ['sport-club', CATEGORY_LABELS['sport-club']],
   ['polos', CATEGORY_LABELS.polos],
   ['sueteres', CATEGORY_LABELS.sueteres],
   ['hombre', CATEGORY_LABELS.hombre],
   ['mujer', CATEGORY_LABELS.mujer],
   ['accesorios', CATEGORY_LABELS.accesorios],
-  ['calzado', CATEGORY_LABELS.calzado],
 ];
 
 const COLLECTION_LABELS = {
@@ -330,6 +330,10 @@ export default function ShopPage() {
               onClick={() => {
                 if (key === 'limited-editions') {
                   navigate('/limited-editions');
+                  return;
+                }
+                if (key === 'sport-club') {
+                  navigate('/sport-club');
                   return;
                 }
                 const p = new URLSearchParams();

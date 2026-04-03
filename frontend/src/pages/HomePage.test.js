@@ -154,6 +154,8 @@ describe('HomePage featured grid', () => {
     const mysticDivider = container.querySelector('[data-testid="mystic-divider-image"]');
     const mysticWrapper = container.querySelector('[data-testid="mystic-divider-wrapper"]');
     const mysticImage = mysticDivider?.querySelector('img');
+    const limitedEditionsSection = container.querySelector('[data-testid="limited-editions-section"]');
+    const spotlightGrid = container.querySelector('[data-testid="homepage-spotlight-grid"]');
 
     expect(dropGrid?.className).toContain('pt-6');
     expect(dropGrid?.className).toContain('md:pt-8');
@@ -173,6 +175,10 @@ describe('HomePage featured grid', () => {
     expect(mysticWrapper?.className).toContain('right-1/2');
     expect(mysticWrapper?.className).toContain('-ml-[50vw]');
     expect(mysticWrapper?.className).toContain('-mr-[50vw]');
+    expect(spotlightGrid?.className).toContain('mt-6');
+    expect(spotlightGrid?.className).toContain('md:mt-8');
+    expect(limitedEditionsSection?.className).toContain('mt-6');
+    expect(limitedEditionsSection?.className).toContain('md:mt-8');
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
     expect(mysticImage?.getAttribute('alt')).toBe('editorial mystic divider');
     expect(mysticImage?.className).toContain('w-full');
@@ -337,6 +343,20 @@ describe('HomePage featured grid', () => {
     expect(editorialImage?.className).toContain('object-center');
     expect(editorialTitle?.textContent).toContain('PRIMAVERA — VERANO');
     expect(editorialTitle?.className).toContain('primavera-editorial-title');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('does not render the Sport Club homepage campaign banner anymore', async () => {
+    const { container, root } = await renderHomePage();
+
+    expect(container.querySelector('[data-testid="campaign-divider-image"]')).toBeNull();
+    expect(container.querySelector('[data-testid="campaign-collection-title"]')).toBeNull();
+    expect(container.querySelector('[data-testid="campaign-collection-button"]')).toBeNull();
+    expect(container.querySelector('[data-testid="collection-transition"]')).toBeNull();
 
     act(() => {
       root.unmount();

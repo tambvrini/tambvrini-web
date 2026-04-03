@@ -38,4 +38,14 @@ describe('queryProducts', () => {
       accesoriosResult.products.map((product) => product.product_id),
     );
   });
+
+  it('returns only the dedicated Sport Club products for the sport-club category', () => {
+    const result = queryProducts({ category: 'sport-club', limit: 100 });
+
+    expect(result.products.map((product) => product.product_id)).toEqual([
+      'camiseta-sport-club',
+      'polo-golf',
+    ]);
+    expect(result.total).toBe(2);
+  });
 });
