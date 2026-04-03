@@ -439,7 +439,10 @@ const DropGridSection = () => {
               </div>
 
               {spotlight.length > 0 && (
-                <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
+                <div
+                  data-testid="homepage-spotlight-grid"
+                  className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20"
+                >
                   {spotlight.map((item, i) => (
                     <ProductCard
                       key={item.product_id}

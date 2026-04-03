@@ -155,6 +155,7 @@ describe('HomePage featured grid', () => {
     const mysticWrapper = container.querySelector('[data-testid="mystic-divider-wrapper"]');
     const mysticImage = mysticDivider?.querySelector('img');
     const limitedEditionsSection = container.querySelector('[data-testid="limited-editions-section"]');
+    const spotlightGrid = container.querySelector('[data-testid="homepage-spotlight-grid"]');
 
     expect(dropGrid?.className).toContain('pt-6');
     expect(dropGrid?.className).toContain('md:pt-8');
@@ -174,6 +175,8 @@ describe('HomePage featured grid', () => {
     expect(mysticWrapper?.className).toContain('right-1/2');
     expect(mysticWrapper?.className).toContain('-ml-[50vw]');
     expect(mysticWrapper?.className).toContain('-mr-[50vw]');
+    expect(spotlightGrid?.className).toContain('mt-6');
+    expect(spotlightGrid?.className).toContain('md:mt-8');
     expect(limitedEditionsSection?.className).toContain('mt-6');
     expect(limitedEditionsSection?.className).toContain('md:mt-0');
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
