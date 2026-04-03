@@ -452,7 +452,11 @@ const DropGridSection = () => {
                 </div>
               )}
 
-              <div ref={limitedEditionsVideosContainerRef} className="mt-4 md:mt-0 mb-6 md:mb-8">
+              <div
+                ref={limitedEditionsVideosContainerRef}
+                data-testid="limited-editions-section"
+                className="mt-4 md:mt-0 mb-6 md:mb-8"
+              >
                 <div className="limited-editions-video-wrapper">
                   <div
                     data-testid="limited-editions-left-wrapper"
