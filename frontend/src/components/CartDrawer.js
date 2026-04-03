@@ -3,7 +3,8 @@ import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { Sheet, SheetContent, SheetClose } from '../components/ui/sheet';
 import { useState } from 'react';
-import { redirectToStripeCheckout } from '../utils/stripeCheckout';
+import { toast } from 'sonner';
+import { getCartCheckoutState, processCartCheckout } from '../utils/stripeCheckout';
 
 export const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice } = useCart();
@@ -14,9 +15,17 @@ export const CartDrawer = () => {
     if (items.length === 0) return;
     setLoading(true);
     try {
-      await redirectToStripeCheckout({ items });
+      const checkoutState = getCartCheckoutState(items);
+
+      if (checkoutState.type === 'multi') {
+        toast.message(checkoutState.message);
+        return;
+      }
+
+      await processCartCheckout({ items });
     } catch (err) {
       console.error('Checkout error:', err);
+      toast.error('No se pudo iniciar el pago');
     } finally {
       setLoading(false);
     }

@@ -8,16 +8,29 @@ import ModelViewer from '../components/ModelViewer';
 import Simple3DViewer from '../components/Simple3DViewer.tsx';
 import { toast } from 'sonner';
 import { getProductById } from '../data/productHelpers';
+import { getStripeLink } from '../constants/stripeProducts';
 import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
 const MAX_RECOMMENDED_PRODUCTS = 4;
+const PRODUCT_UNAVAILABLE_SIZES = {
+  'polo-golf': ['L'],
+  'americana-umbra': ['M', 'L', 'XL'],
+  'polo-aureus': ['XS', 'S', 'L', 'XL'],
+};
+
+const isSizeSoldOut = (product, size) => (
+  (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(size)) ||
+  Boolean(PRODUCT_UNAVAILABLE_SIZES[product.product_id]?.includes(size))
+);
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;
   const firstImage = media.find((item) => item.type === 'image')?.src;
   return firstImage || '';
 };
+
+const requiresColorSelection = (productName) => productName === 'Camiseta Imperium';
 
 export default function ProductPage() {
   const { productId } = useParams();
@@ -52,7 +65,7 @@ export default function ProductPage() {
         setProduct(data);
         setRelatedProducts(Array.isArray(data.related_products) ? data.related_products : []);
         setSelectedSize('');
-        setSelectedColor('');
+        setSelectedColor(data.colors?.[0]?.name || '');
         setQuantity(1);
       } catch (err) {
         console.error(err);
@@ -162,9 +175,44 @@ export default function ProductPage() {
     || LOGO_FALLBACK_POSTER;
   const shouldUseSimpleViewer = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
+  const hasSizeVariants = Array.isArray(product.sizes) && product.sizes.length > 0;
+  const hasAvailableSizes = !hasSizeVariants || product.sizes.some((size) => !isSizeSoldOut(product, size));
+  const isProductUnavailable = product.is_sold_out || !hasAvailableSizes;
+  const hasMappedStripeLinks = hasSizeVariants
+    ? product.sizes.some((size) => Boolean(getStripeLink(product.name, size, selectedColor)))
+      || Boolean(getStripeLink(product.name, '', selectedColor))
+    : Boolean(getStripeLink(product.name, '', selectedColor));
+  const resolveStripeLink = (size, color) => {
+    const variantLink = getStripeLink(product.name, size, color);
+    if (variantLink) return variantLink;
+    if (hasMappedStripeLinks) return null;
+    return requiresColorSelection(product.name) ? null : (product.stripePaymentLink || null);
+  };
+  const selectedStripeLink = resolveStripeLink(selectedSize, selectedColor);
+  const anyStripeLinkAvailable = hasSizeVariants
+    ? product.sizes.some((size) => !isSizeSoldOut(product, size) && Boolean(resolveStripeLink(size, selectedColor)))
+    : Boolean(resolveStripeLink('', selectedColor));
+  const isBuyNowDisabled = isProductUnavailable || !selectedStripeLink;
   const categoryLabel = Array.isArray(product.category) && product.category.length > 0
     ? product.category.slice(0, 2).join(' / ').toUpperCase()
     : 'APPAREL';
+
+  const handleBuyNow = () => {
+    if (isProductUnavailable) return;
+    if (requiresColorSelection(product.name) && !selectedColor) {
+      toast.error('Selecciona un color');
+      return;
+    }
+    if (hasSizeVariants && !selectedSize && !resolveStripeLink('', selectedColor)) {
+      toast.error('Selecciona una talla');
+      return;
+    }
+    if (!selectedStripeLink) {
+      toast.error('Producto no disponible');
+      return;
+    }
+    window.open(selectedStripeLink, '_blank', 'noopener,noreferrer');
+  };
   const galleryItems = (() => {
     let imageIndex = 0;
 
@@ -258,9 +306,9 @@ export default function ProductPage() {
               >
                 {product.name}
               </h1>
-              {product.is_sold_out && (
+              {isProductUnavailable && (
                 <span className="border border-black/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/70">
-                  SOLD OUT
+                  AGOTADO
                 </span>
               )}
             </div>
@@ -304,16 +352,13 @@ export default function ProductPage() {
               {/* Size selector */}
               <div className="product-selector-group product-section flex-1">
                 <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Talla</p>
-                <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
-                  {product.sizes.map((s, i) => {
-                    const isSizeSoldOut =
-                      (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(s)) ||
-                      (product.product_id === 'polo-golf' && s === 'L') ||
-                      (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(s)) ||
-                      (product.product_id === 'polo-aureus' && ['XS', 'S', 'L', 'XL'].includes(s));
-                    const disabled = product.is_sold_out || isSizeSoldOut;
-                    return (
-                      <button
+                  <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
+                    {product.sizes.map((s, i) => {
+                     const sizeSoldOut = isSizeSoldOut(product, s);
+                     const hasStripeLinkForSize = Boolean(resolveStripeLink(s, selectedColor));
+                     const disabled = isProductUnavailable || sizeSoldOut || !hasStripeLinkForSize;
+                     return (
+                       <button
                         key={i}
                         data-testid={`size-btn-${s}`}
                         onClick={() => setSelectedSize(s)}
@@ -337,16 +382,16 @@ export default function ProductPage() {
 
             {/* Quantity + wishlist */}
             <div className="product-options product-options--compact product-section">
-              <div className={product.is_sold_out ? 'product-quantity-block opacity-60 pointer-events-none flex flex-col items-center' : 'product-quantity-block flex flex-col items-center'}>
+              <div className={isProductUnavailable ? 'product-quantity-block opacity-60 pointer-events-none flex flex-col items-center' : 'product-quantity-block flex flex-col items-center'}>
                 <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Cantidad</p>
                 <div className="quantity-selector inline-flex items-center">
                   <button
                     data-testid="quantity-decrease-btn"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     aria-label="Disminuir cantidad"
-                    disabled={product.is_sold_out}
+                    disabled={isProductUnavailable}
                     className={`quantity-selector__button flex items-center justify-center text-obsidian/50 transition-colors duration-300 ${
-                      product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
+                      isProductUnavailable ? 'cursor-not-allowed' : 'hover:text-obsidian'
                     }`}
                   >
                     <Minus size={14} />
@@ -361,9 +406,9 @@ export default function ProductPage() {
                     data-testid="quantity-increase-btn"
                     onClick={() => setQuantity(quantity + 1)}
                     aria-label="Aumentar cantidad"
-                    disabled={product.is_sold_out}
+                    disabled={isProductUnavailable}
                     className={`quantity-selector__button flex items-center justify-center text-obsidian/50 transition-colors duration-300 ${
-                      product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
+                      isProductUnavailable ? 'cursor-not-allowed' : 'hover:text-obsidian'
                     }`}
                   >
                     <Plus size={14} />
@@ -384,26 +429,40 @@ export default function ProductPage() {
 
             {/* Actions */}
             <div className="product-cta-group product-section mx-auto w-full max-w-[28rem]">
-              {product.product_id === 'camiseta-sport-club' && (
-                <a
-                  href="https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00"
-                  className="product-primary-cta cta-button buy-btn umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300"
+              {!isProductUnavailable && anyStripeLinkAvailable && (
+                <button
+                  type="button"
+                  data-testid="buy-now-btn"
+                  onClick={handleBuyNow}
+                  disabled={isBuyNowDisabled}
+                  className={`product-primary-cta cta-button buy-btn umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isBuyNowDisabled ? 'cursor-not-allowed opacity-60' : ''
+                  }`}
                 >
-                  Comprar
-                </a>
+                  COMPRAR AHORA
+                </button>
               )}
-              <button
-                data-testid="add-to-cart-btn"
-                onClick={handleAddToCart}
-                disabled={product.is_sold_out}
-                className={`product-primary-cta cta-button umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
-                  product.is_sold_out
-                    ? 'cursor-not-allowed'
-                    : ''
-                } ${isIgnatiusProduct ? 'ignatius-glow' : ''}`}
-              >
-                {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
-              </button>
+              {isProductUnavailable ? (
+                <span
+                  data-testid="sold-out-btn"
+                  className={`product-primary-cta cta-button umbra-keep-dark flex w-full cursor-not-allowed items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isIgnatiusProduct ? 'ignatius-glow' : ''
+                  }`}
+                  aria-disabled="true"
+                >
+                  AGOTADO
+                </span>
+              ) : (
+                <button
+                  data-testid="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                  className={`product-primary-cta cta-button umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isIgnatiusProduct ? 'ignatius-glow' : ''
+                  }`}
+                >
+                  AÑADIR AL CARRITO
+                </button>
+              )}
             </div>
 
             {/* Info tabs */}

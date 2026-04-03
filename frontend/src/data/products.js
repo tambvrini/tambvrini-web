@@ -1,3 +1,5 @@
+import { STRIPE_PAYMENT_LINKS, STRIPE_PRODUCTS } from '../constants/stripeProducts';
+
 /**
  * TAMBVRINI — Product catalog.
  *
@@ -19,21 +21,38 @@
  */
 
 const ASSET = "https://customer-assets.emergentagent.com";
-// Replace these defaults with real Stripe Dashboard price IDs per environment.
 const STRIPE_PRICE_IDS = {
+  "camiseta-sport-club": STRIPE_PRODUCTS.camisetaSportClub,
+  "polo-golf": STRIPE_PRODUCTS.poloGolf,
+  "sueter-captain": STRIPE_PRODUCTS.sueterCaptain,
+  "polo-aureus": STRIPE_PRODUCTS.poloAureus,
+  "camiseta-imperium": STRIPE_PRODUCTS.camisetaImperium,
+  "americana-umbra": STRIPE_PRODUCTS.americanaUmbra,
+  "sueter-sylva": STRIPE_PRODUCTS.sueterSylva,
+  "polo-patricius": STRIPE_PRODUCTS.poloPatricius,
+  "polo-regius": STRIPE_PRODUCTS.poloRegius,
+  "sueter-ignatius": STRIPE_PRODUCTS.sueterIgnatius,
+};
+const PLACEHOLDER_STRIPE_PRICE_IDS = {
   "traje-monograma-tambvrini": "price_traje_monograma_tambvrini",
   "bolso-monograma-tambvrini": "price_bolso_monograma_tambvrini",
-  "camiseta-sport-club": "price_camiseta_sport_club",
-  "polo-golf": "price_polo_golf",
-  "sueter-captain": "price_sueter_captain",
-  "polo-aureus": "price_polo_aureus",
-  "camiseta-imperium": "price_camiseta_imperium",
-  "americana-umbra": "price_americana_umbra",
   "polo-domus": "price_polo_domus",
-  "sueter-sylva": "price_sueter_sylva",
-  "polo-patricius": "price_polo_patricius",
-  "polo-regius": "price_polo_regius",
-  "sueter-ignatius": "price_sueter_ignatius",
+};
+const PRODUCT_STRIPE_PRICE_IDS = {
+  ...PLACEHOLDER_STRIPE_PRICE_IDS,
+  ...STRIPE_PRICE_IDS,
+};
+const PRODUCT_PAYMENT_LINKS = {
+  'camiseta-sport-club': STRIPE_PAYMENT_LINKS.camisetaSportClub,
+  'polo-golf': STRIPE_PAYMENT_LINKS.poloGolf,
+  'sueter-captain': STRIPE_PAYMENT_LINKS.sueterCaptain,
+  'polo-aureus': STRIPE_PAYMENT_LINKS.poloAureus,
+  'camiseta-imperium': STRIPE_PAYMENT_LINKS.camisetaImperium,
+  'americana-umbra': STRIPE_PAYMENT_LINKS.americanaUmbra,
+  'sueter-sylva': STRIPE_PAYMENT_LINKS.sueterSylva,
+  'polo-patricius': STRIPE_PAYMENT_LINKS.poloPatricius,
+  'polo-regius': STRIPE_PAYMENT_LINKS.poloRegius,
+  'sueter-ignatius': STRIPE_PAYMENT_LINKS.sueterIgnatius,
 };
 
 const products = [
@@ -262,8 +281,11 @@ const products = [
     ],
     category: ["camisetas", "apparel"],
     gender: "mujer",
-    sizes: ["XS", "S", "M", "L"],
-    colors: [{ name: "Negro", hex: "#0A0A0A" }],
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Negro", hex: "#0A0A0A" },
+      { name: "Beige", hex: "#D8C3A5" },
+    ],
     composition: "100% Algodón Premium",
     care: "Lavado a máquina 30° del revés. No usar secadora.",
     is_new: true,
@@ -451,7 +473,9 @@ const products = [
   },
 ].map((product) => ({
   ...product,
-  stripe_price_id: STRIPE_PRICE_IDS[product.product_id],
+  stripePriceId: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
+  stripe_price_id: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
+  stripePaymentLink: PRODUCT_PAYMENT_LINKS[product.product_id],
 }));
 
 export default products;

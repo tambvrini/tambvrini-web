@@ -2,13 +2,15 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import ProductPage from './ProductPage';
 import { getProductById } from '../data/productHelpers';
+import { STRIPE_LINKS, STRIPE_PAYMENT_LINKS, getStripeLink } from '../constants/stripeProducts';
 
 jest.mock('@google/model-viewer', () => ({}));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+const mockAddItem = jest.fn();
 
 jest.mock('../contexts/CartContext', () => ({
-  useCart: () => ({ addItem: jest.fn() }),
+  useCart: () => ({ addItem: mockAddItem }),
 }));
 
 jest.mock('../contexts/WishlistContext', () => ({
@@ -57,6 +59,7 @@ const baseProduct = {
   composition: 'Algodón',
   care: 'Lavado a mano',
   is_sold_out: false,
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.sueterIgnatius,
   related_products: [],
 };
 
@@ -76,6 +79,7 @@ const umbraProduct = {
   composition: 'Lana premium',
   care: 'Solo limpieza en seco',
   is_sold_out: false,
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.americanaUmbra,
   related_products: [],
 };
 
@@ -99,6 +103,7 @@ const poloGolfProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.poloGolf,
   related_products: [],
 };
 
@@ -121,11 +126,15 @@ const camisetaImperiumProduct = {
   ],
   category: ['camisetas', 'apparel'],
   gender: 'mujer',
-  sizes: ['XS', 'S', 'M', 'L'],
-  colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  sizes: ['S', 'M', 'L', 'XL'],
+  colors: [
+    { name: 'Negro', hex: '#0A0A0A' },
+    { name: 'Beige', hex: '#D8C3A5' },
+  ],
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.camisetaImperium,
   related_products: [],
 };
 
@@ -143,6 +152,7 @@ const camisetaSportClubProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
+  stripePaymentLink: STRIPE_PAYMENT_LINKS.camisetaSportClub,
   related_products: [],
 };
 
@@ -160,6 +170,23 @@ const relatedProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
+  related_products: [],
+};
+
+const noColorProduct = {
+  product_id: 'producto-sin-color',
+  name: 'Producto sin color',
+  description: 'Descripción',
+  price: 40,
+  currency: 'EUR',
+  images: ['/products/no-color/look-01.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'mujer',
+  sizes: ['S', 'M'],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  stripePaymentLink: 'https://buy.stripe.com/example',
   related_products: [],
 };
 
@@ -197,8 +224,10 @@ describe('ProductPage', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     window.scrollTo = jest.fn();
+    window.open = jest.fn();
     mockProductId = 'sueter-ignatius';
     mockProductCard.mockClear();
+    mockAddItem.mockClear();
     getProductById.mockReset();
   });
 
@@ -267,6 +296,84 @@ describe('ProductPage', () => {
 
     expect(colorButton).not.toBeNull();
     expect(colorButton.textContent).toContain('Magma');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('defaults Camiseta Imperium to Negro and lets the user switch to Beige', async () => {
+    mockProductId = 'camiseta-imperium';
+    getProductById.mockReturnValue(camisetaImperiumProduct);
+
+    const { container, root } = await renderProductPage();
+    const negroButton = container.querySelector('[data-testid="color-btn-0"]');
+    const beigeButton = container.querySelector('[data-testid="color-btn-1"]');
+    const sizeButton = container.querySelector('[data-testid="size-btn-S"]');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
+    const buyNowButton = container.querySelector('[data-testid="buy-now-btn"]');
+
+    expect(negroButton).not.toBeNull();
+    expect(beigeButton).not.toBeNull();
+    expect(negroButton.textContent).toContain('Negro');
+    expect(beigeButton.textContent).toContain('Beige');
+    expect(negroButton.className).toContain('border-gold');
+    expect(beigeButton.className).not.toContain('border-gold');
+    expect(buyNowButton.disabled).toBe(true);
+
+    act(() => {
+      beigeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(beigeButton.className).toContain('border-gold');
+    expect(negroButton.className).not.toContain('border-gold');
+
+    act(() => {
+      sizeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    act(() => {
+      addToCartButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(mockAddItem).toHaveBeenCalledWith(camisetaImperiumProduct, 'S', 'Beige', 1);
+
+    act(() => {
+      buyNowButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(window.open).toHaveBeenCalledWith(
+      STRIPE_LINKS['Camiseta Imperium - Beige - S'],
+      '_blank',
+      'noopener,noreferrer'
+    );
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('keeps an empty color value when the product has no color variants', async () => {
+    mockProductId = 'producto-sin-color';
+    getProductById.mockReturnValue(noColorProduct);
+
+    const { container, root } = await renderProductPage();
+    const sizeButton = container.querySelector('[data-testid="size-btn-S"]');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
+
+    expect(container.querySelectorAll('[data-testid^="color-btn-"]')).toHaveLength(0);
+
+    act(() => {
+      sizeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    act(() => {
+      addToCartButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(mockAddItem).toHaveBeenCalledWith(noColorProduct, 'S', '', 1);
 
     act(() => {
       root.unmount();
@@ -423,18 +530,35 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('shows a Comprar stripe link only for Camiseta Sport Club', async () => {
+  it('shows a Comprar Ahora stripe link for available products', async () => {
     mockProductId = 'camiseta-sport-club';
     getProductById.mockReturnValue(camisetaSportClubProduct);
 
     const { container, root } = await renderProductPage();
-    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const buyLink = container.querySelector('[data-testid="buy-now-btn"]');
+    const mediumSizeButton = container.querySelector('[data-testid="size-btn-M"]');
     const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
 
     expect(buyLink).not.toBeNull();
-    expect(buyLink.getAttribute('href')).toBe('https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00');
+    expect(buyLink.disabled).toBe(true);
     expect(buyLink.className).toContain('buy-btn');
     expect(addToCartButton).not.toBeNull();
+
+    act(() => {
+      mediumSizeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(buyLink.disabled).toBe(false);
+
+    act(() => {
+      buyLink.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(window.open).toHaveBeenCalledWith(
+      STRIPE_LINKS['Camiseta Sport Club - M'],
+      '_blank',
+      'noopener,noreferrer'
+    );
 
     act(() => {
       root.unmount();
@@ -442,19 +566,61 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('does not show Comprar stripe link for other products', async () => {
+  it('shows the direct Stripe link for other available products too', async () => {
     mockProductId = 'sueter-ignatius';
     getProductById.mockReturnValue(baseProduct);
 
     const { container, root } = await renderProductPage();
-    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const buyLink = container.querySelector('[data-testid="buy-now-btn"]');
 
-    expect(buyLink).toBeUndefined();
+    expect(buyLink).not.toBeNull();
+    expect(buyLink.disabled).toBe(false);
+    expect(buyLink.textContent.trim()).toBe('COMPRAR AHORA');
+
+    act(() => {
+      buyLink.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(window.open).toHaveBeenCalledWith(
+      STRIPE_LINKS['Suéter Ignatius'],
+      '_blank',
+      'noopener,noreferrer'
+    );
 
     act(() => {
       root.unmount();
     });
     container.remove();
+  });
+
+  it('shows Agotado and hides direct purchase actions for sold out products', async () => {
+    mockProductId = 'camiseta-sport-club';
+    getProductById.mockReturnValue({
+      ...camisetaSportClubProduct,
+      is_sold_out: true,
+    });
+
+    const { container, root } = await renderProductPage();
+    const buyLink = container.querySelector('[data-testid="buy-now-btn"]');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
+    const soldOutButton = container.querySelector('[data-testid="sold-out-btn"]');
+
+    expect(buyLink).toBeNull();
+    expect(addToCartButton).toBeNull();
+    expect(soldOutButton).not.toBeNull();
+    expect(soldOutButton.textContent.trim()).toBe('AGOTADO');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('exports the exact stripe variant helper logic', () => {
+    expect(getStripeLink('Camiseta Imperium', 'M', 'Negro')).toBe(STRIPE_LINKS['Camiseta Imperium - Negro - M']);
+    expect(getStripeLink('Camiseta Imperium', 'M', '')).toBeNull();
+    expect(getStripeLink('Camiseta Sport Club', 'XL')).toBe(STRIPE_LINKS['Camiseta Sport Club - XL']);
+    expect(getStripeLink('Americana UMBRA', 'S')).toBe(STRIPE_LINKS['Americana Umbra']);
   });
 
   it('adds the umbra background only for Americana Umbra', async () => {
