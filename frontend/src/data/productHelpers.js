@@ -66,9 +66,7 @@ export function queryProducts({
         )
       );
     } else if (normalizedCategory === "sport-club") {
-      filtered = filtered.filter((p) =>
-        ["camiseta-sport-club", "polo-golf"].includes(p.product_id)
-      );
+      filtered = filtered.filter((p) => p.collections?.includes("sport-club"));
     } else if (normalizedCategory === "sueteres") {
       filtered = filtered.filter((p) => p.category?.includes("knitwear"));
     } else if (normalizedCategory === "polos") {
