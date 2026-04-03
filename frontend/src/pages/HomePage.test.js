@@ -178,7 +178,7 @@ describe('HomePage featured grid', () => {
     expect(spotlightGrid?.className).toContain('mt-6');
     expect(spotlightGrid?.className).toContain('md:mt-8');
     expect(limitedEditionsSection?.className).toContain('mt-6');
-    expect(limitedEditionsSection?.className).toContain('md:mt-0');
+    expect(limitedEditionsSection?.className).toContain('md:mt-8');
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
     expect(mysticImage?.getAttribute('alt')).toBe('editorial mystic divider');
     expect(mysticImage?.className).toContain('w-full');
