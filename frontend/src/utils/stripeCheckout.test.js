@@ -19,8 +19,8 @@ describe('stripeCheckout', () => {
     const payload = mapCartItemsToLineItems([
       { product_id: 'polo-golf', stripePriceId: 'price_polo_golf', quantity: 2 },
       { product_id: 'polo-regius', stripePriceId: 'price_polo_regius', quantity: 1 },
-      { product_id: 'invalid-1', name: 'Invalid 1', price: 99, quantity: 0 },
-      { product_id: 'invalid-2', name: 'Invalid 2', price: 99, quantity: -1 },
+      { product_id: 'invalid-1', quantity: 0 },
+      { product_id: 'invalid-2', quantity: -1 },
     ]);
 
     expect(payload).toEqual([
@@ -40,6 +40,14 @@ describe('stripeCheckout', () => {
     expect(() => mapCartItemsToLineItems([
       { product_id: 'missing-price-id', quantity: 1 },
     ])).toThrow('Missing Stripe price ID for missing-price-id');
+  });
+
+  it('throws when an item has an invalid price for shipping calculation', async () => {
+    const { redirectToStripeCheckout } = require('./stripeCheckout');
+
+    await expect(redirectToStripeCheckout({
+      items: [{ product_id: 'polo-golf', stripePriceId: 'price_polo_golf', quantity: 1 }],
+    })).rejects.toThrow('Invalid product price for polo-golf');
   });
 
   it('redirects to Stripe checkout with paid shipping below the free-shipping threshold', async () => {

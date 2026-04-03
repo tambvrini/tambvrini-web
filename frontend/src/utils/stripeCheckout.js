@@ -33,10 +33,16 @@ export const redirectToStripeCheckout = async ({ items }) => {
   const lineItems = mapCartItemsToLineItems(items);
   if (lineItems.length === 0) return;
   let shippingOptions = [];
-  const totalAmount = items.reduce(
-    (sum, item) => sum + (Math.round(item.price * 100) * item.quantity),
-    0
-  );
+  const totalAmount = items.reduce((sum, item) => {
+    if (!item || item.quantity <= 0) {
+      return sum;
+    }
+    if (typeof item.price !== 'number' || item.price <= 0) {
+      throw new Error(`Invalid product price for ${item.product_id || 'product'}`);
+    }
+
+    return sum + (Math.round(item.price * 100) * item.quantity);
+  }, 0);
   if (!stripePromise) {
     throw new Error('Stripe publishable key is not configured');
   }

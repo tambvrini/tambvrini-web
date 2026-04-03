@@ -22,19 +22,25 @@ import { STRIPE_PRODUCTS } from '../constants/stripeProducts';
 
 const ASSET = "https://customer-assets.emergentagent.com";
 const STRIPE_PRICE_IDS = {
-  "traje-monograma-tambvrini": "price_traje_monograma_tambvrini",
-  "bolso-monograma-tambvrini": "price_bolso_monograma_tambvrini",
   "camiseta-sport-club": STRIPE_PRODUCTS.camisetaSportClub,
   "polo-golf": STRIPE_PRODUCTS.poloGolf,
   "sueter-captain": STRIPE_PRODUCTS.sueterCaptain,
   "polo-aureus": STRIPE_PRODUCTS.poloAureus,
   "camiseta-imperium": STRIPE_PRODUCTS.camisetaImperium,
   "americana-umbra": STRIPE_PRODUCTS.americanaUmbra,
-  "polo-domus": "price_polo_domus",
   "sueter-sylva": STRIPE_PRODUCTS.sueterSylva,
   "polo-patricius": STRIPE_PRODUCTS.poloPatricius,
   "polo-regius": STRIPE_PRODUCTS.poloRegius,
   "sueter-ignatius": STRIPE_PRODUCTS.sueterIgnatius,
+};
+const FALLBACK_STRIPE_PRICE_IDS = {
+  "traje-monograma-tambvrini": "price_traje_monograma_tambvrini",
+  "bolso-monograma-tambvrini": "price_bolso_monograma_tambvrini",
+  "polo-domus": "price_polo_domus",
+};
+const PRODUCT_STRIPE_PRICE_IDS = {
+  ...FALLBACK_STRIPE_PRICE_IDS,
+  ...STRIPE_PRICE_IDS,
 };
 
 const products = [
@@ -452,8 +458,8 @@ const products = [
   },
 ].map((product) => ({
   ...product,
-  stripePriceId: STRIPE_PRICE_IDS[product.product_id],
-  stripe_price_id: STRIPE_PRICE_IDS[product.product_id],
+  stripePriceId: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
+  stripe_price_id: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
 }));
 
 export default products;
