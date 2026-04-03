@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Heart, Minus, Plus, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -46,6 +46,8 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeDetail, setActiveDetail] = useState('details');
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const galleryScrollRef = useRef(null);
   const detailLabels = {
     details: 'Detalles del producto',
   };
@@ -118,6 +120,18 @@ export default function ProductPage() {
       document.body.classList.remove('ignatius-mode');
     };
   }, [isIgnatiusProduct]);
+
+  useEffect(() => {
+    setActiveGalleryIndex(0);
+    if (!galleryScrollRef.current) return;
+
+    if (typeof galleryScrollRef.current.scrollTo === 'function') {
+      galleryScrollRef.current.scrollTo({ left: 0, behavior: 'auto' });
+      return;
+    }
+
+    galleryScrollRef.current.scrollLeft = 0;
+  }, [productId]);
 
   const handleAddToCart = () => {
     if (product.is_sold_out) return;
@@ -213,6 +227,29 @@ export default function ProductPage() {
     }
     window.open(selectedStripeLink, '_blank', 'noopener,noreferrer');
   };
+  const handleGalleryScroll = (event) => {
+    const { scrollLeft, clientWidth } = event.currentTarget;
+    const slideWidth = clientWidth || 1;
+    const nextIndex = Math.min(
+      Math.max(Math.round(scrollLeft / slideWidth), 0),
+      Math.max(galleryMedia.length - 1, 0)
+    );
+
+    setActiveGalleryIndex(nextIndex);
+  };
+  const scrollToGalleryItem = (index) => {
+    if (!galleryScrollRef.current) return;
+
+    const slideWidth = galleryScrollRef.current.clientWidth || 0;
+    const left = slideWidth * index;
+
+    if (typeof galleryScrollRef.current.scrollTo === 'function') {
+      galleryScrollRef.current.scrollTo({ left, behavior: 'smooth' });
+      return;
+    }
+
+    galleryScrollRef.current.scrollLeft = left;
+  };
   const galleryItems = (() => {
     let imageIndex = 0;
 
@@ -256,6 +293,8 @@ export default function ProductPage() {
                 src={media.src}
                 alt={product.name}
                 className="product-gallery-image"
+                loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
+                decoding="async"
               />
             </div>
           )}
@@ -278,12 +317,38 @@ export default function ProductPage() {
       <div className="product-content">
         <div className="product-page product-layout">
           {/* Left: Gallery */}
-          <div className="product-media" data-testid="product-media">
-            {galleryMedia.length > 0 ? (
-              galleryItems
-            ) : (
-              <div className="product-gallery-media flex items-center justify-center">
-                <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+          <div className="product-media-shell">
+            <div
+              ref={galleryScrollRef}
+              className="product-media"
+              data-testid="product-media"
+              onScroll={handleGalleryScroll}
+            >
+              {galleryMedia.length > 0 ? (
+                galleryItems
+              ) : (
+                <div className="product-gallery-media flex items-center justify-center">
+                  <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
+                </div>
+              )}
+            </div>
+            {galleryMedia.length > 1 && (
+              <div
+                className="product-gallery-pagination"
+                data-testid="product-gallery-pagination"
+                aria-label="Paginación de la galería"
+              >
+                {galleryMedia.map((media, index) => (
+                  <button
+                    key={`${media.type}-dot-${index}`}
+                    type="button"
+                    data-testid={`product-gallery-dot-${index}`}
+                    className={`product-gallery-dot ${index === activeGalleryIndex ? 'is-active' : ''}`}
+                    aria-label={`Ir al elemento ${index + 1} de ${galleryMedia.length}`}
+                    aria-current={index === activeGalleryIndex ? 'true' : undefined}
+                    onClick={() => scrollToGalleryItem(index)}
+                  />
+                ))}
               </div>
             )}
           </div>

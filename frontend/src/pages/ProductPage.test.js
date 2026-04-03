@@ -288,6 +288,51 @@ describe('ProductPage', () => {
     container.remove();
   });
 
+  it('renders mobile gallery pagination dots and updates the active slide state', async () => {
+    mockProductId = 'polo-golf';
+    getProductById.mockReturnValue(poloGolfProduct);
+
+    const { container, root } = await renderProductPage();
+    const mediaContainer = container.querySelector('[data-testid="product-media"]');
+    const pagination = container.querySelector('[data-testid="product-gallery-pagination"]');
+    const firstDot = container.querySelector('[data-testid="product-gallery-dot-0"]');
+    const secondDot = container.querySelector('[data-testid="product-gallery-dot-1"]');
+    const thirdDot = container.querySelector('[data-testid="product-gallery-dot-2"]');
+
+    expect(mediaContainer).not.toBeNull();
+    expect(pagination).not.toBeNull();
+    expect(container.querySelectorAll('[data-testid^="product-gallery-dot-"]').length)
+      .toBe(poloGolfProduct.images.length);
+    expect(firstDot.getAttribute('aria-current')).toBe('true');
+    expect(secondDot.getAttribute('aria-current')).toBeNull();
+
+    Object.defineProperty(mediaContainer, 'clientWidth', {
+      configurable: true,
+      value: 320,
+    });
+    mediaContainer.scrollLeft = 320;
+
+    act(() => {
+      mediaContainer.dispatchEvent(new Event('scroll', { bubbles: true }));
+    });
+
+    expect(secondDot.getAttribute('aria-current')).toBe('true');
+    expect(firstDot.getAttribute('aria-current')).toBeNull();
+
+    mediaContainer.scrollTo = jest.fn();
+
+    act(() => {
+      thirdDot.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(mediaContainer.scrollTo).toHaveBeenCalledWith({ left: 640, behavior: 'smooth' });
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
   it('renders the color label from product data', async () => {
     getProductById.mockReturnValue(baseProduct);
 
