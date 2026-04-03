@@ -1,4 +1,4 @@
-import { STRIPE_PRODUCTS } from '../constants/stripeProducts';
+import { STRIPE_PAYMENT_LINKS, STRIPE_PRODUCTS } from '../constants/stripeProducts';
 
 /**
  * TAMBVRINI — Product catalog.
@@ -41,6 +41,18 @@ const PLACEHOLDER_STRIPE_PRICE_IDS = {
 const PRODUCT_STRIPE_PRICE_IDS = {
   ...PLACEHOLDER_STRIPE_PRICE_IDS,
   ...STRIPE_PRICE_IDS,
+};
+const PRODUCT_PAYMENT_LINKS = {
+  'camiseta-sport-club': STRIPE_PAYMENT_LINKS.camisetaSportClub,
+  'polo-golf': STRIPE_PAYMENT_LINKS.poloGolf,
+  'sueter-captain': STRIPE_PAYMENT_LINKS.sueterCaptain,
+  'polo-aureus': STRIPE_PAYMENT_LINKS.poloAureus,
+  'camiseta-imperium': STRIPE_PAYMENT_LINKS.camisetaImperium,
+  'americana-umbra': STRIPE_PAYMENT_LINKS.americanaUmbra,
+  'sueter-sylva': STRIPE_PAYMENT_LINKS.sueterSylva,
+  'polo-patricius': STRIPE_PAYMENT_LINKS.poloPatricius,
+  'polo-regius': STRIPE_PAYMENT_LINKS.poloRegius,
+  'sueter-ignatius': STRIPE_PAYMENT_LINKS.sueterIgnatius,
 };
 
 const products = [
@@ -460,6 +472,7 @@ const products = [
   ...product,
   stripePriceId: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
   stripe_price_id: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
+  stripePaymentLink: PRODUCT_PAYMENT_LINKS[product.product_id],
 }));
 
 export default products;

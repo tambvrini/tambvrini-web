@@ -57,6 +57,7 @@ const baseProduct = {
   composition: 'Algodón',
   care: 'Lavado a mano',
   is_sold_out: false,
+  stripePaymentLink: 'https://buy.stripe.com/14A14o6vZcSNflq39T1Jm03',
   related_products: [],
 };
 
@@ -76,6 +77,7 @@ const umbraProduct = {
   composition: 'Lana premium',
   care: 'Solo limpieza en seco',
   is_sold_out: false,
+  stripePaymentLink: 'https://buy.stripe.com/3cI00kf2vf0V1uA9yh1Jm01',
   related_products: [],
 };
 
@@ -99,6 +101,7 @@ const poloGolfProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
+  stripePaymentLink: 'https://buy.stripe.com/eVq7sM5rVdWRb5ah0J1Jm05',
   related_products: [],
 };
 
@@ -126,6 +129,7 @@ const camisetaImperiumProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
+  stripePaymentLink: 'https://buy.stripe.com/cNibJ28E73id4GMcKt1Jm02',
   related_products: [],
 };
 
@@ -143,6 +147,7 @@ const camisetaSportClubProduct = {
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
+  stripePaymentLink: 'https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00',
   related_products: [],
 };
 
@@ -423,16 +428,18 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('shows a Comprar stripe link only for Camiseta Sport Club', async () => {
+  it('shows a Comprar Ahora stripe link for available products', async () => {
     mockProductId = 'camiseta-sport-club';
     getProductById.mockReturnValue(camisetaSportClubProduct);
 
     const { container, root } = await renderProductPage();
-    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const buyLink = container.querySelector('[data-testid="buy-now-btn"]');
     const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
 
     expect(buyLink).not.toBeNull();
     expect(buyLink.getAttribute('href')).toBe('https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00');
+    expect(buyLink.getAttribute('target')).toBe('_blank');
+    expect(buyLink.getAttribute('rel')).toContain('noopener');
     expect(buyLink.className).toContain('buy-btn');
     expect(addToCartButton).not.toBeNull();
 
@@ -442,14 +449,39 @@ describe('ProductPage', () => {
     container.remove();
   });
 
-  it('does not show Comprar stripe link for other products', async () => {
+  it('shows the direct Stripe link for other available products too', async () => {
     mockProductId = 'sueter-ignatius';
     getProductById.mockReturnValue(baseProduct);
 
     const { container, root } = await renderProductPage();
-    const buyLink = Array.from(container.querySelectorAll('a')).find((link) => link.textContent.trim() === 'Comprar');
+    const buyLink = container.querySelector('[data-testid="buy-now-btn"]');
 
-    expect(buyLink).toBeUndefined();
+    expect(buyLink).not.toBeNull();
+    expect(buyLink.getAttribute('href')).toBe(baseProduct.stripePaymentLink);
+    expect(buyLink.textContent.trim()).toBe('COMPRAR AHORA');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('shows Agotado and hides direct purchase actions for sold out products', async () => {
+    mockProductId = 'camiseta-sport-club';
+    getProductById.mockReturnValue({
+      ...camisetaSportClubProduct,
+      is_sold_out: true,
+    });
+
+    const { container, root } = await renderProductPage();
+    const buyLink = container.querySelector('[data-testid="buy-now-btn"]');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
+    const soldOutButton = container.querySelector('[data-testid="sold-out-btn"]');
+
+    expect(buyLink).toBeNull();
+    expect(addToCartButton).toBeNull();
+    expect(soldOutButton).not.toBeNull();
+    expect(soldOutButton.textContent.trim()).toBe('AGOTADO');
 
     act(() => {
       root.unmount();

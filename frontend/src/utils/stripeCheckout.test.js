@@ -1,128 +1,96 @@
-jest.mock('@stripe/stripe-js', () => ({
-  loadStripe: jest.fn(),
-}));
-
 describe('stripeCheckout', () => {
-  const redirectToCheckout = jest.fn();
-  let loadStripe;
+  it('returns an empty checkout state when the cart has no purchasable items', () => {
+    const { getCartCheckoutState } = require('./stripeCheckout');
 
-  beforeEach(() => {
-    jest.resetModules();
-    jest.clearAllMocks();
-    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY = 'pk_test_tambvrini';
-    ({ loadStripe } = require('@stripe/stripe-js'));
-    loadStripe.mockResolvedValue({ redirectToCheckout });
+    expect(getCartCheckoutState([])).toEqual({ type: 'empty' });
+    expect(getCartCheckoutState([{ product_id: 'empty', quantity: 0 }])).toEqual({ type: 'empty' });
   });
 
-  it('maps cart items to stripe line items', () => {
-    const { mapCartItemsToLineItems } = require('./stripeCheckout');
-    const payload = mapCartItemsToLineItems([
-      { product_id: 'polo-golf', stripePriceId: 'price_polo_golf', quantity: 2 },
-      { product_id: 'polo-regius', stripePriceId: 'price_polo_regius', quantity: 1 },
-      { product_id: 'invalid-1', quantity: 0 },
-      { product_id: 'invalid-2', quantity: -1 },
-    ]);
+  it('returns a direct payment-link checkout state for single-product carts', () => {
+    const { getCartCheckoutState } = require('./stripeCheckout');
 
-    expect(payload).toEqual([
+    expect(getCartCheckoutState([
       {
-        price: 'price_polo_golf',
-        quantity: 2,
-      },
-      {
-        price: 'price_polo_regius',
+        product_id: 'polo-golf',
+        stripePaymentLink: 'https://buy.stripe.com/polo-golf',
         quantity: 1,
       },
-    ]);
+    ])).toEqual({
+      type: 'single',
+      url: 'https://buy.stripe.com/polo-golf',
+    });
   });
 
-  it('throws when an item has no stripe price id', () => {
-    const { mapCartItemsToLineItems } = require('./stripeCheckout');
-    expect(() => mapCartItemsToLineItems([
-      { product_id: 'missing-price-id', quantity: 1 },
-    ])).toThrow('Missing Stripe price ID for missing-price-id');
+  it('returns the temporary fallback message for multi-product carts', () => {
+    const { getCartCheckoutState } = require('./stripeCheckout');
+
+    expect(getCartCheckoutState([
+      {
+        product_id: 'polo-golf',
+        stripePaymentLink: 'https://buy.stripe.com/polo-golf',
+        quantity: 1,
+      },
+      {
+        product_id: 'polo-regius',
+        stripePaymentLink: 'https://buy.stripe.com/polo-regius',
+        quantity: 1,
+      },
+    ])).toEqual({
+      type: 'multi',
+      message: 'Compra múltiple en preparación. Por favor, compra productos individualmente.',
+    });
   });
 
-  it('throws when an item has an invalid price for shipping calculation', async () => {
+  it('throws when a single cart item has no payment link', () => {
+    const { getCartCheckoutState } = require('./stripeCheckout');
+
+    expect(() => getCartCheckoutState([
+      { product_id: 'missing-link', quantity: 1 },
+    ])).toThrow('Missing Stripe payment link for missing-link');
+  });
+
+  it('navigates to the payment link for single-product carts', async () => {
     const { redirectToStripeCheckout } = require('./stripeCheckout');
+    const navigate = jest.fn();
 
     await expect(redirectToStripeCheckout({
-      items: [{ product_id: 'polo-golf', stripePriceId: 'price_polo_golf', quantity: 1 }],
-    })).rejects.toThrow('Invalid product price for polo-golf');
-  });
-
-  it('redirects to Stripe checkout with paid shipping below the free-shipping threshold', async () => {
-    const { redirectToStripeCheckout } = require('./stripeCheckout');
-    redirectToCheckout.mockResolvedValue({});
-
-    await redirectToStripeCheckout({
-      items: [{ product_id: 'polo-golf', price: 30, stripePriceId: 'price_polo_golf', quantity: 1 }],
-    });
-
-    expect(redirectToCheckout).toHaveBeenCalledWith({
-      lineItems: [{
-        price: 'price_polo_golf',
+      items: [{
+        product_id: 'polo-golf',
+        stripePaymentLink: 'https://buy.stripe.com/polo-golf',
         quantity: 1,
       }],
-      mode: 'payment',
-      successUrl: `${window.location.origin}/checkout-success`,
-      cancelUrl: `${window.location.origin}/carrito`,
-      billingAddressCollection: 'required',
-      shippingAddressCollection: {
-        allowedCountries: ['ES', 'FR', 'IT', 'DE'],
-      },
-      shippingOptions: [
-        {
-          shippingRateData: {
-            type: 'fixed_amount',
-            fixedAmount: {
-              amount: 500,
-              currency: 'eur',
-            },
-            displayName: 'Envío estándar',
-            deliveryEstimate: {
-              minimum: { unit: 'business_day', value: 2 },
-              maximum: { unit: 'business_day', value: 5 },
-            },
-          },
-        },
-      ],
-      automaticTax: { enabled: true },
+      navigate,
+    })).resolves.toEqual({
+      type: 'single',
+      url: 'https://buy.stripe.com/polo-golf',
     });
+
+    expect(navigate).toHaveBeenCalledWith('https://buy.stripe.com/polo-golf');
   });
 
-  it('redirects to Stripe checkout with free shipping at the free-shipping threshold', async () => {
+  it('does not navigate for multi-product carts', async () => {
     const { redirectToStripeCheckout } = require('./stripeCheckout');
-    redirectToCheckout.mockResolvedValue({});
+    const navigate = jest.fn();
 
-    await redirectToStripeCheckout({
-      items: [{ product_id: 'polo-regius', price: 75, stripePriceId: 'price_polo_regius', quantity: 1 }],
-    });
-
-    expect(redirectToCheckout).toHaveBeenCalledWith({
-      lineItems: [{
-        price: 'price_polo_regius',
-        quantity: 1,
-      }],
-      mode: 'payment',
-      successUrl: `${window.location.origin}/checkout-success`,
-      cancelUrl: `${window.location.origin}/carrito`,
-      billingAddressCollection: 'required',
-      shippingAddressCollection: {
-        allowedCountries: ['ES', 'FR', 'IT', 'DE'],
-      },
-      shippingOptions: [
+    await expect(redirectToStripeCheckout({
+      items: [
         {
-          shippingRateData: {
-            type: 'fixed_amount',
-            fixedAmount: {
-              amount: 0,
-              currency: 'eur',
-            },
-            displayName: 'Envío gratuito',
-          },
+          product_id: 'polo-golf',
+          stripePaymentLink: 'https://buy.stripe.com/polo-golf',
+          quantity: 1,
+        },
+        {
+          product_id: 'polo-regius',
+          stripePaymentLink: 'https://buy.stripe.com/polo-regius',
+          quantity: 1,
         },
       ],
-      automaticTax: { enabled: true },
+      navigate,
+    })).resolves.toEqual({
+      type: 'multi',
+      message: 'Compra múltiple en preparación. Por favor, compra productos individualmente.',
     });
+
+    expect(navigate).not.toHaveBeenCalled();
   });
 });

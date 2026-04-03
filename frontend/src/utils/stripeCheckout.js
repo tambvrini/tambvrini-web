@@ -1,105 +1,37 @@
-import { loadStripe } from '@stripe/stripe-js';
-import { STRIPE_PRODUCTS } from '../constants/stripeProducts';
+const MULTI_ITEM_CHECKOUT_MESSAGE = 'Compra múltiple en preparación. Por favor, compra productos individualmente.';
 
-const STRIPE_PUBLISHABLE_KEY =
-  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-const CHECKOUT_PENDING_STORAGE_KEY = 'stripe_checkout_pending';
-const CHECKOUT_PENDING_VALUE = 'true';
-const FREE_SHIPPING_THRESHOLD_CENTS = 7500;
-const HAS_CONFIGURED_STRIPE_PRODUCTS = Object.keys(STRIPE_PRODUCTS).length > 0;
-
-const stripePromise = STRIPE_PUBLISHABLE_KEY ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null;
-
-export const mapCartItemsToLineItems = (items = []) => (
-  items
-    .filter((item) => item && item.quantity > 0)
-    .map((item) => {
-      if (!item.stripePriceId) {
-        throw new Error(
-          HAS_CONFIGURED_STRIPE_PRODUCTS
-            ? `Missing Stripe price ID for ${item.product_id || 'product'}`
-            : 'Stripe products are not configured'
-        );
-      }
-
-      return {
-        price: item.stripePriceId,
-        quantity: item.quantity,
-      };
-    })
-);
-
-export const redirectToStripeCheckout = async ({ items }) => {
-  const lineItems = mapCartItemsToLineItems(items);
-  if (lineItems.length === 0) return;
-  let shippingOptions = [];
-  const totalAmount = items.reduce((sum, item) => {
-    if (!item || item.quantity <= 0) {
-      return sum;
-    }
-    if (typeof item.price !== 'number' || item.price <= 0) {
-      throw new Error(`Invalid product price for ${item.product_id || 'product'}`);
-    }
-
-    return sum + (Math.round(item.price * 100) * item.quantity);
-  }, 0);
-  if (!stripePromise) {
-    throw new Error('Stripe publishable key is not configured');
+export const getSingleItemPaymentLink = (item) => {
+  if (!item?.stripePaymentLink) {
+    throw new Error(`Missing Stripe payment link for ${item?.product_id || 'product'}`);
   }
 
-  if (totalAmount >= FREE_SHIPPING_THRESHOLD_CENTS) {
-    shippingOptions = [
-      {
-        shippingRateData: {
-          type: 'fixed_amount',
-          fixedAmount: {
-            amount: 0,
-            currency: 'eur',
-          },
-          displayName: 'Envío gratuito',
-        },
-      },
-    ];
-  } else {
-    shippingOptions = [
-      {
-        shippingRateData: {
-          type: 'fixed_amount',
-          fixedAmount: {
-            amount: 500,
-            currency: 'eur',
-          },
-          displayName: 'Envío estándar',
-          deliveryEstimate: {
-            minimum: { unit: 'business_day', value: 2 },
-            maximum: { unit: 'business_day', value: 5 },
-          },
-        },
-      },
-    ];
+  return item.stripePaymentLink;
+};
+
+export const getCartCheckoutState = (items = []) => {
+  const checkoutItems = items.filter((item) => item && item.quantity > 0);
+
+  if (checkoutItems.length === 0) {
+    return { type: 'empty' };
   }
 
-  const stripe = await stripePromise;
-  if (!stripe) {
-    throw new Error('Failed to initialize Stripe');
+  if (checkoutItems.length > 1) {
+    return { type: 'multi', message: MULTI_ITEM_CHECKOUT_MESSAGE };
   }
 
-  sessionStorage.setItem(CHECKOUT_PENDING_STORAGE_KEY, CHECKOUT_PENDING_VALUE);
+  return {
+    type: 'single',
+    url: getSingleItemPaymentLink(checkoutItems[0]),
+  };
+};
 
-  const { error } = await stripe.redirectToCheckout({
-    lineItems,
-    mode: 'payment',
-    successUrl: `${window.location.origin}/checkout-success`,
-    cancelUrl: `${window.location.origin}/carrito`,
-    billingAddressCollection: 'required',
-    shippingAddressCollection: {
-      allowedCountries: ['ES', 'FR', 'IT', 'DE'],
-    },
-    shippingOptions,
-    automaticTax: { enabled: true },
-  });
+export const redirectToStripeCheckout = async ({ items, navigate = (url) => window.location.assign(url) }) => {
+  const checkoutState = getCartCheckoutState(items);
 
-  if (error) {
-    throw new Error(error.message || 'Stripe checkout redirection failed');
+  if (checkoutState.type !== 'single') {
+    return checkoutState;
   }
+
+  navigate(checkoutState.url);
+  return checkoutState;
 };

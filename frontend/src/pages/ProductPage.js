@@ -13,6 +13,13 @@ import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
 const MAX_RECOMMENDED_PRODUCTS = 4;
 
+const isSizeSoldOut = (product, size) => (
+  (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(size)) ||
+  (product.product_id === 'polo-golf' && size === 'L') ||
+  (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(size)) ||
+  (product.product_id === 'polo-aureus' && ['XS', 'S', 'L', 'XL'].includes(size))
+);
+
 const resolveFallbackPoster = (thumbnailImage, media) => {
   if (thumbnailImage) return thumbnailImage;
   const firstImage = media.find((item) => item.type === 'image')?.src;
@@ -162,6 +169,9 @@ export default function ProductPage() {
     || LOGO_FALLBACK_POSTER;
   const shouldUseSimpleViewer = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
+  const hasAvailableSizes = !Array.isArray(product.sizes) || product.sizes.some((size) => !isSizeSoldOut(product, size));
+  const isProductUnavailable = product.is_sold_out || !hasAvailableSizes;
+  const productPaymentLink = product.stripePaymentLink;
   const categoryLabel = Array.isArray(product.category) && product.category.length > 0
     ? product.category.slice(0, 2).join(' / ').toUpperCase()
     : 'APPAREL';
@@ -258,9 +268,9 @@ export default function ProductPage() {
               >
                 {product.name}
               </h1>
-              {product.is_sold_out && (
+              {isProductUnavailable && (
                 <span className="border border-black/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/70">
-                  SOLD OUT
+                  AGOTADO
                 </span>
               )}
             </div>
@@ -307,11 +317,8 @@ export default function ProductPage() {
                 <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
                   {product.sizes.map((s, i) => {
                     const isSizeSoldOut =
-                      (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(s)) ||
-                      (product.product_id === 'polo-golf' && s === 'L') ||
-                      (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(s)) ||
-                      (product.product_id === 'polo-aureus' && ['XS', 'S', 'L', 'XL'].includes(s));
-                    const disabled = product.is_sold_out || isSizeSoldOut;
+                      isSizeSoldOut(product, s);
+                    const disabled = isProductUnavailable || isSizeSoldOut;
                     return (
                       <button
                         key={i}
@@ -337,16 +344,16 @@ export default function ProductPage() {
 
             {/* Quantity + wishlist */}
             <div className="product-options product-options--compact product-section">
-              <div className={product.is_sold_out ? 'product-quantity-block opacity-60 pointer-events-none flex flex-col items-center' : 'product-quantity-block flex flex-col items-center'}>
+              <div className={isProductUnavailable ? 'product-quantity-block opacity-60 pointer-events-none flex flex-col items-center' : 'product-quantity-block flex flex-col items-center'}>
                 <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Cantidad</p>
                 <div className="quantity-selector inline-flex items-center">
                   <button
                     data-testid="quantity-decrease-btn"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     aria-label="Disminuir cantidad"
-                    disabled={product.is_sold_out}
+                    disabled={isProductUnavailable}
                     className={`quantity-selector__button flex items-center justify-center text-obsidian/50 transition-colors duration-300 ${
-                      product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
+                      isProductUnavailable ? 'cursor-not-allowed' : 'hover:text-obsidian'
                     }`}
                   >
                     <Minus size={14} />
@@ -361,9 +368,9 @@ export default function ProductPage() {
                     data-testid="quantity-increase-btn"
                     onClick={() => setQuantity(quantity + 1)}
                     aria-label="Aumentar cantidad"
-                    disabled={product.is_sold_out}
+                    disabled={isProductUnavailable}
                     className={`quantity-selector__button flex items-center justify-center text-obsidian/50 transition-colors duration-300 ${
-                      product.is_sold_out ? 'cursor-not-allowed' : 'hover:text-obsidian'
+                      isProductUnavailable ? 'cursor-not-allowed' : 'hover:text-obsidian'
                     }`}
                   >
                     <Plus size={14} />
@@ -384,26 +391,38 @@ export default function ProductPage() {
 
             {/* Actions */}
             <div className="product-cta-group product-section mx-auto w-full max-w-[28rem]">
-              {product.product_id === 'camiseta-sport-club' && (
+              {!isProductUnavailable && productPaymentLink && (
                 <a
-                  href="https://buy.stripe.com/8x27sM7A34mh5KQbGp1Jm00"
+                  data-testid="buy-now-btn"
+                  href={productPaymentLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="product-primary-cta cta-button buy-btn umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300"
                 >
-                  Comprar
+                  COMPRAR AHORA
                 </a>
               )}
-              <button
-                data-testid="add-to-cart-btn"
-                onClick={handleAddToCart}
-                disabled={product.is_sold_out}
-                className={`product-primary-cta cta-button umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
-                  product.is_sold_out
-                    ? 'cursor-not-allowed'
-                    : ''
-                } ${isIgnatiusProduct ? 'ignatius-glow' : ''}`}
-              >
-                {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
-              </button>
+              {isProductUnavailable ? (
+                <span
+                  data-testid="sold-out-btn"
+                  className={`product-primary-cta cta-button umbra-keep-dark flex w-full cursor-not-allowed items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isIgnatiusProduct ? 'ignatius-glow' : ''
+                  }`}
+                  aria-disabled="true"
+                >
+                  AGOTADO
+                </span>
+              ) : (
+                <button
+                  data-testid="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                  className={`product-primary-cta cta-button umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isIgnatiusProduct ? 'ignatius-glow' : ''
+                  }`}
+                >
+                  AÑADIR AL CARRITO
+                </button>
+              )}
             </div>
 
             {/* Info tabs */}
