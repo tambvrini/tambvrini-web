@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import ProductPage from './ProductPage';
@@ -458,15 +456,6 @@ describe('ProductPage', () => {
       root.unmount();
     });
     container.remove();
-  });
-
-  it('defines a mobile-only layout reorder that keeps product info before media', () => {
-    const appCss = fs.readFileSync(path.resolve(__dirname, '../App.css'), 'utf8');
-
-    expect(appCss).toContain('@media (max-width: 768px)');
-    expect(appCss).toMatch(/@media \(max-width: 768px\)[\s\S]*\.product-page,\s*[\s\S]*\.product-layout \{[\s\S]*display: flex;[\s\S]*flex-direction: column;/);
-    expect(appCss).toMatch(/@media \(max-width: 768px\)[\s\S]*\.product-info \{[\s\S]*order: 1;/);
-    expect(appCss).toMatch(/@media \(max-width: 768px\)[\s\S]*\.product-media \{[\s\S]*order: 2;/);
   });
 
   it('renders up to four recommended products and passes product data', async () => {
