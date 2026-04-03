@@ -282,7 +282,10 @@ const products = [
     category: ["camisetas", "apparel"],
     gender: "mujer",
     sizes: ["XS", "S", "M", "L"],
-    colors: [{ name: "Negro", hex: "#0A0A0A" }],
+    colors: [
+      { name: "Negro", hex: "#0A0A0A" },
+      { name: "Beige", hex: "#D8C3A5" },
+    ],
     composition: "100% Algodón Premium",
     care: "Lavado a máquina 30° del revés. No usar secadora.",
     is_new: true,

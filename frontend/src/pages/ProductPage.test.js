@@ -125,7 +125,10 @@ const camisetaImperiumProduct = {
   category: ['camisetas', 'apparel'],
   gender: 'mujer',
   sizes: ['XS', 'S', 'M', 'L'],
-  colors: [{ name: 'Negro', hex: '#0A0A0A' }],
+  colors: [
+    { name: 'Negro', hex: '#0A0A0A' },
+    { name: 'Beige', hex: '#D8C3A5' },
+  ],
   composition: 'Algodón',
   care: 'Lavado',
   is_sold_out: false,
@@ -272,6 +275,34 @@ describe('ProductPage', () => {
 
     expect(colorButton).not.toBeNull();
     expect(colorButton.textContent).toContain('Magma');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('defaults Camiseta Imperium to Negro and lets the user switch to Beige', async () => {
+    mockProductId = 'camiseta-imperium';
+    getProductById.mockReturnValue(camisetaImperiumProduct);
+
+    const { container, root } = await renderProductPage();
+    const negroButton = container.querySelector('[data-testid="color-btn-0"]');
+    const beigeButton = container.querySelector('[data-testid="color-btn-1"]');
+
+    expect(negroButton).not.toBeNull();
+    expect(beigeButton).not.toBeNull();
+    expect(negroButton.textContent).toContain('Negro');
+    expect(beigeButton.textContent).toContain('Beige');
+    expect(negroButton.className).toContain('border-gold');
+    expect(beigeButton.className).not.toContain('border-gold');
+
+    act(() => {
+      beigeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(beigeButton.className).toContain('border-gold');
+    expect(negroButton.className).not.toContain('border-gold');
 
     act(() => {
       root.unmount();

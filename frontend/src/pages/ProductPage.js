@@ -62,7 +62,7 @@ export default function ProductPage() {
         setProduct(data);
         setRelatedProducts(Array.isArray(data.related_products) ? data.related_products : []);
         setSelectedSize('');
-        setSelectedColor('');
+        setSelectedColor(data.colors?.[0]?.name || '');
         setQuantity(1);
       } catch (err) {
         console.error(err);
