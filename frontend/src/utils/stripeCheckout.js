@@ -17,7 +17,7 @@ export const mapCartItemsToLineItems = (items = []) => (
       if (!item.stripePriceId) {
         throw new Error(
           HAS_CONFIGURED_STRIPE_PRODUCTS
-            ? `Missing Stripe price ID for ${item.product_id || item.name || 'product'}`
+            ? `Missing Stripe price ID for ${item.product_id || 'product'}`
             : 'Stripe products are not configured'
         );
       }
