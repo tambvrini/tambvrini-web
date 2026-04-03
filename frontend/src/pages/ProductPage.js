@@ -178,10 +178,20 @@ export default function ProductPage() {
   const hasSizeVariants = Array.isArray(product.sizes) && product.sizes.length > 0;
   const hasAvailableSizes = !hasSizeVariants || product.sizes.some((size) => !isSizeSoldOut(product, size));
   const isProductUnavailable = product.is_sold_out || !hasAvailableSizes;
-  const selectedStripeLink = getStripeLink(product.name, selectedSize, selectedColor);
-  const anyStripeLinkAvailable = hasSizeVariants
-    ? product.sizes.some((size) => !isSizeSoldOut(product, size) && Boolean(getStripeLink(product.name, size, selectedColor)))
+  const hasMappedStripeLinks = hasSizeVariants
+    ? product.sizes.some((size) => Boolean(getStripeLink(product.name, size, selectedColor)))
+      || Boolean(getStripeLink(product.name, '', selectedColor))
     : Boolean(getStripeLink(product.name, '', selectedColor));
+  const resolveStripeLink = (size, color) => {
+    const variantLink = getStripeLink(product.name, size, color);
+    if (variantLink) return variantLink;
+    if (hasMappedStripeLinks) return null;
+    return requiresColorSelection(product.name) ? null : (product.stripePaymentLink || null);
+  };
+  const selectedStripeLink = resolveStripeLink(selectedSize, selectedColor);
+  const anyStripeLinkAvailable = hasSizeVariants
+    ? product.sizes.some((size) => !isSizeSoldOut(product, size) && Boolean(resolveStripeLink(size, selectedColor)))
+    : Boolean(resolveStripeLink('', selectedColor));
   const isBuyNowDisabled = isProductUnavailable || !selectedStripeLink;
   const categoryLabel = Array.isArray(product.category) && product.category.length > 0
     ? product.category.slice(0, 2).join(' / ').toUpperCase()
@@ -193,7 +203,7 @@ export default function ProductPage() {
       toast.error('Selecciona un color');
       return;
     }
-    if (hasSizeVariants && !selectedSize && !getStripeLink(product.name, '', selectedColor)) {
+    if (hasSizeVariants && !selectedSize && !resolveStripeLink('', selectedColor)) {
       toast.error('Selecciona una talla');
       return;
     }
@@ -345,7 +355,7 @@ export default function ProductPage() {
                   <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
                     {product.sizes.map((s, i) => {
                      const sizeSoldOut = isSizeSoldOut(product, s);
-                     const hasStripeLinkForSize = Boolean(getStripeLink(product.name, s, selectedColor));
+                     const hasStripeLinkForSize = Boolean(resolveStripeLink(s, selectedColor));
                      const disabled = isProductUnavailable || sizeSoldOut || !hasStripeLinkForSize;
                      return (
                        <button
