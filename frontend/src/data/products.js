@@ -33,13 +33,13 @@ const STRIPE_PRICE_IDS = {
   "polo-regius": STRIPE_PRODUCTS.poloRegius,
   "sueter-ignatius": STRIPE_PRODUCTS.sueterIgnatius,
 };
-const FALLBACK_STRIPE_PRICE_IDS = {
+const PLACEHOLDER_STRIPE_PRICE_IDS = {
   "traje-monograma-tambvrini": "price_traje_monograma_tambvrini",
   "bolso-monograma-tambvrini": "price_bolso_monograma_tambvrini",
   "polo-domus": "price_polo_domus",
 };
 const PRODUCT_STRIPE_PRICE_IDS = {
-  ...FALLBACK_STRIPE_PRICE_IDS,
+  ...PLACEHOLDER_STRIPE_PRICE_IDS,
   ...STRIPE_PRICE_IDS,
 };
 
