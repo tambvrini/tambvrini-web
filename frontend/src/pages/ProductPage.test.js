@@ -6,9 +6,10 @@ import { getProductById } from '../data/productHelpers';
 jest.mock('@google/model-viewer', () => ({}));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+const mockAddItem = jest.fn();
 
 jest.mock('../contexts/CartContext', () => ({
-  useCart: () => ({ addItem: jest.fn() }),
+  useCart: () => ({ addItem: mockAddItem }),
 }));
 
 jest.mock('../contexts/WishlistContext', () => ({
@@ -171,6 +172,23 @@ const relatedProduct = {
   related_products: [],
 };
 
+const noColorProduct = {
+  product_id: 'producto-sin-color',
+  name: 'Producto sin color',
+  description: 'Descripción',
+  price: 40,
+  currency: 'EUR',
+  images: ['/products/no-color/look-01.jpg'],
+  category: ['camisetas', 'apparel'],
+  gender: 'mujer',
+  sizes: ['S', 'M'],
+  composition: 'Algodón',
+  care: 'Lavado',
+  is_sold_out: false,
+  stripePaymentLink: 'https://buy.stripe.com/example',
+  related_products: [],
+};
+
 const extraRelatedProduct = {
   product_id: 'extra-related-product',
   name: 'Producto Extra',
@@ -207,6 +225,7 @@ describe('ProductPage', () => {
     window.scrollTo = jest.fn();
     mockProductId = 'sueter-ignatius';
     mockProductCard.mockClear();
+    mockAddItem.mockClear();
     getProductById.mockReset();
   });
 
@@ -303,6 +322,32 @@ describe('ProductPage', () => {
 
     expect(beigeButton.className).toContain('border-gold');
     expect(negroButton.className).not.toContain('border-gold');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('keeps an empty color value when the product has no color variants', async () => {
+    mockProductId = 'producto-sin-color';
+    getProductById.mockReturnValue(noColorProduct);
+
+    const { container, root } = await renderProductPage();
+    const sizeButton = container.querySelector('[data-testid="size-btn-S"]');
+    const addToCartButton = container.querySelector('[data-testid="add-to-cart-btn"]');
+
+    expect(container.querySelectorAll('[data-testid^="color-btn-"]')).toHaveLength(0);
+
+    act(() => {
+      sizeButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    act(() => {
+      addToCartButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(mockAddItem).toHaveBeenCalledWith(noColorProduct, 'S', '', 1);
 
     act(() => {
       root.unmount();
