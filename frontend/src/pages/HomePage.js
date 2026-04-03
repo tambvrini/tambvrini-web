@@ -458,7 +458,7 @@ const DropGridSection = () => {
               <div
                 ref={limitedEditionsVideosContainerRef}
                 data-testid="limited-editions-section"
-                className="mt-6 md:mt-0 mb-6 md:mb-8"
+                className="mt-6 md:mt-8 mb-6 md:mb-8"
               >
                 <div className="limited-editions-video-wrapper">
                   <div
