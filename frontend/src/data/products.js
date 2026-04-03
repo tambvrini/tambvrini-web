@@ -1,3 +1,5 @@
+import { STRIPE_PRODUCTS } from '../constants/stripeProducts';
+
 /**
  * TAMBVRINI — Product catalog.
  *
@@ -19,21 +21,20 @@
  */
 
 const ASSET = "https://customer-assets.emergentagent.com";
-// Replace these defaults with real Stripe Dashboard price IDs per environment.
 const STRIPE_PRICE_IDS = {
   "traje-monograma-tambvrini": "price_traje_monograma_tambvrini",
   "bolso-monograma-tambvrini": "price_bolso_monograma_tambvrini",
-  "camiseta-sport-club": "price_camiseta_sport_club",
-  "polo-golf": "price_polo_golf",
-  "sueter-captain": "price_sueter_captain",
-  "polo-aureus": "price_polo_aureus",
-  "camiseta-imperium": "price_camiseta_imperium",
-  "americana-umbra": "price_americana_umbra",
+  "camiseta-sport-club": STRIPE_PRODUCTS.camisetaSportClub,
+  "polo-golf": STRIPE_PRODUCTS.poloGolf,
+  "sueter-captain": STRIPE_PRODUCTS.sueterCaptain,
+  "polo-aureus": STRIPE_PRODUCTS.poloAureus,
+  "camiseta-imperium": STRIPE_PRODUCTS.camisetaImperium,
+  "americana-umbra": STRIPE_PRODUCTS.americanaUmbra,
   "polo-domus": "price_polo_domus",
-  "sueter-sylva": "price_sueter_sylva",
-  "polo-patricius": "price_polo_patricius",
-  "polo-regius": "price_polo_regius",
-  "sueter-ignatius": "price_sueter_ignatius",
+  "sueter-sylva": STRIPE_PRODUCTS.sueterSylva,
+  "polo-patricius": STRIPE_PRODUCTS.poloPatricius,
+  "polo-regius": STRIPE_PRODUCTS.poloRegius,
+  "sueter-ignatius": STRIPE_PRODUCTS.sueterIgnatius,
 };
 
 const products = [
@@ -451,6 +452,7 @@ const products = [
   },
 ].map((product) => ({
   ...product,
+  stripePriceId: STRIPE_PRICE_IDS[product.product_id],
   stripe_price_id: STRIPE_PRICE_IDS[product.product_id],
 }));
 

@@ -85,8 +85,9 @@ describe('products data', () => {
     ]);
   });
 
-  it('includes stripe_price_id for each product', () => {
+  it('includes stripe price ids for each product', () => {
     products.forEach((product) => {
+      expect(product.stripePriceId).toEqual(expect.stringMatching(/^price_/));
       expect(product.stripe_price_id).toEqual(expect.stringMatching(/^price_/));
     });
   });

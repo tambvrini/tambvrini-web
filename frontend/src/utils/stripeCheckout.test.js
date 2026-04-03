@@ -17,44 +17,29 @@ describe('stripeCheckout', () => {
   it('maps cart items to stripe line items', () => {
     const { mapCartItemsToLineItems } = require('./stripeCheckout');
     const payload = mapCartItemsToLineItems([
-      { product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 2 },
-      { product_id: 'polo-regius', name: 'Polo Regius', price: 70.5, quantity: 1 },
+      { product_id: 'polo-golf', stripePriceId: 'price_polo_golf', quantity: 2 },
+      { product_id: 'polo-regius', stripePriceId: 'price_polo_regius', quantity: 1 },
       { product_id: 'invalid-1', name: 'Invalid 1', price: 99, quantity: 0 },
       { product_id: 'invalid-2', name: 'Invalid 2', price: 99, quantity: -1 },
     ]);
 
     expect(payload).toEqual([
       {
-        price_data: {
-          currency: 'eur',
-          product_data: { name: 'Polo Golf' },
-          unit_amount: 3000,
-        },
+        price: 'price_polo_golf',
         quantity: 2,
       },
       {
-        price_data: {
-          currency: 'eur',
-          product_data: { name: 'Polo Regius' },
-          unit_amount: 7050,
-        },
+        price: 'price_polo_regius',
         quantity: 1,
       },
     ]);
   });
 
-  it('throws when an item has no name', () => {
+  it('throws when an item has no stripe price id', () => {
     const { mapCartItemsToLineItems } = require('./stripeCheckout');
     expect(() => mapCartItemsToLineItems([
-      { product_id: 'missing-name', price: 30, quantity: 1 },
-    ])).toThrow('Missing product name for missing-name');
-  });
-
-  it('throws when an item has an invalid price', () => {
-    const { mapCartItemsToLineItems } = require('./stripeCheckout');
-    expect(() => mapCartItemsToLineItems([
-      { product_id: 'missing-price', name: 'Missing price', quantity: 1 },
-    ])).toThrow('Invalid product price for missing-price');
+      { product_id: 'missing-price-id', quantity: 1 },
+    ])).toThrow('Missing Stripe price ID for missing-price-id');
   });
 
   it('redirects to Stripe checkout with paid shipping below the free-shipping threshold', async () => {
@@ -62,16 +47,12 @@ describe('stripeCheckout', () => {
     redirectToCheckout.mockResolvedValue({});
 
     await redirectToStripeCheckout({
-      items: [{ product_id: 'polo-golf', name: 'Polo Golf', price: 30, quantity: 1 }],
+      items: [{ product_id: 'polo-golf', price: 30, stripePriceId: 'price_polo_golf', quantity: 1 }],
     });
 
     expect(redirectToCheckout).toHaveBeenCalledWith({
       lineItems: [{
-        price_data: {
-          currency: 'eur',
-          product_data: { name: 'Polo Golf' },
-          unit_amount: 3000,
-        },
+        price: 'price_polo_golf',
         quantity: 1,
       }],
       mode: 'payment',
@@ -106,16 +87,12 @@ describe('stripeCheckout', () => {
     redirectToCheckout.mockResolvedValue({});
 
     await redirectToStripeCheckout({
-      items: [{ product_id: 'polo-regius', name: 'Polo Regius', price: 75, quantity: 1 }],
+      items: [{ product_id: 'polo-regius', price: 75, stripePriceId: 'price_polo_regius', quantity: 1 }],
     });
 
     expect(redirectToCheckout).toHaveBeenCalledWith({
       lineItems: [{
-        price_data: {
-          currency: 'eur',
-          product_data: { name: 'Polo Regius' },
-          unit_amount: 7500,
-        },
+        price: 'price_polo_regius',
         quantity: 1,
       }],
       mode: 'payment',
