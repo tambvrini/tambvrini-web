@@ -87,6 +87,7 @@ describe('products data', () => {
 
   it('includes stripe price ids for each product', () => {
     products.forEach((product) => {
+      expect(product.stripePriceId).toBe(product.stripe_price_id);
       expect(product.stripePriceId).toEqual(expect.stringMatching(/^price_/));
       expect(product.stripe_price_id).toEqual(expect.stringMatching(/^price_/));
     });
