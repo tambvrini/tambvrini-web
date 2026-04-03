@@ -314,11 +314,10 @@ export default function ProductPage() {
               {/* Size selector */}
               <div className="product-selector-group product-section flex-1">
                 <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Talla</p>
-                <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
-                  {product.sizes.map((s, i) => {
-                    const isSizeSoldOut =
-                      isSizeSoldOut(product, s);
-                    const disabled = isProductUnavailable || isSizeSoldOut;
+                  <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
+                    {product.sizes.map((s, i) => {
+                    const sizeSoldOut = isSizeSoldOut(product, s);
+                    const disabled = isProductUnavailable || sizeSoldOut;
                     return (
                       <button
                         key={i}
