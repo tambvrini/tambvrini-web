@@ -12,12 +12,15 @@ import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
 const MAX_RECOMMENDED_PRODUCTS = 4;
+const PRODUCT_UNAVAILABLE_SIZES = {
+  'polo-golf': ['L'],
+  'americana-umbra': ['M', 'L', 'XL'],
+  'polo-aureus': ['XS', 'S', 'L', 'XL'],
+};
 
 const isSizeSoldOut = (product, size) => (
   (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(size)) ||
-  (product.product_id === 'polo-golf' && size === 'L') ||
-  (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(size)) ||
-  (product.product_id === 'polo-aureus' && ['XS', 'S', 'L', 'XL'].includes(size))
+  Boolean(PRODUCT_UNAVAILABLE_SIZES[product.product_id]?.includes(size))
 );
 
 const resolveFallbackPoster = (thumbnailImage, media) => {
