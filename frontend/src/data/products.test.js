@@ -112,4 +112,12 @@ describe('products data', () => {
         expect(product.stripePaymentLink).toEqual(expect.stringMatching(/^https:\/\/buy\.stripe\.com\//));
       });
   });
+
+  it('assigns the Sport Club collection only to Camiseta Sport Club and Polo Golf', () => {
+    const sportClubProductIds = products
+      .filter((product) => product.collections?.includes('sport-club'))
+      .map((product) => product.product_id);
+
+    expect(sportClubProductIds).toEqual(['camiseta-sport-club', 'polo-golf']);
+  });
 });

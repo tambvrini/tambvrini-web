@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
 import IntroVideoSection from '../components/IntroVideoSection.tsx';
@@ -210,17 +209,7 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
 const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showCollectionTransition, setShowCollectionTransition] = useState(false);
   const limitedEditionsVideosContainerRef = useRef(null);
-  const navigate = useNavigate();
-
-  const handleCollectionClick = () => {
-    if (showCollectionTransition) return;
-    setShowCollectionTransition(true);
-    setTimeout(() => {
-      navigate('/tienda?category=2026');
-    }, 450);
-  };
 
 
   useEffect(() => {
@@ -311,26 +300,6 @@ const DropGridSection = () => {
 
   return (
     <section id="drops" data-testid="drop-grid" className="pt-6 pb-24 md:pt-8 md:pb-32">
-      {showCollectionTransition && (
-        <motion.div
-          data-testid="collection-transition"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
-          className="fixed inset-0 z-[80] bg-white/90 backdrop-blur-sm flex items-center justify-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="px-10 py-4 rounded-full border border-[#E6E0D4]/70"
-          >
-            <span className="font-playfair text-sm tracking-[0.35em] uppercase text-obsidian/70">
-              Sport Club 2026
-            </span>
-          </motion.div>
-        </motion.div>
-      )}
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         {/* 8 items: 2 rows of 4 on desktop */}
         {loading ? (
@@ -482,39 +451,6 @@ const DropGridSection = () => {
                   ))}
                 </div>
               )}
-
-              <div className="mt-6 md:mt-8 mb-6 md:mb-8">
-                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-                  <div className="relative w-full">
-                    <img
-                      data-testid="campaign-divider-image"
-                      src={DROP_CAMPAIGN_IMAGE}
-                      alt="Editorial Casablanca TAMBVRINI"
-                      className="w-full h-auto object-contain object-center"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/10" />
-                    <div className="absolute inset-0 flex items-center justify-center px-6">
-                      <div className="text-center max-w-[640px]">
-                        <h2
-                          data-testid="campaign-collection-title"
-                          className="font-playfair text-[34px] md:text-[56px] lg:text-[64px] tracking-[0.08em] text-[#F6F1E7]/90 font-light"
-                        >
-                          Sport Club 2026
-                        </h2>
-                        <button
-                          data-testid="campaign-collection-button"
-                          type="button"
-                          onClick={handleCollectionClick}
-                          className="mt-6 inline-flex items-center justify-center rounded-full border border-[#F6F1E7]/70 px-8 py-3 font-montserrat text-[10px] tracking-[0.32em] uppercase text-[#F6F1E7]/85 transition-all duration-500 hover:text-[#F6F1E7] hover:border-[#F6F1E7] hover:shadow-[0_0_18px_rgba(0,0,0,0.04)] hover:bg-white/5"
-                        >
-                          Comprar la Colección
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               <div ref={limitedEditionsVideosContainerRef} className="mb-6 md:mb-8">
                 <div className="limited-editions-video-wrapper">

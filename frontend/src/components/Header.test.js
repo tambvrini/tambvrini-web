@@ -169,15 +169,18 @@ describe('Header menu', () => {
     const { container, root } = await renderHeader();
 
     const novedadesLink = container.querySelector('[data-testid="menu-link-novedades"]');
+    const sportClubLink = container.querySelector('[data-testid="menu-link-sport-club"]');
     const hombreLink = container.querySelector('[data-testid="menu-link-hombre"]');
     const mujerLink = container.querySelector('[data-testid="menu-link-mujer"]');
     const limitedLink = container.querySelector('[data-testid="menu-link-limited-editions"]');
 
     expect(novedadesLink).not.toBeNull();
+    expect(sportClubLink).not.toBeNull();
     expect(hombreLink).not.toBeNull();
     expect(mujerLink).not.toBeNull();
     expect(limitedLink).not.toBeNull();
     expect(novedadesLink.getAttribute('to')).toBe('/tienda?category=novedades');
+    expect(sportClubLink.getAttribute('to')).toBe('/sport-club');
     expect(limitedLink.getAttribute('to')).toBe('/limited-editions');
 
     const tiendaList = novedadesLink.closest('ul');
@@ -185,7 +188,7 @@ describe('Header menu', () => {
       (link) => link.textContent?.trim()
     );
 
-    expect(tiendaLabels).toEqual(['Novedades', 'Hombre', 'Mujer', 'Limited Editions']);
+    expect(tiendaLabels).toEqual(['Novedades', 'Sport Club', 'Hombre', 'Mujer', 'Limited Editions']);
 
     const sobreLink = container.querySelector('[data-testid="menu-link-sobre-tambvrini"]');
     const filosofiaLink = container.querySelector('[data-testid="menu-link-filosofia"]');

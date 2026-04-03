@@ -23,6 +23,7 @@ import WishlistPage from "./pages/WishlistPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import BrandPage from "./pages/BrandPage";
 import LimitedEditionsPage from "./pages/LimitedEditionsPage";
+import SportClubPage from "./pages/SportClubPage";
 
 function AppRouter() {
   const location = useLocation();
@@ -50,6 +51,7 @@ function AppRouter() {
           <Routes location={location}>
             <Route path="/" element={<HomePage />} />
             <Route path="/tienda" element={<ShopPage />} />
+            <Route path="/sport-club" element={<SportClubPage />} />
             <Route path="/limited-editions" element={<LimitedEditionsPage />} />
             <Route path="/producto/:productId" element={<ProductPage />} />
             <Route path="/carrito" element={<CartPage />} />

@@ -220,7 +220,6 @@ const products = [
     care: "Lavado a máquina 30° del revés. No usar secadora.",
     is_new: true,
     is_featured: true,
-    collections: ["sport-club"],
     created_at: "2026-02-12T00:00:00+00:00",
   },
 

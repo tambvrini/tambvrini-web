@@ -27,6 +27,7 @@ const MENU_SECTIONS = [
     title: 'Tienda',
     links: [
       { label: 'Novedades', href: '/tienda?category=novedades', testId: 'menu-link-novedades' },
+      { label: 'Sport Club', href: '/sport-club', testId: 'menu-link-sport-club' },
       { label: 'Hombre', href: '/tienda?gender=hombre', testId: 'menu-link-hombre' },
       { label: 'Mujer', href: '/tienda?gender=mujer', testId: 'menu-link-mujer' },
       { label: 'Limited Editions', href: '/limited-editions', testId: 'menu-link-limited-editions' },

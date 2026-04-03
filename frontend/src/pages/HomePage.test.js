@@ -343,4 +343,18 @@ describe('HomePage featured grid', () => {
     });
     container.remove();
   });
+
+  it('does not render the Sport Club homepage campaign banner anymore', async () => {
+    const { container, root } = await renderHomePage();
+
+    expect(container.querySelector('[data-testid="campaign-divider-image"]')).toBeNull();
+    expect(container.querySelector('[data-testid="campaign-collection-title"]')).toBeNull();
+    expect(container.querySelector('[data-testid="campaign-collection-button"]')).toBeNull();
+    expect(container.querySelector('[data-testid="collection-transition"]')).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });

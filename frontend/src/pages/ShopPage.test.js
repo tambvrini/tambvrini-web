@@ -117,4 +117,34 @@ describe('ShopPage 2026 editorial image', () => {
     });
     container.remove();
   });
+
+  it('shows Sport Club as a primary filter instead of Calzado', async () => {
+    mockQueryProducts.mockReturnValue({
+      products: [
+        { product_id: 'camiseta-sport-club', name: 'Camiseta Sport Club' },
+        { product_id: 'polo-golf', name: 'Polo Golf' },
+      ],
+      total: 2,
+    });
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(<ShopPage />);
+    });
+
+    const sportClubFilter = container.querySelector('[data-testid="filter-sport-club"]');
+    const calzadoFilter = container.querySelector('[data-testid="filter-calzado"]');
+
+    expect(sportClubFilter).not.toBeNull();
+    expect(sportClubFilter.textContent).toBe('Sport Club');
+    expect(calzadoFilter).toBeNull();
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
 });
