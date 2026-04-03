@@ -490,6 +490,22 @@
     }
 }
 
+@media (max-width: 768px) {
+    .product-page,
+    .product-layout {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-info {
+        order: 1;
+    }
+
+    .product-media {
+        order: 2;
+    }
+}
+
 .details-drawer {
     position: fixed;
     right: 0;
