@@ -173,6 +173,8 @@ describe('HomePage featured grid', () => {
     expect(mysticWrapper?.className).toContain('right-1/2');
     expect(mysticWrapper?.className).toContain('-ml-[50vw]');
     expect(mysticWrapper?.className).toContain('-mr-[50vw]');
+    expect(limitedEditionsLink?.parentElement?.parentElement?.className).toContain('mt-4');
+    expect(limitedEditionsLink?.parentElement?.parentElement?.className).toContain('md:mt-0');
     expect(mysticImage?.getAttribute('src')).toBe('/images/header-mistico-ultrawide.png');
     expect(mysticImage?.getAttribute('alt')).toBe('editorial mystic divider');
     expect(mysticImage?.className).toContain('w-full');
