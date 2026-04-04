@@ -103,7 +103,7 @@ export default function CategoryCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="group relative block min-w-[82vw] sm:min-w-[68vw] md:min-w-0 cursor-pointer snap-start overflow-hidden rounded-[18px] border border-black/[0.06] bg-[#f5f2ec] shadow-[0_20px_45px_rgba(15,15,15,0.08)] outline-none"
+      className="category-card group relative block min-w-[82vw] sm:min-w-[68vw] md:min-w-0 cursor-pointer snap-start overflow-hidden rounded-[18px] border border-black/[0.06] bg-[#f5f2ec] shadow-[0_20px_45px_rgba(15,15,15,0.08)] outline-none"
       style={{
         opacity: isVisible ? 1 : 0,
         filter: isVisible ? 'blur(0px)' : 'blur(6px)',
@@ -126,6 +126,7 @@ export default function CategoryCard({
           className="w-full object-cover object-center"
           style={{
             aspectRatio: '4 / 5',
+            width: '100%',
             height: 'auto',
             transform: `translate3d(0, ${scrollOffset}px, 0) scale(${isHovered ? 1.075 : 1.04})`,
             transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
