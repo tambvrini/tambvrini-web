@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import HomePage, { LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS } from './HomePage';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+const mockNavigate = jest.fn();
 
 jest.mock(
   '@/data/productHelpers',
@@ -49,7 +50,7 @@ jest.mock(
         {children}
       </a>
     ),
-    useNavigate: () => jest.fn(),
+    useNavigate: () => mockNavigate,
   }),
   { virtual: true }
 );
@@ -102,6 +103,7 @@ describe('HomePage featured grid', () => {
   });
 
   beforeEach(() => {
+    mockNavigate.mockReset();
     window.scrollTo = jest.fn();
     global.IntersectionObserver = class {
       constructor(callback) {
@@ -343,6 +345,38 @@ describe('HomePage featured grid', () => {
     expect(editorialImage?.className).toContain('object-center');
     expect(editorialTitle?.textContent).toContain('PRIMAVERA — VERANO');
     expect(editorialTitle?.className).toContain('primavera-editorial-title');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('renders the premium category cards section with the three homepage links', async () => {
+    const { container, root } = await renderHomePage();
+
+    const categorySection = container.querySelector('[data-testid="editorial-collections-section"]');
+    const camisetasCard = container.querySelector('[data-testid="homepage-category-card-camisetas"]');
+    const sueteresCard = container.querySelector('[data-testid="homepage-category-card-sueteres"]');
+    const polosCard = container.querySelector('[data-testid="homepage-category-card-polos"]');
+    const oldPolosLink = container.querySelector('[data-testid="editorial-polos-link"]');
+    const oldSueteresLink = container.querySelector('[data-testid="editorial-sueteres-link"]');
+
+    expect(categorySection).not.toBeNull();
+    expect(camisetasCard?.textContent).toContain('CAMISETAS');
+    expect(sueteresCard?.textContent).toContain('SUÉTERES');
+    expect(polosCard?.textContent).toContain('POLOS');
+    expect(container.querySelector('img[alt="CAMISETAS"]')?.getAttribute('src')).toBe('/images/camisetas-header.png');
+    expect(container.querySelector('img[alt="SUÉTERES"]')?.getAttribute('src')).toBe('/images/sueteres-header.png');
+    expect(container.querySelector('img[alt="POLOS"]')?.getAttribute('src')).toBe('/images/polos-header.png');
+    expect(oldPolosLink).toBeNull();
+    expect(oldSueteresLink).toBeNull();
+
+    act(() => {
+      polosCard.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith('/polos');
 
     act(() => {
       root.unmount();

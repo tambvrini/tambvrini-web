@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import CategoryCard from '../components/CategoryCard';
 import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
 import IntroVideoSection from '../components/IntroVideoSection.tsx';
@@ -18,8 +19,29 @@ const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
 const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
-const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
-const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
+const HOMEPAGE_CATEGORIES = [
+  {
+    title: 'CAMISETAS',
+    image: '/images/camisetas-header.png',
+    link: '/camisetas',
+    scrollSpeed: 0.04,
+    testId: 'homepage-category-card-camisetas',
+  },
+  {
+    title: 'SUÉTERES',
+    image: '/images/sueteres-header.png',
+    link: '/sueteres',
+    scrollSpeed: 0.05,
+    testId: 'homepage-category-card-sueteres',
+  },
+  {
+    title: 'POLOS',
+    image: '/images/polos-header.png',
+    link: '/polos',
+    scrollSpeed: 0.06,
+    testId: 'homepage-category-card-polos',
+  },
+];
 const HTML_MEDIA_READY_STATE_FALLBACK = 2; // Fallback for HTMLMediaElement.HAVE_CURRENT_DATA (2) in non-browser envs.
 const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
   ? HTMLMediaElement.HAVE_CURRENT_DATA
@@ -360,54 +382,24 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-6 md:mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <div className="text-center">
-                    <Link
-                      to="/tienda?category=polos"
-                      data-testid="editorial-polos-link"
-                      className="group block"
-                    >
-                      <div className="overflow-hidden rounded-[22px]">
-                        <img
-                          src={EDITORIAL_POLOS_IMAGE}
-                          alt="Colección Polos"
-                          loading="lazy"
-                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    </Link>
-                    <span
-                      data-testid="editorial-polos-label"
-                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
-                    >
-                      POLOS
-                    </span>
-                  </div>
-                  <div className="text-center">
-                    <Link
-                      to="/tienda?category=sueteres"
-                      data-testid="editorial-sueteres-link"
-                      className="group block"
-                    >
-                      <div className="overflow-hidden rounded-[22px]">
-                        <img
-                          src={EDITORIAL_SUETERES_IMAGE}
-                          alt="Colección Suéteres"
-                          loading="lazy"
-                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    </Link>
-                    <span
-                      data-testid="editorial-sueteres-label"
-                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
-                    >
-                      SUÉTERES
-                    </span>
-                  </div>
-                </div>
-              </div>
+               <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-6 md:mb-8">
+                 <div
+                   className="category-cards-scroll flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-2 lg:px-4 xl:px-8"
+                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                 >
+                   {HOMEPAGE_CATEGORIES.map((category, index) => (
+                     <CategoryCard
+                       key={category.title}
+                       title={category.title}
+                       image={category.image}
+                       link={category.link}
+                       index={index}
+                       scrollSpeed={category.scrollSpeed}
+                       testId={category.testId}
+                     />
+                   ))}
+                 </div>
+               </div>
 
               <div data-testid="editorial-eagle-divider" className="my-6 md:my-8">
                 <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
