@@ -104,14 +104,6 @@ export default function CategoryCard({
           event.preventDefault();
           activateCard();
         }
-        if (event.key === ' ') {
-          event.preventDefault();
-        }
-      }}
-      onKeyUp={(event) => {
-        if (event.key !== ' ') return;
-        event.preventDefault();
-        activateCard();
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
