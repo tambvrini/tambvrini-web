@@ -373,7 +373,7 @@ describe('HomePage featured grid', () => {
     expect(oldSueteresLink).toBeNull();
 
     act(() => {
-      polosCard.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      polosCard.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     });
 
     expect(mockNavigate).toHaveBeenCalledWith('/polos');

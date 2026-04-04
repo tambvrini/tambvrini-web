@@ -55,7 +55,7 @@ describe('CategoryCard', () => {
     const card = container.querySelector('[data-testid="category-card"]');
 
     act(() => {
-      card.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      card.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     });
 
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
@@ -67,7 +67,7 @@ describe('CategoryCard', () => {
     container.remove();
   });
 
-  it('supports keyboard activation and renders the image', async () => {
+  it('renders the image and exposes the destination href', async () => {
     const { container, root } = await renderCategoryCard({
       title: 'POLOS',
       image: '/images/polos-header.png',
@@ -77,12 +77,7 @@ describe('CategoryCard', () => {
     const image = container.querySelector('img[alt="POLOS"]');
 
     expect(image?.getAttribute('src')).toBe('/images/polos-header.png');
-
-    act(() => {
-      card.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith('/polos');
+    expect(card?.getAttribute('href')).toBe('/polos');
 
     act(() => {
       root.unmount();

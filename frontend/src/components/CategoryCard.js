@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MAX_SCROLL_OFFSET = 18;
@@ -17,7 +17,6 @@ export default function CategoryCard({
   testId,
 }) {
   const navigate = useNavigate();
-  const router = useMemo(() => ({ push: navigate }), [navigate]);
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -62,7 +61,7 @@ export default function CategoryCard({
 
   const activateCard = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    router.push(link);
+    navigate(link);
   };
 
   const handleMouseMove = ({ clientX, clientY }) => {
@@ -92,23 +91,19 @@ export default function CategoryCard({
   };
 
   return (
-    <article
+    <a
       ref={cardRef}
       data-testid={testId}
-      role="link"
-      tabIndex={0}
+      href={link}
       aria-label={title}
-      onClick={activateCard}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          activateCard();
-        }
+      onClick={(event) => {
+        event.preventDefault();
+        activateCard();
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="group relative min-w-[82vw] sm:min-w-[68vw] md:min-w-0 cursor-pointer snap-start overflow-hidden rounded-[18px] border border-black/[0.06] bg-[#f5f2ec] shadow-[0_20px_45px_rgba(15,15,15,0.08)] outline-none"
+      className="group relative block min-w-[82vw] sm:min-w-[68vw] md:min-w-0 cursor-pointer snap-start overflow-hidden rounded-[18px] border border-black/[0.06] bg-[#f5f2ec] shadow-[0_20px_45px_rgba(15,15,15,0.08)] outline-none"
       style={{
         opacity: isVisible ? 1 : 0,
         filter: isVisible ? 'blur(0px)' : 'blur(6px)',
@@ -160,6 +155,6 @@ export default function CategoryCard({
           </div>
         </div>
       </div>
-    </article>
+    </a>
   );
 }
