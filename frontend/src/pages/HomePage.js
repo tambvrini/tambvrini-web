@@ -222,6 +222,41 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
   );
 };
 
+const EditorialCategoryTitle = () => {
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 1200], [0, 6]);
+
+  return (
+    <motion.div
+      data-testid="homepage-editorial-title-section"
+      className="relative mt-20 mb-12 flex justify-center overflow-visible md:mt-24 md:mb-14"
+      style={{ y: parallaxY }}
+    >
+      <div className="relative flex justify-center px-6 text-center">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-24 w-[min(34rem,88vw)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40"
+          style={{
+            background: 'radial-gradient(circle, rgba(0, 0, 0, 0.06) 0%, transparent 70%)',
+            filter: 'blur(20px)',
+          }}
+        />
+        <motion.h2
+          data-testid="homepage-editorial-title"
+          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          className="relative font-cinzel text-[1.35rem] font-normal uppercase tracking-[0.3em] text-[#005046] sm:text-[1.55rem] md:text-[1.9rem]"
+          style={{ textShadow: '0 0 12px rgba(0, 80, 70, 0.15)' }}
+        >
+          NUOVI ARRIVI
+        </motion.h2>
+      </div>
+    </motion.div>
+  );
+};
+
 
 /* ============ DROP GRID (Homepage main focus) ============ */
 const DropGridSection = () => {
@@ -378,10 +413,12 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-               <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-6 md:mb-8">
-                 <div
-                   className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-2 lg:px-4 xl:px-8"
-                 >
+               <EditorialCategoryTitle />
+
+               <div data-testid="editorial-collections-section" className="mb-6 md:mb-8">
+                  <div
+                    className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-2 lg:px-4 xl:px-8"
+                  >
                    {HOMEPAGE_CATEGORIES.map((category, index) => (
                      <CategoryCard
                        key={category.title}

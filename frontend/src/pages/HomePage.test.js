@@ -354,6 +354,8 @@ describe('HomePage featured grid', () => {
   it('renders the premium category cards section with the three homepage links', async () => {
     const { container, root } = await renderHomePage();
 
+    const editorialTitleSection = container.querySelector('[data-testid="homepage-editorial-title-section"]');
+    const editorialTitle = container.querySelector('[data-testid="homepage-editorial-title"]');
     const categorySection = container.querySelector('[data-testid="editorial-collections-section"]');
     const camisetasCard = container.querySelector('[data-testid="homepage-category-card-camisetas"]');
     const sueteresCard = container.querySelector('[data-testid="homepage-category-card-sueteres"]');
@@ -361,6 +363,12 @@ describe('HomePage featured grid', () => {
     const oldPolosLink = container.querySelector('[data-testid="editorial-polos-link"]');
     const oldSueteresLink = container.querySelector('[data-testid="editorial-sueteres-link"]');
 
+    expect(editorialTitleSection?.className).toContain('mt-20');
+    expect(editorialTitleSection?.className).toContain('mb-12');
+    expect(editorialTitle?.textContent).toContain('NUOVI ARRIVI');
+    expect(editorialTitle?.className).toContain('font-cinzel');
+    expect(editorialTitle?.className).toContain('tracking-[0.3em]');
+    expect(editorialTitle?.className).toContain('text-[#005046]');
     expect(categorySection).not.toBeNull();
     expect(camisetasCard?.textContent).toContain('CAMISETAS');
     expect(sueteresCard?.textContent).toContain('SUÉTERES');
