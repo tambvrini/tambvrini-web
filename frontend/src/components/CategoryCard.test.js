@@ -83,5 +83,4 @@ describe('CategoryCard', () => {
       root.unmount();
     });
     container.remove();
-  });
-}
+});
