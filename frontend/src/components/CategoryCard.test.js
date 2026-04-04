@@ -68,11 +68,15 @@ describe('CategoryCard', () => {
   });
 
   it('supports keyboard activation and renders the image', async () => {
-    const { container, root } = await renderCategoryCard({ title: 'POLOS', link: '/polos' });
+    const { container, root } = await renderCategoryCard({
+      title: 'POLOS',
+      image: '/images/polos-header.png',
+      link: '/polos',
+    });
     const card = container.querySelector('[data-testid="category-card"]');
     const image = container.querySelector('img[alt="POLOS"]');
 
-    expect(image?.getAttribute('src')).toBe('/images/camisetas-header.png');
+    expect(image?.getAttribute('src')).toBe('/images/polos-header.png');
 
     act(() => {
       card.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
