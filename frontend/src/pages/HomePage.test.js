@@ -34,10 +34,6 @@ jest.mock('../components/ProductCard', () => ({
   default: (props) => <div data-testid={`product-card-${props.product.product_id}`} />,
 }));
 
-jest.mock('../components/IntroVideoSection.tsx', () => () => (
-  <div data-testid="intro-video" />
-));
-
 jest.mock('lucide-react', () => ({
   ArrowRight: () => <span data-testid="arrow-right" />,
 }));
@@ -119,7 +115,9 @@ describe('HomePage featured grid', () => {
 
   it('shows Suéter Ignatius instead of Polo Domus', async () => {
     const { container, root } = await renderHomePage();
+    const heroImage = container.querySelector('[data-testid="hero-section"] img');
 
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-gafas.jpeg');
     expect(
       container.querySelector('[data-testid="product-card-sueter-ignatius"]')
     ).not.toBeNull();
@@ -187,6 +185,7 @@ describe('HomePage featured grid', () => {
     expect(mysticImage?.className).toContain('h-auto');
     expect(mysticImage?.className).toContain('object-contain');
     expect(mysticImage?.className).toContain('object-center');
+    expect(container.querySelector('[data-testid="intro-video"]')).toBeNull();
 
     act(() => {
       root.unmount();
