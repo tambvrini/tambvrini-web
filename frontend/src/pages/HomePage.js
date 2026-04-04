@@ -44,6 +44,7 @@ const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
   : HTML_MEDIA_READY_STATE_FALLBACK;
 export const LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS = 0.08;
 export const LIMITED_EDITIONS_SYNC_INTERVAL_MS = 250;
+// Keep the title parallax understated by spreading a 6px vertical offset across a long scroll range.
 const EDITORIAL_TITLE_SCROLL_DISTANCE_PX = 1200;
 const EDITORIAL_TITLE_VERTICAL_OFFSET_PX = 6;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
