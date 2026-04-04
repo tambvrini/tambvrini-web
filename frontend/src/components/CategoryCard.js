@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const MAX_SCROLL_OFFSET = 18;
+const POINTER_CENTER = 0.5;
+const TILT_MULTIPLIER = 8;
+const MAX_TILT_DEGREES = 4;
+
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 export default function CategoryCard({
@@ -23,7 +28,7 @@ export default function CategoryCard({
     if (typeof window === 'undefined') return undefined;
 
     const updateOffset = () => {
-      setScrollOffset(clamp((window.scrollY || 0) * scrollSpeed, 0, 18));
+      setScrollOffset(clamp((window.scrollY || 0) * scrollSpeed, 0, MAX_SCROLL_OFFSET));
     };
 
     updateOffset();
@@ -67,8 +72,16 @@ export default function CategoryCard({
     const rect = node.getBoundingClientRect();
     const x = (clientX - rect.left) / rect.width;
     const y = (clientY - rect.top) / rect.height;
-    const rotateY = clamp((x - 0.5) * 8, -4, 4);
-    const rotateX = clamp((0.5 - y) * 8, -4, 4);
+    const rotateY = clamp(
+      (x - POINTER_CENTER) * TILT_MULTIPLIER,
+      -MAX_TILT_DEGREES,
+      MAX_TILT_DEGREES
+    );
+    const rotateX = clamp(
+      (POINTER_CENTER - y) * TILT_MULTIPLIER,
+      -MAX_TILT_DEGREES,
+      MAX_TILT_DEGREES
+    );
 
     setPointerTilt({ rotateX, rotateY });
   };

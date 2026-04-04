@@ -19,26 +19,28 @@ const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
 const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
+// Slightly staggered speeds keep the row feeling alive without making the scroll parallax obvious.
+const CATEGORY_SCROLL_PARALLAX_SPEEDS = [0.04, 0.05, 0.06];
 const HOMEPAGE_CATEGORIES = [
   {
     title: 'CAMISETAS',
     image: '/images/camisetas-header.png',
     link: '/camisetas',
-    scrollSpeed: 0.04,
+    scrollSpeed: CATEGORY_SCROLL_PARALLAX_SPEEDS[0],
     testId: 'homepage-category-card-camisetas',
   },
   {
     title: 'SUÉTERES',
     image: '/images/sueteres-header.png',
     link: '/sueteres',
-    scrollSpeed: 0.05,
+    scrollSpeed: CATEGORY_SCROLL_PARALLAX_SPEEDS[1],
     testId: 'homepage-category-card-sueteres',
   },
   {
     title: 'POLOS',
     image: '/images/polos-header.png',
     link: '/polos',
-    scrollSpeed: 0.06,
+    scrollSpeed: CATEGORY_SCROLL_PARALLAX_SPEEDS[2],
     testId: 'homepage-category-card-polos',
   },
 ];
