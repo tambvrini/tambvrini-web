@@ -44,6 +44,8 @@ const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
   : HTML_MEDIA_READY_STATE_FALLBACK;
 export const LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS = 0.08;
 export const LIMITED_EDITIONS_SYNC_INTERVAL_MS = 250;
+const EDITORIAL_TITLE_PARALLAX_SCROLL_RANGE = 1200;
+const EDITORIAL_TITLE_PARALLAX_MAX_OFFSET = 6;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 /* ============ HERO with GUCCI-style animated logo ============ */
 const SCROLL_THRESHOLD = 500;
@@ -224,7 +226,11 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
 
 const EditorialCategoryTitle = () => {
   const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 1200], [0, 6]);
+  const parallaxY = useTransform(
+    scrollY,
+    [0, EDITORIAL_TITLE_PARALLAX_SCROLL_RANGE],
+    [0, EDITORIAL_TITLE_PARALLAX_MAX_OFFSET]
+  );
 
   return (
     <motion.div
