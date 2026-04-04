@@ -31,7 +31,7 @@ const HOMEPAGE_CATEGORIES = [
   },
   {
     title: 'SUÉTERES',
-    image: '/images/sueteres-header.png',
+    image: '/images/suéteres-header.png',
     link: '/sueteres',
     scrollSpeed: CATEGORY_SCROLL_PARALLAX_SPEEDS[1],
     testId: 'homepage-category-card-sueteres',

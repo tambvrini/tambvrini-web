@@ -118,13 +118,15 @@ export default function CategoryCard({
           : '0 20px 45px rgba(15, 15, 15, 0.08)',
       }}
     >
-      <div className="relative h-[320px] md:h-[340px] xl:h-[360px] overflow-hidden bg-[#ece7df]">
+      <div className="relative overflow-hidden rounded-[18px] bg-[#ece7df]">
         <img
           src={image}
           alt={title}
           loading="lazy"
-          className="h-full w-full object-cover object-center"
+          className="w-full object-cover object-center"
           style={{
+            aspectRatio: '4 / 5',
+            height: 'auto',
             transform: `translate3d(0, ${scrollOffset}px, 0) scale(${isHovered ? 1.075 : 1.04})`,
             transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
             willChange: 'transform',

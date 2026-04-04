@@ -367,7 +367,7 @@ describe('HomePage featured grid', () => {
     expect(sueteresCard?.textContent).toContain('SUÉTERES');
     expect(polosCard?.textContent).toContain('POLOS');
     expect(container.querySelector('img[alt="CAMISETAS"]')?.getAttribute('src')).toBe('/images/camisetas-header.png');
-    expect(container.querySelector('img[alt="SUÉTERES"]')?.getAttribute('src')).toBe('/images/sueteres-header.png');
+    expect(container.querySelector('img[alt="SUÉTERES"]')?.getAttribute('src')).toBe('/images/suéteres-header.png');
     expect(container.querySelector('img[alt="POLOS"]')?.getAttribute('src')).toBe('/images/polos-header.png');
     expect(oldPolosLink).toBeNull();
     expect(oldSueteresLink).toBeNull();

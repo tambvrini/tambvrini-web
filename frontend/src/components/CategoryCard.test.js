@@ -78,6 +78,9 @@ describe('CategoryCard', () => {
 
     expect(image?.getAttribute('src')).toBe('/images/polos-header.png');
     expect(card?.getAttribute('href')).toBe('/polos');
+    expect(image?.style.width).toBe('100%');
+    expect(image?.style.height).toBe('auto');
+    expect(image?.style.aspectRatio).toBe('4 / 5');
 
     act(() => {
       root.unmount();
