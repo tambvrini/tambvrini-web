@@ -384,8 +384,7 @@ const DropGridSection = () => {
 
                <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-6 md:mb-8">
                  <div
-                   className="category-cards-scroll flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-2 lg:px-4 xl:px-8"
-                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                   className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-2 lg:px-4 xl:px-8"
                  >
                    {HOMEPAGE_CATEGORIES.map((category, index) => (
                      <CategoryCard
@@ -399,6 +398,9 @@ const DropGridSection = () => {
                      />
                    ))}
                  </div>
+                 <p className="mt-3 px-1 font-montserrat text-[10px] uppercase tracking-[0.28em] text-black/45 md:hidden">
+                   Desliza para explorar
+                 </p>
                </div>
 
               <div data-testid="editorial-eagle-divider" className="my-6 md:my-8">

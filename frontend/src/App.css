@@ -126,10 +126,6 @@
     transform: scale(1.06);
 }
 
-.category-cards-scroll::-webkit-scrollbar {
-    display: none;
-}
-
 .product-gallery-media {
     width: 100%;
     min-height: calc(100vh - var(--product-header-offset, 120px));

@@ -87,10 +87,18 @@ export default function CategoryCard({
       aria-label={title}
       onClick={activateCard}
       onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (event.key === 'Enter') {
           event.preventDefault();
           activateCard();
         }
+        if (event.key === ' ') {
+          event.preventDefault();
+        }
+      }}
+      onKeyUp={(event) => {
+        if (event.key !== ' ') return;
+        event.preventDefault();
+        activateCard();
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
