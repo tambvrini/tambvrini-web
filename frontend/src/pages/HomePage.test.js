@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import HomePage, { LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS } from './HomePage';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+const mockNavigate = jest.fn();
 
 jest.mock(
   '@/data/productHelpers',
@@ -33,10 +34,6 @@ jest.mock('../components/ProductCard', () => ({
   default: (props) => <div data-testid={`product-card-${props.product.product_id}`} />,
 }));
 
-jest.mock('../components/IntroVideoSection.tsx', () => () => (
-  <div data-testid="intro-video" />
-));
-
 jest.mock('lucide-react', () => ({
   ArrowRight: () => <span data-testid="arrow-right" />,
 }));
@@ -49,7 +46,7 @@ jest.mock(
         {children}
       </a>
     ),
-    useNavigate: () => jest.fn(),
+    useNavigate: () => mockNavigate,
   }),
   { virtual: true }
 );
@@ -57,7 +54,18 @@ jest.mock(
 jest.mock('framer-motion', () => {
   const React = require('react');
   const createMotionComponent = (tag) =>
-    React.forwardRef(({ children, ...props }, ref) =>
+    React.forwardRef(({
+      children,
+      initial,
+      animate,
+      exit,
+      transition,
+      whileInView,
+      viewport,
+      whileHover,
+      whileTap,
+      ...props
+    }, ref) =>
       React.createElement(tag, { ...props, ref }, children)
     );
   const motion = new Proxy(
@@ -102,6 +110,7 @@ describe('HomePage featured grid', () => {
   });
 
   beforeEach(() => {
+    mockNavigate.mockReset();
     window.scrollTo = jest.fn();
     global.IntersectionObserver = class {
       constructor(callback) {
@@ -117,7 +126,9 @@ describe('HomePage featured grid', () => {
 
   it('shows Suéter Ignatius instead of Polo Domus', async () => {
     const { container, root } = await renderHomePage();
+    const heroImage = container.querySelector('[data-testid="hero-section"] img');
 
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo-2.jpg');
     expect(
       container.querySelector('[data-testid="product-card-sueter-ignatius"]')
     ).not.toBeNull();
@@ -185,6 +196,7 @@ describe('HomePage featured grid', () => {
     expect(mysticImage?.className).toContain('h-auto');
     expect(mysticImage?.className).toContain('object-contain');
     expect(mysticImage?.className).toContain('object-center');
+    expect(container.querySelector('[data-testid="intro-video"]')).toBeNull();
 
     act(() => {
       root.unmount();
@@ -311,10 +323,10 @@ describe('HomePage featured grid', () => {
       'img[alt="TAMBVRINI Campaign"]'
     );
 
-    expect(heroSource?.getAttribute('srcset')).toBe('/images/header-vertical-final.jpg.jpeg');
+    expect(heroSource?.getAttribute('srcset')).toBe('/images/header-tambvrini-yo-2.jpg');
     expect(heroSource?.getAttribute('media')).toBe('(max-width: 767px)');
     expect(heroSource?.getAttribute('type')).toBe('image/jpeg');
-    expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo.jpg');
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo-2.jpg');
     expect(heroImage?.className).toContain('hero-image-cinematic');
     expect(heroImage?.className).toContain('object-cover');
     expect(heroImage?.className).toContain('object-center');
@@ -343,6 +355,49 @@ describe('HomePage featured grid', () => {
     expect(editorialImage?.className).toContain('object-center');
     expect(editorialTitle?.textContent).toContain('PRIMAVERA — VERANO');
     expect(editorialTitle?.className).toContain('primavera-editorial-title');
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('renders the premium category cards section with the three homepage links', async () => {
+    const { container, root } = await renderHomePage();
+
+    const editorialTitleSection = container.querySelector('[data-testid="homepage-editorial-title-section"]');
+    const editorialTitle = container.querySelector('[data-testid="homepage-editorial-title"]');
+    const categorySection = container.querySelector('[data-testid="editorial-collections-section"]');
+    const camisetasCard = container.querySelector('[data-testid="homepage-category-card-camisetas"]');
+    const sueteresCard = container.querySelector('[data-testid="homepage-category-card-sueteres"]');
+    const polosCard = container.querySelector('[data-testid="homepage-category-card-polos"]');
+    const oldPolosLink = container.querySelector('[data-testid="editorial-polos-link"]');
+    const oldSueteresLink = container.querySelector('[data-testid="editorial-sueteres-link"]');
+
+    expect(editorialTitleSection?.className).toContain('mt-20');
+    expect(editorialTitleSection?.className).toContain('mb-12');
+    expect(editorialTitle?.textContent).toContain('NUOVI ARRIVI');
+    expect(editorialTitle?.className).toContain('font-cinzel');
+    expect(editorialTitle?.className).toContain('tracking-[0.3em]');
+    expect(editorialTitle?.className).toContain('text-[#005046]');
+    expect(categorySection).not.toBeNull();
+    expect(camisetasCard?.textContent).toContain('CAMISETAS');
+    expect(sueteresCard?.textContent).toContain('SUÉTERES');
+    expect(polosCard?.textContent).toContain('POLOS');
+    expect(container.querySelector('img[alt="CAMISETAS"]')?.getAttribute('src')).toBe('/images/camisetas-header.png');
+    expect(container.querySelector('img[alt="SUÉTERES"]')?.getAttribute('src')).toBe('/images/suéteres-header.png');
+    expect(container.querySelector('img[alt="POLOS"]')?.getAttribute('src')).toBe('/images/polos-header.png');
+    expect(camisetasCard?.getAttribute('href')).toBe('/tienda?category=camisetas');
+    expect(sueteresCard?.getAttribute('href')).toBe('/tienda?category=suéteres');
+    expect(polosCard?.getAttribute('href')).toBe('/tienda?category=polos');
+    expect(oldPolosLink).toBeNull();
+    expect(oldSueteresLink).toBeNull();
+
+    act(() => {
+      polosCard.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith('/tienda?category=polos');
 
     act(() => {
       root.unmount();

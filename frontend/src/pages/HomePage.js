@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import CategoryCard from '../components/CategoryCard';
 import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
-import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
 import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
-const HERO_IMAGE = "/images/header-tambvrini-yo.jpg";
-const HERO_IMAGE_MOBILE = "/images/header-vertical-final.jpg.jpeg";
+const HERO_IMAGE = "/images/header-tambvrini-yo-2.jpg";
+const HERO_IMAGE_MOBILE = "/images/header-tambvrini-yo-2.jpg";
 const HERO_WRAPPER_CLASSES = "h-screen overflow-hidden";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
@@ -18,14 +18,35 @@ const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
 const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
-const EDITORIAL_POLOS_IMAGE = "/images/heades-polos.png";
-const EDITORIAL_SUETERES_IMAGE = "/images/header-sueteres.png";
+const HOMEPAGE_CATEGORIES = [
+  {
+    title: 'CAMISETAS',
+    image: '/images/camisetas-header.png',
+    link: '/tienda?category=camisetas',
+    testId: 'homepage-category-card-camisetas',
+  },
+  {
+    title: 'SUÉTERES',
+    image: '/images/suéteres-header.png',
+    link: '/tienda?category=suéteres',
+    testId: 'homepage-category-card-sueteres',
+  },
+  {
+    title: 'POLOS',
+    image: '/images/polos-header.png',
+    link: '/tienda?category=polos',
+    testId: 'homepage-category-card-polos',
+  },
+];
 const HTML_MEDIA_READY_STATE_FALLBACK = 2; // Fallback for HTMLMediaElement.HAVE_CURRENT_DATA (2) in non-browser envs.
 const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
   ? HTMLMediaElement.HAVE_CURRENT_DATA
   : HTML_MEDIA_READY_STATE_FALLBACK;
 export const LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS = 0.08;
 export const LIMITED_EDITIONS_SYNC_INTERVAL_MS = 250;
+// Keep the title parallax understated by spreading a 6px vertical offset across a long scroll range.
+const EDITORIAL_TITLE_SCROLL_DISTANCE_PX = 1200;
+const EDITORIAL_TITLE_VERTICAL_OFFSET_PX = 6;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
 /* ============ HERO with GUCCI-style animated logo ============ */
 const SCROLL_THRESHOLD = 500;
@@ -204,6 +225,45 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
   );
 };
 
+const EditorialCategoryTitle = () => {
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(
+    scrollY,
+    [0, EDITORIAL_TITLE_SCROLL_DISTANCE_PX],
+    [0, EDITORIAL_TITLE_VERTICAL_OFFSET_PX]
+  );
+
+  return (
+    <motion.div
+      data-testid="homepage-editorial-title-section"
+      className="relative mt-20 mb-12 flex justify-center overflow-visible md:mt-24 md:mb-14"
+      style={{ y: parallaxY }}
+    >
+      <div className="relative flex justify-center px-6 text-center">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-24 w-[min(34rem,88vw)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40"
+          style={{
+            background: 'radial-gradient(circle, rgba(0, 0, 0, 0.06) 0%, transparent 70%)',
+            filter: 'blur(20px)',
+          }}
+        />
+        <motion.h2
+          data-testid="homepage-editorial-title"
+          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          className="relative font-cinzel text-[1.35rem] font-normal uppercase tracking-[0.3em] text-[#005046] sm:text-[1.55rem] md:text-[1.9rem]"
+          style={{ textShadow: '0 0 12px rgba(0, 80, 70, 0.15)' }}
+        >
+          NUOVI ARRIVI
+        </motion.h2>
+      </div>
+    </motion.div>
+  );
+};
+
 
 /* ============ DROP GRID (Homepage main focus) ============ */
 const DropGridSection = () => {
@@ -360,54 +420,27 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-6 md:mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <div className="text-center">
-                    <Link
-                      to="/tienda?category=polos"
-                      data-testid="editorial-polos-link"
-                      className="group block"
-                    >
-                      <div className="overflow-hidden rounded-[22px]">
-                        <img
-                          src={EDITORIAL_POLOS_IMAGE}
-                          alt="Colección Polos"
-                          loading="lazy"
-                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    </Link>
-                    <span
-                      data-testid="editorial-polos-label"
-                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
-                    >
-                      POLOS
-                    </span>
-                  </div>
-                  <div className="text-center">
-                    <Link
-                      to="/tienda?category=sueteres"
-                      data-testid="editorial-sueteres-link"
-                      className="group block"
-                    >
-                      <div className="overflow-hidden rounded-[22px]">
-                        <img
-                          src={EDITORIAL_SUETERES_IMAGE}
-                          alt="Colección Suéteres"
-                          loading="lazy"
-                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    </Link>
-                    <span
-                      data-testid="editorial-sueteres-label"
-                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
-                    >
-                      SUÉTERES
-                    </span>
-                  </div>
-                </div>
-              </div>
+               <EditorialCategoryTitle />
+
+               <div data-testid="editorial-collections-section" className="mb-6 md:mb-8">
+                  <div
+                    className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-2 lg:px-4 xl:px-8"
+                  >
+                   {HOMEPAGE_CATEGORIES.map((category, index) => (
+                     <CategoryCard
+                       key={category.title}
+                       title={category.title}
+                       image={category.image}
+                       link={category.link}
+                       index={index}
+                       testId={category.testId}
+                     />
+                   ))}
+                 </div>
+                 <p className="mt-3 px-1 font-montserrat text-[10px] uppercase tracking-[0.28em] text-black/45 md:hidden">
+                   Desliza para explorar
+                 </p>
+               </div>
 
               <div data-testid="editorial-eagle-divider" className="my-6 md:my-8">
                 <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
@@ -583,8 +616,6 @@ export default function HomePage() {
   return (
     <div data-testid="home-page" className="noise-overlay editorial-noise bg-white">
       <HeroSection />
-
-      <IntroVideoSection />
 
       {/* (removed editorial divider) */}
 

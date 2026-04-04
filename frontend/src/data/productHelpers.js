@@ -41,7 +41,11 @@ export function queryProducts({
 } = {}) {
   let filtered = [...products];
   const normalizedCategory =
-    category === "marroquineria" ? "accesorios" : category;
+    category === "marroquineria"
+      ? "accesorios"
+      : category === "suéteres"
+        ? "sueteres"
+        : category;
   const isNovedadesCategory = normalizedCategory === "novedades";
 
   // Category filters (mirrors backend logic)

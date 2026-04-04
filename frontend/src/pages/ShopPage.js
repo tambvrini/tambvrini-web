@@ -11,8 +11,10 @@ const CATEGORY_LABELS = {
   novedades: 'Novedades',
   '2026': '2026',
   'sport-club': 'Sport Club',
+  camisetas: 'Camisetas',
   polos: 'Polos',
   sueteres: 'Suéteres',
+  'suéteres': 'Suéteres',
   hombre: 'Hombre',
   mujer: 'Mujer',
   accesorios: 'Accesorios',
@@ -23,6 +25,7 @@ const CATEGORY_NAV_ITEMS = [
   ['limited-editions', 'Limited Editions'],
   ['novedades', CATEGORY_LABELS.novedades],
   ['sport-club', CATEGORY_LABELS['sport-club']],
+  ['camisetas', CATEGORY_LABELS.camisetas],
   ['polos', CATEGORY_LABELS.polos],
   ['sueteres', CATEGORY_LABELS.sueteres],
   ['hombre', CATEGORY_LABELS.hombre],
@@ -46,8 +49,39 @@ const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c
 const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/nqiyik78_video%20final%20tambvrini%202.mov";
 
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
-const COLLECTION_2026_HEADER_IMAGE = '/images/header-gafas.jpeg';
+const COLLECTION_2026_HEADER_VIDEO = '/videos/tambvrini-intro-loop.mp4';
+const ACCESSORIES_HEADER_IMAGE = '/images/header-gafas.jpeg';
 const COLLECTION_2026_EDITORIAL_IMAGE = '/images/2026.PNG';
+
+function CategoryHeaderMedia({ type, src, alt, testId }) {
+  return (
+    <div data-testid={`${testId}-banner`} className="mb-12">
+      <div className="overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)]">
+        {type === 'video' ? (
+          <video
+            data-testid={`${testId}-video`}
+            src={src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="w-full h-auto max-w-full object-contain object-center"
+            aria-label={alt}
+          />
+        ) : (
+          <img
+            data-testid={`${testId}-image`}
+            src={src}
+            alt={alt}
+            loading="lazy"
+            className="w-full h-auto object-cover object-center"
+          />
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -62,7 +96,11 @@ export default function ShopPage() {
   const videoRef = useRef(null);
 
   const category = searchParams.get('category') || searchParams.get('filter') || '';
-  const normalizedCategory = category === 'marroquineria' ? 'accesorios' : category;
+  const normalizedCategory = category === 'marroquineria'
+    ? 'accesorios'
+    : category === 'suéteres'
+      ? 'sueteres'
+      : category;
   const gender = searchParams.get('gender') || '';
   const collection = searchParams.get('collection') || '';
   const search = searchParams.get('search') || '';
@@ -119,6 +157,7 @@ export default function ShopPage() {
 
   const isMensView = gender === 'hombre';
   const isWomenView = gender === 'mujer';
+  const isAccessoriesView = normalizedCategory === 'accesorios';
   const mujerProducts = useMemo(() => {
     if (!isWomenView) return filteredProducts;
     const poloAureus = catalogProducts.find((p) => p.product_id === 'polo-aureus');
@@ -288,7 +327,24 @@ export default function ShopPage() {
           </div>
         </div>
       )}
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
+        <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
+        {isCollection2026View && (
+          <CategoryHeaderMedia
+            type="video"
+            src={COLLECTION_2026_HEADER_VIDEO}
+            alt="Editorial 2026 Header TAMBVRINI"
+            testId="editorial-2026-header"
+          />
+        )}
+        {isAccessoriesView && (
+          <CategoryHeaderMedia
+            type="image"
+            src={ACCESSORIES_HEADER_IMAGE}
+            alt="Editorial Accesorios Header TAMBVRINI"
+            testId="editorial-accesorios-header"
+          />
+        )}
+
         {/* Header */}
         <div className="relative flex flex-col md:flex-row justify-start items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
           <div className="w-full text-left">
@@ -351,20 +407,6 @@ export default function ShopPage() {
             </button>
           ))}
         </div>
-
-        {isCollection2026View && (
-          <div data-testid="editorial-2026-header-banner" className="mb-12">
-            <div className="overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)]">
-              <img
-                data-testid="editorial-2026-header-image"
-                src={COLLECTION_2026_HEADER_IMAGE}
-                alt="Editorial 2026 Header TAMBVRINI"
-                loading="lazy"
-                className="w-full h-auto object-cover object-center"
-              />
-            </div>
-          </div>
-        )}
 
         {/* Products grid */}
         {loading ? (

@@ -7,6 +7,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const mockQueryProducts = jest.fn();
 const mockProductCard = jest.fn();
+let mockSearchParams = 'category=2026';
 
 jest.mock(
   '@/data/productHelpers',
@@ -42,7 +43,7 @@ jest.mock(
   'react-router-dom',
   () => ({
     useNavigate: () => jest.fn(),
-    useSearchParams: () => [new URLSearchParams('category=2026'), jest.fn()],
+    useSearchParams: () => [new URLSearchParams(mockSearchParams), jest.fn()],
   }),
   { virtual: true }
 );
@@ -52,6 +53,7 @@ describe('ShopPage 2026 editorial image', () => {
     jest.useFakeTimers();
     window.scrollTo = jest.fn();
     mockProductCard.mockClear();
+    mockSearchParams = 'category=2026';
   });
 
   afterEach(() => {
@@ -86,18 +88,18 @@ describe('ShopPage 2026 editorial image', () => {
 
     const captainCard = container.querySelector('[data-testid="product-card-sueter-captain"]');
     const headerBanner = container.querySelector('[data-testid="editorial-2026-header-banner"]');
-    const headerImage = container.querySelector('[data-testid="editorial-2026-header-image"]');
+    const headerVideo = container.querySelector('[data-testid="editorial-2026-header-video"]');
     const editorialInsert = container.querySelector('[data-testid="editorial-2026-insert"]');
     const editorialImage = container.querySelector('[data-testid="editorial-2026-image"]');
     const nextProduct = container.querySelector('[data-testid="product-card-polo-regius"]');
 
     expect(captainCard).not.toBeNull();
     expect(headerBanner).not.toBeNull();
-    expect(headerImage).not.toBeNull();
+    expect(headerVideo).not.toBeNull();
     expect(editorialInsert).not.toBeNull();
     expect(editorialImage).not.toBeNull();
     expect(nextProduct).not.toBeNull();
-    expect(headerImage.getAttribute('src')).toBe('/images/header-gafas.jpeg');
+    expect(headerVideo.getAttribute('src')).toBe('/videos/tambvrini-intro-loop.mp4');
     expect(editorialImage.getAttribute('src')).toBe('/images/2026.PNG');
     expect(editorialInsert.className.includes('lg:row-span-2')).toBe(true);
     expect(headerBanner.compareDocumentPosition(captainCard) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -111,6 +113,38 @@ describe('ShopPage 2026 editorial image', () => {
     const regiusProps = mockProductCard.mock.calls.find(([props]) => props.product.product_id === 'polo-regius')?.[0];
     expect(poloGolfProps?.enableHoverVideo).toBe(true);
     expect(regiusProps?.enableHoverVideo).toBe(false);
+
+    act(() => {
+      root.unmount();
+    });
+    container.remove();
+  });
+
+  it('renders the sunglasses image as the accesorios header banner', async () => {
+    mockSearchParams = 'category=accesorios';
+    mockQueryProducts.mockReturnValue({
+      products: [
+        { product_id: 'bolso-monograma-tambvrini', name: 'Bolso Monograma Tambvrini' },
+      ],
+      total: 1,
+    });
+
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(<ShopPage />);
+    });
+
+    const headerBanner = container.querySelector('[data-testid="editorial-accesorios-header-banner"]');
+    const headerImage = container.querySelector('[data-testid="editorial-accesorios-header-image"]');
+    const shopTitle = container.querySelector('[data-testid="shop-title"]');
+
+    expect(headerBanner).not.toBeNull();
+    expect(headerImage).not.toBeNull();
+    expect(headerImage.getAttribute('src')).toBe('/images/header-gafas.jpeg');
+    expect(shopTitle?.textContent).toBe('Accesorios');
 
     act(() => {
       root.unmount();
