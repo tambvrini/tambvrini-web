@@ -2,6 +2,7 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import CategoryCard from './CategoryCard';
 
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const mockNavigate = jest.fn();
 
 jest.mock(
@@ -83,4 +84,5 @@ describe('CategoryCard', () => {
       root.unmount();
     });
     container.remove();
+  });
 });
