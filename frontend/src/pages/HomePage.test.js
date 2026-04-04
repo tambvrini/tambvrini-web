@@ -117,7 +117,7 @@ describe('HomePage featured grid', () => {
     const { container, root } = await renderHomePage();
     const heroImage = container.querySelector('[data-testid="hero-section"] img');
 
-    expect(heroImage?.getAttribute('src')).toBe('/images/header-gafas.jpeg');
+    expect(heroImage?.getAttribute('src')).toBe('/images/header-tambvrini-yo-2.jpg');
     expect(
       container.querySelector('[data-testid="product-card-sueter-ignatius"]')
     ).not.toBeNull();
