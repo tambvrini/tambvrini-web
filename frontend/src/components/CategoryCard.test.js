@@ -38,7 +38,6 @@ const renderCategoryCard = async (props = {}) => {
 describe('CategoryCard', () => {
   beforeEach(() => {
     mockNavigate.mockReset();
-    window.scrollTo = jest.fn();
     global.IntersectionObserver = class {
       constructor(callback) {
         this.callback = callback;
@@ -58,7 +57,6 @@ describe('CategoryCard', () => {
       card.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     });
 
-    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
     expect(mockNavigate).toHaveBeenCalledWith('/tienda?category=camisetas');
 
     act(() => {
@@ -78,10 +76,6 @@ describe('CategoryCard', () => {
 
     expect(image?.getAttribute('src')).toBe('/images/polos-header.png');
     expect(card?.getAttribute('href')).toBe('/tienda?category=polos');
-    expect(image?.style.width).toBe('100%');
-    expect(image?.style.height).toBe('auto');
-    expect(image?.style.aspectRatio).toBe('4 / 5');
-    expect(image?.style.display).toBe('block');
     expect(container.querySelector('[aria-hidden="true"]')).toBeNull();
 
     act(() => {

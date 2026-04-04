@@ -44,7 +44,6 @@ export default function CategoryCard({
   }, []);
 
   const activateCard = () => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     navigate(link);
   };
 
@@ -74,6 +73,11 @@ export default function CategoryCard({
     setPointerTilt({ rotateX: 0, rotateY: 0 });
   };
 
+  const visibilityOffset = isVisible ? (isHovered ? -5 : 0) : 40;
+  const cardScale = isHovered ? 1.04 : 1;
+  const cardTransform = `perspective(1400px) translateY(${visibilityOffset}px) rotateX(${pointerTilt.rotateX}deg) rotateY(${pointerTilt.rotateY}deg) scale(${cardScale})`;
+  const imageTransform = `scale(${isHovered ? 1.02 : 1})`;
+
   return (
     <a
       ref={cardRef}
@@ -91,7 +95,7 @@ export default function CategoryCard({
       style={{
         opacity: isVisible ? 1 : 0,
         filter: isVisible ? 'blur(0px)' : 'blur(6px)',
-        transform: `perspective(1400px) translateY(${isVisible ? (isHovered ? -5 : 0) : 40}px) rotateX(${pointerTilt.rotateX}deg) rotateY(${pointerTilt.rotateY}deg) scale(${isHovered ? 1.04 : 1})`,
+        transform: cardTransform,
         transformStyle: 'preserve-3d',
         transitionDelay: `${index * 100}ms`,
         transitionDuration: isHovered ? '0.4s' : '0.8s',
@@ -113,7 +117,7 @@ export default function CategoryCard({
             width: '100%',
             height: 'auto',
             display: 'block',
-            transform: `scale(${isHovered ? 1.02 : 1})`,
+            transform: imageTransform,
             transition: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
             willChange: 'transform',
           }}
