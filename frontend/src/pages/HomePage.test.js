@@ -54,7 +54,18 @@ jest.mock(
 jest.mock('framer-motion', () => {
   const React = require('react');
   const createMotionComponent = (tag) =>
-    React.forwardRef(({ children, ...props }, ref) =>
+    React.forwardRef(({
+      children,
+      initial,
+      animate,
+      exit,
+      transition,
+      whileInView,
+      viewport,
+      whileHover,
+      whileTap,
+      ...props
+    }, ref) =>
       React.createElement(tag, { ...props, ref }, children)
     );
   const motion = new Proxy(
