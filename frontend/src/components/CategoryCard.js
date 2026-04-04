@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const MAX_SCROLL_OFFSET = 18;
 const POINTER_CENTER = 0.5;
 const TILT_MULTIPLIER = 8;
 const MAX_TILT_DEGREES = 4;
@@ -13,7 +12,6 @@ export default function CategoryCard({
   image,
   link,
   index = 0,
-  scrollSpeed = 0.05,
   testId,
 }) {
   const navigate = useNavigate();
@@ -21,20 +19,6 @@ export default function CategoryCard({
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [pointerTilt, setPointerTilt] = useState({ rotateX: 0, rotateY: 0 });
-  const [scrollOffset, setScrollOffset] = useState(0);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const updateOffset = () => {
-      setScrollOffset(clamp((window.scrollY || 0) * scrollSpeed, 0, MAX_SCROLL_OFFSET));
-    };
-
-    updateOffset();
-    window.addEventListener('scroll', updateOffset, { passive: true });
-
-    return () => window.removeEventListener('scroll', updateOffset);
-  }, [scrollSpeed]);
 
   useEffect(() => {
     const node = cardRef.current;
@@ -103,22 +87,22 @@ export default function CategoryCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="category-card group relative block min-w-[82vw] sm:min-w-[68vw] md:min-w-0 cursor-pointer snap-start overflow-hidden rounded-[18px] border border-black/[0.06] bg-[#f5f2ec] shadow-[0_20px_45px_rgba(15,15,15,0.08)] outline-none"
+      className="category-card group relative block min-w-[82vw] sm:min-w-[68vw] md:min-w-0 cursor-pointer snap-start overflow-hidden rounded-[20px] border border-white/30 shadow-[0_20px_45px_rgba(15,15,15,0.08)] outline-none"
       style={{
         opacity: isVisible ? 1 : 0,
         filter: isVisible ? 'blur(0px)' : 'blur(6px)',
-        transform: `perspective(1400px) translateY(${isVisible ? (isHovered ? -5 : 0) : 40}px) rotateX(${pointerTilt.rotateX}deg) rotateY(${pointerTilt.rotateY}deg) scale(${isHovered ? 1.01 : 1})`,
+        transform: `perspective(1400px) translateY(${isVisible ? (isHovered ? -5 : 0) : 40}px) rotateX(${pointerTilt.rotateX}deg) rotateY(${pointerTilt.rotateY}deg) scale(${isHovered ? 1.04 : 1})`,
         transformStyle: 'preserve-3d',
         transitionDelay: `${index * 100}ms`,
-        transitionDuration: isHovered ? '0.45s' : '0.8s',
+        transitionDuration: isHovered ? '0.4s' : '0.8s',
         transitionProperty: 'opacity, transform, filter, box-shadow, border-color',
         transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
         boxShadow: isHovered
-          ? '0 28px 55px rgba(15, 15, 15, 0.12)'
+          ? '0 30px 60px rgba(15, 15, 15, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.24)'
           : '0 20px 45px rgba(15, 15, 15, 0.08)',
       }}
     >
-      <div className="relative overflow-hidden rounded-[18px] bg-[#ece7df]">
+      <div className="relative overflow-hidden rounded-[20px]">
         <img
           src={image}
           alt={title}
@@ -128,21 +112,20 @@ export default function CategoryCard({
             aspectRatio: '4 / 5',
             width: '100%',
             height: 'auto',
-            transform: `translate3d(0, ${scrollOffset}px, 0) scale(${isHovered ? 1.075 : 1.04})`,
-            transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
+            display: 'block',
+            transform: `scale(${isHovered ? 1.02 : 1})`,
+            transition: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
             willChange: 'transform',
           }}
         />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/12 to-transparent"
-          style={{
-            opacity: isHovered ? 0.72 : 1,
-            transition: 'opacity 0.6s ease',
-          }}
-        />
         <div className="absolute inset-x-0 bottom-0 flex items-end p-6 md:p-7">
-          <div className="text-left text-white" style={{ transform: 'translateZ(32px)' }}>
+          <div
+            className="text-left text-white"
+            style={{
+              transform: 'translateZ(32px)',
+              textShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+            }}
+          >
             <span className="block font-montserrat text-[10px] uppercase tracking-[0.38em] text-white/70">
               Editorial Selection
             </span>

@@ -29,6 +29,16 @@ describe('queryProducts', () => {
     expect(result.products.every((product) => product.category?.includes('polos'))).toBe(true);
   });
 
+  it('supports the accented suéteres category alias', () => {
+    const accentedResult = queryProducts({ category: 'suéteres', limit: 100 });
+    const plainResult = queryProducts({ category: 'sueteres', limit: 100 });
+
+    expect(accentedResult.total).toBe(plainResult.total);
+    expect(accentedResult.products.map((product) => product.product_id)).toEqual(
+      plainResult.products.map((product) => product.product_id),
+    );
+  });
+
   it('maps marroquineria filter to accesorios without removing products', () => {
     const accesoriosResult = queryProducts({ category: 'accesorios', limit: 100 });
     const marroquineriaResult = queryProducts({ category: 'marroquineria', limit: 100 });

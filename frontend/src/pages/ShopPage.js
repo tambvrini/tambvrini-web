@@ -11,8 +11,10 @@ const CATEGORY_LABELS = {
   novedades: 'Novedades',
   '2026': '2026',
   'sport-club': 'Sport Club',
+  camisetas: 'Camisetas',
   polos: 'Polos',
   sueteres: 'Suéteres',
+  'suéteres': 'Suéteres',
   hombre: 'Hombre',
   mujer: 'Mujer',
   accesorios: 'Accesorios',
@@ -23,6 +25,7 @@ const CATEGORY_NAV_ITEMS = [
   ['limited-editions', 'Limited Editions'],
   ['novedades', CATEGORY_LABELS.novedades],
   ['sport-club', CATEGORY_LABELS['sport-club']],
+  ['camisetas', CATEGORY_LABELS.camisetas],
   ['polos', CATEGORY_LABELS.polos],
   ['sueteres', CATEGORY_LABELS.sueteres],
   ['hombre', CATEGORY_LABELS.hombre],
@@ -62,7 +65,11 @@ export default function ShopPage() {
   const videoRef = useRef(null);
 
   const category = searchParams.get('category') || searchParams.get('filter') || '';
-  const normalizedCategory = category === 'marroquineria' ? 'accesorios' : category;
+  const normalizedCategory = category === 'marroquineria'
+    ? 'accesorios'
+    : category === 'suéteres'
+      ? 'sueteres'
+      : category;
   const gender = searchParams.get('gender') || '';
   const collection = searchParams.get('collection') || '';
   const search = searchParams.get('search') || '';

@@ -369,6 +369,9 @@ describe('HomePage featured grid', () => {
     expect(container.querySelector('img[alt="CAMISETAS"]')?.getAttribute('src')).toBe('/images/camisetas-header.png');
     expect(container.querySelector('img[alt="SUÉTERES"]')?.getAttribute('src')).toBe('/images/suéteres-header.png');
     expect(container.querySelector('img[alt="POLOS"]')?.getAttribute('src')).toBe('/images/polos-header.png');
+    expect(camisetasCard?.getAttribute('href')).toBe('/tienda?category=camisetas');
+    expect(sueteresCard?.getAttribute('href')).toBe('/tienda?category=suéteres');
+    expect(polosCard?.getAttribute('href')).toBe('/tienda?category=polos');
     expect(oldPolosLink).toBeNull();
     expect(oldSueteresLink).toBeNull();
 
@@ -376,7 +379,7 @@ describe('HomePage featured grid', () => {
       polosCard.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith('/polos');
+    expect(mockNavigate).toHaveBeenCalledWith('/tienda?category=polos');
 
     act(() => {
       root.unmount();
