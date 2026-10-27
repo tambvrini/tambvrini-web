@@ -1,27 +1,53 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import CategoryCard from '../components/CategoryCard';
+import Logo from '../components/Logo';
 import ProductCard from '../components/ProductCard';
-import IntroVideoSection from '../components/IntroVideoSection.tsx';
 import { queryProducts } from '@/data/productHelpers';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
-const LOGO_WHITE = "/logo-letras-final-blanco.svg";
-const HERO_IMAGE = "/hero-main.jpg";
-const HERO_ASPECT_RATIO_CLASS = "h-screen";
+const HERO_IMAGE = "/images/header-tambvrini-yo-2.jpg";
+const HERO_IMAGE_MOBILE = "/images/headerpara-vertical.png";
+const HERO_WRAPPER_CLASSES = "h-screen overflow-hidden";
 
 const NOVEDADES_HOMBRE_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/had86o8r_hf_20260213_213626_2abfbed4-aa1c-4aef-9cbb-2f94a6ca4225.png";
 const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/gmhgobyc_hf_20260213_214633_0565b32b-1650-49f6-87d1-ae0424c2505d.png";
 const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sbeaj2rx_video%20hombre.mp4";
 const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
-const EDITORIAL_HERO_IMAGE = "https://customer-assets.emergentagent.com/job_602a5873-5674-439a-a044-350968db276c/artifacts/l2b60pgp_Sin%20t%C3%ADtulo-122222.jpg";
+const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
-const EDITORIAL_POLOS_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/v4zs6ugs_hf_20260222_181550_e58e110a-c888-46f9-818a-7daac73fbd28.jpeg";
-const EDITORIAL_SUETERES_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/lks43ws5_hf_20260222_183135_094a5ad6-f6e8-407f-8fd4-6dceef064698.jpeg";
+const HOMEPAGE_CATEGORIES = [
+  {
+    title: 'CAMISETAS',
+    image: '/images/camisetas-header.png',
+    link: '/tienda?category=camisetas',
+    testId: 'homepage-category-card-camisetas',
+  },
+  {
+    title: 'SUÉTERES',
+    image: '/images/suéteres-header.png',
+    link: '/tienda?category=suéteres',
+    testId: 'homepage-category-card-sueteres',
+  },
+  {
+    title: 'POLOS',
+    image: '/images/polos-header.png',
+    link: '/tienda?category=polos',
+    testId: 'homepage-category-card-polos',
+  },
+];
+const HTML_MEDIA_READY_STATE_FALLBACK = 2; // Fallback for HTMLMediaElement.HAVE_CURRENT_DATA (2) in non-browser envs.
+const HTML_MEDIA_READY_STATE_TARGET = typeof HTMLMediaElement !== 'undefined'
+  ? HTMLMediaElement.HAVE_CURRENT_DATA
+  : HTML_MEDIA_READY_STATE_FALLBACK;
+export const LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS = 0.08;
+export const LIMITED_EDITIONS_SYNC_INTERVAL_MS = 250;
+// Keep the title parallax understated by spreading a 6px vertical offset across a long scroll range.
+const EDITORIAL_TITLE_SCROLL_DISTANCE_PX = 1200;
+const EDITORIAL_TITLE_VERTICAL_OFFSET_PX = 6;
 // (Campaign/categories/tennis/story visuals removed for simplified DROP-style homepage)
-
-
 /* ============ HERO with GUCCI-style animated logo ============ */
 const SCROLL_THRESHOLD = 500;
 
@@ -54,19 +80,24 @@ const HeroSection = () => {
   // so we avoid the unwanted "medium logo" handoff step.
   const heroLogoOpacity = useTransform(progress, [0.9, 1], [1, 0]);
 
-  // Hero overlay darkens as you scroll
-  const overlayOpacity = useTransform(progress, [0, 1], [0.08, 0.22]);
-
   // CTA buttons fade out quickly
   const buttonsOpacity = useTransform(scrollY, [0, 250], [1, 0]);
   const buttonsY = useTransform(scrollY, [0, 250], [0, 40]);
 
   return (
-      <section data-testid="hero-section" className="relative w-full">
+      <section data-testid="hero-section" className="hero relative w-full">
         {/* Background image */}
-        <div className={`relative w-full ${HERO_ASPECT_RATIO_CLASS}`}>
-          <img src={HERO_IMAGE} alt="TAMBVRINI Campaign" className="block w-full h-full object-cover object-center brightness-105" />
-          <motion.div className="absolute inset-0 bg-white" style={{ opacity: overlayOpacity }} />
+        <div className={`relative w-full ${HERO_WRAPPER_CLASSES}`}>
+          <picture>
+            <source media="(max-width: 767px)" srcSet={HERO_IMAGE_MOBILE} type="image/png" />
+            <img
+              src={HERO_IMAGE}
+              alt="TAMBVRINI Campaign"
+              loading="eager"
+              fetchPriority="high"
+              className="hero-image-cinematic block w-full h-full object-cover object-center"
+            />
+          </picture>
           <div className="absolute inset-0 z-10">
             <div className="relative w-full h-full">
               {/* CTA Buttons at bottom of hero */}
@@ -81,7 +112,7 @@ const HeroSection = () => {
                   to="/tienda?gender=hombre"
                   data-testid="hero-shop-men"
                   onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                  className="btn-luxury text-center"
+                  className="btn-luxury hero-cta-luxury text-center"
                 >
                   Comprar Hombre
                 </Link>
@@ -89,7 +120,7 @@ const HeroSection = () => {
                   to="/tienda?gender=mujer"
                   data-testid="hero-shop-women"
                   onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                  className="btn-luxury text-center"
+                  className="btn-luxury hero-cta-luxury text-center"
                 >
                   Comprar Mujer
                 </Link>
@@ -100,7 +131,7 @@ const HeroSection = () => {
                     const el = document.getElementById('drops');
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
-                  className="btn-luxury btn-gold text-center"
+                  className="btn-luxury btn-gold hero-cta-luxury text-center"
                 >
                   Explorar
                 </button>
@@ -114,16 +145,18 @@ const HeroSection = () => {
         className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[52] pointer-events-none"
         style={{ opacity: heroLogoOpacity }}
       >
-        <motion.img
-          src={LOGO_WHITE}
-          alt="TAMBVRINI"
-          className="w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px] origin-center"
+        <motion.div
+          className="origin-center"
           style={{
             scale: logoScale,
             y: logoY,
             willChange: 'transform',
           }}
-        />
+        >
+          <Logo
+            className="logo hero-logo w-[88vw] md:w-[78vw] lg:w-[72vw] max-w-[1250px]"
+          />
+        </motion.div>
       </motion.div>
 
     </section>
@@ -192,21 +225,51 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
   );
 };
 
+const EditorialCategoryTitle = () => {
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(
+    scrollY,
+    [0, EDITORIAL_TITLE_SCROLL_DISTANCE_PX],
+    [0, EDITORIAL_TITLE_VERTICAL_OFFSET_PX]
+  );
+
+  return (
+    <motion.div
+      data-testid="homepage-editorial-title-section"
+      className="relative mt-20 mb-12 flex justify-center overflow-visible md:mt-24 md:mb-14"
+      style={{ y: parallaxY }}
+    >
+      <div className="relative flex justify-center px-6 text-center">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-24 w-[min(34rem,88vw)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40"
+          style={{
+            background: 'radial-gradient(circle, rgba(0, 0, 0, 0.06) 0%, transparent 70%)',
+            filter: 'blur(20px)',
+          }}
+        />
+        <motion.h2
+          data-testid="homepage-editorial-title"
+          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          className="relative font-cinzel text-[1.35rem] font-normal uppercase tracking-[0.3em] text-[#005046] sm:text-[1.55rem] md:text-[1.9rem]"
+          style={{ textShadow: '0 0 12px rgba(0, 80, 70, 0.15)' }}
+        >
+          NUOVI ARRIVI
+        </motion.h2>
+      </div>
+    </motion.div>
+  );
+};
+
 
 /* ============ DROP GRID (Homepage main focus) ============ */
 const DropGridSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showCollectionTransition, setShowCollectionTransition] = useState(false);
-  const navigate = useNavigate();
-
-  const handleCollectionClick = () => {
-    if (showCollectionTransition) return;
-    setShowCollectionTransition(true);
-    setTimeout(() => {
-      navigate('/tienda?category=2026');
-    }, 450);
-  };
+  const limitedEditionsVideosContainerRef = useRef(null);
 
 
   useEffect(() => {
@@ -233,28 +296,70 @@ const DropGridSection = () => {
     fetchDrop();
   }, []);
 
+  useEffect(() => {
+    if (loading) return;
+    const container = limitedEditionsVideosContainerRef.current;
+    if (!container) return;
+    const videos = [
+      container.querySelector('[data-testid="limited-editions-left-video"]'),
+      container.querySelector('[data-testid="limited-editions-right-video"]'),
+    ].filter(Boolean);
+    if (videos.length < 2) return;
+    let cancelled = false;
+    let syncInterval = null;
+    const handlers = new Map();
+
+    const waitForVideo = (video) => new Promise((resolve) => {
+      if (video.readyState >= HTML_MEDIA_READY_STATE_TARGET) {
+        resolve();
+        return;
+      }
+      const handleLoaded = () => {
+        video.removeEventListener('loadeddata', handleLoaded);
+        resolve();
+      };
+      handlers.set(video, handleLoaded);
+      video.addEventListener('loadeddata', handleLoaded);
+    });
+
+    Promise.all(videos.map(waitForVideo)).then(() => {
+      if (cancelled) return;
+      const [masterVideo] = videos;
+      videos.forEach((video) => {
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {});
+        }
+      });
+
+      if (cancelled) return;
+      syncInterval = window.setInterval(() => {
+        if (cancelled) return;
+        if (masterVideo.paused || masterVideo.ended) return;
+        const masterTime = masterVideo.currentTime;
+        videos.slice(1).forEach((video) => {
+          if (video.paused || video.ended) return;
+          if (Math.abs(video.currentTime - masterTime) > LIMITED_EDITIONS_SYNC_THRESHOLD_SECONDS) {
+            video.currentTime = masterTime;
+          }
+        });
+      }, LIMITED_EDITIONS_SYNC_INTERVAL_MS);
+    });
+
+    return () => {
+      cancelled = true;
+      if (syncInterval) {
+        window.clearInterval(syncInterval);
+      }
+      handlers.forEach((handler, video) => {
+        video.removeEventListener('loadeddata', handler);
+      });
+    };
+  }, [loading]);
+
   return (
-    <section id="drops" data-testid="drop-grid" className="py-24 md:py-32">
-      {showCollectionTransition && (
-        <motion.div
-          data-testid="collection-transition"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
-          className="fixed inset-0 z-[80] bg-white/90 backdrop-blur-sm flex items-center justify-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="px-10 py-4 rounded-full border border-[#E6E0D4]/70"
-          >
-            <span className="font-playfair text-sm tracking-[0.35em] uppercase text-obsidian/70">
-              Sport Club 2026
-            </span>
-          </motion.div>
-        </motion.div>
-      )}
+    <section id="drops" data-testid="drop-grid" className="pt-6 pb-24 md:pt-8 md:pb-32">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         {/* 8 items: 2 rows of 4 on desktop */}
         {loading ? (
@@ -270,7 +375,7 @@ const DropGridSection = () => {
         ) : (() => {
           // Force “Suéter Captain” to render as the 8th (last) item in the 2nd row on desktop.
           const captain = products.find((p) => p.product_id === 'sueter-captain');
-          const domus = products.find((p) => p.product_id === 'polo-domus');
+          const ignatius = products.find((p) => p.product_id === 'sueter-ignatius');
           const sylva = products.find((p) => p.product_id === 'sueter-sylva');
           const patricius = products.find((p) => p.product_id === 'polo-patricius');
           const regius = products.find((p) => p.product_id === 'polo-regius');
@@ -278,6 +383,7 @@ const DropGridSection = () => {
             (p) =>
               p.product_id !== 'sueter-captain' &&
               p.product_id !== 'polo-domus' &&
+              p.product_id !== 'sueter-ignatius' &&
               p.product_id !== 'sueter-sylva' &&
               p.product_id !== 'polo-patricius' &&
               p.product_id !== 'polo-regius'
@@ -286,7 +392,7 @@ const DropGridSection = () => {
           const displayed = captain ? [...base, captain] : base;
           const firstRow = displayed.slice(0, 4);
           const secondRow = displayed.slice(4, 8);
-          const spotlight = [domus, sylva, patricius, regius].filter(Boolean);
+          const spotlight = [ignatius, sylva, patricius, regius].filter(Boolean);
 
           return (
             <>
@@ -296,7 +402,7 @@ const DropGridSection = () => {
                     key={p.product_id}
                     product={p}
                     index={i}
-                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini' || p.product_id === 'polo-domus' || p.product_id === 'sueter-sylva' || p.product_id === 'polo-patricius'}
+                    enableHoverVideo={supportsHoverVideo(p.product_id)}
                     enableWishlistIcon
                   />
                 ))}
@@ -314,51 +420,41 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div data-testid="editorial-collections-section" className="mt-6 md:mt-8 mb-4 md:mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <div className="text-center">
-                    <Link
-                      to="/tienda?category=polos"
-                      data-testid="editorial-polos-link"
-                      className="group block"
-                    >
-                      <div className="overflow-hidden rounded-[22px]">
-                        <img
-                          src={EDITORIAL_POLOS_IMAGE}
-                          alt="Colección Polos"
-                          loading="lazy"
-                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    </Link>
-                    <span
-                      data-testid="editorial-polos-label"
-                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
-                    >
-                      POLOS
-                    </span>
-                  </div>
-                  <div className="text-center">
-                    <Link
-                      to="/tienda?category=sueteres"
-                      data-testid="editorial-sueteres-link"
-                      className="group block"
-                    >
-                      <div className="overflow-hidden rounded-[22px]">
-                        <img
-                          src={EDITORIAL_SUETERES_IMAGE}
-                          alt="Colección Suéteres"
-                          loading="lazy"
-                          className="w-full h-auto object-contain object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    </Link>
-                    <span
-                      data-testid="editorial-sueteres-label"
-                      className="mt-3 block font-playfair text-[12px] md:text-[13px] tracking-[0.28em] text-[#1a1a1a]/85"
-                    >
-                      SUÉTERES
-                    </span>
+               <EditorialCategoryTitle />
+
+               <div data-testid="editorial-collections-section" className="mb-6 md:mb-8">
+                  <div
+                    className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-2 lg:px-4 xl:px-8"
+                  >
+                   {HOMEPAGE_CATEGORIES.map((category, index) => (
+                     <CategoryCard
+                       key={category.title}
+                       title={category.title}
+                       image={category.image}
+                       link={category.link}
+                       index={index}
+                       testId={category.testId}
+                     />
+                   ))}
+                 </div>
+                 <p className="mt-3 px-1 font-montserrat text-[10px] uppercase tracking-[0.28em] text-black/45 md:hidden">
+                   Desliza para explorar
+                 </p>
+               </div>
+
+              <div data-testid="editorial-eagle-divider" className="my-6 md:my-8">
+                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+                  <div className="w-full overflow-hidden flex justify-center">
+                    <video
+                      data-testid="editorial-eagle-divider-video"
+                      src="/videos/aguila-header-ultrawide.mp4"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      aria-hidden="true"
+                      className="w-full h-auto block object-contain"
+                    />
                   </div>
                 </div>
               </div>
@@ -369,69 +465,98 @@ const DropGridSection = () => {
                     key={p.product_id}
                     product={p}
                     index={i + firstRow.length}
-                    enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-golf' || p.product_id === 'camiseta-imperium' || p.product_id === 'americana-umbra' || p.product_id === 'sueter-captain' || p.product_id === 'polo-aureus' || p.product_id === 'traje-monograma-tambvrini' || p.product_id === 'bolso-monograma-tambvrini'}
+                    enableHoverVideo={supportsHoverVideo(p.product_id)}
                     enableWishlistIcon
                   />
                 ))}
               </div>
 
               {spotlight.length > 0 && (
-                <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20">
+                <div
+                  data-testid="homepage-spotlight-grid"
+                  className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-14 gap-y-20"
+                >
                   {spotlight.map((item, i) => (
                     <ProductCard
                       key={item.product_id}
                       product={item}
                       index={displayed.length + i}
-                      enableHoverVideo={item.product_id === 'camiseta-sport-club' || item.product_id === 'polo-golf' || item.product_id === 'camiseta-imperium' || item.product_id === 'americana-umbra' || item.product_id === 'sueter-captain' || item.product_id === 'polo-aureus' || item.product_id === 'traje-monograma-tambvrini' || item.product_id === 'bolso-monograma-tambvrini'}
+                      enableHoverVideo={supportsHoverVideo(item.product_id)}
                       enableWishlistIcon
                     />
                   ))}
                 </div>
               )}
 
-              <div className="mt-8 md:mt-10 mb-6 md:mb-8">
-                <div className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-                  <div className="relative w-full">
-                    <img
-                      data-testid="campaign-divider-image"
-                      src={DROP_CAMPAIGN_IMAGE}
-                      alt="Editorial Casablanca TAMBVRINI"
-                      className="w-full h-auto object-contain object-center"
-                      loading="lazy"
+              <div
+                ref={limitedEditionsVideosContainerRef}
+                data-testid="limited-editions-section"
+                className="mt-6 md:mt-8 mb-6 md:mb-8"
+              >
+                <div className="limited-editions-video-wrapper">
+                  <div
+                    data-testid="limited-editions-left-wrapper"
+                    className="limited-editions-video-card"
+                    aria-hidden="true"
+                  >
+                    <video
+                      data-testid="limited-editions-left-video"
+                      data-video-label="left"
+                      src="/videos/pasarela-video-web.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      aria-label="Limited Editions Pasarela video"
+                      title="Limited Editions Pasarela video"
+                      className="limited-editions-video"
                     />
-                    <div className="absolute inset-0 bg-black/10" />
-                    <div className="absolute inset-0 flex items-center justify-center px-6">
-                      <div className="text-center max-w-[640px]">
-                        <h2
-                          data-testid="campaign-collection-title"
-                          className="font-playfair text-[34px] md:text-[56px] lg:text-[64px] tracking-[0.08em] text-[#F6F1E7]/90 font-light"
-                        >
-                          Sport Club 2026
-                        </h2>
-                        <button
-                          data-testid="campaign-collection-button"
-                          type="button"
-                          onClick={handleCollectionClick}
-                          className="mt-6 inline-flex items-center justify-center rounded-full border border-[#F6F1E7]/70 px-8 py-3 font-montserrat text-[10px] tracking-[0.32em] uppercase text-[#F6F1E7]/85 transition-all duration-500 hover:text-[#F6F1E7] hover:border-[#F6F1E7] hover:shadow-[0_0_18px_rgba(0,0,0,0.04)] hover:bg-white/5"
-                        >
-                          Comprar la Colección
-                        </button>
-                      </div>
-                    </div>
+                    <Link
+                      to="/limited-editions"
+                      data-testid="limited-editions-label"
+                      className="limited-editions-video-label"
+                    >
+                      Limited Editions
+                    </Link>
+                  </div>
+                  <div
+                    data-testid="limited-editions-right-wrapper"
+                    className="limited-editions-video-card"
+                    aria-hidden="true"
+                  >
+                    <video
+                      data-testid="limited-editions-right-video"
+                      data-video-label="right"
+                      src="/videos/eden-video-web.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      aria-label="Limited Editions Eden video"
+                      title="Limited Editions Eden video"
+                      className="limited-editions-video"
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className="mb-8 md:mb-10">
+              <div className="mb-6 md:mb-8">
                 <div className="w-[94%] max-w-[1760px] mx-auto">
                   <div className="relative w-full aspect-video rounded-[28px] overflow-hidden">
                     <img
                       data-testid="editorial-hero-image"
                       src={EDITORIAL_HERO_IMAGE}
                       alt="Editorial TAMBVRINI"
-                      className="w-full h-auto object-contain object-center"
+                      className="w-full h-full object-cover object-center"
                       loading="lazy"
                     />
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6 text-center">
+                      <span data-testid="editorial-hero-title" className="primavera-editorial-title">
+                        PRIMAVERA — VERANO
+                      </span>
+                    </div>
                     <Link
                       data-testid="editorial-hero-cta"
                       to="/tienda?category=novedades"
@@ -448,7 +573,7 @@ const DropGridSection = () => {
         })()}
 
         {/* Aesthetic-only promo tiles (scroll to drops) */}
-        <div id="novedades" data-testid="novedades-section" className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div id="novedades" data-testid="novedades-section" className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 md:gap-y-8">
           <NovedadesTile
             title="Novedades para Hombre"
             bg={NOVEDADES_HOMBRE_BG}
@@ -464,6 +589,20 @@ const DropGridSection = () => {
             testId="novedades-mujer-link"
           />
         </div>
+
+        <div data-testid="mystic-divider-image" className="mt-6 md:mt-8 -mb-[4.5rem] md:-mb-24">
+          <div
+            data-testid="mystic-divider-wrapper"
+            className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
+          >
+            <img
+              src="/images/header-mistico-ultrawide.png"
+              alt="editorial mystic divider"
+              className="w-full h-auto object-contain object-center"
+              loading="lazy"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -477,8 +616,6 @@ export default function HomePage() {
   return (
     <div data-testid="home-page" className="noise-overlay editorial-noise bg-white">
       <HeroSection />
-
-      <IntroVideoSection />
 
       {/* (removed editorial divider) */}
 

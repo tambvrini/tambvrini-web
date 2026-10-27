@@ -1,5 +1,7 @@
+import { STRIPE_PAYMENT_LINKS, STRIPE_PRODUCTS } from '../constants/stripeProducts';
+
 /**
- * TAMBVRINI — Real product catalog restored from the Emergent export.
+ * TAMBVRINI — Product catalog.
  *
  * Sources used to recover this dataset:
  *   • backend/server.py  SEED_PRODUCTS  (bolso-monograma, camiseta-sport-club, traje-monograma)
@@ -9,7 +11,7 @@
  *   • frontend/src/pages/ProductPage.js        (sold-out-size rules)
  *   • frontend/src/pages/HomePage.js           (layout / spotlight references)
  *   • frontend/src/pages/ShopPage.js           (category-2026 mapping, gender filters)
- *   • memory/PRD.md + .emergent/summary.txt    (product names, gallery sizes, dates)
+ *   • memory/PRD.md                             (product names, gallery sizes, dates)
  *   • test_result.md                           (Polo Aureus price, colors, sizes)
  *
  * Products whose image URLs existed ONLY in the live MongoDB (never committed)
@@ -19,6 +21,39 @@
  */
 
 const ASSET = "https://customer-assets.emergentagent.com";
+const STRIPE_PRICE_IDS = {
+  "camiseta-sport-club": STRIPE_PRODUCTS.camisetaSportClub,
+  "polo-golf": STRIPE_PRODUCTS.poloGolf,
+  "sueter-captain": STRIPE_PRODUCTS.sueterCaptain,
+  "polo-aureus": STRIPE_PRODUCTS.poloAureus,
+  "camiseta-imperium": STRIPE_PRODUCTS.camisetaImperium,
+  "americana-umbra": STRIPE_PRODUCTS.americanaUmbra,
+  "sueter-sylva": STRIPE_PRODUCTS.sueterSylva,
+  "polo-patricius": STRIPE_PRODUCTS.poloPatricius,
+  "polo-regius": STRIPE_PRODUCTS.poloRegius,
+  "sueter-ignatius": STRIPE_PRODUCTS.sueterIgnatius,
+};
+const PLACEHOLDER_STRIPE_PRICE_IDS = {
+  "traje-monograma-tambvrini": "price_traje_monograma_tambvrini",
+  "bolso-monograma-tambvrini": "price_bolso_monograma_tambvrini",
+  "polo-domus": "price_polo_domus",
+};
+const PRODUCT_STRIPE_PRICE_IDS = {
+  ...PLACEHOLDER_STRIPE_PRICE_IDS,
+  ...STRIPE_PRICE_IDS,
+};
+const PRODUCT_PAYMENT_LINKS = {
+  'camiseta-sport-club': STRIPE_PAYMENT_LINKS.camisetaSportClub,
+  'polo-golf': STRIPE_PAYMENT_LINKS.poloGolf,
+  'sueter-captain': STRIPE_PAYMENT_LINKS.sueterCaptain,
+  'polo-aureus': STRIPE_PAYMENT_LINKS.poloAureus,
+  'camiseta-imperium': STRIPE_PAYMENT_LINKS.camisetaImperium,
+  'americana-umbra': STRIPE_PAYMENT_LINKS.americanaUmbra,
+  'sueter-sylva': STRIPE_PAYMENT_LINKS.sueterSylva,
+  'polo-patricius': STRIPE_PAYMENT_LINKS.poloPatricius,
+  'polo-regius': STRIPE_PAYMENT_LINKS.poloRegius,
+  'sueter-ignatius': STRIPE_PAYMENT_LINKS.sueterIgnatius,
+};
 
 const products = [
   // ──────────────────────────────────────────────────
@@ -32,7 +67,7 @@ const products = [
     name: "Traje Monograma Tambvrini",
     description:
       "Set de traje Tambvrini con bordado monograma romano integral. Sastrería contemporánea de inspiración italiana con silueta elegante y estructura ligera.",
-    price: 210.0,
+    price: 200.0,
     currency: "EUR",
     images: [
       "/products/traje-monograma-tambvrini/01.jpeg",
@@ -40,10 +75,9 @@ const products = [
       "/products/traje-monograma-tambvrini/03.jpeg",
       "/products/traje-monograma-tambvrini/04.jpeg",
       "/products/traje-monograma-tambvrini/05.png",
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
-      `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
+      "/products/traje-monograma-tambvrini/traje-monograma-tambvrini (1).jpg",
     ],
-    thumbnail_image: `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/m52og20p_hf_20260208_234900_3f14961d-1c72-4047-86f4-58b0ebda6f0c%20%282%29.png`,
+    thumbnail_image: `${ASSET}/job_8de41a80-b224-42fd-8fc4-51d1d3d41b34/artifacts/13w6alad_hf_20260208_221349_74b1b08f-1ec5-41f5-bf8f-915f5855630a.jpeg`,
     category: ["sastrería", "set"],
     gender: "unisex",
     sizes: ["S", "M", "L", "XL"],
@@ -67,7 +101,7 @@ const products = [
     name: "Bolso Monograma Tambvrini",
     description:
       "El Bolso Monograma Tambvrini representa la visión contemporánea del lujo clásico de la casa.\nUna pieza diseñada para viajes elegantes y uso diario refinado, donde el equilibrio entre estructura, textura y detalles define su carácter.\n\nSu silueta arquitectónica se combina con un lienzo monograma exclusivo y bandas centrales en tonos pastel que aportan identidad visual distintiva. Cada elemento ha sido pensado para transmitir presencia, sofisticación y durabilidad.\n\nDiseñado para acompañar movimiento, viajes y estilo con una estética limpia y atemporal.",
-    price: 290.0,
+    price: 260.0,
     currency: "EUR",
     images: [
       `${ASSET}/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/u6zqjmsq_3.png`,
@@ -140,7 +174,13 @@ const products = [
       "Polo Golf de la colección Sport Club 2026. Algodón premium con bordado del escudo Sport Club. Estética deportiva europea con acabado de lujo.",
     price: 30.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/polo-golf/polo-golf-look-01.jpg",
+      "/products/polo-golf/polo-golf-look-02.jpg",
+      "/products/polo-golf/polo-golf-look-03.jpg",
+      "/products/polo-golf/polo-golf-look-04.jpg",
+      "/products/polo-golf/polo-golf-look-05.jpg",
+    ],
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -155,8 +195,7 @@ const products = [
   },
 
   // ──────────────────────────────────────────────────
-  // 5. Suéter Captain  (recovered from category-2026 mapping + frontend refs)
-  //    Images only existed in MongoDB — URLs pending re-import.
+  // 5. Suéter Captain
   // ──────────────────────────────────────────────────
   {
     product_id: "sueter-captain",
@@ -166,7 +205,13 @@ const products = [
       "Suéter Captain de la colección Sport Club 2026. Punto fino premium con bordado del escudo Sport Club. Diseñado para el rendimiento con estética de club privado europeo.",
     price: 50.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/sueter-captain/sueter-captain-look-01.jpg",
+      "/products/sueter-captain/sueter-captain-look-02.jpg",
+      "/products/sueter-captain/sueter-captain-look-03.jpg",
+      "/products/sueter-captain/sueter-captain-look-04.jpg",
+      "/products/sueter-captain/sueter-captain-look-05.jpg",
+    ],
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -175,13 +220,11 @@ const products = [
     care: "Lavado a máquina 30° del revés. No usar secadora.",
     is_new: true,
     is_featured: true,
-    collections: ["sport-club"],
     created_at: "2026-02-12T00:00:00+00:00",
   },
 
   // ──────────────────────────────────────────────────
   // 6. Polo Aureus  (recovered from test_result.md verification data)
-  //    Images only existed in MongoDB — URLs pending re-import.
   // ──────────────────────────────────────────────────
   {
     product_id: "polo-aureus",
@@ -191,7 +234,14 @@ const products = [
       "Polo Aureus de algodón premium con acabado de lujo. Una pieza atemporal que combina la elegancia deportiva con el refinamiento mediterráneo.",
     price: 30.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/polo-aureus/polo-aureus-look-01.jpg",
+      "/products/polo-aureus/polo-aureus-look-02.jpg",
+      "/products/polo-aureus/polo-aureus-look-03.jpg",
+      "/products/polo-aureus/polo-aureus-look-04.jpg",
+      "/products/polo-aureus/polo-aureus-look-05.jpg",
+      "/products/polo-aureus/polo-aureus-look-06.jpg",
+    ],
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -217,11 +267,24 @@ const products = [
       "Camiseta Imperium de algodón premium con diseño editorial. Inspiración clásica romana con acabado contemporáneo de lujo.",
     price: 20.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/camiseta-imperium/camiseta-imperium-look-01.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-02.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-03.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-04.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-05.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-06.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-07.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-08.jpg",
+      "/products/camiseta-imperium/camiseta-imperium-look-09.jpg",
+    ],
     category: ["camisetas", "apparel"],
     gender: "mujer",
-    sizes: ["XS", "S", "M", "L"],
-    colors: [{ name: "Negro", hex: "#0A0A0A" }],
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Negro", hex: "#0A0A0A" },
+      { name: "Beige", hex: "#D8C3A5" },
+    ],
     composition: "100% Algodón Premium",
     care: "Lavado a máquina 30° del revés. No usar secadora.",
     is_new: true,
@@ -243,6 +306,8 @@ const products = [
     price: 150.0,
     currency: "EUR",
     images: [],
+    model_url: "/models/umbra.glb",
+    model_poster: "/thumbnails/americana-umbra.jpg",
     category: ["sastrería", "apparel"],
     gender: "mujer",
     sizes: ["S", "M", "L", "XL"],
@@ -293,7 +358,15 @@ const products = [
       "Suéter Sylva de punto fino premium. Diseño elegante con acabado de lujo y estética de club privado europeo.",
     price: 40.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/sueter-sylva/sueter-sylva-look-01.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-02.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-03.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-04.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-05.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-07.jpg",
+      "/products/sueter-sylva/sueter-sylva-look-08.jpg",
+    ],
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -318,7 +391,15 @@ const products = [
       "Polo Patricius de algodón premium con bordado exclusivo. Inspiración clásica romana con estética de lujo contemporáneo.",
     price: 25.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/polo-patricius/polo-patricius-look-01.jpg",
+      "/products/polo-patricius/polo-patricius-look-02.jpg",
+      "/products/polo-patricius/polo-patricius-look-03.jpg",
+      "/products/polo-patricius/polo-patricius-look-04.jpg",
+      "/products/polo-patricius/polo-patricius-look-05.jpg",
+      "/products/polo-patricius/polo-patricius-look-06.jpg",
+      "/products/polo-patricius/polo-patricius-look-07.jpg",
+    ],
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -343,7 +424,14 @@ const products = [
       "Polo Regius de algodón premium con bordado exclusivo. La máxima expresión de la elegancia deportiva mediterránea.",
     price: 30.0,
     currency: "EUR",
-    images: [],
+    images: [
+      "/products/polo-regius/polo-regius-look-01.jpg",
+      "/products/polo-regius/polo-regius-look-02.jpg",
+      "/products/polo-regius/polo-regius-look-03.jpg",
+      "/products/polo-regius/polo-regius-look-04.jpg",
+      "/products/polo-regius/polo-regius-look-05.jpg",
+      "/products/polo-regius/polo-regius-look-06.jpg",
+    ],
     category: ["polos", "apparel"],
     gender: "hombre",
     sizes: ["S", "M", "L", "XL"],
@@ -363,22 +451,30 @@ const products = [
     product_id: "sueter-ignatius",
     slug: "ignatius-sweater-thumb",
     name: "Suéter Ignatius",
-    description: "Suéter Ignatius, echo a mano, pieza única",
-    price: 390.0,
+    description:
+      "El Suéter Ignatius reinterpreta el knitwear clásico con un carácter deliberadamente imperfecto. Confeccionado en algodón de tacto suave, presenta un acabado desgastado artesanal que revela capas interiores en contraste rojo, creando una estética cruda y contemporánea.\n\nCada pieza expresa una elegancia desestructurada, donde el desgaste controlado y los cortes irregulares evocan la tradición del trabajo manual y la individualidad de la prenda. Un equilibrio entre sofisticación clásica y rebeldía moderna.",
+    price: 300.0,
     currency: "EUR",
     images: [],
+    model_url: "/models/ignatius.glb",
     thumbnail_image: "/thumbnails/ignatius-sweater-thumb.jpg",
     category: ["knitwear", "apparel"],
     gender: "hombre",
     sizes: ["S", "M"],
-    colors: [{ name: "Beige", hex: "#D2B48C" }],
-    composition: "materiales de la mejor calidad, cosido a mano",
-    care: "",
+    colors: [{ name: "Magma", hex: "#0A0A0A" }],
+    composition:
+      "100% algodón de alta calidad.\n\nTejido de gramaje medio con acabado suavizado para mayor confort. Detalles desgastados realizados manualmente que hacen que cada pieza sea única.",
+    care: "Lavado a mano. Secar en plano.",
     is_new: true,
     is_featured: true,
     collections: ["roma"],
     created_at: "2026-03-04T00:00:00+00:00",
   },
-];
+].map((product) => ({
+  ...product,
+  stripePriceId: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
+  stripe_price_id: PRODUCT_STRIPE_PRICE_IDS[product.product_id],
+  stripePaymentLink: PRODUCT_PAYMENT_LINKS[product.product_id],
+}));
 
 export default products;

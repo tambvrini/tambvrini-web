@@ -9,14 +9,14 @@ const scrollToDrops = () => {
   });
 };
 
-import { Menu, X, User, Heart, ShoppingBag } from 'lucide-react';
+import { X, User, Heart, ShoppingBag, Search, Phone } from 'lucide-react';
+import Logo from './Logo';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '../components/ui/sheet';
-
-const LOGO_WHITE = "/logo-letras-final-blanco.svg";
-const LOGO_DARK = "/logo-letras-final-blanco.svg";
+import SearchOverlay from './SearchOverlay';
+import ContactPanel from './ContactPanel';
 
 const SCROLL_THRESHOLD = 500;
 
@@ -26,9 +26,10 @@ const MENU_SECTIONS = [
   {
     title: 'Tienda',
     links: [
-      { label: 'Novedades', href: '/#drops', testId: 'menu-link-novedades' },
+      { label: 'Novedades', href: '/tienda?category=novedades', testId: 'menu-link-novedades' },
       { label: 'Hombre', href: '/tienda?gender=hombre', testId: 'menu-link-hombre' },
       { label: 'Mujer', href: '/tienda?gender=mujer', testId: 'menu-link-mujer' },
+      { label: 'Limited Editions', href: '/limited-editions', testId: 'menu-link-limited-editions' },
     ]
   },
 
@@ -37,7 +38,6 @@ const MENU_SECTIONS = [
     links: [
       { label: 'Sobre TAMBVRINI', href: '/marca', testId: 'menu-link-sobre-tambvrini' },
       { label: 'Filosofía', href: '/marca', testId: 'menu-link-filosofia' },
-      { label: 'Artesanía', href: '/marca', testId: 'menu-link-artesania' },
       { label: 'Editorial', href: '/marca', testId: 'menu-link-editorial' },
     ]
   }
@@ -46,6 +46,8 @@ const MENU_SECTIONS = [
 export const Header = () => {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [cinematicProgress, setCinematicProgress] = useState(1);
 
   const location = useLocation();
@@ -54,6 +56,7 @@ export const Header = () => {
   const { items: wishlistItems } = useWishlist();
 
   const isHomePage = location.pathname === '/';
+  const isProductPage = location.pathname.startsWith('/producto');
   const isWomenCategory =
     location.pathname === '/tienda' && new URLSearchParams(location.search).get('gender') === 'mujer';
   const isMenCategory =
@@ -64,6 +67,29 @@ export const Header = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('menu-open', menuOpen);
+    return () => {
+      document.body.classList.remove('menu-open');
+    };
+  }, [menuOpen]);
+
+  const handleMenuOpenChange = (open) => {
+    setMenuOpen(open);
+    if (open) {
+      setSearchOpen(false);
+      setContactOpen(false);
+    }
+  };
+
+  const handleContactOpenChange = (open) => {
+    setContactOpen(open);
+    if (open) {
+      setMenuOpen(false);
+      setSearchOpen(false);
+    }
+  };
 
   useEffect(() => {
     const handleCinematic = (event) => {
@@ -82,11 +108,21 @@ export const Header = () => {
     }
   }, [location.pathname, location.hash]);
 
+  useEffect(() => {
+    setSearchOpen(false);
+    setContactOpen(false);
+  }, [location.pathname]);
+
 
 
   // On homepage, header logo hidden until scroll passes threshold
   // On other pages, header logo always visible
-  const scrolled = isHomePage ? scrollY > SCROLL_THRESHOLD : scrollY > 80;
+  let scrolled = scrollY > 80;
+  if (isHomePage) {
+    scrolled = scrollY > SCROLL_THRESHOLD;
+  } else if (isProductPage) {
+    scrolled = true;
+  }
   // Delay header logo reveal so we don't see a duplicated "medium" logo during the hero shrink.
   // We fade the header logo in right at the end of the hero animation.
   const headerFadeStart = SCROLL_THRESHOLD - 40; // ~460
@@ -99,9 +135,6 @@ export const Header = () => {
 
   const cinematicHidden = (isWomenCategory || isMenCategory) && cinematicProgress < 0.85;
   const navToneClass = cinematicHidden ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
-  const shouldInvertLogo = (scrolled || !isHomePage) && !cinematicHidden;
-
-  const logoSrc = LOGO_DARK;
 
   return (
     <>
@@ -116,19 +149,31 @@ export const Header = () => {
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
           <div className="flex items-center gap-5 w-[120px]" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
-            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <Sheet open={menuOpen} onOpenChange={handleMenuOpenChange}>
               <SheetTrigger asChild>
                 <button
+                  type="button"
+                  aria-expanded={menuOpen}
+                  aria-controls="site-menu"
+                  aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                   data-testid="menu-toggle-btn"
-                  className={`${navToneClass} transition-colors duration-300`}
+                  className={`menu-toggle ${menuOpen ? 'is-open' : ''} ${navToneClass} transition-colors duration-300`}
                 >
-                  <Menu size={20} strokeWidth={1.5} />
+                  <span aria-hidden="true" />
+                  <span aria-hidden="true" />
+                  <span aria-hidden="true" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" hideClose className="w-full sm:w-[480px] bg-white border-r border-black/5 p-0 overflow-y-auto">
-                <div className="p-8 md:p-12">
+              <SheetContent
+                id="site-menu"
+                side="left"
+                hideClose
+                overlayClassName="menu-overlay"
+                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-hidden"
+              >
+                <div className="flex flex-col h-full p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">
-                    <img src={logoSrc} alt="TAMBVRINI" className={`h-5 ${(scrolled || !isHomePage) ? 'invert' : ''}`} />
+                    <Logo className="logo h-5 w-auto" />
                     <SheetClose asChild>
                       <button data-testid="menu-close-btn">
                         <X size={24} className="text-obsidian/60 hover:text-obsidian" />
@@ -161,9 +206,48 @@ export const Header = () => {
                       </ul>
                     </div>
                   ))}
+                  <div className="mt-auto pt-10">
+                    <div className="-mx-8 md:-mx-12 px-8 md:px-12 py-6 bg-black/[0.03] border-t border-black/5">
+                      <div className="space-y-4">
+                        <Link
+                          to="/cuenta"
+                          onClick={() => setMenuOpen(false)}
+                          className="premium-scale flex items-center gap-3 text-obsidian/70 hover:text-obsidian transition-colors duration-300"
+                        >
+                          <User size={16} strokeWidth={1.5} />
+                          <span className="font-montserrat text-sm tracking-wide">Login</span>
+                        </Link>
+                        <button
+                          type="button"
+                          data-testid="contact-toggle-btn"
+                          onClick={() => {
+                            setMenuOpen(false);
+                            setContactOpen(true);
+                          }}
+                          className="flex items-center gap-3 text-obsidian/70 hover:text-obsidian transition-colors duration-300"
+                        >
+                          <Phone size={16} strokeWidth={1.5} />
+                          <span className="font-montserrat text-sm tracking-wide">Contáctanos</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
+            <button
+              type="button"
+              data-testid="search-toggle-btn"
+              aria-label="Abrir búsqueda"
+              onClick={() => {
+                setMenuOpen(false);
+                setContactOpen(false);
+                setSearchOpen(true);
+              }}
+              className={`header-icon ${navToneClass} transition-colors duration-300`}
+            >
+              <Search size={20} strokeWidth={1.5} />
+            </button>
           </div>
 
           {/* Center: Header Logo — fades in after hero logo shrinks (homepage) or always visible (other pages) */}
@@ -173,10 +257,8 @@ export const Header = () => {
             className="flex-shrink-0 transition-opacity duration-500"
             style={{ opacity: headerLogoOpacity, pointerEvents: headerLogoVisible ? 'auto' : 'none' }}
           >
-            <img
-              src={logoSrc}
-              alt="TAMBVRINI"
-              className={`transition-all duration-500 ${shouldInvertLogo ? 'invert' : ''} ${isHomePage ? 'h-10 md:h-12' : (scrolled ? 'h-10 md:h-12' : 'h-16 md:h-28')}`}
+            <Logo
+              className={`logo transition-all duration-500 w-auto ${isHomePage ? 'h-10 md:h-12' : (scrolled ? 'h-10 md:h-12' : 'h-16 md:h-28')}`}
             />
           </Link>
 
@@ -185,14 +267,14 @@ export const Header = () => {
             <Link
               to="/cuenta"
               data-testid="account-link"
-              className={`${navToneClass} transition-colors duration-300 hidden sm:block`}
+              className={`header-icon ${navToneClass} transition-colors duration-300 hidden sm:block`}
             >
               <User size={20} strokeWidth={1.5} />
             </Link>
             <Link
               to="/favoritos"
               data-testid="wishlist-link"
-              className={`${navToneClass} transition-colors duration-300 relative`}
+              className={`header-icon ${navToneClass} transition-colors duration-300 relative`}
             >
               <Heart size={20} strokeWidth={1.5} />
               {wishlistItems.length > 0 && (
@@ -204,7 +286,7 @@ export const Header = () => {
             <button
               data-testid="cart-toggle-btn"
               onClick={() => setIsOpen(true)}
-              className={`${navToneClass} transition-colors duration-300 relative`}
+              className={`header-icon ${navToneClass} transition-colors duration-300 relative`}
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
               {totalItems > 0 && (
@@ -218,8 +300,8 @@ export const Header = () => {
 
 
       </header>
-
-
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <ContactPanel open={contactOpen} onOpenChange={handleContactOpenChange} />
     </>
   );
 };

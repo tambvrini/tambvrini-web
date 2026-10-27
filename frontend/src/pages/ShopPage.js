@@ -1,22 +1,37 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { queryProducts } from '@/data/productHelpers';
 import catalogProducts from '@/data/products';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
 
 const CATEGORY_LABELS = {
   novedades: 'Novedades',
   '2026': '2026',
+  'sport-club': 'Sport Club',
+  camisetas: 'Camisetas',
   polos: 'Polos',
   sueteres: 'Suéteres',
+  'suéteres': 'Suéteres',
   hombre: 'Hombre',
   mujer: 'Mujer',
   accesorios: 'Accesorios',
-  marroquineria: 'Marroquinería',
-  calzado: 'Calzado',
 };
+
+const CATEGORY_NAV_ITEMS = [
+  ['2026', CATEGORY_LABELS['2026']],
+  ['limited-editions', 'Limited Editions'],
+  ['novedades', CATEGORY_LABELS.novedades],
+  ['sport-club', CATEGORY_LABELS['sport-club']],
+  ['camisetas', CATEGORY_LABELS.camisetas],
+  ['polos', CATEGORY_LABELS.polos],
+  ['sueteres', CATEGORY_LABELS.sueteres],
+  ['hombre', CATEGORY_LABELS.hombre],
+  ['mujer', CATEGORY_LABELS.mujer],
+  ['accesorios', CATEGORY_LABELS.accesorios],
+];
 
 const COLLECTION_LABELS = {
   roma: 'Roma',
@@ -34,9 +49,43 @@ const MUJER_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c
 const HOMBRE_CINEMATIC_VIDEO = "https://customer-assets.emergentagent.com/job_14c68bcb-ef5d-44c9-b883-bd8d392c855c/artifacts/nqiyik78_video%20final%20tambvrini%202.mov";
 
 const HOMBRE_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/91b5s9c4_HOMBRE.jpg";
+const COLLECTION_2026_HEADER_VIDEO = '/videos/tambvrini-intro-loop.mp4';
+const ACCESSORIES_HEADER_IMAGE = '/images/header-gafas.jpeg';
+const COLLECTION_2026_EDITORIAL_IMAGE = '/images/2026.PNG';
+
+function CategoryHeaderMedia({ type, src, alt, testId }) {
+  return (
+    <div data-testid={`${testId}-banner`} className="mb-12">
+      <div className="overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)]">
+        {type === 'video' ? (
+          <video
+            data-testid={`${testId}-video`}
+            src={src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="w-full h-auto max-w-full object-contain object-center"
+            aria-label={alt}
+          />
+        ) : (
+          <img
+            data-testid={`${testId}-image`}
+            src={src}
+            alt={alt}
+            loading="lazy"
+            className="w-full h-auto object-cover object-center"
+          />
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -47,6 +96,11 @@ export default function ShopPage() {
   const videoRef = useRef(null);
 
   const category = searchParams.get('category') || searchParams.get('filter') || '';
+  const normalizedCategory = category === 'marroquineria'
+    ? 'accesorios'
+    : category === 'suéteres'
+      ? 'sueteres'
+      : category;
   const gender = searchParams.get('gender') || '';
   const collection = searchParams.get('collection') || '';
   const search = searchParams.get('search') || '';
@@ -55,20 +109,18 @@ export default function ShopPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [category, gender, collection, search, sort, page]);
+  }, [normalizedCategory, gender, collection, search, sort, page]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const isNew = category === 'novedades' || searchParams.get('filter') === 'novedades';
         const result = queryProducts({
-          category: category || undefined,
+          category: normalizedCategory || undefined,
           gender: gender || undefined,
           collection: collection || undefined,
           search: search || undefined,
           sort: sort || undefined,
-          is_new: isNew || undefined,
           page,
           limit: 20,
         });
@@ -81,12 +133,12 @@ export default function ShopPage() {
       }
     };
     fetchProducts();
-  }, [category, gender, collection, search, sort, page]);
+  }, [normalizedCategory, gender, collection, search, sort, page]);
 
   const getTitle = () => {
     if (search) return `Resultados: "${search}"`;
     if (gender) return HEADER_LABEL_OVERRIDES[gender] || CATEGORY_LABELS[gender] || gender;
-    if (category) return HEADER_LABEL_OVERRIDES[category] || CATEGORY_LABELS[category] || category;
+    if (normalizedCategory) return HEADER_LABEL_OVERRIDES[normalizedCategory] || CATEGORY_LABELS[normalizedCategory] || normalizedCategory;
     if (collection) return COLLECTION_LABELS[collection] || collection;
     return 'Tienda';
   };
@@ -105,6 +157,7 @@ export default function ShopPage() {
 
   const isMensView = gender === 'hombre';
   const isWomenView = gender === 'mujer';
+  const isAccessoriesView = normalizedCategory === 'accesorios';
   const mujerProducts = useMemo(() => {
     if (!isWomenView) return filteredProducts;
     const poloAureus = catalogProducts.find((p) => p.product_id === 'polo-aureus');
@@ -154,6 +207,23 @@ export default function ShopPage() {
         ...mujerProducts.slice(mujerImperiumIndex + 1),
       ]
     : gridProducts;
+  const isCollection2026View = normalizedCategory === '2026';
+  const collection2026CaptainIndex = isCollection2026View
+    ? gridProducts.findIndex((p) => p.product_id === 'sueter-captain')
+    : -1;
+  const collection2026GridItems = isCollection2026View && collection2026CaptainIndex !== -1
+    ? [
+        ...gridProducts.slice(0, collection2026CaptainIndex + 1),
+        { type: 'editorial-2026', id: 'collection-2026-editorial' },
+        ...gridProducts.slice(collection2026CaptainIndex + 1),
+      ]
+    : gridProducts;
+  let shopGridItems = gridProducts;
+  if (isWomenView) {
+    shopGridItems = mujerGridItems;
+  } else if (isCollection2026View) {
+    shopGridItems = collection2026GridItems;
+  }
 
   useEffect(() => {
     if (!isCinematicView) {
@@ -234,7 +304,7 @@ export default function ShopPage() {
         <div
           ref={introRef}
           data-testid="category-cinematic-intro"
-          className="relative w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-32 md:-mt-40 h-[160vh]"
+          className="relative w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-32 md:-mt-40 h-[calc(100vh+40px)]"
         >
           <div className="sticky top-0 h-screen flex items-center justify-center bg-[#06070C] relative z-[20]">
             <div className="relative z-[40] flex items-center justify-center w-full h-full">
@@ -257,7 +327,24 @@ export default function ShopPage() {
           </div>
         </div>
       )}
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
+        <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
+        {isCollection2026View && (
+          <CategoryHeaderMedia
+            type="video"
+            src={COLLECTION_2026_HEADER_VIDEO}
+            alt="Editorial 2026 Header TAMBVRINI"
+            testId="editorial-2026-header"
+          />
+        )}
+        {isAccessoriesView && (
+          <CategoryHeaderMedia
+            type="image"
+            src={ACCESSORIES_HEADER_IMAGE}
+            alt="Editorial Accesorios Header TAMBVRINI"
+            testId="editorial-accesorios-header"
+          />
+        )}
+
         {/* Header */}
         <div className="relative flex flex-col md:flex-row justify-start items-start md:items-end mt-20 md:mt-24 mb-10 md:mb-14 gap-6">
           <div className="w-full text-left">
@@ -292,18 +379,26 @@ export default function ShopPage() {
 
         {/* Category pills */}
         <div className="flex flex-wrap gap-2 mb-12">
-          {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+          {CATEGORY_NAV_ITEMS.map(([key, label]) => (
             <button
               key={key}
               data-testid={`filter-${key}`}
               onClick={() => {
+                if (key === 'limited-editions') {
+                  navigate('/limited-editions');
+                  return;
+                }
+                if (key === 'sport-club') {
+                  navigate('/sport-club');
+                  return;
+                }
                 const p = new URLSearchParams();
                 if (key === 'hombre' || key === 'mujer') p.set('gender', key);
                 else p.set('category', key);
                 setSearchParams(p);
               }}
               className={`font-montserrat text-[10px] tracking-[0.15em] uppercase py-2 px-5 border transition-colors duration-300 ${
-                category === key || gender === key
+                normalizedCategory === key || gender === key
                   ? 'border-gold text-gold'
                   : 'border-black/10 text-obsidian/50 hover:text-obsidian hover:border-black/30'
               }`}
@@ -348,7 +443,7 @@ export default function ShopPage() {
                   key={p.product_id}
                   product={p}
                   index={i}
-                enableHoverVideo={p.product_id === 'camiseta-sport-club' || p.product_id === 'polo-domus' || p.product_id === 'sueter-sylva' || p.product_id === 'polo-patricius'}
+                enableHoverVideo={supportsHoverVideo(p.product_id)}
                 />
               ))}
             </div>
@@ -367,7 +462,7 @@ export default function ShopPage() {
                   key={p.product_id}
                   product={p}
                   index={i + mensFirst.length}
-                  enableHoverVideo={p.product_id === 'camiseta-sport-club'}
+                  enableHoverVideo={supportsHoverVideo(p.product_id)}
                 />
               ))}
             </div>
@@ -385,7 +480,7 @@ export default function ShopPage() {
                 : undefined
             }
           >
-            {mujerGridItems.map((item, i) => (
+            {shopGridItems.map((item, i) => (
               item?.type === 'editorial' ? (
                 <div
                   key={item.id}
@@ -402,12 +497,28 @@ export default function ShopPage() {
                     />
                   </div>
                 </div>
+              ) : item?.type === 'editorial-2026' ? (
+                <div
+                  key={item.id}
+                  data-testid="editorial-2026-insert"
+                  className="col-span-1 lg:row-span-2"
+                >
+                  <div className="h-full min-h-[22rem] lg:min-h-0 relative overflow-hidden rounded-[22px] shadow-[0_18px_46px_rgba(0,0,0,0.08)]">
+                    <img
+                      data-testid="editorial-2026-image"
+                      src={COLLECTION_2026_EDITORIAL_IMAGE}
+                      alt="Editorial 2026 TAMBVRINI"
+                      loading="lazy"
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                </div>
               ) : (
                 <ProductCard
                   key={item.product_id}
                   product={item}
                   index={i}
-                  enableHoverVideo={item.product_id === 'camiseta-sport-club' || item.product_id === 'polo-domus' || item.product_id === 'sueter-sylva' || item.product_id === 'polo-patricius'}
+                  enableHoverVideo={supportsHoverVideo(item.product_id)}
                 />
               )
             ))}

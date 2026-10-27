@@ -1,22 +1,56 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Heart, Minus, Plus, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { Heart, Minus, Plus, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
+import ModelViewer from '../components/ModelViewer';
+import Simple3DViewer from '../components/Simple3DViewer.tsx';
 import { toast } from 'sonner';
-import { getProductById } from '@/data/productHelpers';
+import { getProductById } from '../data/productHelpers';
+import { getStripeLink } from '../constants/stripeProducts';
+import { supportsHoverVideo } from '../constants/hoverVideoProducts';
+
+const LOGO_FALLBACK_POSTER = '/logo-letras-final-blanco.svg';
+const MAX_RECOMMENDED_PRODUCTS = 4;
+const PRODUCT_UNAVAILABLE_SIZES = {
+  'polo-golf': ['L'],
+  'americana-umbra': ['M', 'L', 'XL'],
+  'polo-aureus': ['XS', 'S', 'L', 'XL'],
+};
+
+const isSizeSoldOut = (product, size) => (
+  (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(size)) ||
+  Boolean(PRODUCT_UNAVAILABLE_SIZES[product.product_id]?.includes(size))
+);
+
+const resolveFallbackPoster = (thumbnailImage, media) => {
+  if (thumbnailImage) return thumbnailImage;
+  const firstImage = media.find((item) => item.type === 'image')?.src;
+  return firstImage || '';
+};
+
+const requiresColorSelection = (productName) => productName === 'Camiseta Imperium';
 
 export default function ProductPage() {
   const { productId } = useParams();
+  const isUmbraProduct = productId === 'americana-umbra';
+  const isIgnatiusProduct = productId === 'sueter-ignatius';
+  const umbraTransitionDelay = 800;
+  const ignatiusTransitionDelay = 300;
   const [product, setProduct] = useState(null);
-  const [related, setRelated] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [infoTab, setInfoTab] = useState('description');
+  const [activeDetail, setActiveDetail] = useState('details');
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const galleryScrollRef = useRef(null);
+  const detailLabels = {
+    details: 'Detalles del producto',
+  };
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
 
@@ -25,11 +59,15 @@ export default function ProductPage() {
       setLoading(true);
       try {
         const data = getProductById(productId);
+        if (!data) {
+          setProduct(null);
+          setRelatedProducts([]);
+          return;
+        }
         setProduct(data);
-        setRelated(data?.related_products || []);
-        setSelectedImage(0);
+        setRelatedProducts(Array.isArray(data.related_products) ? data.related_products : []);
         setSelectedSize('');
-        setSelectedColor('');
+        setSelectedColor(data.colors?.[0]?.name || '');
         setQuantity(1);
       } catch (err) {
         console.error(err);
@@ -38,7 +76,61 @@ export default function ProductPage() {
       }
     };
     fetchProduct();
-    window.scrollTo(0, 0);
+  }, [productId]);
+
+  useEffect(() => {
+    if (!detailsOpen) return;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setDetailsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [detailsOpen]);
+
+  useEffect(() => {
+    if (!isUmbraProduct) {
+      document.body.classList.remove('umbra-mode');
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      document.body.classList.add('umbra-mode');
+    }, umbraTransitionDelay);
+
+    return () => {
+      window.clearTimeout(timer);
+      document.body.classList.remove('umbra-mode');
+    };
+  }, [isUmbraProduct]);
+
+  useEffect(() => {
+    if (!isIgnatiusProduct) {
+      document.body.classList.remove('ignatius-mode');
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      document.body.classList.add('ignatius-mode');
+    }, ignatiusTransitionDelay);
+
+    return () => {
+      window.clearTimeout(timer);
+      document.body.classList.remove('ignatius-mode');
+    };
+  }, [isIgnatiusProduct]);
+
+  useEffect(() => {
+    setActiveGalleryIndex(0);
+    if (!galleryScrollRef.current) return;
+
+    if (typeof galleryScrollRef.current.scrollTo === 'function') {
+      galleryScrollRef.current.scrollTo({ left: 0, behavior: 'auto' });
+      return;
+    }
+
+    galleryScrollRef.current.scrollLeft = 0;
   }, [productId]);
 
   const handleAddToCart = () => {
@@ -53,7 +145,9 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-32 flex items-center justify-center">
+      <div className={`product-page-shell mb-10 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+        {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+        {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <div className="w-8 h-8 border border-gold/30 border-t-gold animate-spin" />
       </div>
     );
@@ -61,182 +155,334 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen pt-32 flex items-center justify-center">
+      <div className={`product-page-shell mb-10 flex items-center justify-center ${isUmbraProduct ? 'umbra-product-page' : ''} ${isIgnatiusProduct ? 'product-page-ignatius' : ''}`}>
+        {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+        {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
         <p className="font-playfair text-xl text-obsidian/50">Producto no encontrado</p>
       </div>
     );
   }
 
+  const selectorLayoutClass = product.colors?.length
+    ? 'product-options'
+    : 'product-options product-options--single';
+
+  const galleryImages = product.product_id === 'americana-umbra'
+    ? [
+        '/products/americana-umbra/americana-umbra-main.jpg',
+        '/products/americana-umbra/americana-umbra-look-01.jpg',
+        '/products/americana-umbra/americana-umbra-look-02.jpg',
+        '/products/americana-umbra/americana-umbra-look-03.jpg',
+        '/products/americana-umbra/americana-umbra-look-04.jpg',
+        '/products/americana-umbra/americana-umbra-detail-01.jpg',
+        '/products/americana-umbra/americana-umbra-detail-02.jpg',
+      ]
+    : (product.images || []);
+
+  const galleryMedia = [
+    ...(product.model_url ? [{ type: 'model', src: product.model_url }] : []),
+    ...galleryImages.map((img) => ({ type: 'image', src: img })),
+  ];
+  const fallbackPoster = resolveFallbackPoster(product.thumbnail_image, galleryMedia);
+  const modelPoster = product.model_poster
+    || fallbackPoster
+    || LOGO_FALLBACK_POSTER;
+  const shouldUseSimpleViewer = isUmbraProduct || isIgnatiusProduct;
   const inWishlist = isInWishlist(product.product_id);
+  const hasSizeVariants = Array.isArray(product.sizes) && product.sizes.length > 0;
+  const hasAvailableSizes = !hasSizeVariants || product.sizes.some((size) => !isSizeSoldOut(product, size));
+  const isProductUnavailable = product.is_sold_out || !hasAvailableSizes;
+  const hasMappedStripeLinks = hasSizeVariants
+    ? product.sizes.some((size) => Boolean(getStripeLink(product.name, size, selectedColor)))
+      || Boolean(getStripeLink(product.name, '', selectedColor))
+    : Boolean(getStripeLink(product.name, '', selectedColor));
+  const resolveStripeLink = (size, color) => {
+    const variantLink = getStripeLink(product.name, size, color);
+    if (variantLink) return variantLink;
+    if (hasMappedStripeLinks) return null;
+    return requiresColorSelection(product.name) ? null : (product.stripePaymentLink || null);
+  };
+  const selectedStripeLink = resolveStripeLink(selectedSize, selectedColor);
+  const anyStripeLinkAvailable = hasSizeVariants
+    ? product.sizes.some((size) => !isSizeSoldOut(product, size) && Boolean(resolveStripeLink(size, selectedColor)))
+    : Boolean(resolveStripeLink('', selectedColor));
+  const isBuyNowDisabled = isProductUnavailable || !selectedStripeLink;
+  const categoryLabel = Array.isArray(product.category) && product.category.length > 0
+    ? product.category.slice(0, 2).join(' / ').toUpperCase()
+    : 'APPAREL';
 
-  return (
-    <div data-testid="product-page" className="min-h-screen pt-28 md:pt-32 pb-24">
-      {/* Breadcrumb */}
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 mb-8">
-        <nav className="flex items-center gap-2 font-montserrat text-[10px] tracking-widest uppercase text-obsidian/40">
-          <Link to="/" className="hover:text-obsidian transition-colors">Inicio</Link>
-          <ChevronRight size={10} />
-          <Link to="/tienda" className="hover:text-obsidian transition-colors">Tienda</Link>
-          <ChevronRight size={10} />
-          <span className="text-obsidian/60">{product.name}</span>
-        </nav>
-      </div>
+  const handleBuyNow = () => {
+    if (isProductUnavailable) return;
+    if (requiresColorSelection(product.name) && !selectedColor) {
+      toast.error('Selecciona un color');
+      return;
+    }
+    if (hasSizeVariants && !selectedSize && !resolveStripeLink('', selectedColor)) {
+      toast.error('Selecciona una talla');
+      return;
+    }
+    if (!selectedStripeLink) {
+      toast.error('Producto no disponible');
+      return;
+    }
+    window.open(selectedStripeLink, '_blank', 'noopener,noreferrer');
+  };
+  const handleGalleryScroll = (event) => {
+    const { scrollLeft, clientWidth } = event.currentTarget;
+    const slideWidth = clientWidth || 1;
+    const nextIndex = Math.min(
+      Math.max(Math.round(scrollLeft / slideWidth), 0),
+      Math.max(galleryMedia.length - 1, 0)
+    );
 
-      {/* Product layout */}
-      <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-          {/* Left: Gallery */}
-          <div>
-            <div className="img-zoom aspect-[3/4] mb-4 overflow-hidden bg-white/5 flex items-center justify-center">
-              {(product.images?.length > 0) ? (
-                <img
-                  data-testid="product-main-image"
-                  src={product.images[selectedImage]}
-                  alt={product.name}
-                  className="w-full h-auto max-h-full object-contain object-center"
+    setActiveGalleryIndex(nextIndex);
+  };
+  const scrollToGalleryItem = (index) => {
+    if (!galleryScrollRef.current) return;
+
+    const slideWidth = galleryScrollRef.current.clientWidth || 0;
+    const left = slideWidth * index;
+
+    if (typeof galleryScrollRef.current.scrollTo === 'function') {
+      galleryScrollRef.current.scrollTo({ left, behavior: 'smooth' });
+      return;
+    }
+
+    galleryScrollRef.current.scrollLeft = left;
+  };
+  const galleryItems = (() => {
+    let imageIndex = 0;
+
+    return galleryMedia.map((media, index) => {
+      const currentImageIndex = media.type === 'image' ? imageIndex : null;
+
+      if (media.type === 'image') {
+        imageIndex += 1;
+      }
+
+      return (
+        <div
+          key={`${media.type}-${index}`}
+          className="product-gallery-item"
+          data-testid={`product-gallery-item-${index}`}
+        >
+          {media.type === 'model' ? (
+            <div className="product-gallery-media">
+              {shouldUseSimpleViewer ? (
+                <Simple3DViewer
+                  data-testid="product-model-viewer"
+                  src={media.src}
+                  productId={product.product_id}
+                  className="product-model-viewer"
+                  aria-label={`Vista 3D de ${product.name}`}
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-[#f5f5f5]">
+                <ModelViewer
+                  data-testid="product-model-viewer"
+                  src={media.src}
+                  alt={`Vista 3D de ${product.name}`}
+                  poster={modelPoster}
+                  className="product-model-viewer"
+                />
+              )}
+            </div>
+          ) : (
+            <div className="product-gallery-media">
+              <img
+                data-testid={`product-gallery-image-${currentImageIndex}`}
+                src={media.src}
+                alt={product.name}
+                className="product-gallery-image"
+              />
+            </div>
+          )}
+        </div>
+      );
+    });
+  })();
+
+  return (
+    <div
+      data-testid="product-page"
+      className={`product-page-shell mb-12 ${isUmbraProduct ? 'umbra-product-page' : ''} ${
+        isIgnatiusProduct ? 'product-page-ignatius' : ''
+      }`}
+    >
+      {isUmbraProduct && <div className="umbra-background" aria-hidden="true" />}
+      {isIgnatiusProduct && <div className="ignatius-background" aria-hidden="true" />}
+
+      {/* Product layout */}
+      <div className="product-content">
+        <div className="product-page product-layout">
+          {/* Left: Gallery */}
+          <div className="product-media-shell">
+            <div
+              ref={galleryScrollRef}
+              className="product-media"
+              data-testid="product-media"
+              onScroll={handleGalleryScroll}
+            >
+              {galleryMedia.length > 0 ? (
+                galleryItems
+              ) : (
+                <div className="product-gallery-media flex items-center justify-center">
                   <span className="font-montserrat text-xs tracking-[0.22em] uppercase text-obsidian/30">{product.name}</span>
                 </div>
               )}
             </div>
-            {product.images?.length > 0 && (
-            <div className="flex gap-3">
-              {product.images.map((img, i) => (
-                <button
-                  key={i}
-                  data-testid={`product-thumb-${i}`}
-                  onClick={() => setSelectedImage(i)}
-                  className={`w-20 h-28 overflow-hidden border transition-colors duration-300 flex items-center justify-center ${
-                    selectedImage === i ? 'border-gold' : 'border-black/10 hover:border-black/30'
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-auto max-h-full object-contain object-center" />
-                </button>
-              ))}
-            </div>
+            {galleryMedia.length > 1 && (
+              <div
+                className="product-gallery-pagination"
+                data-testid="product-gallery-pagination"
+                aria-label="Paginación de la galería"
+              >
+                {galleryMedia.map((media, index) => (
+                  <button
+                    key={`${media.type}-dot-${index}`}
+                    type="button"
+                    data-testid={`product-gallery-dot-${index}`}
+                    className={`product-gallery-dot ${index === activeGalleryIndex ? 'is-active' : ''}`}
+                    aria-label={`Ir al elemento ${index + 1} de ${galleryMedia.length}`}
+                    aria-current={index === activeGalleryIndex ? 'true' : undefined}
+                    onClick={() => scrollToGalleryItem(index)}
+                  />
+                ))}
+              </div>
             )}
           </div>
 
           {/* Right: Product info */}
-          <div className="lg:pl-8 lg:pt-4">
-            <p className="font-cinzel text-[10px] tracking-[0.3em] uppercase text-gold/60 mb-4">
-              {product.category?.join(' / ')}
-            </p>
-            <div className="flex items-start justify-between gap-6 mb-4">
-              <h1 data-testid="product-name" className="font-playfair text-3xl md:text-4xl text-obsidian">
+          <div className="product-info product-right">
+            <nav
+              data-testid="product-breadcrumb"
+              aria-label="Categoría del producto"
+              className="product-category-label category-label mx-auto flex w-full max-w-[28rem] justify-center"
+            >
+              <span className="font-montserrat uppercase text-obsidian/45">
+                {categoryLabel}
+              </span>
+            </nav>
+            <div className="product-heading-block mx-auto flex w-full max-w-[28rem] flex-col items-center gap-3">
+              <h1
+                data-testid="product-name"
+                className={`product-title max-w-[16ch] text-center font-playfair break-words text-obsidian ${isIgnatiusProduct ? 'ignatius-glow-text' : ''}`}
+              >
                 {product.name}
               </h1>
-              {product.is_sold_out && (
-                <span className="mt-2 border border-black/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/70">
-                  SOLD OUT
+              {isProductUnavailable && (
+                <span className="border border-black/15 px-4 py-2 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/70">
+                  AGOTADO
                 </span>
               )}
             </div>
-            <p data-testid="product-price" className="font-montserrat text-lg text-[#6e6e6e] tracking-wide mb-4">
+            <p
+              data-testid="product-price"
+              className="product-price price mx-auto w-full max-w-[28rem] text-center font-montserrat text-obsidian/60"
+            >
               {product.price.toLocaleString('es-ES', { minimumFractionDigits: 0 })} &euro;
             </p>
             {product.product_id === 'polo-aureus' && (
-              <p className="font-montserrat text-xs text-obsidian/50 tracking-wide mb-8">
+              <p className="product-note mx-auto w-full max-w-[28rem] text-center font-montserrat text-xs tracking-wide text-obsidian/50">
                 Solo queda talla M disponible
               </p>
             )}
-            {product.product_id !== 'polo-aureus' && (
-              <div className="mb-10" />
-            )}
 
-            {/* Color selector */}
-            {product.colors?.length > 0 && (
-              <div className="mb-8">
-                <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-4">Color</p>
-                <div className="flex gap-3">
-                  {product.colors.map((c, i) => (
-                    <button
-                      key={i}
-                      data-testid={`color-btn-${i}`}
-                      onClick={() => setSelectedColor(c.name)}
-                      disabled={product.is_sold_out}
-                      className={`flex items-center gap-2 px-4 py-2 border transition-colors duration-300 ${
-                        selectedColor === c.name ? 'border-gold text-gold' : 'border-black/10 text-obsidian/60'
-                      } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-black/30'}`}
-                    >
-                      <span className="w-3 h-3 rounded-full" style={{ backgroundColor: c.hex }} />
-                      <span className="font-montserrat text-[10px] tracking-wide">{c.name}</span>
-                    </button>
-                  ))}
+            <div className={`${selectorLayoutClass} product-selectors`}>
+              {/* Color selector */}
+              {product.colors?.length > 0 && (
+                <div className="product-selector-group product-section flex-1">
+                  <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Color</p>
+                  <div className="product-selector-list color-selector flex flex-wrap justify-center gap-2">
+                    {product.colors.map((c, i) => (
+                      <button
+                        key={i}
+                        data-testid={`color-btn-${i}`}
+                        onClick={() => setSelectedColor(c.name)}
+                        aria-label={`Seleccionar color ${c.name}`}
+                        disabled={product.is_sold_out}
+                        className={`product-color-chip color-pill flex items-center justify-center gap-2 border text-center transition-colors duration-300 ${
+                          selectedColor === c.name ? 'border-gold text-gold' : 'border-black/10 text-obsidian/60'
+                        } ${product.is_sold_out ? 'opacity-60 cursor-not-allowed' : 'hover:border-black/30'}`}
+                      >
+                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: c.hex }} />
+                        <span className="font-montserrat tracking-wide">{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Size selector */}
+              <div className="product-selector-group product-section flex-1">
+                <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Talla</p>
+                  <div className="product-selector-list size-selector flex flex-wrap justify-center gap-2">
+                    {product.sizes.map((s, i) => {
+                     const sizeSoldOut = isSizeSoldOut(product, s);
+                     const hasStripeLinkForSize = Boolean(resolveStripeLink(s, selectedColor));
+                     const disabled = isProductUnavailable || sizeSoldOut || !hasStripeLinkForSize;
+                     return (
+                       <button
+                        key={i}
+                        data-testid={`size-btn-${s}`}
+                        onClick={() => setSelectedSize(s)}
+                        aria-label={`Seleccionar talla ${s}`}
+                        disabled={disabled}
+                        className={`product-size-chip size-button border text-center font-montserrat tracking-wide transition-colors duration-300 ${
+                          selectedSize === s
+                            ? 'border-obsidian text-obsidian bg-black/5'
+                            : 'border-black/10 text-obsidian/50'
+                        } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'} ${
+                          isIgnatiusProduct && selectedSize === s ? 'ignatius-glow' : ''
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-            )}
-
-            {/* Size selector */}
-            <div className="mb-8">
-              <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-4">Talla</p>
-              <div className="flex flex-wrap gap-2">
-                {product.sizes.map((s, i) => {
-                  const isSizeSoldOut =
-                    (Array.isArray(product.sold_out_sizes) && product.sold_out_sizes.includes(s)) ||
-                    (product.product_id === 'polo-golf' && s === 'L') ||
-                    (product.product_id === 'americana-umbra' && ['M', 'L', 'XL'].includes(s)) ||
-                    (product.product_id === 'polo-aureus' && ['XS', 'S', 'L', 'XL'].includes(s));
-                  const disabled = product.is_sold_out || isSizeSoldOut;
-                  return (
-                    <button
-                      key={i}
-                      data-testid={`size-btn-${s}`}
-                      onClick={() => setSelectedSize(s)}
-                      disabled={disabled}
-                      className={`min-w-[48px] py-3 px-4 border font-montserrat text-xs tracking-wide transition-colors duration-300 ${
-                        selectedSize === s
-                          ? 'border-obsidian text-obsidian bg-black/5'
-                          : 'border-black/10 text-obsidian/50'
-                      } ${disabled ? 'opacity-60 cursor-not-allowed line-through' : 'hover:border-black/30 hover:text-obsidian'}`}
-                    >
-                      {s}
-                    </button>
-                  );
-                })}
-              </div>
             </div>
 
-            {/* Quantity */}
-            <div className={`mb-10 ${product.is_sold_out ? 'opacity-60 pointer-events-none' : ''}`}>
-              <p className="font-montserrat text-[10px] tracking-[0.2em] uppercase text-obsidian/50 mb-4">Cantidad</p>
-              <div className="flex items-center gap-0 border border-black/10 inline-flex">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-r border-black/10"
-                >
-                  <Minus size={14} />
-                </button>
-                <span className="w-16 h-12 flex items-center justify-center font-montserrat text-sm text-obsidian">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-12 h-12 flex items-center justify-center text-obsidian/50 hover:text-obsidian border-l border-black/10"
-                >
-                  <Plus size={14} />
-                </button>
+            {/* Quantity + wishlist */}
+            <div className="product-options product-options--compact product-section">
+              <div className={isProductUnavailable ? 'product-quantity-block opacity-60 pointer-events-none flex flex-col items-center' : 'product-quantity-block flex flex-col items-center'}>
+                <p className="product-selector-label text-center font-montserrat text-[10px] tracking-[0.24em] uppercase text-obsidian/50">Cantidad</p>
+                <div className="quantity-selector inline-flex items-center">
+                  <button
+                    data-testid="quantity-decrease-btn"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    aria-label="Disminuir cantidad"
+                    disabled={isProductUnavailable}
+                    className={`quantity-selector__button flex items-center justify-center text-obsidian/50 transition-colors duration-300 ${
+                      isProductUnavailable ? 'cursor-not-allowed' : 'hover:text-obsidian'
+                    }`}
+                  >
+                    <Minus size={14} />
+                  </button>
+                  <span
+                    data-testid="quantity-value"
+                    className="quantity-selector__value flex items-center justify-center font-montserrat text-sm text-obsidian"
+                  >
+                    {quantity}
+                  </span>
+                  <button
+                    data-testid="quantity-increase-btn"
+                    onClick={() => setQuantity(quantity + 1)}
+                    aria-label="Aumentar cantidad"
+                    disabled={isProductUnavailable}
+                    className={`quantity-selector__button flex items-center justify-center text-obsidian/50 transition-colors duration-300 ${
+                      isProductUnavailable ? 'cursor-not-allowed' : 'hover:text-obsidian'
+                    }`}
+                  >
+                    <Plus size={14} />
+                  </button>
+                </div>
               </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex gap-3 mb-12">
-              <button
-                data-testid="add-to-cart-btn"
-                onClick={handleAddToCart}
-                disabled={product.is_sold_out}
-                className={`flex-1 py-4 font-montserrat text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 ${
-                  product.is_sold_out
-                    ? 'bg-black/5 text-obsidian/60 cursor-not-allowed'
-                    : 'bg-white text-obsidian hover:bg-gold'
-                }`}
-              >
-                {product.is_sold_out ? 'SOLD OUT' : 'Añadir al Carrito'}
-              </button>
               <button
                 data-testid="product-wishlist-btn"
                 onClick={() => toggleItem(product)}
-                className={`w-14 h-14 border flex items-center justify-center transition-colors duration-300 ${
+                aria-label={inWishlist ? 'Eliminar de la lista de deseos' : 'Añadir a la lista de deseos'}
+                className={`product-wishlist flex items-center justify-center border transition-colors duration-300 ${
                   inWishlist ? 'border-gold' : 'border-black/10 hover:border-black/30'
                 }`}
               >
@@ -244,56 +490,123 @@ export default function ProductPage() {
               </button>
             </div>
 
-            {/* Info tabs */}
-            <div className="border-t border-white/5">
-              {['description', 'composition', 'shipping'].map((tab) => (
+            {/* Actions */}
+            <div className="product-cta-group product-section mx-auto w-full max-w-[28rem]">
+              {!isProductUnavailable && anyStripeLinkAvailable && (
                 <button
-                  key={tab}
-                  data-testid={`tab-${tab}`}
-                  onClick={() => setInfoTab(infoTab === tab ? '' : tab)}
-                  className="w-full py-5 border-b border-white/5 flex justify-between items-center text-left"
+                  type="button"
+                  data-testid="buy-now-btn"
+                  onClick={handleBuyNow}
+                  disabled={isBuyNowDisabled}
+                  className={`product-primary-cta cta-button buy-btn umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isBuyNowDisabled ? 'cursor-not-allowed opacity-60' : ''
+                  }`}
                 >
-                  <span className="font-montserrat text-xs tracking-[0.15em] uppercase text-obsidian/60">
-                    {tab === 'description' ? 'Descripción' : tab === 'composition' ? 'Composición' : 'Envío'}
-                  </span>
-                  <Plus size={14} className={`text-obsidian/30 transition-transform duration-300 ${infoTab === tab ? 'rotate-45' : ''}`} />
+                  COMPRAR AHORA
                 </button>
-              ))}
-              {infoTab === 'description' && (
-                <div className="py-5 border-b border-white/5">
-                  <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed">{product.description}</p>
-                </div>
               )}
-              {infoTab === 'composition' && (
-                <div className="py-5 border-b border-white/5">
-                  <p className="font-montserrat text-sm text-obsidian/60 leading-relaxed mb-2">{product.composition}</p>
-                  <p className="font-montserrat text-xs text-obsidian/40">{product.care}</p>
-                </div>
+              {isProductUnavailable ? (
+                <span
+                  data-testid="sold-out-btn"
+                  className={`product-primary-cta cta-button umbra-keep-dark flex w-full cursor-not-allowed items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isIgnatiusProduct ? 'ignatius-glow' : ''
+                  }`}
+                  aria-disabled="true"
+                >
+                  AGOTADO
+                </span>
+              ) : (
+                <button
+                  data-testid="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                  className={`product-primary-cta cta-button umbra-keep-dark flex w-full items-center justify-center px-4 text-center font-montserrat uppercase transition-colors duration-300 ${
+                    isIgnatiusProduct ? 'ignatius-glow' : ''
+                  }`}
+                >
+                  AÑADIR AL CARRITO
+                </button>
               )}
-              {infoTab === 'shipping' && (
-                <div className="py-5 border-b border-white/5 space-y-2">
-                  <p className="font-montserrat text-sm text-obsidian/60">Envío estándar: 5-7 días laborables</p>
-                  <p className="font-montserrat text-sm text-obsidian/60">Envío express: 2-3 días laborables</p>
-                  <p className="font-montserrat text-sm text-obsidian/60">Envío gratuito en pedidos superiores a 500&euro;</p>
-                  <p className="font-montserrat text-xs text-obsidian/40 mt-3">Devoluciones gratuitas en 30 días</p>
+            </div>
+
+            {/* Info tabs */}
+            <div className="product-info-links product-details mx-auto w-full max-w-[28rem] border-t border-white/5">
+              <button
+                data-testid="tab-details"
+                onClick={() => {
+                  setActiveDetail('details');
+                  setDetailsOpen(true);
+                }}
+                className="product-info-link relative flex w-full items-center justify-center border-b border-white/5 text-center"
+              >
+                <span className="product-info-link__label font-montserrat uppercase text-obsidian/60">
+                  {detailLabels.details}
+                </span>
+                <Plus size={12} className="product-info-link__icon absolute right-0 text-obsidian/30 transition-transform duration-300" />
+              </button>
+            </div>
+            <div
+              className={`fixed inset-0 z-[80] transition-opacity duration-500 ${
+                detailsOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
+              aria-hidden={!detailsOpen}
+            >
+              <div
+                className="absolute inset-0 bg-black/30"
+                onClick={() => setDetailsOpen(false)}
+                aria-hidden="true"
+              />
+              <div
+                className={`details-drawer p-8 shadow-[0_24px_64px_rgba(15,23,42,0.18)] ${
+                  detailsOpen ? 'open' : ''
+                }`}
+                role="dialog"
+                aria-label="Detalles del producto"
+              >
+                <button
+                  type="button"
+                  onClick={() => setDetailsOpen(false)}
+                  aria-label="Cerrar detalles"
+                  className="absolute right-6 top-6 flex h-8 w-8 items-center justify-center text-obsidian/50 hover:text-obsidian transition-colors"
+                >
+                  <X size={18} />
+                </button>
+                <div className="space-y-5 text-center">
+                  <div>
+                    <p className="mb-2 font-cinzel text-[10px] tracking-[0.3em] uppercase text-obsidian/40">
+                      Detalles
+                    </p>
+                    <h3 className="font-playfair text-2xl text-obsidian">
+                      {detailLabels[activeDetail]}
+                    </h3>
+                  </div>
+                  {activeDetail === 'details' && (
+                    <div className="space-y-2.5">
+                      <p className="font-montserrat text-sm leading-relaxed text-obsidian/60">
+                        {product.description}
+                      </p>
+                      <p className="font-montserrat text-sm leading-relaxed text-obsidian/60">{product.composition}</p>
+                      <p className="font-montserrat text-xs text-obsidian/40">{product.care}</p>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Related products */}
-        {related.length > 0 && (
-          <div className="mt-24 md:mt-32">
-            <div className="section-divider mb-8" />
-            <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50 mb-3">También te puede gustar</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 mt-10">
-              {related.map((p, i) => (
-                <ProductCard key={p.product_id} product={p} index={i} />
+        {relatedProducts.length > 0 && (
+          <section className="mt-16 md:mt-20">
+            <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-obsidian/50 mb-6">
+              También te puede gustar
+            </h2>
+            <div className="product-recommendations" data-testid="product-recommendations">
+              {relatedProducts.slice(0, MAX_RECOMMENDED_PRODUCTS).map((item, index) => (
+                <ProductCard key={item.product_id} product={item} index={index} enableHoverVideo={supportsHoverVideo(item.product_id)} />
               ))}
             </div>
-          </div>
+          </section>
         )}
+
       </div>
     </div>
   );
