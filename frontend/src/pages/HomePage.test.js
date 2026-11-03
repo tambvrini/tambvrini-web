@@ -338,23 +338,11 @@ describe('HomePage featured grid', () => {
     container.remove();
   });
 
-  it('renders the primavera editorial hero image and title', async () => {
+  it('no longer renders the primavera editorial block', async () => {
     const { container, root } = await renderHomePage();
 
-    const editorialImage = container.querySelector(
-      '[data-testid="editorial-hero-image"]'
-    );
-    const editorialTitle = container.querySelector(
-      '[data-testid="editorial-hero-title"]'
-    );
-
-    expect(editorialImage?.getAttribute('src')).toBe(
-      '/images/header-primavera.jpeg'
-    );
-    expect(editorialImage?.className).toContain('object-cover');
-    expect(editorialImage?.className).toContain('object-center');
-    expect(editorialTitle?.textContent).toContain('PRIMAVERA — VERANO');
-    expect(editorialTitle?.className).toContain('primavera-editorial-title');
+    expect(container.querySelector('[data-testid="editorial-hero-image"]')).toBeNull();
+    expect(container.querySelector('[data-testid="editorial-hero-title"]')).toBeNull();
 
     act(() => {
       root.unmount();

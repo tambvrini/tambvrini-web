@@ -16,7 +16,6 @@ const NOVEDADES_MUJER_BG = "https://customer-assets.emergentagent.com/job_a24b64
 const NOVEDADES_HOMBRE_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/sbeaj2rx_video%20hombre.mp4";
 const NOVEDADES_MUJER_VIDEO = "https://customer-assets.emergentagent.com/job_a24b6471-62bc-4793-aa50-779b82deb92e/artifacts/mzrddski_video%20mujer.mp4";
 const DROP_EDITORIAL_IMAGE = "https://customer-assets.emergentagent.com/job_ed531f3b-442c-4069-8f9a-a4817ba88a48/artifacts/jaoxpz4f_10.jpg";
-const EDITORIAL_HERO_IMAGE = "/images/header-primavera.jpeg";
 const DROP_CAMPAIGN_IMAGE = "https://customer-assets.emergentagent.com/job_6fc96d8f-cb6c-4beb-8fea-5ecb3f3ddc7f/artifacts/74ejw418_campa%C3%B1a%202.jpg";
 const HOMEPAGE_CATEGORIES = [
   {
@@ -542,32 +541,6 @@ const DropGridSection = () => {
                 </div>
               </div>
 
-              <div className="mb-6 md:mb-8">
-                <div className="w-[94%] max-w-[1760px] mx-auto">
-                  <div className="relative w-full aspect-video rounded-[28px] overflow-hidden">
-                    <img
-                      data-testid="editorial-hero-image"
-                      src={EDITORIAL_HERO_IMAGE}
-                      alt="Editorial TAMBVRINI"
-                      className="w-full h-full object-cover object-center"
-                      loading="lazy"
-                    />
-                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6 text-center">
-                      <span data-testid="editorial-hero-title" className="primavera-editorial-title">
-                        PRIMAVERA — VERANO
-                      </span>
-                    </div>
-                    <Link
-                      data-testid="editorial-hero-cta"
-                      to="/tienda?category=novedades"
-                      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
-                      className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 rounded-full border border-[#F5F2EA]/70 bg-transparent px-6 py-2 text-[11px] tracking-[0.25em] uppercase font-montserrat text-[#1a1a1a] transition-colors duration-300 hover:bg-white hover:text-[#1a1a1a]"
-                    >
-                      Descubrir
-                    </Link>
-                  </div>
-                </div>
-              </div>
             </>
           );
         })()}
