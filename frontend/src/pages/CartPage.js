@@ -16,7 +16,7 @@ export default function CartPage() {
     try {
       const checkoutState = getCartCheckoutState(items);
 
-      if (checkoutState.type === 'multi') {
+      if (checkoutState.type === 'multi' || checkoutState.type === 'sold_out') {
         toast.message(checkoutState.message);
         return;
       }

@@ -11,7 +11,7 @@ describe('stripeCheckout', () => {
 
     expect(getCartCheckoutState([
       {
-        product_id: 'polo-golf',
+        product_id: 'test-product',
         stripePaymentLink: 'https://buy.stripe.com/polo-golf',
         quantity: 1,
       },
@@ -55,7 +55,7 @@ describe('stripeCheckout', () => {
 
     await expect(processCartCheckout({
       items: [{
-        product_id: 'polo-golf',
+        product_id: 'test-product',
         stripePaymentLink: 'https://buy.stripe.com/polo-golf',
         quantity: 1,
       }],
@@ -92,5 +92,34 @@ describe('stripeCheckout', () => {
     });
 
     expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it('blocks checkout for a product that is now sold out, even from an old cart', () => {
+    const { getCartCheckoutState } = require('./stripeCheckout');
+
+    expect(getCartCheckoutState([
+      {
+        product_id: 'americana-umbra',
+        stripePaymentLink: 'https://buy.stripe.com/old-link',
+        quantity: 1,
+      },
+    ])).toEqual({
+      type: 'sold_out',
+      message: 'Americana UMBRA está agotado.',
+    });
+  });
+
+  it('uses the current catalogue payment link over the one saved in the cart', () => {
+    const { getCartCheckoutState } = require('./stripeCheckout');
+    const products = require('../data/products').default;
+    const poloGolf = products.find((p) => p.product_id === 'polo-golf');
+
+    expect(getCartCheckoutState([
+      {
+        product_id: 'polo-golf',
+        stripePaymentLink: 'https://buy.stripe.com/old-link',
+        quantity: 1,
+      },
+    ])).toEqual({ type: 'single', url: poloGolf.stripePaymentLink });
   });
 });

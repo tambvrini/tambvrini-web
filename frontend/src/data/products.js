@@ -303,7 +303,7 @@ const products = [
     name: "Americana UMBRA",
     description:
       "Americana UMBRA de sastrería contemporánea. Silueta elegante con estructura ligera e inspiración clásica mediterránea.",
-    price: 150.0,
+    price: 900.0,
     currency: "EUR",
     images: [],
     model_url: "/models/umbra.glb",
@@ -316,6 +316,7 @@ const products = [
     care: "Solo limpieza en seco",
     is_new: true,
     is_featured: true,
+    is_sold_out: true,
     sold_out_sizes: ["M", "L", "XL"],
     collections: ["roma"],
     created_at: "2026-02-14T00:00:00+00:00",
@@ -453,7 +454,7 @@ const products = [
     name: "Suéter Ignatius",
     description:
       "El Suéter Ignatius reinterpreta el knitwear clásico con un carácter deliberadamente imperfecto. Confeccionado en algodón de tacto suave, presenta un acabado desgastado artesanal que revela capas interiores en contraste rojo, creando una estética cruda y contemporánea.\n\nCada pieza expresa una elegancia desestructurada, donde el desgaste controlado y los cortes irregulares evocan la tradición del trabajo manual y la individualidad de la prenda. Un equilibrio entre sofisticación clásica y rebeldía moderna.",
-    price: 300.0,
+    price: 600.0,
     currency: "EUR",
     images: [],
     model_url: "/models/ignatius.glb",
@@ -467,6 +468,7 @@ const products = [
     care: "Lavado a mano. Secar en plano.",
     is_new: true,
     is_featured: true,
+    is_sold_out: true,
     collections: ["roma"],
     created_at: "2026-03-04T00:00:00+00:00",
   },
