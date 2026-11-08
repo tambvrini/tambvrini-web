@@ -7,7 +7,7 @@ const ContactPanel = ({ open, onOpenChange }) => (
       side="right"
       hideClose
       overlayClassName="contact-overlay"
-      className="w-full sm:w-1/2 sm:max-w-none border-l border-black/10 p-0 bg-white data-[state=open]:duration-300 data-[state=closed]:duration-200"
+      className="w-full sm:w-1/2 sm:max-w-none border-l border-black/10 p-0 bg-ivory data-[state=open]:duration-300 data-[state=closed]:duration-200"
     >
       <div data-testid="contact-panel" data-state={open ? 'open' : 'closed'} className="flex h-full flex-col">
         <div className="flex items-center justify-between px-8 md:px-12 py-8 border-b border-black/5">
@@ -26,7 +26,7 @@ const ContactPanel = ({ open, onOpenChange }) => (
           </SheetClose>
         </div>
         <div className="flex-1 overflow-y-auto px-8 md:px-12 py-10 space-y-6">
-          <div className="rounded-2xl border border-black/10 bg-white shadow-[0_12px_30px_rgba(17,17,17,0.06)] p-6 space-y-3">
+          <div className="rounded-2xl border border-black/10 bg-ivory shadow-[0_12px_30px_rgba(17,17,17,0.06)] p-6 space-y-3">
             <h3 className="font-montserrat text-sm text-obsidian tracking-wide">Llámanos</h3>
             <p className="font-montserrat text-sm text-obsidian/60">
               Estamos disponibles de 9:00 a 21:00.
@@ -38,7 +38,7 @@ const ContactPanel = ({ open, onOpenChange }) => (
               </a>
             </p>
           </div>
-          <div className="rounded-2xl border border-black/10 bg-white shadow-[0_12px_30px_rgba(17,17,17,0.06)] p-6 space-y-3">
+          <div className="rounded-2xl border border-black/10 bg-ivory shadow-[0_12px_30px_rgba(17,17,17,0.06)] p-6 space-y-3">
             <h3 className="font-montserrat text-sm text-obsidian tracking-wide">Escríbenos</h3>
             <p className="font-montserrat text-sm text-obsidian/60">
               Nuestro equipo está disponible de 9:00 a 21:00.
@@ -47,7 +47,7 @@ const ContactPanel = ({ open, onOpenChange }) => (
               Servicio disponible en Español e Inglés.
             </p>
           </div>
-          <div className="rounded-2xl border border-black/10 bg-white shadow-[0_12px_30px_rgba(17,17,17,0.06)] p-6 space-y-3">
+          <div className="rounded-2xl border border-black/10 bg-ivory shadow-[0_12px_30px_rgba(17,17,17,0.06)] p-6 space-y-3">
             <h3 className="font-montserrat text-sm text-obsidian tracking-wide">Email</h3>
             <p className="font-montserrat text-sm text-obsidian/60">
               Estamos disponibles de 9:00 a 21:00.

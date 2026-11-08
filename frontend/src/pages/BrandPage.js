@@ -107,7 +107,7 @@ export default function BrandPage() {
       </section>
 
       {/* Craftsmanship */}
-      <section className="bg-white">
+      <section className="bg-ivory">
         <div className="max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-2">
           <div className="px-8 md:px-16 lg:px-24 py-20 md:py-32 flex flex-col justify-center">
             <div className="w-12 h-px bg-emerald mb-10" />

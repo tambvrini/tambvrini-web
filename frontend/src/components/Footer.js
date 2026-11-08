@@ -2,7 +2,7 @@ import { useI18n } from "../contexts/I18nContext";
 
 const LOGO_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/amln6wrd_LOGO%20LETRAS%20blanco%20svg%20web.svg";
 const ICON_WHITE = "https://customer-assets.emergentagent.com/job_42168592-1148-4152-ae1b-eab7ccc63cd7/artifacts/krjmn5r6_LOGO%20ICONO%20blanco%20svg%20web.svg";
-export const FOOTER_BACKGROUND = '#0e2a2c';
+export const FOOTER_BACKGROUND = '#005046';
 const FOOTER_TEXT_CLASS = 'text-white';
 const LINK_STYLE = { transition: 'color 0.25s ease' };
 const LOGO_STYLE = { filter: 'sepia(0.2) saturate(1.1) brightness(0.98)' };

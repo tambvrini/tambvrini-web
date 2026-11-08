@@ -16,7 +16,17 @@ module.exports = {
                 'editorial-red': '#B33A3A',
                 obsidian: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
                 black: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
-                marble: '#F5F2EA',
+                marble: 'var(--ivory)',
+                ivory: {
+                    DEFAULT: '#F7F3EC',
+                    deep: '#EFE8DC',
+                },
+                cian: {
+                    DEFAULT: 'rgb(var(--cian-rgb) / <alpha-value>)',
+                    deep: '#003A33',
+                    soft: '#2B6E66',
+                },
+                brass: '#B8955A',
                 gold: '#C5A059',
                 emerald: '#1B4D3E',
                 terracotta: '#A0522D',

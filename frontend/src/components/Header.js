@@ -142,10 +142,14 @@ export const Header = () => {
         data-testid="main-header"
         className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
           scrolled
-            ? `${isHomePage ? 'bg-white/95' : 'bg-white/95'} backdrop-blur-md py-5 border-b border-black/5`
-            : 'bg-transparent py-6'
+            ? 'bg-ivory/95 backdrop-blur-md pb-5 border-b border-black/5'
+            : 'bg-transparent pb-6'
         } ${cinematicHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
+        {/* Brand signature bar (Casa TAMBVRINI) */}
+        <div data-testid="brand-bar" className={`brand-bar ${scrolled ? 'mb-5' : 'mb-6'}`}>
+          <span>Casa TAMBVRINI</span>
+        </div>
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
           <div className="flex items-center gap-5 w-[120px]" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
@@ -169,7 +173,7 @@ export const Header = () => {
                 side="left"
                 hideClose
                 overlayClassName="menu-overlay"
-                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-hidden"
+                className="side-menu w-[320px] bg-ivory border-r border-black/5 p-0 overflow-hidden"
               >
                 <div className="flex flex-col h-full p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">

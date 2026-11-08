@@ -136,7 +136,7 @@ export default function LoginPage() {
           data-testid="google-login-btn"
           type="button"
           onClick={handleGoogleLoginClick}
-          className="w-full rounded-full border border-black/15 bg-white font-montserrat text-[11px] tracking-[0.15em] text-obsidian/70 hover:border-black/30 transition-colors p-0 overflow-hidden"
+          className="w-full rounded-full border border-black/15 bg-ivory font-montserrat text-[11px] tracking-[0.15em] text-obsidian/70 hover:border-black/30 transition-colors p-0 overflow-hidden"
         >
           <div
             id="google-login-button"

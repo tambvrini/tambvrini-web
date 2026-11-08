@@ -18,7 +18,7 @@ export default function SportClubPage() {
   return (
     <div
       data-testid="sport-club-page"
-      className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise bg-white"
+      className="min-h-screen pt-32 md:pt-40 pb-24 noise-overlay editorial-noise bg-ivory"
     >
       <div
         data-testid="sport-club-hero-wrapper"

@@ -22,12 +22,12 @@ const renderFooter = async () => {
 };
 
 describe('Footer styling', () => {
-  it('uses the global pastel background and ivory accents', async () => {
+  it('uses the brand cian background and ivory accents', async () => {
     const { container, root } = await renderFooter();
     const footer = container.querySelector('[data-testid="main-footer"]');
 
     expect(footer).not.toBeNull();
-    expect(FOOTER_BACKGROUND).toBe('#0e2a2c');
+    expect(FOOTER_BACKGROUND).toBe('#005046');
     expect(footer.className).toContain('footer');
     expect(footer.style.cssText).toContain('--footer-bg');
     expect(footer.style.getPropertyValue('--footer-bg')).toBe(FOOTER_BACKGROUND);
