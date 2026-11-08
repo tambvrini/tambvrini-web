@@ -392,7 +392,7 @@
 }
 
 .product-primary-cta:not(:disabled) {
-    background: var(--ink-primary, #0e2a2c);
+    background: var(--ink-primary, #005046);
     color: #ffffff;
 }
 
@@ -1491,6 +1491,8 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
 /* Franja superior de firma */
 .brand-bar {
     height: 28px;
+    overflow: hidden;
+    transition: height 0.35s ease, margin 0.35s ease, opacity 0.25s ease, border-color 0.35s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1536,8 +1538,9 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
     letter-spacing: 0.26em;
 }
 .hero-cta-luxury:hover {
-    background: var(--cian-deep);
+    background: var(--cian);
     color: var(--ivory);
+    opacity: 0.9;
 }
 .btn-gold,
 .hero-cta-luxury.btn-gold {
@@ -1545,7 +1548,7 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
 }
 .hero-cta-luxury.btn-gold {
     background: var(--brass);
-    color: var(--cian-deep);
+    color: var(--cian);
 }
 .btn-gold::before {
     background: var(--brass);
@@ -1558,8 +1561,8 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
     transition: background-color 0.25s ease;
 }
 .product-primary-cta:not(:disabled):hover {
-    background: var(--cian-deep);
-    opacity: 1;
+    background: var(--cian);
+    opacity: 0.88;
 }
 
 /* Pie de página en cian con texto blanco roto y filete oro viejo */
@@ -1574,4 +1577,13 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
 }
 .footer svg {
     stroke: var(--ivory);
+}
+
+/* La franja desaparece al hacer scroll, como en Casablanca */
+.brand-bar.is-hidden {
+    height: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    opacity: 0;
+    border-bottom-color: transparent;
 }

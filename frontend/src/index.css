@@ -9,17 +9,17 @@
         --ivory-deep: #EFE8DC;   /* superficies y hover */
         --cian: #005046;         /* cian TAMBVRINI (azulado verdoso) */
         --cian-rgb: 0 80 70;
-        --cian-deep: #003A33;
+        --cian-deep: #005046;  /* mismo cian: sin tonos extra */
         --cian-soft: #2B6E66;
         --brass: #B8955A;        /* oro viejo para filetes */
         /* Luxury ivory theme */
         /* Ink system: primary for body text, secondary for subheads, muted for captions. */
-        --ink-primary: #0e2a2c;
+        --ink-primary: #005046; /* texto principal = cian TAMBVRINI */
         --ink-secondary: #2f3f42;
         --ink-muted: #6b7c80;
         /* Footer background ink tone. */
         --footer-bg: var(--cian);
-        --ink-primary-rgb: 14 42 44;
+        --ink-primary-rgb: 0 80 70;
         --background: 39 41% 95%;
         --foreground: 0 0% 7%;
         --card: 39 41% 95%;

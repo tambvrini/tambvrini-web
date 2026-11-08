@@ -569,7 +569,7 @@ const DropGridSection = () => {
             className="w-screen max-w-none relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]"
           >
             <img
-              src="/images/header-mistico-ultrawide.png"
+              src="/images/header-mistico-ultrawide-cian.png"
               alt="editorial mystic divider"
               className="w-full h-auto object-contain object-center"
               loading="lazy"

@@ -23,7 +23,7 @@ module.exports = {
                 },
                 cian: {
                     DEFAULT: 'rgb(var(--cian-rgb) / <alpha-value>)',
-                    deep: '#003A33',
+                    deep: '#005046',
                     soft: '#2B6E66',
                 },
                 brass: '#B8955A',
