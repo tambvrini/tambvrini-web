@@ -210,12 +210,12 @@ const NovedadesTile = ({ title, bg, videoSrc, to, testId }) => {
         />
 
         {/* Keep luminosity consistent between image/video */}
-        <div className="absolute inset-0 bg-black/5" />
+        <div className="absolute inset-0 bg-black/15" />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center px-10">
-          <p className="font-cinzel text-[11px] tracking-[0.35em] uppercase text-obsidian/60">Novedades</p>
-          <h3 className="mt-4 font-playfair text-2xl md:text-3xl text-obsidian tracking-wide text-center">{title}</h3>
-          <span className="mt-8 inline-flex items-center justify-center border border-black/15 px-10 py-4 font-montserrat text-[10px] tracking-[0.25em] uppercase text-obsidian/80 group-hover:border-black/30 group-hover:text-obsidian transition-colors duration-500">
+          <p className="font-cinzel text-[11px] tracking-[0.35em] uppercase text-ivory/85 photo-text">Novedades</p>
+          <h3 className="mt-4 font-playfair text-2xl md:text-3xl text-ivory tracking-wide text-center photo-text">{title}</h3>
+          <span className="mt-8 inline-flex items-center justify-center border border-ivory/60 px-10 py-4 font-montserrat text-[10px] tracking-[0.25em] uppercase text-ivory group-hover:border-ivory group-hover:bg-ivory group-hover:text-cian transition-colors duration-500">
             Comprar
           </span>
         </div>

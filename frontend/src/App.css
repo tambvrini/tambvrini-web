@@ -1587,3 +1587,8 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
     opacity: 0;
     border-bottom-color: transparent;
 }
+
+/* Texto sobre fotos: blanco roto con sombra suave para que siempre se lea */
+.photo-text {
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.28);
+}
