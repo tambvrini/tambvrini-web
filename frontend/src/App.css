@@ -159,7 +159,7 @@
 }
 
 .product-page-shell {
-    background-color: var(--ivory);
+    background-color: #ffffff;
     min-height: 100vh;
     padding-top: var(--product-header-offset, 120px);
     box-sizing: border-box;
@@ -367,7 +367,7 @@
     flex: 0 0 36px;
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 9999px;
-    background: var(--ivory);
+    background: #ffffff;
 }
 
 .quantity-selector__value {
@@ -392,7 +392,7 @@
 }
 
 .product-primary-cta:not(:disabled) {
-    background: var(--ink-primary, #005046);
+    background: var(--ink-primary, #0e2a2c);
     color: #ffffff;
 }
 
@@ -574,7 +574,7 @@
     width: var(--details-drawer-width, 480px);
     max-width: 100%;
     height: 100vh;
-    background: var(--ivory);
+    background: #ffffff;
     transform: translateX(100%);
     transition: transform 0.35s ease;
 }
@@ -944,7 +944,7 @@ body.umbra-mode .umbra-product-page [class*="hover:border-black"]:hover {
     border-color: rgba(255, 255, 255, 0.15);
 }
 
-body.umbra-mode [data-testid="main-header"].bg-ivory\/95 {
+body.umbra-mode [data-testid="main-header"].bg-white\/95 {
     background-color: rgba(0, 0, 0, 0.9);
 }
 
@@ -1148,7 +1148,7 @@ body.ignatius-mode .product-page-ignatius [data-testid="add-to-cart-btn"][disabl
     color: rgba(245, 235, 235, 0.6);
 }
 
-body.ignatius-mode [data-testid="main-header"].bg-ivory\/95 {
+body.ignatius-mode [data-testid="main-header"].bg-white\/95 {
     background-color: transparent;
 }
 
@@ -1191,7 +1191,7 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
 
 .limited-editions-page {
     min-height: 100vh;
-    background-color: var(--ivory);
+    background-color: #ffffff;
     color: var(--ink-primary);
     transition: background-color 900ms cubic-bezier(.4, 0, .2, 1), color 900ms cubic-bezier(.4, 0, .2, 1);
 }
@@ -1480,115 +1480,4 @@ body.limited-editions-mode [data-testid="main-header"] .logo {
         gap: 24px;
         align-items: center;
     }
-}
-
-/* ==========================================================================
-   CASA TAMBVRINI — mini rebranding
-   Old money italiano: blanco roto, cian de marca protagonista, oro viejo en filetes.
-   Todo sale de los tokens de index.css (--ivory, --cian, --brass).
-   ========================================================================== */
-
-/* Franja superior de firma */
-.brand-bar {
-    height: 28px;
-    overflow: hidden;
-    transition: height 0.35s ease, margin 0.35s ease, opacity 0.25s ease, border-color 0.35s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--cian);
-    color: var(--ivory);
-    border-bottom: 1px solid rgb(184 149 90 / 0.35);
-}
-.brand-bar span {
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 0.42em;
-    text-transform: uppercase;
-    padding-left: 0.42em; /* compensa el tracking para centrar */
-}
-
-/* Logo en cian de marca */
-.logo {
-    color: var(--cian);
-    fill: var(--cian);
-}
-
-/* Cabecera al hacer scroll: filete cian muy sutil */
-[data-testid="main-header"].border-b {
-    border-bottom-color: rgb(var(--cian-rgb) / 0.12);
-}
-
-/* Botones de portada */
-.btn-luxury {
-    border-color: rgb(var(--cian-rgb) / 0.35);
-    color: var(--cian);
-}
-.btn-luxury::before {
-    background: var(--cian);
-}
-.btn-luxury:hover {
-    color: var(--ivory);
-    border-color: var(--cian);
-}
-.hero-cta-luxury {
-    background: var(--cian);
-    color: var(--ivory);
-    border-color: rgb(247 243 236 / 0.25);
-    letter-spacing: 0.26em;
-}
-.hero-cta-luxury:hover {
-    background: var(--cian);
-    color: var(--ivory);
-    opacity: 0.9;
-}
-.btn-gold,
-.hero-cta-luxury.btn-gold {
-    border-color: var(--brass);
-}
-.hero-cta-luxury.btn-gold {
-    background: var(--brass);
-    color: var(--cian);
-}
-.btn-gold::before {
-    background: var(--brass);
-}
-
-/* Botones de compra en ficha de producto */
-.product-primary-cta:not(:disabled) {
-    background: var(--cian);
-    color: var(--ivory);
-    transition: background-color 0.25s ease;
-}
-.product-primary-cta:not(:disabled):hover {
-    background: var(--cian);
-    opacity: 0.88;
-}
-
-/* Pie de página en cian con texto blanco roto y filete oro viejo */
-.footer {
-    color: var(--ivory);
-    border-top: 1px solid rgb(184 149 90 / 0.45) !important;
-}
-.footer a,
-.footer button,
-.footer p {
-    color: var(--ivory);
-}
-.footer svg {
-    stroke: var(--ivory);
-}
-
-/* La franja desaparece al hacer scroll, como en Casablanca */
-.brand-bar.is-hidden {
-    height: 0;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    opacity: 0;
-    border-bottom-color: transparent;
-}
-
-/* Texto sobre fotos: blanco roto con sombra suave para que siempre se lea */
-.photo-text {
-    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.28);
 }

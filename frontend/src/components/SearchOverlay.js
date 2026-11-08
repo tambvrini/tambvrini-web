@@ -94,7 +94,7 @@ const SearchOverlay = ({ open, onClose }) => {
     <div
       data-testid="search-overlay"
       data-state={open ? 'open' : 'closed'}
-      className={`fixed inset-0 z-[70] bg-ivory transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[70] bg-white transition-opacity duration-300 ${
         open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
       onClick={onClose}
@@ -148,7 +148,7 @@ const SearchOverlay = ({ open, onClose }) => {
                         onClick={onClose}
                         className="flex items-center gap-4 group"
                       >
-                        <div className="w-16 h-20 border border-black/10 overflow-hidden bg-ivory">
+                        <div className="w-16 h-20 border border-black/10 overflow-hidden bg-white">
                           {getProductThumbnailUrl(product) ? (
                             <img
                               src={getProductThumbnailUrl(product)}
@@ -212,7 +212,7 @@ const SearchOverlay = ({ open, onClose }) => {
                   onClick={onClose}
                   className="flex items-center gap-4 group"
                 >
-                  <div className="w-14 h-16 border border-black/10 overflow-hidden bg-ivory">
+                  <div className="w-14 h-16 border border-black/10 overflow-hidden bg-white">
                     {getProductThumbnailUrl(product) ? (
                       <img
                         src={getProductThumbnailUrl(product)}

@@ -134,16 +134,7 @@ export const Header = () => {
     : 1;
 
   const cinematicHidden = (isWomenCategory || isMenCategory) && cinematicProgress < 0.85;
-  // Over the homepage hero (transparent header on a photo/video) the icons must be light to stay visible.
-  const onDarkHero = isHomePage && !scrolled;
-  let navToneClass = 'text-obsidian/80 hover:text-obsidian';
-  if (cinematicHidden) {
-    navToneClass = 'text-white/70 hover:text-white';
-  } else if (onDarkHero) {
-    navToneClass = 'text-ivory hover:text-ivory/80';
-  }
-  // The "Casa TAMBVRINI" bar only shows at the very top and disappears on scroll.
-  const brandBarHidden = scrollY > 24;
+  const navToneClass = cinematicHidden ? 'text-white/70 hover:text-white' : 'text-obsidian/80 hover:text-obsidian';
 
   return (
     <>
@@ -151,18 +142,10 @@ export const Header = () => {
         data-testid="main-header"
         className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
           scrolled
-            ? 'bg-ivory/95 backdrop-blur-md py-5 border-b border-black/5'
+            ? `${isHomePage ? 'bg-white/95' : 'bg-white/95'} backdrop-blur-md py-5 border-b border-black/5`
             : 'bg-transparent py-6'
         } ${cinematicHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
-        {/* Brand signature bar (Casa TAMBVRINI) */}
-        <div
-          data-testid="brand-bar"
-          aria-hidden={brandBarHidden}
-          className={`brand-bar ${scrolled ? '-mt-5 mb-5' : '-mt-6 mb-6'} ${brandBarHidden ? 'is-hidden' : ''}`}
-        >
-          <span>Casa TAMBVRINI</span>
-        </div>
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-between">
           {/* Left: Menu */}
           <div className="flex items-center gap-5 w-[120px]" style={{ opacity: cinematicHidden ? 0.7 : 1 }}>
@@ -186,7 +169,7 @@ export const Header = () => {
                 side="left"
                 hideClose
                 overlayClassName="menu-overlay"
-                className="side-menu w-[320px] bg-ivory border-r border-black/5 p-0 overflow-hidden"
+                className="side-menu w-[320px] bg-white border-r border-black/5 p-0 overflow-hidden"
               >
                 <div className="flex flex-col h-full p-8 md:p-12">
                   <div className="flex justify-between items-center mb-16">

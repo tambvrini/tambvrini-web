@@ -4,41 +4,33 @@
 
 @layer base {
     :root {
-        /* Casa TAMBVRINI — blanco roto + cian de marca */
-        --ivory: #F7F3EC;        /* blanco roto, base de toda la web */
-        --ivory-deep: #EFE8DC;   /* superficies y hover */
-        --cian: #005046;         /* cian TAMBVRINI (azulado verdoso) */
-        --cian-rgb: 0 80 70;
-        --cian-deep: #005046;  /* mismo cian: sin tonos extra */
-        --cian-soft: #2B6E66;
-        --brass: #B8955A;        /* oro viejo para filetes */
         /* Luxury ivory theme */
         /* Ink system: primary for body text, secondary for subheads, muted for captions. */
-        --ink-primary: #005046; /* texto principal = cian TAMBVRINI */
+        --ink-primary: #0e2a2c;
         --ink-secondary: #2f3f42;
         --ink-muted: #6b7c80;
         /* Footer background ink tone. */
-        --footer-bg: var(--cian);
-        --ink-primary-rgb: 0 80 70;
-        --background: 39 41% 95%;
+        --footer-bg: #0e2a2c;
+        --ink-primary-rgb: 14 42 44;
+        --background: 0 0% 100%;
         --foreground: 0 0% 7%;
-        --card: 39 41% 95%;
+        --card: 0 0% 100%;
         --card-foreground: 0 0% 7%;
-        --popover: 39 41% 95%;
+        --popover: 0 0% 100%;
         --popover-foreground: 0 0% 7%;
-        --primary: 172 100% 16%;
-        --primary-foreground: 39 41% 95%;
-        --secondary: 38 35% 90%;
+        --primary: 39 40% 55%;
+        --primary-foreground: 0 0% 7%;
+        --secondary: 0 0% 100%;
         --secondary-foreground: 0 0% 7%;
-        --muted: 38 35% 90%;
+        --muted: 0 0% 100%;
         --muted-foreground: 0 0% 43%;
-        --accent: 172 100% 16%;
+        --accent: 160 47% 21%;
         --accent-foreground: 43 33% 94%;
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 98%;
-        --border: 36 22% 84%;
-        --input: 36 22% 84%;
-        --ring: 172 100% 16%;
+        --border: 0 0% 86%;
+        --input: 0 0% 86%;
+        --ring: 39 40% 55%;
         --radius: 0px;
         --chart-1: 12 76% 61%;
         --chart-2: 173 58% 39%;
@@ -56,7 +48,7 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
-    background-color: var(--ivory);
+    background-color: #FFFFFF;
     color: var(--ink-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -71,15 +63,15 @@ body {
 }
 
 ::selection {
-    background-color: var(--cian);
-    color: var(--ivory);
+    background-color: #C5A059;
+    color: var(--ink-primary);
 }
 
 ::-webkit-scrollbar {
     width: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: var(--ivory);
+    background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
     background: rgb(var(--ink-primary-rgb) / 0.18);

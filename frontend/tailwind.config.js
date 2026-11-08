@@ -13,20 +13,10 @@ module.exports = {
                 montserrat: ['Montserrat', 'sans-serif'],
             },
             colors: {
-                'editorial-red': '#005046', // títulos editoriales en cian de marca (antes rojo #B33A3A)
+                'editorial-red': '#B33A3A',
                 obsidian: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
                 black: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
-                marble: 'var(--ivory)',
-                ivory: {
-                    DEFAULT: '#F7F3EC',
-                    deep: '#EFE8DC',
-                },
-                cian: {
-                    DEFAULT: 'rgb(var(--cian-rgb) / <alpha-value>)',
-                    deep: '#005046',
-                    soft: '#2B6E66',
-                },
-                brass: '#B8955A',
+                marble: '#F5F2EA',
                 gold: '#C5A059',
                 emerald: '#1B4D3E',
                 terracotta: '#A0522D',
