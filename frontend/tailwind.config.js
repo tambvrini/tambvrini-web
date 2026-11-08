@@ -13,7 +13,7 @@ module.exports = {
                 montserrat: ['Montserrat', 'sans-serif'],
             },
             colors: {
-                'editorial-red': '#B33A3A',
+                'editorial-red': '#005046', // títulos editoriales en cian de marca (antes rojo #B33A3A)
                 obsidian: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
                 black: 'rgb(var(--ink-primary-rgb) / <alpha-value>)',
                 marble: 'var(--ivory)',
